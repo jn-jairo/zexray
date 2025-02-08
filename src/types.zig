@@ -2736,23 +2736,6 @@ pub const Mesh = struct {
     }
 
     pub fn free(value: rl.Mesh) void {
-        // var v = value;
-        //
-        // // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
-        // if (v.vboId != null) {
-        //     var test_vbo_id: u8 = 0;
-        //     for (0..Self.MAX_VERTEX_BUFFERS) |i| {
-        //         if (v.vboId[i] == 0) {
-        //             test_vbo_id += 1;
-        //         }
-        //     }
-        //
-        //     if (test_vbo_id == Self.MAX_VERTEX_BUFFERS) {
-        //         rl.allocator.free(@as([*]c_int, @ptrCast(v.vboId))[0..Self.MAX_VERTEX_BUFFERS]);
-        //         v.vboId = null;
-        //     }
-        // }
-
         rl.UnloadMesh(pre_free(value));
     }
 
@@ -3495,23 +3478,6 @@ pub const Model = struct {
         for (0..@intCast(value.meshCount)) |i| {
             v.meshes[i] = Mesh.pre_free(v.meshes[i]);
         }
-
-        // for (0..@intCast(value.meshCount)) |m| {
-        //     // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
-        //     if (v.meshes[m].vboId != null) {
-        //         var test_vbo_id: u8 = 0;
-        //         for (0..Mesh.MAX_VERTEX_BUFFERS) |i| {
-        //             if (v.meshes[m].vboId[i] == 0) {
-        //                 test_vbo_id += 1;
-        //             }
-        //         }
-        //
-        //         if (test_vbo_id == Mesh.MAX_VERTEX_BUFFERS) {
-        //             rl.allocator.free(@as([*]c_int, @ptrCast(v.meshes[m].vboId))[0..Mesh.MAX_VERTEX_BUFFERS]);
-        //             v.meshes[m].vboId = null;
-        //         }
-        //     }
-        // }
 
         return value;
     }

@@ -4,40 +4,6 @@ const e = @import("./erl_nif.zig");
 const types = @import("./types.zig");
 pub usingnamespace types;
 
-// pub fn make_ok_result(env: ?*e.ErlNifEnv, result: e.ErlNifTerm) e.ErlNifTerm {
-//     return e.enif_make_tuple2(env, types.Atom.make(env, "ok"), result);
-// }
-//
-// pub fn make_error_result(env: ?*e.ErlNifEnv, result: e.ErlNifTerm) e.ErlNifTerm {
-//     return e.enif_make_tuple2(env, types.Atom.make(env, "error"), result);
-// }
-//
-// pub fn make_error_atom_result(env: ?*e.ErlNifEnv, err: anyerror) e.ErlNifTerm {
-//     return make_error_result(env, make_error_atom(env, err));
-// }
-//
-// fn make_error_atom(env: ?*e.ErlNifEnv, err: anyerror) e.ErlNifTerm {
-//     const error_name = @errorName(err);
-//     var buf: [256]u8 = undefined;
-//
-//     var index: usize = 0;
-//     for (error_name) |char| {
-//         if (index > 256) unreachable;
-//         if (std.ascii.isUpper(char)) {
-//             if (index > 0) {
-//                 buf[index] = '_';
-//                 index += 1;
-//             }
-//             buf[index] = std.ascii.toLower(char);
-//         } else {
-//             buf[index] = char;
-//         }
-//         index += 1;
-//     }
-//
-//     return types.Atom.make(env, buf[0..index]);
-// }
-
 pub fn raise_exception(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, err: anyerror, stack_trace: ?*std.builtin.StackTrace, message: ?[]const u8) e.ErlNifTerm {
     var term = e.enif_make_new_map(env);
 
