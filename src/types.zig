@@ -1,0 +1,3518 @@
+const std = @import("std");
+const assert = std.debug.assert;
+const e = @import("./erl_nif.zig");
+const rl = @import("./raylib.zig");
+const rlgl = @import("./rlgl.zig");
+
+const resources = @import("./resources.zig");
+
+//////////////
+//  Double  //
+//////////////
+
+pub const Double = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: f64) e.ErlNifTerm {
+        return e.enif_make_double(env, value);
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !f64 {
+        var value: f64 = undefined;
+        if (e.enif_get_double(env, term, &value) == 0) return error.ArgumentError;
+        return value;
+    }
+};
+
+////////////
+//  Int  //
+////////////
+
+pub const Int = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: c_int) e.ErlNifTerm {
+        return e.enif_make_int(env, value);
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !c_int {
+        var value: c_int = undefined;
+        if (e.enif_get_int(env, term, &value) == 0) return error.ArgumentError;
+        return value;
+    }
+};
+
+////////////
+//  UInt  //
+////////////
+
+pub const UInt = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: c_uint) e.ErlNifTerm {
+        return e.enif_make_uint(env, value);
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !c_uint {
+        var value: c_uint = undefined;
+        if (e.enif_get_uint(env, term, &value) == 0) return error.ArgumentError;
+        return value;
+    }
+};
+
+////////////
+//  Atom  //
+////////////
+
+pub const Atom = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
+        return e.enif_make_atom_len(env, value.ptr, value.len);
+    }
+
+    pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
+        var len: c_uint = undefined;
+        if (e.enif_get_atom_length(env, term, &len, e.ERL_NIF_LATIN1) == 0) return error.ArgumentError;
+        len += 1;
+
+        const value = try allocator.alloc(u8, len);
+        errdefer allocator.free(value);
+
+        if (e.enif_get_atom(env, term, value.ptr, @intCast(value.len), e.ERL_NIF_LATIN1) == 0) return error.ArgumentError;
+
+        return value[0 .. len - 1];
+    }
+};
+
+//////////////
+//  Binary  //
+//////////////
+
+pub const Binary = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
+        var term: e.ErlNifTerm = undefined;
+        var buf = e.enif_make_new_binary(env, value.len, &term);
+        @memcpy(buf[0..value.len], value);
+        return term;
+    }
+
+    pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+
+        const value = try allocator.alloc(u8, binary.size);
+        errdefer allocator.free(value);
+
+        @memcpy(value, binary.data[0..binary.size]);
+
+        return value;
+    }
+
+    pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        if (binary.size > dest.len) return error.ArgumentError;
+
+        const length =
+            if (dest.len > binary.size) binary.size else dest.len;
+
+        std.mem.copyForwards(u8, dest[0..length], binary.data[0..length]);
+    }
+
+    pub fn get_size(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !usize {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        return @intCast(binary.size);
+    }
+};
+
+///////////////
+//  CString  //
+///////////////
+
+pub const CString = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
+        var term: e.ErlNifTerm = undefined;
+        const value_length: usize = @intCast(blk: {
+            for (0..value.len) |i| {
+                if (value[i] == 0) {
+                    break :blk i;
+                }
+            }
+            break :blk value.len;
+        });
+
+        var buf = e.enif_make_new_binary(env, value_length, &term);
+        if (value_length > 0) {
+            std.mem.copyForwards(u8, buf[0..value_length], value[0..value_length]);
+        }
+        return term;
+    }
+
+    pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+
+        const value = try allocator.alloc(u8, binary.size + 1);
+        errdefer allocator.free(value);
+
+        std.mem.copyForwards(u8, value, binary.data[0..binary.size]);
+        value[binary.size] = 0;
+
+        return value;
+    }
+
+    pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        if (binary.size > dest.len) return error.ArgumentError;
+
+        for (0..dest.len) |i| {
+            if (i < binary.size) {
+                dest[i] = binary.data[i];
+            } else {
+                dest[i] = 0;
+            }
+        }
+    }
+
+    pub fn get_size(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !usize {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        return @intCast(binary.size + 1);
+    }
+};
+
+////////////////
+//  Resource  //
+////////////////
+
+const Resource = struct {
+    fn make(env: ?*e.ErlNifEnv, obj: ?*anyopaque) e.ErlNifTerm {
+        return e.enif_make_resource(env, obj);
+    }
+
+    fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, resource_type: *e.ErlNifResourceType) !*anyopaque {
+        var objp: ?*anyopaque = undefined;
+        if (e.enif_get_resource(env, term, resource_type, &objp) == 0) return error.ArgumentError;
+        return objp.?;
+    }
+
+    fn create(resource_type: *e.ErlNifResourceType, size: usize) !*anyopaque {
+        return e.enif_alloc_resource(resource_type, size) orelse return error.OutOfMemory;
+    }
+
+    fn release(obj: ?*anyopaque) void {
+        e.enif_release_resource(obj);
+    }
+};
+
+pub fn ResourceBase(comptime T: type, comptime T_rl: type, resource_name: []const u8) type {
+    return struct {
+        pub fn make(env: ?*e.ErlNifEnv, resource: **T_rl) e.ErlNifTerm {
+            return Resource.make(env, @ptrCast(@alignCast(resource)));
+        }
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !**T_rl {
+            const resource_type = @field(resources.resource_type, resource_name);
+
+            return @ptrCast(@alignCast(try Resource.get(env, term, resource_type)));
+        }
+
+        pub fn create(value: T_rl) !**T_rl {
+            const allocator = resources.ResourceType.allocator;
+            const resource_type = @field(resources.resource_type, resource_name);
+
+            const resource: **T_rl = @ptrCast(@alignCast(try Resource.create(resource_type, @sizeOf(*T_rl))));
+
+            resource.* = try allocator.create(T_rl);
+            resource.*.* = value;
+
+            return resource;
+        }
+
+        pub fn destroy(resource: **T_rl) void {
+            const allocator = resources.ResourceType.allocator;
+
+            allocator.destroy(resource.*);
+        }
+
+        pub fn release(resource: **T_rl) void {
+            Resource.release(@ptrCast(@alignCast(resource)));
+        }
+
+        pub fn free(resource: **T_rl) void {
+            defer release(resource);
+            T.free(resource.*.*);
+        }
+    };
+}
+
+///////////////
+//  Vector2  //
+///////////////
+
+pub const Vector2 = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Vector2, "vector2");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector2) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Double.make(env, @floatCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Double.make(env, @floatCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector2 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Vector2{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @floatCast(try Double.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @floatCast(try Double.get(env, term_y_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Vector2) void {
+        _ = value;
+    }
+};
+
+///////////////
+//  Vector3  //
+///////////////
+
+pub const Vector3 = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Vector3, "vector3");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector3) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Double.make(env, @floatCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Double.make(env, @floatCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = Double.make(env, @floatCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector3 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Vector3{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @floatCast(try Double.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @floatCast(try Double.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @floatCast(try Double.get(env, term_z_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Vector3) void {
+        _ = value;
+    }
+};
+
+///////////////
+//  Vector4  //
+///////////////
+
+pub const Vector4 = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Vector4, "vector4");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector4) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Double.make(env, @floatCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Double.make(env, @floatCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = Double.make(env, @floatCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        const term_w_value = Double.make(env, @floatCast(value.w));
+        assert(e.enif_make_map_put(env, term, term_w_key, term_w_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector4 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Vector4{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @floatCast(try Double.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @floatCast(try Double.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @floatCast(try Double.get(env, term_z_value));
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        var term_w_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_w_key, &term_w_value) == 0) return error.ArgumentError;
+        value.w = @floatCast(try Double.get(env, term_w_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Vector4) void {
+        _ = value;
+    }
+};
+
+//////////////////
+//  Quaternion  //
+//////////////////
+
+pub const Quaternion = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Quaternion, "quaternion");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Quaternion) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Double.make(env, @floatCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Double.make(env, @floatCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = Double.make(env, @floatCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        const term_w_value = Double.make(env, @floatCast(value.w));
+        assert(e.enif_make_map_put(env, term, term_w_key, term_w_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Quaternion {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Quaternion{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @floatCast(try Double.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @floatCast(try Double.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @floatCast(try Double.get(env, term_z_value));
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        var term_w_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_w_key, &term_w_value) == 0) return error.ArgumentError;
+        value.w = @floatCast(try Double.get(env, term_w_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Quaternion) void {
+        _ = value;
+    }
+};
+
+//////////////
+//  Matrix  //
+//////////////
+
+pub const Matrix = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Matrix, "matrix");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Matrix) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // m0
+
+        const term_m0_key = Atom.make(env, "m0");
+        const term_m0_value = Double.make(env, @floatCast(value.m0));
+        assert(e.enif_make_map_put(env, term, term_m0_key, term_m0_value, &term) != 0);
+
+        // m1
+
+        const term_m1_key = Atom.make(env, "m1");
+        const term_m1_value = Double.make(env, @floatCast(value.m1));
+        assert(e.enif_make_map_put(env, term, term_m1_key, term_m1_value, &term) != 0);
+
+        // m2
+
+        const term_m2_key = Atom.make(env, "m2");
+        const term_m2_value = Double.make(env, @floatCast(value.m2));
+        assert(e.enif_make_map_put(env, term, term_m2_key, term_m2_value, &term) != 0);
+
+        // m3
+
+        const term_m3_key = Atom.make(env, "m3");
+        const term_m3_value = Double.make(env, @floatCast(value.m3));
+        assert(e.enif_make_map_put(env, term, term_m3_key, term_m3_value, &term) != 0);
+
+        // m4
+
+        const term_m4_key = Atom.make(env, "m4");
+        const term_m4_value = Double.make(env, @floatCast(value.m4));
+        assert(e.enif_make_map_put(env, term, term_m4_key, term_m4_value, &term) != 0);
+
+        // m5
+
+        const term_m5_key = Atom.make(env, "m5");
+        const term_m5_value = Double.make(env, @floatCast(value.m5));
+        assert(e.enif_make_map_put(env, term, term_m5_key, term_m5_value, &term) != 0);
+
+        // m6
+
+        const term_m6_key = Atom.make(env, "m6");
+        const term_m6_value = Double.make(env, @floatCast(value.m6));
+        assert(e.enif_make_map_put(env, term, term_m6_key, term_m6_value, &term) != 0);
+
+        // m7
+
+        const term_m7_key = Atom.make(env, "m7");
+        const term_m7_value = Double.make(env, @floatCast(value.m7));
+        assert(e.enif_make_map_put(env, term, term_m7_key, term_m7_value, &term) != 0);
+
+        // m8
+
+        const term_m8_key = Atom.make(env, "m8");
+        const term_m8_value = Double.make(env, @floatCast(value.m8));
+        assert(e.enif_make_map_put(env, term, term_m8_key, term_m8_value, &term) != 0);
+
+        // m9
+
+        const term_m9_key = Atom.make(env, "m9");
+        const term_m9_value = Double.make(env, @floatCast(value.m9));
+        assert(e.enif_make_map_put(env, term, term_m9_key, term_m9_value, &term) != 0);
+
+        // m10
+
+        const term_m10_key = Atom.make(env, "m10");
+        const term_m10_value = Double.make(env, @floatCast(value.m10));
+        assert(e.enif_make_map_put(env, term, term_m10_key, term_m10_value, &term) != 0);
+
+        // m11
+
+        const term_m11_key = Atom.make(env, "m11");
+        const term_m11_value = Double.make(env, @floatCast(value.m11));
+        assert(e.enif_make_map_put(env, term, term_m11_key, term_m11_value, &term) != 0);
+
+        // m12
+
+        const term_m12_key = Atom.make(env, "m12");
+        const term_m12_value = Double.make(env, @floatCast(value.m12));
+        assert(e.enif_make_map_put(env, term, term_m12_key, term_m12_value, &term) != 0);
+
+        // m13
+
+        const term_m13_key = Atom.make(env, "m13");
+        const term_m13_value = Double.make(env, @floatCast(value.m13));
+        assert(e.enif_make_map_put(env, term, term_m13_key, term_m13_value, &term) != 0);
+
+        // m14
+
+        const term_m14_key = Atom.make(env, "m14");
+        const term_m14_value = Double.make(env, @floatCast(value.m14));
+        assert(e.enif_make_map_put(env, term, term_m14_key, term_m14_value, &term) != 0);
+
+        // m15
+
+        const term_m15_key = Atom.make(env, "m15");
+        const term_m15_value = Double.make(env, @floatCast(value.m15));
+        assert(e.enif_make_map_put(env, term, term_m15_key, term_m15_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Matrix {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Matrix{};
+
+        // m0
+
+        const term_m0_key = Atom.make(env, "m0");
+        var term_m0_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m0_key, &term_m0_value) == 0) return error.ArgumentError;
+        value.m0 = @floatCast(try Double.get(env, term_m0_value));
+
+        // m1
+
+        const term_m1_key = Atom.make(env, "m1");
+        var term_m1_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m1_key, &term_m1_value) == 0) return error.ArgumentError;
+        value.m1 = @floatCast(try Double.get(env, term_m1_value));
+
+        // m2
+
+        const term_m2_key = Atom.make(env, "m2");
+        var term_m2_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m2_key, &term_m2_value) == 0) return error.ArgumentError;
+        value.m2 = @floatCast(try Double.get(env, term_m2_value));
+
+        // m3
+
+        const term_m3_key = Atom.make(env, "m3");
+        var term_m3_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m3_key, &term_m3_value) == 0) return error.ArgumentError;
+        value.m3 = @floatCast(try Double.get(env, term_m3_value));
+
+        // m4
+
+        const term_m4_key = Atom.make(env, "m4");
+        var term_m4_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m4_key, &term_m4_value) == 0) return error.ArgumentError;
+        value.m4 = @floatCast(try Double.get(env, term_m4_value));
+
+        // m5
+
+        const term_m5_key = Atom.make(env, "m5");
+        var term_m5_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m5_key, &term_m5_value) == 0) return error.ArgumentError;
+        value.m5 = @floatCast(try Double.get(env, term_m5_value));
+
+        // m6
+
+        const term_m6_key = Atom.make(env, "m6");
+        var term_m6_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m6_key, &term_m6_value) == 0) return error.ArgumentError;
+        value.m6 = @floatCast(try Double.get(env, term_m6_value));
+
+        // m7
+
+        const term_m7_key = Atom.make(env, "m7");
+        var term_m7_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m7_key, &term_m7_value) == 0) return error.ArgumentError;
+        value.m7 = @floatCast(try Double.get(env, term_m7_value));
+
+        // m8
+
+        const term_m8_key = Atom.make(env, "m8");
+        var term_m8_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m8_key, &term_m8_value) == 0) return error.ArgumentError;
+        value.m8 = @floatCast(try Double.get(env, term_m8_value));
+
+        // m9
+
+        const term_m9_key = Atom.make(env, "m9");
+        var term_m9_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m9_key, &term_m9_value) == 0) return error.ArgumentError;
+        value.m9 = @floatCast(try Double.get(env, term_m9_value));
+
+        // m10
+
+        const term_m10_key = Atom.make(env, "m10");
+        var term_m10_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m10_key, &term_m10_value) == 0) return error.ArgumentError;
+        value.m10 = @floatCast(try Double.get(env, term_m10_value));
+
+        // m11
+
+        const term_m11_key = Atom.make(env, "m11");
+        var term_m11_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m11_key, &term_m11_value) == 0) return error.ArgumentError;
+        value.m11 = @floatCast(try Double.get(env, term_m11_value));
+
+        // m12
+
+        const term_m12_key = Atom.make(env, "m12");
+        var term_m12_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m12_key, &term_m12_value) == 0) return error.ArgumentError;
+        value.m12 = @floatCast(try Double.get(env, term_m12_value));
+
+        // m13
+
+        const term_m13_key = Atom.make(env, "m13");
+        var term_m13_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m13_key, &term_m13_value) == 0) return error.ArgumentError;
+        value.m13 = @floatCast(try Double.get(env, term_m13_value));
+
+        // m14
+
+        const term_m14_key = Atom.make(env, "m14");
+        var term_m14_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m14_key, &term_m14_value) == 0) return error.ArgumentError;
+        value.m14 = @floatCast(try Double.get(env, term_m14_value));
+
+        // m15
+
+        const term_m15_key = Atom.make(env, "m15");
+        var term_m15_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_m15_key, &term_m15_value) == 0) return error.ArgumentError;
+        value.m15 = @floatCast(try Double.get(env, term_m15_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Matrix) void {
+        _ = value;
+    }
+};
+
+/////////////
+//  Color  //
+/////////////
+
+pub const Color = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Color, "color");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Color) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // r
+
+        const term_r_key = Atom.make(env, "r");
+        const term_r_value = UInt.make(env, @intCast(value.r));
+        assert(e.enif_make_map_put(env, term, term_r_key, term_r_value, &term) != 0);
+
+        // g
+
+        const term_g_key = Atom.make(env, "g");
+        const term_g_value = UInt.make(env, @intCast(value.g));
+        assert(e.enif_make_map_put(env, term, term_g_key, term_g_value, &term) != 0);
+
+        // b
+
+        const term_b_key = Atom.make(env, "b");
+        const term_b_value = UInt.make(env, @intCast(value.b));
+        assert(e.enif_make_map_put(env, term, term_b_key, term_b_value, &term) != 0);
+
+        // a
+
+        const term_a_key = Atom.make(env, "a");
+        const term_a_value = UInt.make(env, @intCast(value.a));
+        assert(e.enif_make_map_put(env, term, term_a_key, term_a_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Color {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Color{};
+
+        // r
+
+        const term_r_key = Atom.make(env, "r");
+        var term_r_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_r_key, &term_r_value) == 0) return error.ArgumentError;
+        value.r = @intCast(try UInt.get(env, term_r_value));
+
+        // g
+
+        const term_g_key = Atom.make(env, "g");
+        var term_g_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_g_key, &term_g_value) == 0) return error.ArgumentError;
+        value.g = @intCast(try UInt.get(env, term_g_value));
+
+        // b
+
+        const term_b_key = Atom.make(env, "b");
+        var term_b_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_b_key, &term_b_value) == 0) return error.ArgumentError;
+        value.b = @intCast(try UInt.get(env, term_b_value));
+
+        // a
+
+        const term_a_key = Atom.make(env, "a");
+        var term_a_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_a_key, &term_a_value) == 0) return error.ArgumentError;
+        value.a = @intCast(try UInt.get(env, term_a_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Color) void {
+        _ = value;
+    }
+};
+
+/////////////////
+//  Rectangle  //
+/////////////////
+
+pub const Rectangle = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Rectangle, "rectangle");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Rectangle) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Double.make(env, @floatCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Double.make(env, @floatCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        const term_width_value = Double.make(env, @floatCast(value.width));
+        assert(e.enif_make_map_put(env, term, term_width_key, term_width_value, &term) != 0);
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        const term_height_value = Double.make(env, @floatCast(value.height));
+        assert(e.enif_make_map_put(env, term, term_height_key, term_height_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Rectangle {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Rectangle{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @floatCast(try Double.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @floatCast(try Double.get(env, term_y_value));
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        var term_width_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_width_key, &term_width_value) == 0) return error.ArgumentError;
+        value.width = @floatCast(try Double.get(env, term_width_value));
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        var term_height_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_height_key, &term_height_value) == 0) return error.ArgumentError;
+        value.height = @floatCast(try Double.get(env, term_height_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Rectangle) void {
+        _ = value;
+    }
+};
+
+/////////////
+//  Image  //
+/////////////
+
+pub const Image = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Image, "image");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Image) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        const term_width_value = Int.make(env, @intCast(value.width));
+        assert(e.enif_make_map_put(env, term, term_width_key, term_width_value, &term) != 0);
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        const term_height_value = Int.make(env, @intCast(value.height));
+        assert(e.enif_make_map_put(env, term, term_height_key, term_height_value, &term) != 0);
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        const term_mipmaps_value = Int.make(env, @intCast(value.mipmaps));
+        assert(e.enif_make_map_put(env, term, term_mipmaps_key, term_mipmaps_value, &term) != 0);
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        const term_format_value = Int.make(env, @intCast(value.format));
+        assert(e.enif_make_map_put(env, term, term_format_key, term_format_value, &term) != 0);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.width,
+            value.height,
+            value.format,
+            value.mipmaps,
+        );
+
+        const term_data_key = Atom.make(env, "data");
+        var term_data_value: e.ErlNifTerm = undefined;
+        if (value.data != null) {
+            term_data_value = Binary.make(env, @as([*]u8, @ptrCast(value.data))[0..data_size]);
+        } else {
+            term_data_value = Binary.make(env, "");
+        }
+        assert(e.enif_make_map_put(env, term, term_data_key, term_data_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Image {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Image{};
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        var term_width_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_width_key, &term_width_value) == 0) return error.ArgumentError;
+        value.width = @intCast(try Int.get(env, term_width_value));
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        var term_height_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_height_key, &term_height_value) == 0) return error.ArgumentError;
+        value.height = @intCast(try Int.get(env, term_height_value));
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        var term_mipmaps_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mipmaps_key, &term_mipmaps_value) == 0) return error.ArgumentError;
+        value.mipmaps = @intCast(try Int.get(env, term_mipmaps_value));
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        var term_format_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_format_key, &term_format_value) == 0) return error.ArgumentError;
+        value.format = @intCast(try Int.get(env, term_format_value));
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.width,
+            value.height,
+            value.format,
+            value.mipmaps,
+        );
+
+        const term_data_key = Atom.make(env, "data");
+        var term_data_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_data_key, &term_data_value) == 0) return error.ArgumentError;
+
+        const data_length = try Binary.get_size(env, term_data_value);
+        if (data_length > 0 and data_length != data_size) return error.ArgumentError;
+
+        if (data_length > 0) {
+            const data = try Binary.get(rl.allocator, env, term_data_value);
+            errdefer rl.allocator.free(data);
+            if (data.len != data_size) return error.ArgumentError;
+            value.data = @ptrCast(data);
+        } else {
+            value.data = null;
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Image) void {
+        rl.UnloadImage(value);
+    }
+
+    pub fn get_data_size(width: c_int, height: c_int, format: c_int, mipmaps: c_int) usize {
+        var size: c_int = 0;
+
+        var w = width;
+        var h = height;
+        const m: usize = @intCast(mipmaps);
+
+        for (0..m) |_| {
+            size += rl.GetPixelDataSize(
+                width,
+                height,
+                format,
+            );
+
+            w = @divTrunc(w, 2);
+            h = @divTrunc(h, 2);
+
+            // Security check for NPOT textures
+            if (w < 1) w = 1;
+            if (h < 1) h = 1;
+        }
+
+        return @intCast(size);
+    }
+};
+
+///////////////
+//  Texture  //
+///////////////
+
+pub const Texture = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Texture, "texture");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Texture) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        const term_width_value = Int.make(env, @intCast(value.width));
+        assert(e.enif_make_map_put(env, term, term_width_key, term_width_value, &term) != 0);
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        const term_height_value = Int.make(env, @intCast(value.height));
+        assert(e.enif_make_map_put(env, term, term_height_key, term_height_value, &term) != 0);
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        const term_mipmaps_value = Int.make(env, @intCast(value.mipmaps));
+        assert(e.enif_make_map_put(env, term, term_mipmaps_key, term_mipmaps_value, &term) != 0);
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        const term_format_value = Int.make(env, @intCast(value.format));
+        assert(e.enif_make_map_put(env, term, term_format_key, term_format_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Texture {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Texture{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        var term_width_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_width_key, &term_width_value) == 0) return error.ArgumentError;
+        value.width = @intCast(try Int.get(env, term_width_value));
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        var term_height_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_height_key, &term_height_value) == 0) return error.ArgumentError;
+        value.height = @intCast(try Int.get(env, term_height_value));
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        var term_mipmaps_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mipmaps_key, &term_mipmaps_value) == 0) return error.ArgumentError;
+        value.mipmaps = @intCast(try Int.get(env, term_mipmaps_value));
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        var term_format_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_format_key, &term_format_value) == 0) return error.ArgumentError;
+        value.format = @intCast(try Int.get(env, term_format_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Texture) void {
+        rl.UnloadTexture(value);
+    }
+};
+
+/////////////////
+//  Texture2D  //
+/////////////////
+
+pub const Texture2D = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Texture2D, "texture_2d");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Texture2D) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        const term_width_value = Int.make(env, @intCast(value.width));
+        assert(e.enif_make_map_put(env, term, term_width_key, term_width_value, &term) != 0);
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        const term_height_value = Int.make(env, @intCast(value.height));
+        assert(e.enif_make_map_put(env, term, term_height_key, term_height_value, &term) != 0);
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        const term_mipmaps_value = Int.make(env, @intCast(value.mipmaps));
+        assert(e.enif_make_map_put(env, term, term_mipmaps_key, term_mipmaps_value, &term) != 0);
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        const term_format_value = Int.make(env, @intCast(value.format));
+        assert(e.enif_make_map_put(env, term, term_format_key, term_format_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Texture2D {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Texture2D{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        var term_width_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_width_key, &term_width_value) == 0) return error.ArgumentError;
+        value.width = @intCast(try Int.get(env, term_width_value));
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        var term_height_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_height_key, &term_height_value) == 0) return error.ArgumentError;
+        value.height = @intCast(try Int.get(env, term_height_value));
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        var term_mipmaps_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mipmaps_key, &term_mipmaps_value) == 0) return error.ArgumentError;
+        value.mipmaps = @intCast(try Int.get(env, term_mipmaps_value));
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        var term_format_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_format_key, &term_format_value) == 0) return error.ArgumentError;
+        value.format = @intCast(try Int.get(env, term_format_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Texture2D) void {
+        rl.UnloadTexture(value);
+    }
+};
+
+//////////////////////
+//  TextureCubemap  //
+//////////////////////
+
+pub const TextureCubemap = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.TextureCubemap, "texture_cubemap");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.TextureCubemap) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        const term_width_value = Int.make(env, @intCast(value.width));
+        assert(e.enif_make_map_put(env, term, term_width_key, term_width_value, &term) != 0);
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        const term_height_value = Int.make(env, @intCast(value.height));
+        assert(e.enif_make_map_put(env, term, term_height_key, term_height_value, &term) != 0);
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        const term_mipmaps_value = Int.make(env, @intCast(value.mipmaps));
+        assert(e.enif_make_map_put(env, term, term_mipmaps_key, term_mipmaps_value, &term) != 0);
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        const term_format_value = Int.make(env, @intCast(value.format));
+        assert(e.enif_make_map_put(env, term, term_format_key, term_format_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.TextureCubemap {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.TextureCubemap{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // width
+
+        const term_width_key = Atom.make(env, "width");
+        var term_width_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_width_key, &term_width_value) == 0) return error.ArgumentError;
+        value.width = @intCast(try Int.get(env, term_width_value));
+
+        // height
+
+        const term_height_key = Atom.make(env, "height");
+        var term_height_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_height_key, &term_height_value) == 0) return error.ArgumentError;
+        value.height = @intCast(try Int.get(env, term_height_value));
+
+        // mipmaps
+
+        const term_mipmaps_key = Atom.make(env, "mipmaps");
+        var term_mipmaps_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mipmaps_key, &term_mipmaps_value) == 0) return error.ArgumentError;
+        value.mipmaps = @intCast(try Int.get(env, term_mipmaps_value));
+
+        // format
+
+        const term_format_key = Atom.make(env, "format");
+        var term_format_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_format_key, &term_format_value) == 0) return error.ArgumentError;
+        value.format = @intCast(try Int.get(env, term_format_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.TextureCubemap) void {
+        rl.UnloadTexture(value);
+    }
+};
+
+/////////////////////
+//  RenderTexture  //
+/////////////////////
+
+pub const RenderTexture = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.RenderTexture, "render_texture");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.RenderTexture) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        const term_texture_value = Texture.make(env, value.texture);
+        assert(e.enif_make_map_put(env, term, term_texture_key, term_texture_value, &term) != 0);
+
+        // depth
+
+        const term_depth_key = Atom.make(env, "depth");
+        const term_depth_value = Texture.make(env, value.depth);
+        assert(e.enif_make_map_put(env, term, term_depth_key, term_depth_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RenderTexture {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.RenderTexture{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        var term_texture_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
+        value.texture = try Texture.get(env, term_texture_value);
+
+        // depth
+
+        const term_depth_key = Atom.make(env, "depth");
+        var term_depth_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
+        value.depth = try Texture.get(env, term_depth_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.RenderTexture) void {
+        rl.UnloadRenderTexture(value);
+    }
+};
+
+///////////////////////
+//  RenderTexture2D  //
+///////////////////////
+
+pub const RenderTexture2D = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.RenderTexture2D, "render_texture_2d");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.RenderTexture2D) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        const term_texture_value = Texture.make(env, value.texture);
+        assert(e.enif_make_map_put(env, term, term_texture_key, term_texture_value, &term) != 0);
+
+        // depth
+
+        const term_depth_key = Atom.make(env, "depth");
+        const term_depth_value = Texture.make(env, value.depth);
+        assert(e.enif_make_map_put(env, term, term_depth_key, term_depth_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RenderTexture2D {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.RenderTexture2D{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        var term_texture_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
+        value.texture = try Texture.get(env, term_texture_value);
+
+        // depth
+
+        const term_depth_key = Atom.make(env, "depth");
+        var term_depth_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
+        value.depth = try Texture.get(env, term_depth_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.RenderTexture2D) void {
+        rl.UnloadRenderTexture(value);
+    }
+};
+
+//////////////////
+//  NPatchInfo  //
+//////////////////
+
+pub const NPatchInfo = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.NPatchInfo, "n_patch_info");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.NPatchInfo) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // source
+
+        const term_source_key = Atom.make(env, "source");
+        const term_source_value = Rectangle.make(env, value.source);
+        assert(e.enif_make_map_put(env, term, term_source_key, term_source_value, &term) != 0);
+
+        // left
+
+        const term_left_key = Atom.make(env, "left");
+        const term_left_value = Int.make(env, @intCast(value.left));
+        assert(e.enif_make_map_put(env, term, term_left_key, term_left_value, &term) != 0);
+
+        // top
+
+        const term_top_key = Atom.make(env, "top");
+        const term_top_value = Int.make(env, @intCast(value.top));
+        assert(e.enif_make_map_put(env, term, term_top_key, term_top_value, &term) != 0);
+
+        // right
+
+        const term_right_key = Atom.make(env, "right");
+        const term_right_value = Int.make(env, @intCast(value.right));
+        assert(e.enif_make_map_put(env, term, term_right_key, term_right_value, &term) != 0);
+
+        // bottom
+
+        const term_bottom_key = Atom.make(env, "bottom");
+        const term_bottom_value = Int.make(env, @intCast(value.bottom));
+        assert(e.enif_make_map_put(env, term, term_bottom_key, term_bottom_value, &term) != 0);
+
+        // layout
+
+        const term_layout_key = Atom.make(env, "layout");
+        const term_layout_value = Int.make(env, @intCast(value.layout));
+        assert(e.enif_make_map_put(env, term, term_layout_key, term_layout_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.NPatchInfo {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.NPatchInfo{};
+
+        // source
+
+        const term_source_key = Atom.make(env, "source");
+        var term_source_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_source_key, &term_source_value) == 0) return error.ArgumentError;
+        value.source = try Rectangle.get(env, term_source_value);
+
+        // left
+
+        const term_left_key = Atom.make(env, "left");
+        var term_left_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_left_key, &term_left_value) == 0) return error.ArgumentError;
+        value.left = @intCast(try Int.get(env, term_left_value));
+
+        // top
+
+        const term_top_key = Atom.make(env, "top");
+        var term_top_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_top_key, &term_top_value) == 0) return error.ArgumentError;
+        value.top = @intCast(try Int.get(env, term_top_value));
+
+        // right
+
+        const term_right_key = Atom.make(env, "right");
+        var term_right_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_right_key, &term_right_value) == 0) return error.ArgumentError;
+        value.right = @intCast(try Int.get(env, term_right_value));
+
+        // bottom
+
+        const term_bottom_key = Atom.make(env, "bottom");
+        var term_bottom_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bottom_key, &term_bottom_value) == 0) return error.ArgumentError;
+        value.bottom = @intCast(try Int.get(env, term_bottom_value));
+
+        // layout
+
+        const term_layout_key = Atom.make(env, "layout");
+        var term_layout_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_layout_key, &term_layout_value) == 0) return error.ArgumentError;
+        value.layout = @intCast(try Int.get(env, term_layout_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.NPatchInfo) void {
+        Rectangle.free(value.source);
+    }
+};
+
+/////////////////
+//  GlyphInfo  //
+/////////////////
+
+pub const GlyphInfo = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.GlyphInfo, "glyph_info");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.GlyphInfo) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // value
+
+        const term_value_key = Atom.make(env, "value");
+        const term_value_value = Int.make(env, @intCast(value.value));
+        assert(e.enif_make_map_put(env, term, term_value_key, term_value_value, &term) != 0);
+
+        // offset_x
+
+        const term_offset_x_key = Atom.make(env, "offset_x");
+        const term_offset_x_value = Int.make(env, @intCast(value.offsetX));
+        assert(e.enif_make_map_put(env, term, term_offset_x_key, term_offset_x_value, &term) != 0);
+
+        // offset_y
+
+        const term_offset_y_key = Atom.make(env, "offset_y");
+        const term_offset_y_value = Int.make(env, @intCast(value.offsetY));
+        assert(e.enif_make_map_put(env, term, term_offset_y_key, term_offset_y_value, &term) != 0);
+
+        // advance_x
+
+        const term_advance_x_key = Atom.make(env, "advance_x");
+        const term_advance_x_value = Int.make(env, @intCast(value.advanceX));
+        assert(e.enif_make_map_put(env, term, term_advance_x_key, term_advance_x_value, &term) != 0);
+
+        // image
+
+        const term_image_key = Atom.make(env, "image");
+        const term_image_value = Image.make(env, value.image);
+        assert(e.enif_make_map_put(env, term, term_image_key, term_image_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.GlyphInfo {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.GlyphInfo{};
+
+        // value
+
+        const term_value_key = Atom.make(env, "value");
+        var term_value_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_value_key, &term_value_value) == 0) return error.ArgumentError;
+        value.value = @intCast(try Int.get(env, term_value_value));
+
+        // offset_x
+
+        const term_offset_x_key = Atom.make(env, "offset_x");
+        var term_offset_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_offset_x_key, &term_offset_x_value) == 0) return error.ArgumentError;
+        value.offsetX = @intCast(try Int.get(env, term_offset_x_value));
+
+        // offset_y
+
+        const term_offset_y_key = Atom.make(env, "offset_y");
+        var term_offset_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_offset_y_key, &term_offset_y_value) == 0) return error.ArgumentError;
+        value.offsetY = @intCast(try Int.get(env, term_offset_y_value));
+
+        // advance_x
+
+        const term_advance_x_key = Atom.make(env, "advance_x");
+        var term_advance_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_advance_x_key, &term_advance_x_value) == 0) return error.ArgumentError;
+        value.advanceX = @intCast(try Int.get(env, term_advance_x_value));
+
+        // image
+
+        const term_image_key = Atom.make(env, "image");
+        var term_image_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_image_key, &term_image_value) == 0) return error.ArgumentError;
+        value.image = try Image.get(env, term_image_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.GlyphInfo) void {
+        Image.free(value.image);
+    }
+};
+
+////////////
+//  Font  //
+////////////
+
+pub const Font = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Font, "font");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Font) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // base_size
+
+        const term_base_size_key = Atom.make(env, "base_size");
+        const term_base_size_value = Int.make(env, @intCast(value.baseSize));
+        assert(e.enif_make_map_put(env, term, term_base_size_key, term_base_size_value, &term) != 0);
+
+        // glyph_count
+
+        const term_glyph_count_key = Atom.make(env, "glyph_count");
+        const term_glyph_count_value = Int.make(env, @intCast(value.glyphCount));
+        assert(e.enif_make_map_put(env, term, term_glyph_count_key, term_glyph_count_value, &term) != 0);
+
+        // glyph_padding
+
+        const term_glyph_padding_key = Atom.make(env, "glyph_padding");
+        const term_glyph_padding_value = Int.make(env, @intCast(value.glyphPadding));
+        assert(e.enif_make_map_put(env, term, term_glyph_padding_key, term_glyph_padding_value, &term) != 0);
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        const term_texture_value = Texture.make(env, value.texture);
+        assert(e.enif_make_map_put(env, term, term_texture_key, term_texture_value, &term) != 0);
+
+        // recs
+
+        const recs_length: usize = @intCast(value.glyphCount);
+        var term_recs_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.recs != null) {
+            const recs = @as([*]rl.Rectangle, @ptrCast(value.recs))[0..recs_length];
+            for (0..recs_length) |i| {
+                term_recs_value = e.enif_make_list_cell(env, Rectangle.make(env, recs[recs_length - 1 - i]), term_recs_value);
+            }
+        }
+        const term_recs_key = Atom.make(env, "recs");
+        assert(e.enif_make_map_put(env, term, term_recs_key, term_recs_value, &term) != 0);
+
+        // glyphs
+
+        const glyphs_length: usize = @intCast(value.glyphCount);
+        var term_glyphs_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.glyphs != null) {
+            const glyphs = @as([*]rl.GlyphInfo, @ptrCast(value.glyphs))[0..glyphs_length];
+            for (0..glyphs_length) |i| {
+                term_glyphs_value = e.enif_make_list_cell(env, GlyphInfo.make(env, glyphs[glyphs_length - 1 - i]), term_glyphs_value);
+            }
+        }
+        const term_glyphs_key = Atom.make(env, "glyphs");
+        assert(e.enif_make_map_put(env, term, term_glyphs_key, term_glyphs_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Font {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Font{};
+
+        // base_size
+
+        const term_base_size_key = Atom.make(env, "base_size");
+        var term_base_size_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_base_size_key, &term_base_size_value) == 0) return error.ArgumentError;
+        value.baseSize = @intCast(try Int.get(env, term_base_size_value));
+
+        // glyph_count
+
+        const term_glyph_count_key = Atom.make(env, "glyph_count");
+        var term_glyph_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_glyph_count_key, &term_glyph_count_value) == 0) return error.ArgumentError;
+        value.glyphCount = @intCast(try Int.get(env, term_glyph_count_value));
+
+        // glyph_padding
+
+        const term_glyph_padding_key = Atom.make(env, "glyph_padding");
+        var term_glyph_padding_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_glyph_padding_key, &term_glyph_padding_value) == 0) return error.ArgumentError;
+        value.glyphPadding = @intCast(try Int.get(env, term_glyph_padding_value));
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        var term_texture_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
+        value.texture = try Texture.get(env, term_texture_value);
+
+        // recs
+
+        const term_recs_key = Atom.make(env, "recs");
+        var term_recs_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_recs_key, &term_recs_value) == 0) return error.ArgumentError;
+
+        var recs_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_recs_value, &recs_length) == 0) return error.ArgumentError;
+        if (recs_length != value.glyphCount) return error.ArgumentError;
+
+        if (recs_length > 0) {
+            var recs = try rl.allocator.alloc(rl.Rectangle, @intCast(recs_length));
+            errdefer rl.allocator.free(recs);
+
+            var term_recs_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(recs_length)) |i| {
+                if (e.enif_get_list_cell(env, term_recs_value, &term_recs_value_head, &term_recs_value) == 0) return error.ArgumentError;
+                recs[i] = try Rectangle.get(env, term_recs_value_head);
+            }
+
+            value.recs = @ptrCast(recs);
+        } else {
+            value.recs = null;
+        }
+
+        // glyphs
+
+        const term_glyphs_key = Atom.make(env, "glyphs");
+        var term_glyphs_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_glyphs_key, &term_glyphs_value) == 0) return error.ArgumentError;
+
+        var glyphs_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_glyphs_value, &glyphs_length) == 0) return error.ArgumentError;
+        if (glyphs_length != value.glyphCount) return error.ArgumentError;
+
+        if (glyphs_length > 0) {
+            var glyphs = try rl.allocator.alloc(rl.GlyphInfo, @intCast(glyphs_length));
+            errdefer rl.allocator.free(glyphs);
+
+            var term_glyphs_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(glyphs_length)) |i| {
+                if (e.enif_get_list_cell(env, term_glyphs_value, &term_glyphs_value_head, &term_glyphs_value) == 0) return error.ArgumentError;
+                glyphs[i] = try GlyphInfo.get(env, term_glyphs_value_head);
+            }
+
+            value.glyphs = @ptrCast(glyphs);
+        } else {
+            value.glyphs = null;
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Font) void {
+        rl.UnloadFont(value);
+    }
+};
+
+////////////////
+//  Camera3D  //
+////////////////
+
+pub const Camera3D = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Camera3D, "camera_3d");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera3D) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        const term_position_value = Vector3.make(env, value.position);
+        assert(e.enif_make_map_put(env, term, term_position_key, term_position_value, &term) != 0);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        const term_target_value = Vector3.make(env, value.target);
+        assert(e.enif_make_map_put(env, term, term_target_key, term_target_value, &term) != 0);
+
+        // up
+
+        const term_up_key = Atom.make(env, "up");
+        const term_up_value = Vector3.make(env, value.up);
+        assert(e.enif_make_map_put(env, term, term_up_key, term_up_value, &term) != 0);
+
+        // fovy
+
+        const term_fovy_key = Atom.make(env, "fovy");
+        const term_fovy_value = Double.make(env, @floatCast(value.fovy));
+        assert(e.enif_make_map_put(env, term, term_fovy_key, term_fovy_value, &term) != 0);
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        const term_projection_value = Int.make(env, @intCast(value.projection));
+        assert(e.enif_make_map_put(env, term, term_projection_key, term_projection_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera3D {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Camera3D{};
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        var term_position_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
+        value.position = try Vector3.get(env, term_position_value);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        var term_target_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
+        value.target = try Vector3.get(env, term_target_value);
+
+        // up
+
+        const term_up_key = Atom.make(env, "up");
+        var term_up_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
+        value.up = try Vector3.get(env, term_up_value);
+
+        // fovy
+
+        const term_fovy_key = Atom.make(env, "fovy");
+        var term_fovy_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_fovy_key, &term_fovy_value) == 0) return error.ArgumentError;
+        value.fovy = @floatCast(try Double.get(env, term_fovy_value));
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        var term_projection_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_projection_key, &term_projection_value) == 0) return error.ArgumentError;
+        value.projection = @intCast(try Int.get(env, term_projection_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Camera3D) void {
+        _ = value;
+    }
+};
+
+//////////////
+//  Camera  //
+//////////////
+
+pub const Camera = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Camera, "camera");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        const term_position_value = Vector3.make(env, value.position);
+        assert(e.enif_make_map_put(env, term, term_position_key, term_position_value, &term) != 0);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        const term_target_value = Vector3.make(env, value.target);
+        assert(e.enif_make_map_put(env, term, term_target_key, term_target_value, &term) != 0);
+
+        // up
+
+        const term_up_key = Atom.make(env, "up");
+        const term_up_value = Vector3.make(env, value.up);
+        assert(e.enif_make_map_put(env, term, term_up_key, term_up_value, &term) != 0);
+
+        // fovy
+
+        const term_fovy_key = Atom.make(env, "fovy");
+        const term_fovy_value = Double.make(env, @floatCast(value.fovy));
+        assert(e.enif_make_map_put(env, term, term_fovy_key, term_fovy_value, &term) != 0);
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        const term_projection_value = Int.make(env, @intCast(value.projection));
+        assert(e.enif_make_map_put(env, term, term_projection_key, term_projection_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Camera{};
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        var term_position_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
+        value.position = try Vector3.get(env, term_position_value);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        var term_target_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
+        value.target = try Vector3.get(env, term_target_value);
+
+        // up
+
+        const term_up_key = Atom.make(env, "up");
+        var term_up_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
+        value.up = try Vector3.get(env, term_up_value);
+
+        // fovy
+
+        const term_fovy_key = Atom.make(env, "fovy");
+        var term_fovy_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_fovy_key, &term_fovy_value) == 0) return error.ArgumentError;
+        value.fovy = @floatCast(try Double.get(env, term_fovy_value));
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        var term_projection_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_projection_key, &term_projection_value) == 0) return error.ArgumentError;
+        value.projection = @intCast(try Int.get(env, term_projection_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Camera) void {
+        _ = value;
+    }
+};
+
+////////////////
+//  Camera2D  //
+////////////////
+
+pub const Camera2D = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Camera2D, "camera_2d");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera2D) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // offset
+
+        const term_offset_key = Atom.make(env, "offset");
+        const term_offset_value = Vector2.make(env, value.offset);
+        assert(e.enif_make_map_put(env, term, term_offset_key, term_offset_value, &term) != 0);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        const term_target_value = Vector2.make(env, value.target);
+        assert(e.enif_make_map_put(env, term, term_target_key, term_target_value, &term) != 0);
+
+        // rotation
+
+        const term_rotation_key = Atom.make(env, "rotation");
+        const term_rotation_value = Double.make(env, @floatCast(value.rotation));
+        assert(e.enif_make_map_put(env, term, term_rotation_key, term_rotation_value, &term) != 0);
+
+        // zoom
+
+        const term_zoom_key = Atom.make(env, "zoom");
+        const term_zoom_value = Double.make(env, @floatCast(value.zoom));
+        assert(e.enif_make_map_put(env, term, term_zoom_key, term_zoom_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera2D {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Camera2D{};
+
+        // offset
+
+        const term_offset_key = Atom.make(env, "offset");
+        var term_offset_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_offset_key, &term_offset_value) == 0) return error.ArgumentError;
+        value.offset = try Vector2.get(env, term_offset_value);
+
+        // target
+
+        const term_target_key = Atom.make(env, "target");
+        var term_target_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
+        value.target = try Vector2.get(env, term_target_value);
+
+        // rotation
+
+        const term_rotation_key = Atom.make(env, "rotation");
+        var term_rotation_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_rotation_key, &term_rotation_value) == 0) return error.ArgumentError;
+        value.rotation = @floatCast(try Double.get(env, term_rotation_value));
+
+        // zoom
+
+        const term_zoom_key = Atom.make(env, "zoom");
+        var term_zoom_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_zoom_key, &term_zoom_value) == 0) return error.ArgumentError;
+        value.zoom = @floatCast(try Double.get(env, term_zoom_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.Camera2D) void {
+        _ = value;
+    }
+};
+
+////////////
+//  Mesh  //
+////////////
+
+pub const Mesh = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Mesh, "mesh");
+
+    pub const MAX_VERTEX_BUFFERS = rl.MAX_MESH_VERTEX_BUFFERS;
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Mesh) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // vertex_count
+
+        const term_vertex_count_key = Atom.make(env, "vertex_count");
+        const term_vertex_count_value = Int.make(env, @intCast(value.vertexCount));
+        assert(e.enif_make_map_put(env, term, term_vertex_count_key, term_vertex_count_value, &term) != 0);
+
+        // triangle_count
+
+        const term_triangle_count_key = Atom.make(env, "triangle_count");
+        const term_triangle_count_value = Int.make(env, @intCast(value.triangleCount));
+        assert(e.enif_make_map_put(env, term, term_triangle_count_key, term_triangle_count_value, &term) != 0);
+
+        // vertices
+        // = vertex_count * 3
+
+        const vertices_length: usize = @intCast(value.vertexCount * 3);
+        var term_vertices_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.vertices != null) {
+            const vertices = @as([*]f32, @ptrCast(value.vertices))[0..vertices_length];
+            for (0..vertices_length) |i| {
+                term_vertices_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(vertices[vertices_length - 1 - i])), term_vertices_value);
+            }
+        }
+        const term_vertices_key = Atom.make(env, "vertices");
+        assert(e.enif_make_map_put(env, term, term_vertices_key, term_vertices_value, &term) != 0);
+
+        // texcoords
+        // = vertex_count * 2
+
+        const texcoords_length: usize = @intCast(value.vertexCount * 2);
+        var term_texcoords_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.texcoords != null) {
+            const texcoords = @as([*]f32, @ptrCast(value.texcoords))[0..texcoords_length];
+            for (0..texcoords_length) |i| {
+                term_texcoords_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(texcoords[texcoords_length - 1 - i])), term_texcoords_value);
+            }
+        }
+        const term_texcoords_key = Atom.make(env, "texcoords");
+        assert(e.enif_make_map_put(env, term, term_texcoords_key, term_texcoords_value, &term) != 0);
+
+        // texcoords2
+        // = vertex_count * 2
+
+        const texcoords2_length: usize = @intCast(value.vertexCount * 2);
+        var term_texcoords2_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.texcoords2 != null) {
+            const texcoords2 = @as([*]f32, @ptrCast(value.texcoords2))[0..texcoords2_length];
+            for (0..texcoords2_length) |i| {
+                term_texcoords2_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(texcoords2[texcoords2_length - 1 - i])), term_texcoords2_value);
+            }
+        }
+        const term_texcoords2_key = Atom.make(env, "texcoords2");
+        assert(e.enif_make_map_put(env, term, term_texcoords2_key, term_texcoords2_value, &term) != 0);
+
+        // normals
+        // = vertex_count * 3
+
+        const normals_length: usize = @intCast(value.vertexCount * 3);
+        var term_normals_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.normals != null) {
+            const normals = @as([*]f32, @ptrCast(value.normals))[0..normals_length];
+            for (0..normals_length) |i| {
+                term_normals_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(normals[normals_length - 1 - i])), term_normals_value);
+            }
+        }
+        const term_normals_key = Atom.make(env, "normals");
+        assert(e.enif_make_map_put(env, term, term_normals_key, term_normals_value, &term) != 0);
+
+        // tangents
+        // = vertex_count * 4
+
+        const tangents_length: usize = @intCast(value.vertexCount * 4);
+        var term_tangents_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.tangents != null) {
+            const tangents = @as([*]f32, @ptrCast(value.tangents))[0..tangents_length];
+            for (0..tangents_length) |i| {
+                term_tangents_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(tangents[tangents_length - 1 - i])), term_tangents_value);
+            }
+        }
+        const term_tangents_key = Atom.make(env, "tangents");
+        assert(e.enif_make_map_put(env, term, term_tangents_key, term_tangents_value, &term) != 0);
+
+        // colors
+        // = vertex_count * 4
+
+        const colors_length: usize = @intCast(value.vertexCount * 4);
+        var term_colors_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.colors != null) {
+            const colors = @as([*]u8, @ptrCast(value.colors))[0..colors_length];
+            for (0..colors_length) |i| {
+                term_colors_value = e.enif_make_list_cell(env, UInt.make(env, @intCast(colors[colors_length - 1 - i])), term_colors_value);
+            }
+        }
+        const term_colors_key = Atom.make(env, "colors");
+        assert(e.enif_make_map_put(env, term, term_colors_key, term_colors_value, &term) != 0);
+
+        // indices
+        // = triangle_count * 3
+
+        const indices_length: usize = @intCast(value.triangleCount * 3);
+        var term_indices_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.indices != null) {
+            const indices = @as([*]c_ushort, @ptrCast(value.indices))[0..indices_length];
+            for (0..indices_length) |i| {
+                term_indices_value = e.enif_make_list_cell(env, UInt.make(env, @intCast(indices[indices_length - 1 - i])), term_indices_value);
+            }
+        }
+        const term_indices_key = Atom.make(env, "indices");
+        assert(e.enif_make_map_put(env, term, term_indices_key, term_indices_value, &term) != 0);
+
+        // anim_vertices
+        // = vertex_count * 3
+
+        const anim_vertices_length: usize = @intCast(value.vertexCount * 3);
+        var term_anim_vertices_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.animVertices != null) {
+            const anim_vertices = @as([*]f32, @ptrCast(value.animVertices))[0..anim_vertices_length];
+            for (0..anim_vertices_length) |i| {
+                term_anim_vertices_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(anim_vertices[anim_vertices_length - 1 - i])), term_anim_vertices_value);
+            }
+        }
+        const term_anim_vertices_key = Atom.make(env, "anim_vertices");
+        assert(e.enif_make_map_put(env, term, term_anim_vertices_key, term_anim_vertices_value, &term) != 0);
+
+        // anim_normals
+        // = vertex_count * 3
+
+        const anim_normals_length: usize = @intCast(value.vertexCount * 3);
+        var term_anim_normals_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.animNormals != null) {
+            const anim_normals = @as([*]f32, @ptrCast(value.animNormals))[0..anim_normals_length];
+            for (0..anim_normals_length) |i| {
+                term_anim_normals_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(anim_normals[anim_normals_length - 1 - i])), term_anim_normals_value);
+            }
+        }
+        const term_anim_normals_key = Atom.make(env, "anim_normals");
+        assert(e.enif_make_map_put(env, term, term_anim_normals_key, term_anim_normals_value, &term) != 0);
+
+        // bone_ids
+        // = vertex_count * 4
+
+        const bone_ids_length: usize = @intCast(value.vertexCount * 4);
+        var term_bone_ids_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.boneIds != null) {
+            const bone_ids = @as([*]u8, @ptrCast(value.boneIds))[0..bone_ids_length];
+            for (0..bone_ids_length) |i| {
+                term_bone_ids_value = e.enif_make_list_cell(env, UInt.make(env, @intCast(bone_ids[bone_ids_length - 1 - i])), term_bone_ids_value);
+            }
+        }
+        const term_bone_ids_key = Atom.make(env, "bone_ids");
+        assert(e.enif_make_map_put(env, term, term_bone_ids_key, term_bone_ids_value, &term) != 0);
+
+        // bone_weights
+        // = vertex_count * 4
+
+        const bone_weights_length: usize = @intCast(value.vertexCount * 4);
+        var term_bone_weights_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.boneWeights != null) {
+            const bone_weights = @as([*]f32, @ptrCast(value.boneWeights))[0..bone_weights_length];
+            for (0..bone_weights_length) |i| {
+                term_bone_weights_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(bone_weights[bone_weights_length - 1 - i])), term_bone_weights_value);
+            }
+        }
+        const term_bone_weights_key = Atom.make(env, "bone_weights");
+        assert(e.enif_make_map_put(env, term, term_bone_weights_key, term_bone_weights_value, &term) != 0);
+
+        // bone_count
+
+        const term_bone_count_key = Atom.make(env, "bone_count");
+        const term_bone_count_value = Int.make(env, @intCast(value.boneCount));
+        assert(e.enif_make_map_put(env, term, term_bone_count_key, term_bone_count_value, &term) != 0);
+
+        // bone_matrices
+        // = bone_count
+
+        const bone_matrices_length: usize = @intCast(value.boneCount);
+        var term_bone_matrices_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.boneMatrices != null) {
+            const bone_matrices = @as([*]rl.Matrix, @ptrCast(value.boneMatrices))[0..bone_matrices_length];
+            for (0..bone_matrices_length) |i| {
+                term_bone_matrices_value = e.enif_make_list_cell(env, Matrix.make(env, bone_matrices[bone_matrices_length - 1 - i]), term_bone_matrices_value);
+            }
+        }
+        const term_bone_matrices_key = Atom.make(env, "bone_matrices");
+        assert(e.enif_make_map_put(env, term, term_bone_matrices_key, term_bone_matrices_value, &term) != 0);
+
+        // vao_id
+
+        const term_vao_id_key = Atom.make(env, "vao_id");
+        const term_vao_id_value = UInt.make(env, @intCast(value.vaoId));
+        assert(e.enif_make_map_put(env, term, term_vao_id_key, term_vao_id_value, &term) != 0);
+
+        // vbo_id
+
+        const vbo_id_length: usize = @intCast(Self.MAX_VERTEX_BUFFERS);
+        var term_vbo_id_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.vboId != null) {
+            const vbo_id = @as([*]c_uint, @ptrCast(value.vboId))[0..vbo_id_length];
+            for (0..vbo_id_length) |i| {
+                term_vbo_id_value = e.enif_make_list_cell(env, UInt.make(env, @intCast(vbo_id[vbo_id_length - 1 - i])), term_vbo_id_value);
+            }
+        }
+        const term_vbo_id_key = Atom.make(env, "vbo_id");
+        assert(e.enif_make_map_put(env, term, term_vbo_id_key, term_vbo_id_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Mesh {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Mesh{};
+
+        // vertex_count
+
+        const term_vertex_count_key = Atom.make(env, "vertex_count");
+        var term_vertex_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_vertex_count_key, &term_vertex_count_value) == 0) return error.ArgumentError;
+        value.vertexCount = @intCast(try Int.get(env, term_vertex_count_value));
+
+        // triangle_count
+
+        const term_triangle_count_key = Atom.make(env, "triangle_count");
+        var term_triangle_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_triangle_count_key, &term_triangle_count_value) == 0) return error.ArgumentError;
+        value.triangleCount = @intCast(try Int.get(env, term_triangle_count_value));
+
+        // vertices
+        // = vertex_count * 3
+
+        const term_vertices_key = Atom.make(env, "vertices");
+        var term_vertices_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_vertices_key, &term_vertices_value) == 0) return error.ArgumentError;
+
+        var vertices_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_vertices_value, &vertices_length) == 0) return error.ArgumentError;
+        if (vertices_length > 0 and vertices_length != value.vertexCount * 3) return error.ArgumentError;
+
+        if (vertices_length > 0) {
+            var vertices = try rl.allocator.alloc(f32, @intCast(vertices_length));
+            errdefer rl.allocator.free(vertices);
+
+            var term_vertices_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(vertices_length)) |i| {
+                if (e.enif_get_list_cell(env, term_vertices_value, &term_vertices_value_head, &term_vertices_value) == 0) return error.ArgumentError;
+                vertices[i] = @floatCast(try Double.get(env, term_vertices_value_head));
+            }
+
+            value.vertices = @ptrCast(vertices);
+        } else {
+            value.vertices = null;
+        }
+
+        // texcoords
+        // = vertex_count * 2
+
+        const term_texcoords_key = Atom.make(env, "texcoords");
+        var term_texcoords_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texcoords_key, &term_texcoords_value) == 0) return error.ArgumentError;
+
+        var texcoords_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_texcoords_value, &texcoords_length) == 0) return error.ArgumentError;
+        if (texcoords_length > 0 and texcoords_length != value.vertexCount * 2) return error.ArgumentError;
+
+        if (texcoords_length > 0) {
+            var texcoords = try rl.allocator.alloc(f32, @intCast(texcoords_length));
+            errdefer rl.allocator.free(texcoords);
+
+            var term_texcoords_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(texcoords_length)) |i| {
+                if (e.enif_get_list_cell(env, term_texcoords_value, &term_texcoords_value_head, &term_texcoords_value) == 0) return error.ArgumentError;
+                texcoords[i] = @floatCast(try Double.get(env, term_texcoords_value_head));
+            }
+
+            value.texcoords = @ptrCast(texcoords);
+        } else {
+            value.texcoords = null;
+        }
+
+        // texcoords2
+        // = vertex_count * 2
+
+        const term_texcoords2_key = Atom.make(env, "texcoords2");
+        var term_texcoords2_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texcoords2_key, &term_texcoords2_value) == 0) return error.ArgumentError;
+
+        var texcoords2_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_texcoords2_value, &texcoords2_length) == 0) return error.ArgumentError;
+        if (texcoords2_length > 0 and texcoords2_length != value.vertexCount * 2) return error.ArgumentError;
+
+        if (texcoords2_length > 0) {
+            var texcoords2 = try rl.allocator.alloc(f32, @intCast(texcoords2_length));
+            errdefer rl.allocator.free(texcoords2);
+
+            var term_texcoords2_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(texcoords2_length)) |i| {
+                if (e.enif_get_list_cell(env, term_texcoords2_value, &term_texcoords2_value_head, &term_texcoords2_value) == 0) return error.ArgumentError;
+                texcoords2[i] = @floatCast(try Double.get(env, term_texcoords2_value_head));
+            }
+
+            value.texcoords2 = @ptrCast(texcoords2);
+        } else {
+            value.texcoords2 = null;
+        }
+
+        // normals
+        // = vertex_count * 3
+
+        const term_normals_key = Atom.make(env, "normals");
+        var term_normals_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_normals_key, &term_normals_value) == 0) return error.ArgumentError;
+
+        var normals_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_normals_value, &normals_length) == 0) return error.ArgumentError;
+        if (normals_length > 0 and normals_length != value.vertexCount * 3) return error.ArgumentError;
+
+        if (normals_length > 0) {
+            var normals = try rl.allocator.alloc(f32, @intCast(normals_length));
+            errdefer rl.allocator.free(normals);
+
+            var term_normals_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(normals_length)) |i| {
+                if (e.enif_get_list_cell(env, term_normals_value, &term_normals_value_head, &term_normals_value) == 0) return error.ArgumentError;
+                normals[i] = @floatCast(try Double.get(env, term_normals_value_head));
+            }
+
+            value.normals = @ptrCast(normals);
+        } else {
+            value.normals = null;
+        }
+
+        // tangents
+        // = vertex_count * 4
+
+        const term_tangents_key = Atom.make(env, "tangents");
+        var term_tangents_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_tangents_key, &term_tangents_value) == 0) return error.ArgumentError;
+
+        var tangents_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_tangents_value, &tangents_length) == 0) return error.ArgumentError;
+        if (tangents_length > 0 and tangents_length != value.vertexCount * 4) return error.ArgumentError;
+
+        if (tangents_length > 0) {
+            var tangents = try rl.allocator.alloc(f32, @intCast(tangents_length));
+            errdefer rl.allocator.free(tangents);
+
+            var term_tangents_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(tangents_length)) |i| {
+                if (e.enif_get_list_cell(env, term_tangents_value, &term_tangents_value_head, &term_tangents_value) == 0) return error.ArgumentError;
+                tangents[i] = @floatCast(try Double.get(env, term_tangents_value_head));
+            }
+
+            value.tangents = @ptrCast(tangents);
+        } else {
+            value.tangents = null;
+        }
+
+        // colors
+        // = vertex_count * 4
+
+        const term_colors_key = Atom.make(env, "colors");
+        var term_colors_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_colors_key, &term_colors_value) == 0) return error.ArgumentError;
+
+        var colors_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_colors_value, &colors_length) == 0) return error.ArgumentError;
+        if (colors_length > 0 and colors_length != value.vertexCount * 4) return error.ArgumentError;
+
+        if (colors_length > 0) {
+            var colors = try rl.allocator.alloc(u8, @intCast(colors_length));
+            errdefer rl.allocator.free(colors);
+
+            var term_colors_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(colors_length)) |i| {
+                if (e.enif_get_list_cell(env, term_colors_value, &term_colors_value_head, &term_colors_value) == 0) return error.ArgumentError;
+                colors[i] = @intCast(try UInt.get(env, term_colors_value_head));
+            }
+
+            value.colors = @ptrCast(colors);
+        } else {
+            value.colors = null;
+        }
+
+        // indices
+        // = triangle_count * 3
+
+        const term_indices_key = Atom.make(env, "indices");
+        var term_indices_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_indices_key, &term_indices_value) == 0) return error.ArgumentError;
+
+        var indices_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_indices_value, &indices_length) == 0) return error.ArgumentError;
+        if (indices_length > 0 and indices_length != value.triangleCount * 3) return error.ArgumentError;
+
+        if (indices_length > 0) {
+            var indices = try rl.allocator.alloc(c_ushort, @intCast(indices_length));
+            errdefer rl.allocator.free(indices);
+
+            var term_indices_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(indices_length)) |i| {
+                if (e.enif_get_list_cell(env, term_indices_value, &term_indices_value_head, &term_indices_value) == 0) return error.ArgumentError;
+                indices[i] = @intCast(try UInt.get(env, term_indices_value_head));
+            }
+
+            value.indices = @ptrCast(indices);
+        } else {
+            value.indices = null;
+        }
+
+        // anim_vertices
+        // = vertex_count * 3
+
+        const term_anim_vertices_key = Atom.make(env, "anim_vertices");
+        var term_anim_vertices_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_anim_vertices_key, &term_anim_vertices_value) == 0) return error.ArgumentError;
+
+        var anim_vertices_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_anim_vertices_value, &anim_vertices_length) == 0) return error.ArgumentError;
+        if (anim_vertices_length > 0 and anim_vertices_length != value.vertexCount * 3) return error.ArgumentError;
+
+        if (anim_vertices_length > 0) {
+            var anim_vertices = try rl.allocator.alloc(f32, @intCast(anim_vertices_length));
+            errdefer rl.allocator.free(anim_vertices);
+
+            var term_anim_vertices_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(anim_vertices_length)) |i| {
+                if (e.enif_get_list_cell(env, term_anim_vertices_value, &term_anim_vertices_value_head, &term_anim_vertices_value) == 0) return error.ArgumentError;
+                anim_vertices[i] = @floatCast(try Double.get(env, term_anim_vertices_value_head));
+            }
+
+            value.animVertices = @ptrCast(anim_vertices);
+        } else {
+            value.animVertices = null;
+        }
+
+        // anim_normals
+        // = vertex_count * 3
+
+        const term_anim_normals_key = Atom.make(env, "anim_normals");
+        var term_anim_normals_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_anim_normals_key, &term_anim_normals_value) == 0) return error.ArgumentError;
+
+        var anim_normals_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_anim_normals_value, &anim_normals_length) == 0) return error.ArgumentError;
+        if (anim_normals_length > 0 and anim_normals_length != value.vertexCount * 3) return error.ArgumentError;
+
+        if (anim_normals_length > 0) {
+            var anim_normals = try rl.allocator.alloc(f32, @intCast(anim_normals_length));
+            errdefer rl.allocator.free(anim_normals);
+
+            var term_anim_normals_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(anim_normals_length)) |i| {
+                if (e.enif_get_list_cell(env, term_anim_normals_value, &term_anim_normals_value_head, &term_anim_normals_value) == 0) return error.ArgumentError;
+                anim_normals[i] = @floatCast(try Double.get(env, term_anim_normals_value_head));
+            }
+
+            value.animNormals = @ptrCast(anim_normals);
+        } else {
+            value.animNormals = null;
+        }
+
+        // bone_ids
+        // = vertex_count * 4
+
+        const term_bone_ids_key = Atom.make(env, "bone_ids");
+        var term_bone_ids_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bone_ids_key, &term_bone_ids_value) == 0) return error.ArgumentError;
+
+        var bone_ids_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_bone_ids_value, &bone_ids_length) == 0) return error.ArgumentError;
+        if (bone_ids_length > 0 and bone_ids_length != value.vertexCount * 4) return error.ArgumentError;
+
+        if (bone_ids_length > 0) {
+            var bone_ids = try rl.allocator.alloc(u8, @intCast(bone_ids_length));
+            errdefer rl.allocator.free(bone_ids);
+
+            var term_bone_ids_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(bone_ids_length)) |i| {
+                if (e.enif_get_list_cell(env, term_bone_ids_value, &term_bone_ids_value_head, &term_bone_ids_value) == 0) return error.ArgumentError;
+                bone_ids[i] = @intCast(try UInt.get(env, term_bone_ids_value_head));
+            }
+
+            value.boneIds = @ptrCast(bone_ids);
+        } else {
+            value.boneIds = null;
+        }
+
+        // bone_weights
+        // = vertex_count * 4
+
+        const term_bone_weights_key = Atom.make(env, "bone_weights");
+        var term_bone_weights_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bone_weights_key, &term_bone_weights_value) == 0) return error.ArgumentError;
+
+        var bone_weights_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_bone_weights_value, &bone_weights_length) == 0) return error.ArgumentError;
+        if (bone_weights_length > 0 and bone_weights_length != value.vertexCount * 4) return error.ArgumentError;
+
+        if (bone_weights_length > 0) {
+            var bone_weights = try rl.allocator.alloc(f32, @intCast(bone_weights_length));
+            errdefer rl.allocator.free(bone_weights);
+
+            var term_bone_weights_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(bone_weights_length)) |i| {
+                if (e.enif_get_list_cell(env, term_bone_weights_value, &term_bone_weights_value_head, &term_bone_weights_value) == 0) return error.ArgumentError;
+                bone_weights[i] = @floatCast(try Double.get(env, term_bone_weights_value_head));
+            }
+
+            value.boneWeights = @ptrCast(bone_weights);
+        } else {
+            value.boneWeights = null;
+        }
+
+        // bone_count
+
+        const term_bone_count_key = Atom.make(env, "bone_count");
+        var term_bone_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bone_count_key, &term_bone_count_value) == 0) return error.ArgumentError;
+        value.boneCount = @intCast(try Int.get(env, term_bone_count_value));
+
+        // bone_matrices
+        // = bone_count
+
+        const term_bone_matrices_key = Atom.make(env, "bone_matrices");
+        var term_bone_matrices_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bone_matrices_key, &term_bone_matrices_value) == 0) return error.ArgumentError;
+
+        var bone_matrices_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_bone_matrices_value, &bone_matrices_length) == 0) return error.ArgumentError;
+        if (bone_matrices_length > 0 and bone_matrices_length != value.boneCount) return error.ArgumentError;
+
+        if (bone_matrices_length > 0) {
+            var bone_matrices = try rl.allocator.alloc(rl.Matrix, @intCast(bone_matrices_length));
+            errdefer rl.allocator.free(bone_matrices);
+
+            var term_bone_matrices_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(bone_matrices_length)) |i| {
+                if (e.enif_get_list_cell(env, term_bone_matrices_value, &term_bone_matrices_value_head, &term_bone_matrices_value) == 0) return error.ArgumentError;
+                bone_matrices[i] = try Matrix.get(env, term_bone_matrices_value_head);
+            }
+
+            value.boneMatrices = @ptrCast(bone_matrices);
+        } else {
+            value.boneMatrices = null;
+        }
+
+        // vao_id
+
+        const term_vao_id_key = Atom.make(env, "vao_id");
+        var term_vao_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_vao_id_key, &term_vao_id_value) == 0) return error.ArgumentError;
+        value.vaoId = @intCast(try UInt.get(env, term_vao_id_value));
+
+        // vbo_id
+
+        const term_vbo_id_key = Atom.make(env, "vbo_id");
+        var term_vbo_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_vbo_id_key, &term_vbo_id_value) == 0) return error.ArgumentError;
+
+        var vbo_id_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_vbo_id_value, &vbo_id_length) == 0) return error.ArgumentError;
+        if (vbo_id_length > 0 and vbo_id_length != Self.MAX_VERTEX_BUFFERS) return error.ArgumentError;
+
+        if (vbo_id_length > 0) {
+            var vbo_id = try rl.allocator.alloc(c_uint, @intCast(vbo_id_length));
+            errdefer rl.allocator.free(vbo_id);
+
+            var term_vbo_id_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(vbo_id_length)) |i| {
+                if (e.enif_get_list_cell(env, term_vbo_id_value, &term_vbo_id_value_head, &term_vbo_id_value) == 0) return error.ArgumentError;
+                vbo_id[i] = @intCast(try UInt.get(env, term_vbo_id_value_head));
+            }
+
+            value.vboId = @ptrCast(vbo_id);
+        } else {
+            value.vboId = null;
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Mesh) void {
+        // var v = value;
+        //
+        // // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
+        // if (v.vboId != null) {
+        //     var test_vbo_id: u8 = 0;
+        //     for (0..Self.MAX_VERTEX_BUFFERS) |i| {
+        //         if (v.vboId[i] == 0) {
+        //             test_vbo_id += 1;
+        //         }
+        //     }
+        //
+        //     if (test_vbo_id == Self.MAX_VERTEX_BUFFERS) {
+        //         rl.allocator.free(@as([*]c_int, @ptrCast(v.vboId))[0..Self.MAX_VERTEX_BUFFERS]);
+        //         v.vboId = null;
+        //     }
+        // }
+
+        rl.UnloadMesh(pre_free(value));
+    }
+
+    pub fn pre_free(value: rl.Mesh) rl.Mesh {
+        var v = value;
+
+        // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
+        if (v.vboId != null) {
+            var test_vbo_id: u8 = 0;
+            for (0..Self.MAX_VERTEX_BUFFERS) |i| {
+                if (v.vboId[i] == 0) {
+                    test_vbo_id += 1;
+                }
+            }
+
+            if (test_vbo_id == Self.MAX_VERTEX_BUFFERS) {
+                rl.allocator.free(@as([*]c_int, @ptrCast(v.vboId))[0..Self.MAX_VERTEX_BUFFERS]);
+                v.vboId = null;
+            }
+        }
+
+        return v;
+    }
+};
+
+//////////////
+//  Shader  //
+//////////////
+
+pub const Shader = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Shader, "shader");
+
+    pub const MAX_LOCATIONS = rl.RL_MAX_SHADER_LOCATIONS;
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Shader) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        const term_id_value = UInt.make(env, @intCast(value.id));
+        assert(e.enif_make_map_put(env, term, term_id_key, term_id_value, &term) != 0);
+
+        // locs
+
+        const locs_length: usize = @intCast(Self.MAX_LOCATIONS);
+        var term_locs_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.locs != null) {
+            const locs = @as([*]c_int, @ptrCast(value.locs))[0..locs_length];
+            for (0..locs_length) |i| {
+                term_locs_value = e.enif_make_list_cell(env, Int.make(env, @intCast(locs[locs_length - 1 - i])), term_locs_value);
+            }
+        }
+        const term_locs_key = Atom.make(env, "locs");
+        assert(e.enif_make_map_put(env, term, term_locs_key, term_locs_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Shader {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Shader{};
+
+        // id
+
+        const term_id_key = Atom.make(env, "id");
+        var term_id_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_id_key, &term_id_value) == 0) return error.ArgumentError;
+        value.id = @intCast(try UInt.get(env, term_id_value));
+
+        // locs
+
+        const term_locs_key = Atom.make(env, "locs");
+        var term_locs_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_locs_key, &term_locs_value) == 0) return error.ArgumentError;
+
+        var locs_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_locs_value, &locs_length) == 0) return error.ArgumentError;
+        if (locs_length > 0 and locs_length != Self.MAX_LOCATIONS) return error.ArgumentError;
+
+        if (locs_length > 0) {
+            var locs = try rl.allocator.alloc(c_int, @intCast(locs_length));
+            errdefer rl.allocator.free(locs);
+
+            var term_locs_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(locs_length)) |i| {
+                if (e.enif_get_list_cell(env, term_locs_value, &term_locs_value_head, &term_locs_value) == 0) return error.ArgumentError;
+                locs[i] = @intCast(try Int.get(env, term_locs_value_head));
+            }
+
+            value.locs = @ptrCast(locs);
+        } else {
+            value.locs = null;
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Shader) void {
+        rl.UnloadShader(value);
+    }
+};
+
+///////////////////
+//  MaterialMap  //
+///////////////////
+
+pub const MaterialMap = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.MaterialMap, "material_map");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.MaterialMap) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        const term_texture_value = Texture2D.make(env, value.texture);
+        assert(e.enif_make_map_put(env, term, term_texture_key, term_texture_value, &term) != 0);
+
+        // color
+
+        const term_color_key = Atom.make(env, "color");
+        const term_color_value = Color.make(env, value.color);
+        assert(e.enif_make_map_put(env, term, term_color_key, term_color_value, &term) != 0);
+
+        // value
+
+        const term_value_key = Atom.make(env, "value");
+        const term_value_value = Double.make(env, @floatCast(value.value));
+        assert(e.enif_make_map_put(env, term, term_value_key, term_value_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.MaterialMap {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.MaterialMap{};
+
+        // texture
+
+        const term_texture_key = Atom.make(env, "texture");
+        var term_texture_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
+        value.texture = try Texture2D.get(env, term_texture_value);
+
+        // color
+
+        const term_color_key = Atom.make(env, "color");
+        var term_color_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_color_key, &term_color_value) == 0) return error.ArgumentError;
+        value.color = try Color.get(env, term_color_value);
+
+        // value
+
+        const term_value_key = Atom.make(env, "value");
+        var term_value_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_value_key, &term_value_value) == 0) return error.ArgumentError;
+        value.value = @floatCast(try Double.get(env, term_value_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.MaterialMap) void {
+        rl.UnloadTexture(value.texture);
+    }
+};
+
+////////////////
+//  Material  //
+////////////////
+
+pub const Material = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Material, "material");
+
+    pub const MAX_MAPS = rl.MAX_MATERIAL_MAPS;
+
+    pub const MAX_PARAMS = blk: {
+        switch (@typeInfo(rl.Material)) {
+            .Struct => |material_info| {
+                for (material_info.fields) |field| {
+                    if (std.mem.eql(u8, field.name, "params")) {
+                        switch (@typeInfo(field.type)) {
+                            .Array => |params_info| {
+                                break :blk params_info.len;
+                            },
+                            else => @compileError("Invalid raylib.Material.params type"),
+                        }
+                    }
+                }
+            },
+            else => @compileError("Invalid raylib.Material type"),
+        }
+        @compileError("Could not found the field raylib.Material.params");
+    };
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Material) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // shader
+
+        const term_shader_key = Atom.make(env, "shader");
+        const term_shader_value = Shader.make(env, value.shader);
+        assert(e.enif_make_map_put(env, term, term_shader_key, term_shader_value, &term) != 0);
+
+        // maps
+
+        const maps_length: usize = @intCast(Self.MAX_MAPS);
+        var term_maps_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.maps != null) {
+            const maps = @as([*]rl.MaterialMap, @ptrCast(value.maps))[0..maps_length];
+            for (0..maps_length) |i| {
+                term_maps_value = e.enif_make_list_cell(env, MaterialMap.make(env, maps[maps_length - 1 - i]), term_maps_value);
+            }
+        }
+        const term_maps_key = Atom.make(env, "maps");
+        assert(e.enif_make_map_put(env, term, term_maps_key, term_maps_value, &term) != 0);
+
+        // params
+
+        const params_length: usize = @intCast(Self.MAX_PARAMS);
+        var term_params_value = e.enif_make_list_from_array(env, null, 0);
+        for (0..params_length) |i| {
+            term_params_value = e.enif_make_list_cell(env, Double.make(env, @floatCast(value.params[params_length - 1 - i])), term_params_value);
+        }
+        const term_params_key = Atom.make(env, "params");
+        assert(e.enif_make_map_put(env, term, term_params_key, term_params_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Material {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Material{};
+
+        // shader
+
+        const term_shader_key = Atom.make(env, "shader");
+        var term_shader_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_shader_key, &term_shader_value) == 0) return error.ArgumentError;
+        value.shader = try Shader.get(env, term_shader_value);
+
+        // maps
+
+        const term_maps_key = Atom.make(env, "maps");
+        var term_maps_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_maps_key, &term_maps_value) == 0) return error.ArgumentError;
+
+        var maps_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_maps_value, &maps_length) == 0) return error.ArgumentError;
+        if (maps_length > 0 and maps_length != Self.MAX_MAPS) return error.ArgumentError;
+
+        if (maps_length > 0) {
+            var maps = try rl.allocator.alloc(rl.MaterialMap, @intCast(maps_length));
+            errdefer rl.allocator.free(maps);
+
+            var term_maps_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(maps_length)) |i| {
+                if (e.enif_get_list_cell(env, term_maps_value, &term_maps_value_head, &term_maps_value) == 0) return error.ArgumentError;
+                maps[i] = try MaterialMap.get(env, term_maps_value_head);
+            }
+
+            value.maps = @ptrCast(maps);
+        } else {
+            value.maps = null;
+        }
+
+        // params
+
+        const term_params_key = Atom.make(env, "params");
+        var term_params_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_params_key, &term_params_value) == 0) return error.ArgumentError;
+
+        var params_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_params_value, &params_length) == 0) return error.ArgumentError;
+        if (params_length > 0 and params_length != Self.MAX_PARAMS) return error.ArgumentError;
+
+        if (params_length > 0) {
+            var term_params_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(params_length)) |i| {
+                if (e.enif_get_list_cell(env, term_params_value, &term_params_value_head, &term_params_value) == 0) return error.ArgumentError;
+                value.params[i] = @floatCast(try Double.get(env, term_params_value_head));
+            }
+        } else {
+            for (0..@intCast(Self.MAX_PARAMS)) |i| {
+                value.params[i] = 0;
+            }
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Material) void {
+        rl.UnloadMaterial(value);
+    }
+};
+
+/////////////////
+//  Transform  //
+/////////////////
+
+pub const Transform = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Transform, "transform");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Transform) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // translation
+
+        const term_translation_key = Atom.make(env, "translation");
+        const term_translation_value = Vector3.make(env, value.translation);
+        assert(e.enif_make_map_put(env, term, term_translation_key, term_translation_value, &term) != 0);
+
+        // rotation
+
+        const term_rotation_key = Atom.make(env, "rotation");
+        const term_rotation_value = Quaternion.make(env, value.rotation);
+        assert(e.enif_make_map_put(env, term, term_rotation_key, term_rotation_value, &term) != 0);
+
+        // scale
+
+        const term_scale_key = Atom.make(env, "scale");
+        const term_scale_value = Vector3.make(env, value.scale);
+        assert(e.enif_make_map_put(env, term, term_scale_key, term_scale_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Transform {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Transform{};
+
+        // translation
+
+        const term_translation_key = Atom.make(env, "translation");
+        var term_translation_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_translation_key, &term_translation_value) == 0) return error.ArgumentError;
+        value.translation = try Vector3.get(env, term_translation_value);
+
+        // rotation
+
+        const term_rotation_key = Atom.make(env, "rotation");
+        var term_rotation_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_rotation_key, &term_rotation_value) == 0) return error.ArgumentError;
+        value.rotation = try Quaternion.get(env, term_rotation_value);
+
+        // scale
+
+        const term_scale_key = Atom.make(env, "scale");
+        var term_scale_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_scale_key, &term_scale_value) == 0) return error.ArgumentError;
+        value.scale = try Vector3.get(env, term_scale_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.Transform) void {
+        _ = value;
+    }
+};
+
+////////////////
+//  BoneInfo  //
+////////////////
+
+pub const BoneInfo = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.BoneInfo, "bone_info");
+
+    pub const MAX_NAME = blk: {
+        switch (@typeInfo(rl.BoneInfo)) {
+            .Struct => |bone_info_info| {
+                for (bone_info_info.fields) |field| {
+                    if (std.mem.eql(u8, field.name, "name")) {
+                        switch (@typeInfo(field.type)) {
+                            .Array => |name_info| {
+                                break :blk name_info.len;
+                            },
+                            else => @compileError("Invalid raylib.BoneInfo.name type"),
+                        }
+                    }
+                }
+            },
+            else => @compileError("Invalid raylib.BoneInfo type"),
+        }
+        @compileError("Could not found the field raylib.BoneInfo.name");
+    };
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.BoneInfo) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // name
+
+        const term_name_key = Atom.make(env, "name");
+        const term_name_value = CString.make(env, &value.name);
+        assert(e.enif_make_map_put(env, term, term_name_key, term_name_value, &term) != 0);
+
+        // parent
+
+        const term_parent_key = Atom.make(env, "parent");
+        const term_parent_value = Int.make(env, @intCast(value.parent));
+        assert(e.enif_make_map_put(env, term, term_parent_key, term_parent_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.BoneInfo {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.BoneInfo{};
+
+        // name
+
+        const term_name_key = Atom.make(env, "name");
+        var term_name_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_name_key, &term_name_value) == 0) return error.ArgumentError;
+        try CString.get_copy(env, term_name_value, &value.name);
+
+        // parent
+
+        const term_parent_key = Atom.make(env, "parent");
+        var term_parent_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_parent_key, &term_parent_value) == 0) return error.ArgumentError;
+        value.parent = @intCast(try Int.get(env, term_parent_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.BoneInfo) void {
+        _ = value;
+    }
+};
+
+/////////////
+//  Model  //
+/////////////
+
+pub const Model = struct {
+    const Self = @This();
+
+    pub const Resource = ResourceBase(Self, rl.Model, "model");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Model) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // transform
+
+        const term_transform_key = Atom.make(env, "transform");
+        const term_transform_value = Matrix.make(env, value.transform);
+        assert(e.enif_make_map_put(env, term, term_transform_key, term_transform_value, &term) != 0);
+
+        // mesh_count
+
+        const term_mesh_count_key = Atom.make(env, "mesh_count");
+        const term_mesh_count_value = Int.make(env, @intCast(value.meshCount));
+        assert(e.enif_make_map_put(env, term, term_mesh_count_key, term_mesh_count_value, &term) != 0);
+
+        // material_count
+
+        const term_material_count_key = Atom.make(env, "material_count");
+        const term_material_count_value = Int.make(env, @intCast(value.materialCount));
+        assert(e.enif_make_map_put(env, term, term_material_count_key, term_material_count_value, &term) != 0);
+
+        // bone_count
+
+        const term_bone_count_key = Atom.make(env, "bone_count");
+        const term_bone_count_value = Int.make(env, @intCast(value.boneCount));
+        assert(e.enif_make_map_put(env, term, term_bone_count_key, term_bone_count_value, &term) != 0);
+
+        // meshes
+        // = mesh_count
+
+        const meshes_length: usize = @intCast(value.meshCount);
+        var term_meshes_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.meshes != null) {
+            const meshes = @as([*]rl.Mesh, @ptrCast(value.meshes))[0..meshes_length];
+            for (0..meshes_length) |i| {
+                term_meshes_value = e.enif_make_list_cell(env, Mesh.make(env, meshes[meshes_length - 1 - i]), term_meshes_value);
+            }
+        }
+        const term_meshes_key = Atom.make(env, "meshes");
+        assert(e.enif_make_map_put(env, term, term_meshes_key, term_meshes_value, &term) != 0);
+
+        // materials
+        // = material_count
+
+        const materials_length: usize = @intCast(value.materialCount);
+        var term_materials_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.materials != null) {
+            const materials = @as([*]rl.Material, @ptrCast(value.materials))[0..materials_length];
+            for (0..materials_length) |i| {
+                term_materials_value = e.enif_make_list_cell(env, Material.make(env, materials[materials_length - 1 - i]), term_materials_value);
+            }
+        }
+        const term_materials_key = Atom.make(env, "materials");
+        assert(e.enif_make_map_put(env, term, term_materials_key, term_materials_value, &term) != 0);
+
+        // mesh_material
+        // = mesh_count
+
+        const mesh_material_length: usize = @intCast(value.meshCount);
+        var term_mesh_material_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.meshMaterial != null) {
+            const mesh_material = @as([*]c_int, @ptrCast(value.meshMaterial))[0..mesh_material_length];
+            for (0..mesh_material_length) |i| {
+                term_mesh_material_value = e.enif_make_list_cell(env, Int.make(env, @intCast(mesh_material[mesh_material_length - 1 - i])), term_mesh_material_value);
+            }
+        }
+        const term_mesh_material_key = Atom.make(env, "mesh_material");
+        assert(e.enif_make_map_put(env, term, term_mesh_material_key, term_mesh_material_value, &term) != 0);
+
+        // bones
+        // = bone_count
+
+        const bones_length: usize = @intCast(value.boneCount);
+        var term_bones_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.bones != null) {
+            const bones = @as([*]rl.BoneInfo, @ptrCast(value.bones))[0..bones_length];
+            for (0..bones_length) |i| {
+                term_bones_value = e.enif_make_list_cell(env, BoneInfo.make(env, bones[bones_length - 1 - i]), term_bones_value);
+            }
+        }
+        const term_bones_key = Atom.make(env, "bones");
+        assert(e.enif_make_map_put(env, term, term_bones_key, term_bones_value, &term) != 0);
+
+        // bind_pose
+        // = bone_count
+
+        const bind_pose_length: usize = @intCast(value.boneCount);
+        var term_bind_pose_value = e.enif_make_list_from_array(env, null, 0);
+        if (value.bindPose != null) {
+            const bind_pose = @as([*]rl.Transform, @ptrCast(value.bindPose))[0..bind_pose_length];
+            for (0..bind_pose_length) |i| {
+                term_bind_pose_value = e.enif_make_list_cell(env, Transform.make(env, bind_pose[bind_pose_length - 1 - i]), term_bind_pose_value);
+            }
+        }
+        const term_bind_pose_key = Atom.make(env, "bind_pose");
+        assert(e.enif_make_map_put(env, term, term_bind_pose_key, term_bind_pose_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Model {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Model{};
+
+        // transform
+
+        const term_transform_key = Atom.make(env, "transform");
+        var term_transform_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_transform_key, &term_transform_value) == 0) return error.ArgumentError;
+        value.transform = try Matrix.get(env, term_transform_value);
+
+        // mesh_count
+
+        const term_mesh_count_key = Atom.make(env, "mesh_count");
+        var term_mesh_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mesh_count_key, &term_mesh_count_value) == 0) return error.ArgumentError;
+        value.meshCount = @intCast(try Int.get(env, term_mesh_count_value));
+
+        // material_count
+
+        const term_material_count_key = Atom.make(env, "material_count");
+        var term_material_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_material_count_key, &term_material_count_value) == 0) return error.ArgumentError;
+        value.materialCount = @intCast(try Int.get(env, term_material_count_value));
+
+        // bone_count
+
+        const term_bone_count_key = Atom.make(env, "bone_count");
+        var term_bone_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bone_count_key, &term_bone_count_value) == 0) return error.ArgumentError;
+        value.boneCount = @intCast(try Int.get(env, term_bone_count_value));
+
+        // meshes
+        // = mesh_count
+
+        const term_meshes_key = Atom.make(env, "meshes");
+        var term_meshes_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_meshes_key, &term_meshes_value) == 0) return error.ArgumentError;
+
+        var meshes_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_meshes_value, &meshes_length) == 0) return error.ArgumentError;
+        if (meshes_length > 0 and meshes_length != value.meshCount) return error.ArgumentError;
+
+        if (meshes_length > 0) {
+            var meshes = try rl.allocator.alloc(rl.Mesh, @intCast(meshes_length));
+            errdefer rl.allocator.free(meshes);
+
+            var term_meshes_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(meshes_length)) |i| {
+                if (e.enif_get_list_cell(env, term_meshes_value, &term_meshes_value_head, &term_meshes_value) == 0) return error.ArgumentError;
+                meshes[i] = try Mesh.get(env, term_meshes_value_head);
+            }
+
+            value.meshes = @ptrCast(meshes);
+        } else {
+            value.meshes = null;
+        }
+
+        // materials
+        // = material_count
+
+        const term_materials_key = Atom.make(env, "materials");
+        var term_materials_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_materials_key, &term_materials_value) == 0) return error.ArgumentError;
+
+        var materials_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_materials_value, &materials_length) == 0) return error.ArgumentError;
+        if (materials_length > 0 and materials_length != value.materialCount) return error.ArgumentError;
+
+        if (materials_length > 0) {
+            var materials = try rl.allocator.alloc(rl.Material, @intCast(materials_length));
+            errdefer rl.allocator.free(materials);
+
+            var term_materials_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(materials_length)) |i| {
+                if (e.enif_get_list_cell(env, term_materials_value, &term_materials_value_head, &term_materials_value) == 0) return error.ArgumentError;
+                materials[i] = try Material.get(env, term_materials_value_head);
+            }
+
+            value.materials = @ptrCast(materials);
+        } else {
+            value.materials = null;
+        }
+
+        // mesh_material
+        // = mesh_count
+
+        const term_mesh_material_key = Atom.make(env, "mesh_material");
+        var term_mesh_material_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_mesh_material_key, &term_mesh_material_value) == 0) return error.ArgumentError;
+
+        var mesh_material_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_mesh_material_value, &mesh_material_length) == 0) return error.ArgumentError;
+        if (mesh_material_length > 0 and mesh_material_length != value.meshCount) return error.ArgumentError;
+
+        if (mesh_material_length > 0) {
+            var mesh_material = try rl.allocator.alloc(c_int, @intCast(mesh_material_length));
+            errdefer rl.allocator.free(mesh_material);
+
+            var term_mesh_material_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(mesh_material_length)) |i| {
+                if (e.enif_get_list_cell(env, term_mesh_material_value, &term_mesh_material_value_head, &term_mesh_material_value) == 0) return error.ArgumentError;
+                mesh_material[i] = @intCast(try Int.get(env, term_mesh_material_value_head));
+            }
+
+            value.meshMaterial = @ptrCast(mesh_material);
+        } else {
+            value.meshMaterial = null;
+        }
+
+        // bones
+        // = bone_count
+
+        const term_bones_key = Atom.make(env, "bones");
+        var term_bones_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bones_key, &term_bones_value) == 0) return error.ArgumentError;
+
+        var bones_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_bones_value, &bones_length) == 0) return error.ArgumentError;
+        if (bones_length > 0 and bones_length != value.boneCount) return error.ArgumentError;
+
+        if (bones_length > 0) {
+            var bones = try rl.allocator.alloc(rl.BoneInfo, @intCast(bones_length));
+            errdefer rl.allocator.free(bones);
+
+            var term_bones_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(bones_length)) |i| {
+                if (e.enif_get_list_cell(env, term_bones_value, &term_bones_value_head, &term_bones_value) == 0) return error.ArgumentError;
+                bones[i] = try BoneInfo.get(env, term_bones_value_head);
+            }
+
+            value.bones = @ptrCast(bones);
+        } else {
+            value.bones = null;
+        }
+
+        // bind_pose
+        // = bone_count
+
+        const term_bind_pose_key = Atom.make(env, "bind_pose");
+        var term_bind_pose_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_bind_pose_key, &term_bind_pose_value) == 0) return error.ArgumentError;
+
+        var bind_pose_length: c_uint = undefined;
+        if (e.enif_get_list_length(env, term_bind_pose_value, &bind_pose_length) == 0) return error.ArgumentError;
+        if (bind_pose_length > 0 and bind_pose_length != value.boneCount) return error.ArgumentError;
+
+        if (bind_pose_length > 0) {
+            var bind_pose = try rl.allocator.alloc(rl.Transform, @intCast(bind_pose_length));
+            errdefer rl.allocator.free(bind_pose);
+
+            var term_bind_pose_value_head: e.ErlNifTerm = undefined;
+            for (0..@intCast(bind_pose_length)) |i| {
+                if (e.enif_get_list_cell(env, term_bind_pose_value, &term_bind_pose_value_head, &term_bind_pose_value) == 0) return error.ArgumentError;
+                bind_pose[i] = try Transform.get(env, term_bind_pose_value_head);
+            }
+
+            value.bindPose = @ptrCast(bind_pose);
+        } else {
+            value.bindPose = null;
+        }
+
+        return value;
+    }
+
+    pub fn free(value: rl.Model) void {
+        rl.UnloadModel(pre_free(value));
+    }
+
+    pub fn pre_free(value: rl.Model) rl.Model {
+        var v = value;
+
+        for (0..@intCast(value.meshCount)) |i| {
+            v.meshes[i] = Mesh.pre_free(v.meshes[i]);
+        }
+
+        // for (0..@intCast(value.meshCount)) |m| {
+        //     // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
+        //     if (v.meshes[m].vboId != null) {
+        //         var test_vbo_id: u8 = 0;
+        //         for (0..Mesh.MAX_VERTEX_BUFFERS) |i| {
+        //             if (v.meshes[m].vboId[i] == 0) {
+        //                 test_vbo_id += 1;
+        //             }
+        //         }
+        //
+        //         if (test_vbo_id == Mesh.MAX_VERTEX_BUFFERS) {
+        //             rl.allocator.free(@as([*]c_int, @ptrCast(v.meshes[m].vboId))[0..Mesh.MAX_VERTEX_BUFFERS]);
+        //             v.meshes[m].vboId = null;
+        //         }
+        //     }
+        // }
+
+        return value;
+    }
+};
