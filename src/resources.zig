@@ -30,6 +30,7 @@ pub const ResourceType = struct {
     transform: *e.ErlNifResourceType = undefined,
     bone_info: *e.ErlNifResourceType = undefined,
     model: *e.ErlNifResourceType = undefined,
+    model_animation: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -136,6 +137,10 @@ pub const ResourceType = struct {
     pub fn model_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Model.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn model_animation_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.ModelAnimation.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -169,6 +174,7 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.transform = e.enif_open_resource_type(env, null, "Zexray.Resource.Transform", &ResourceType.transform_dtor, flags, null) orelse return false;
     resource_type.bone_info = e.enif_open_resource_type(env, null, "Zexray.Resource.BoneInfo", &ResourceType.bone_info_dtor, flags, null) orelse return false;
     resource_type.model = e.enif_open_resource_type(env, null, "Zexray.Resource.Model", &ResourceType.model_dtor, flags, null) orelse return false;
+    resource_type.model_animation = e.enif_open_resource_type(env, null, "Zexray.Resource.ModelAnimation", &ResourceType.model_animation_dtor, flags, null) orelse return false;
 
     return true;
 }

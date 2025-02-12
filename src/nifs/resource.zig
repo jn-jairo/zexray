@@ -134,6 +134,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "model_to_resource", .arity = 1, .fptr = nif_model_to_resource, .flags = 0 },
     .{ .name = "model_from_resource", .arity = 1, .fptr = nif_model_from_resource, .flags = 0 },
     .{ .name = "model_free_resource", .arity = 1, .fptr = nif_model_free_resource, .flags = 0 },
+
+    // ModelAnimation
+    .{ .name = "model_animation_to_resource", .arity = 1, .fptr = nif_model_animation_to_resource, .flags = 0 },
+    .{ .name = "model_animation_from_resource", .arity = 1, .fptr = nif_model_animation_from_resource, .flags = 0 },
+    .{ .name = "model_animation_free_resource", .arity = 1, .fptr = nif_model_animation_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1198,6 +1203,47 @@ fn nif_model_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     };
 
     core.Model.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+//////////////////////
+//  ModelAnimation  //
+//////////////////////
+
+fn nif_model_animation_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.ModelAnimation.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.ModelAnimation.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.ModelAnimation.Resource.release(resource);
+
+    return core.ModelAnimation.Resource.make(env, resource);
+}
+
+fn nif_model_animation_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.ModelAnimation.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.ModelAnimation.make(env, resource.*.*);
+}
+
+fn nif_model_animation_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.ModelAnimation.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.ModelAnimation.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

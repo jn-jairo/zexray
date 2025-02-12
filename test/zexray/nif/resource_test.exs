@@ -38,6 +38,7 @@ defmodule Zexray.NIF.ResourceTest do
         transform: {"transform", :base},
         bone_info: {"bone_info", :base},
         model: {"model", :base},
+        model_animation: {"model_animation", :base},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -64,7 +65,8 @@ defmodule Zexray.NIF.ResourceTest do
         material_empty: {"material", :empty},
         transform_empty: {"transform", :empty},
         bone_info_empty: {"bone_info", :empty},
-        model_empty: {"model", :empty}
+        model_empty: {"model", :empty},
+        model_animation_empty: {"model_animation", :empty}
       }
 
       %{datasets: datasets}
@@ -100,6 +102,7 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :transform],
       [dataset: :bone_info],
       [dataset: :model],
+      [dataset: :model_animation],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -126,7 +129,8 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :material_empty],
       [dataset: :transform_empty],
       [dataset: :bone_info_empty],
-      [dataset: :model_empty]
+      [dataset: :model_empty],
+      [dataset: :model_animation_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 

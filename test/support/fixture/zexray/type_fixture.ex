@@ -15,6 +15,7 @@ defmodule Zexray.TypeFixture do
     Matrix,
     Mesh,
     Model,
+    ModelAnimation,
     NPatchInfo,
     Quaternion,
     Rectangle,
@@ -398,6 +399,40 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Model.new()
+  end
+
+  def model_animation_fixture(type \\ :base, attrs \\ %{}) do
+    bone_count = 3
+    frame_count = 2
+
+    case type do
+      :base ->
+        %{
+          bone_count: bone_count,
+          frame_count: frame_count,
+          bones: Enum.map(1..bone_count, fn _ -> bone_info_fixture(:base) end),
+          frame_poses:
+            Enum.map(1..frame_count, fn _ ->
+              Enum.map(1..bone_count, fn _ ->
+                transform_fixture(:base)
+              end)
+            end),
+          name:
+            Enum.map(1..Zexray.Model.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
+            |> Enum.join()
+        }
+
+      :empty ->
+        %{
+          bone_count: 0,
+          frame_count: 0,
+          bones: [],
+          frame_poses: [],
+          name: ""
+        }
+    end
+    |> Map.merge(attrs)
+    |> ModelAnimation.new()
   end
 
   def n_patch_info_fixture(type \\ :base, attrs \\ %{}) do

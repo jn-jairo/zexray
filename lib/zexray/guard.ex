@@ -17,6 +17,7 @@ defmodule Zexray.Guard do
     Matrix,
     Mesh,
     Model,
+    ModelAnimation,
     NPatchInfo,
     Quaternion,
     Rectangle,
@@ -82,6 +83,7 @@ defmodule Zexray.Guard do
   defguard is_matrix(value) when is_struct(value, Matrix)
   defguard is_mesh(value) when is_struct(value, Mesh)
   defguard is_model(value) when is_struct(value, Model)
+  defguard is_model_animation(value) when is_struct(value, ModelAnimation)
   defguard is_n_patch_info(value) when is_struct(value, NPatchInfo)
   defguard is_quaternion(value) when is_struct(value, Quaternion)
   defguard is_rectangle(value) when is_struct(value, Rectangle)
@@ -181,6 +183,12 @@ defmodule Zexray.Guard do
                   is_struct(value, Model.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 9)
+
+  defguard is_model_animation_like(value)
+           when is_model_animation(value) or
+                  is_struct(value, ModelAnimation.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 5)
 
   defguard is_n_patch_info_like(value)
            when is_n_patch_info(value) or
