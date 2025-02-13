@@ -33,7 +33,7 @@ defmodule Zexray.TypeFixture do
 
   def bone_info_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           name:
             Enum.map(1..Zexray.Model.bone_info_max_name(), fn n -> "#{rem(n, 10)}" end)
@@ -55,18 +55,27 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          position: vector3_fixture(:base),
-          target: vector3_fixture(:base),
-          up: vector3_fixture(:base),
+          position: vector3_fixture(type),
+          target: vector3_fixture(type),
+          up: vector3_fixture(type),
+          fovy: 1.5,
+          projection: 0
+        }
+
+      :resource ->
+        %{
+          position: make_ref(),
+          target: make_ref(),
+          up: make_ref(),
           fovy: 1.5,
           projection: 0
         }
 
       :empty ->
         %{
-          position: vector3_fixture(:empty),
-          target: vector3_fixture(:empty),
-          up: vector3_fixture(:empty),
+          position: vector3_fixture(type),
+          target: vector3_fixture(type),
+          up: vector3_fixture(type),
           fovy: 0.0,
           projection: 0
         }
@@ -79,16 +88,24 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          offset: vector2_fixture(:base),
-          target: vector2_fixture(:base),
+          offset: vector2_fixture(type),
+          target: vector2_fixture(type),
+          rotation: 0.0,
+          zoom: 1.0
+        }
+
+      :resource ->
+        %{
+          offset: make_ref(),
+          target: make_ref(),
           rotation: 0.0,
           zoom: 1.0
         }
 
       :empty ->
         %{
-          offset: vector2_fixture(:empty),
-          target: vector2_fixture(:empty),
+          offset: vector2_fixture(type),
+          target: vector2_fixture(type),
           rotation: 0.0,
           zoom: 0.0
         }
@@ -101,18 +118,27 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          position: vector3_fixture(:base),
-          target: vector3_fixture(:base),
-          up: vector3_fixture(:base),
+          position: vector3_fixture(type),
+          target: vector3_fixture(type),
+          up: vector3_fixture(type),
+          fovy: 1.5,
+          projection: 0
+        }
+
+      :resource ->
+        %{
+          position: make_ref(),
+          target: make_ref(),
+          up: make_ref(),
           fovy: 1.5,
           projection: 0
         }
 
       :empty ->
         %{
-          position: vector3_fixture(:empty),
-          target: vector3_fixture(:empty),
-          up: vector3_fixture(:empty),
+          position: vector3_fixture(type),
+          target: vector3_fixture(type),
+          up: vector3_fixture(type),
           fovy: 0.0,
           projection: 0
         }
@@ -123,7 +149,7 @@ defmodule Zexray.TypeFixture do
 
   def color_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           r: 0x87,
           g: 0x3C,
@@ -154,9 +180,19 @@ defmodule Zexray.TypeFixture do
           base_size: 32,
           glyph_count: 3,
           glyph_padding: 4,
-          texture: texture_fixture(:base),
-          recs: Enum.map(1..3, fn _ -> rectangle_fixture(:base) end),
-          glyphs: Enum.map(1..3, fn _ -> glyph_info_fixture(:base) end)
+          texture: texture_fixture(type),
+          recs: Enum.map(1..3, fn _ -> rectangle_fixture(type) end),
+          glyphs: Enum.map(1..3, fn _ -> glyph_info_fixture(type) end)
+        }
+
+      :resource ->
+        %{
+          base_size: 32,
+          glyph_count: 3,
+          glyph_padding: 4,
+          texture: make_ref(),
+          recs: Enum.map(1..3, fn _ -> make_ref() end),
+          glyphs: Enum.map(1..3, fn _ -> make_ref() end)
         }
 
       :empty ->
@@ -164,7 +200,7 @@ defmodule Zexray.TypeFixture do
           base_size: 0,
           glyph_count: 0,
           glyph_padding: 0,
-          texture: texture_fixture(:empty),
+          texture: texture_fixture(type),
           recs: [],
           glyphs: []
         }
@@ -181,7 +217,16 @@ defmodule Zexray.TypeFixture do
           offset_x: 1,
           offset_y: 2,
           advance_x: 3,
-          image: image_fixture(:base)
+          image: image_fixture(type)
+        }
+
+      :resource ->
+        %{
+          value: 65,
+          offset_x: 1,
+          offset_y: 2,
+          advance_x: 3,
+          image: make_ref()
         }
 
       :empty ->
@@ -190,7 +235,7 @@ defmodule Zexray.TypeFixture do
           offset_x: 0,
           offset_y: 0,
           advance_x: 0,
-          image: image_fixture(:empty)
+          image: image_fixture(type)
         }
     end
     |> Map.merge(attrs)
@@ -199,7 +244,7 @@ defmodule Zexray.TypeFixture do
 
   def image_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           data:
             <<18, 35, 52, 255, 18, 35, 52, 255, 18, 35, 52, 255, 18, 35, 52, 255, 18, 35, 52, 255,
@@ -227,16 +272,24 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          shader: shader_fixture(:base),
-          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(:base) end),
+          shader: shader_fixture(type),
+          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(type) end),
+          params:
+            Enum.map(1..Zexray.Material.max_params(), fn n -> Float.round(1.0 + n / 100, 2) end)
+        }
+
+      :resource ->
+        %{
+          shader: make_ref(),
+          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> make_ref() end),
           params:
             Enum.map(1..Zexray.Material.max_params(), fn n -> Float.round(1.0 + n / 100, 2) end)
         }
 
       :empty ->
         %{
-          shader: shader_fixture(:empty),
-          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(:empty) end),
+          shader: shader_fixture(type),
+          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(type) end),
           params: Enum.map(1..Zexray.Material.max_params(), fn _ -> 0.0 end)
         }
     end
@@ -248,15 +301,22 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          texture: texture_2d_fixture(:base),
-          color: color_fixture(:base),
+          texture: texture_2d_fixture(type),
+          color: color_fixture(type),
+          value: 1.23
+        }
+
+      :resource ->
+        %{
+          texture: make_ref(),
+          color: make_ref(),
           value: 1.23
         }
 
       :empty ->
         %{
-          texture: texture_2d_fixture(:empty),
-          color: color_fixture(:empty),
+          texture: texture_2d_fixture(type),
+          color: color_fixture(type),
           value: 0.0
         }
     end
@@ -266,7 +326,7 @@ defmodule Zexray.TypeFixture do
 
   def matrix_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           m0: 1.00,
           m1: 1.01,
@@ -334,7 +394,31 @@ defmodule Zexray.TypeFixture do
           bone_ids: Enum.map(1..(vertex_count * 4), fn n -> n end),
           bone_weights:
             Enum.map(1..(vertex_count * 4), fn n -> Float.round(1.0 + n / 100, 2) end),
-          bone_matrices: Enum.map(1..bone_count, fn _ -> matrix_fixture(:base) end),
+          bone_matrices: Enum.map(1..bone_count, fn _ -> matrix_fixture(type) end),
+          bone_count: bone_count,
+          vao_id: 0,
+          vbo_id: Enum.map(1..Zexray.Mesh.max_vertex_buffers(), fn _ -> 0 end)
+        }
+
+      :resource ->
+        %{
+          vertex_count: 4,
+          triangle_count: 2,
+          vertices: Enum.map(1..(vertex_count * 3), fn n -> Float.round(1.0 + n / 100, 2) end),
+          texcoords: Enum.map(1..(vertex_count * 2), fn n -> Float.round(1.0 + n / 100, 2) end),
+          texcoords2: Enum.map(1..(vertex_count * 2), fn n -> Float.round(1.0 + n / 100, 2) end),
+          normals: Enum.map(1..(vertex_count * 3), fn n -> Float.round(1.0 + n / 100, 2) end),
+          tangents: Enum.map(1..(vertex_count * 4), fn n -> Float.round(1.0 + n / 100, 2) end),
+          colors: Enum.map(1..(vertex_count * 4), fn n -> n end),
+          indices: Enum.map(1..(triangle_count * 3), fn n -> n end),
+          anim_vertices:
+            Enum.map(1..(vertex_count * 3), fn n -> Float.round(1.0 + n / 100, 2) end),
+          anim_normals:
+            Enum.map(1..(vertex_count * 3), fn n -> Float.round(1.0 + n / 100, 2) end),
+          bone_ids: Enum.map(1..(vertex_count * 4), fn n -> n end),
+          bone_weights:
+            Enum.map(1..(vertex_count * 4), fn n -> Float.round(1.0 + n / 100, 2) end),
+          bone_matrices: Enum.map(1..bone_count, fn _ -> make_ref() end),
           bone_count: bone_count,
           vao_id: 0,
           vbo_id: Enum.map(1..Zexray.Mesh.max_vertex_buffers(), fn _ -> 0 end)
@@ -373,20 +457,33 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          transform: matrix_fixture(:base),
+          transform: matrix_fixture(type),
           mesh_count: mesh_count,
           material_count: material_count,
-          meshes: Enum.map(1..mesh_count, fn _ -> mesh_fixture(:base) end),
-          materials: Enum.map(1..material_count, fn _ -> material_fixture(:base) end),
+          meshes: Enum.map(1..mesh_count, fn _ -> mesh_fixture(type) end),
+          materials: Enum.map(1..material_count, fn _ -> material_fixture(type) end),
           mesh_material: Enum.map(0..(mesh_count - 1), fn n -> n end),
           bone_count: bone_count,
-          bones: Enum.map(1..bone_count, fn _ -> bone_info_fixture(:base) end),
-          bind_pose: Enum.map(1..bone_count, fn _ -> transform_fixture(:base) end)
+          bones: Enum.map(1..bone_count, fn _ -> bone_info_fixture(type) end),
+          bind_pose: Enum.map(1..bone_count, fn _ -> transform_fixture(type) end)
+        }
+
+      :resource ->
+        %{
+          transform: make_ref(),
+          mesh_count: mesh_count,
+          material_count: material_count,
+          meshes: Enum.map(1..mesh_count, fn _ -> make_ref() end),
+          materials: Enum.map(1..material_count, fn _ -> make_ref() end),
+          mesh_material: Enum.map(0..(mesh_count - 1), fn n -> n end),
+          bone_count: bone_count,
+          bones: Enum.map(1..bone_count, fn _ -> make_ref() end),
+          bind_pose: Enum.map(1..bone_count, fn _ -> make_ref() end)
         }
 
       :empty ->
         %{
-          transform: matrix_fixture(:empty),
+          transform: matrix_fixture(type),
           mesh_count: 0,
           material_count: 0,
           meshes: [],
@@ -410,11 +507,27 @@ defmodule Zexray.TypeFixture do
         %{
           bone_count: bone_count,
           frame_count: frame_count,
-          bones: Enum.map(1..bone_count, fn _ -> bone_info_fixture(:base) end),
+          bones: Enum.map(1..bone_count, fn _ -> bone_info_fixture(type) end),
           frame_poses:
             Enum.map(1..frame_count, fn _ ->
               Enum.map(1..bone_count, fn _ ->
-                transform_fixture(:base)
+                transform_fixture(type)
+              end)
+            end),
+          name:
+            Enum.map(1..Zexray.Model.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
+            |> Enum.join()
+        }
+
+      :resource ->
+        %{
+          bone_count: bone_count,
+          frame_count: frame_count,
+          bones: Enum.map(1..bone_count, fn _ -> make_ref() end),
+          frame_poses:
+            Enum.map(1..frame_count, fn _ ->
+              Enum.map(1..bone_count, fn _ ->
+                make_ref()
               end)
             end),
           name:
@@ -439,7 +552,17 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          source: rectangle_fixture(:base),
+          source: rectangle_fixture(type),
+          left: 0,
+          top: 1,
+          right: 2,
+          bottom: 3,
+          layout: 0
+        }
+
+      :resource ->
+        %{
+          source: make_ref(),
           left: 0,
           top: 1,
           right: 2,
@@ -449,7 +572,7 @@ defmodule Zexray.TypeFixture do
 
       :empty ->
         %{
-          source: rectangle_fixture(:empty),
+          source: rectangle_fixture(type),
           left: 0,
           top: 0,
           right: 0,
@@ -463,7 +586,7 @@ defmodule Zexray.TypeFixture do
 
   def quaternion_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           x: 1.23,
           y: 2.34,
@@ -485,7 +608,7 @@ defmodule Zexray.TypeFixture do
 
   def rectangle_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           x: 1.23,
           y: 2.34,
@@ -510,15 +633,22 @@ defmodule Zexray.TypeFixture do
       :base ->
         %{
           id: 0,
-          texture: texture_fixture(:base),
-          depth: texture_fixture(:base)
+          texture: texture_fixture(type),
+          depth: texture_fixture(type)
+        }
+
+      :resource ->
+        %{
+          id: 0,
+          texture: make_ref(),
+          depth: make_ref()
         }
 
       :empty ->
         %{
           id: 0,
-          texture: texture_fixture(:empty),
-          depth: texture_fixture(:empty)
+          texture: texture_fixture(type),
+          depth: texture_fixture(type)
         }
     end
     |> Map.merge(attrs)
@@ -530,15 +660,22 @@ defmodule Zexray.TypeFixture do
       :base ->
         %{
           id: 0,
-          texture: texture_fixture(:base),
-          depth: texture_fixture(:base)
+          texture: texture_fixture(type),
+          depth: texture_fixture(type)
+        }
+
+      :resource ->
+        %{
+          id: 0,
+          texture: make_ref(),
+          depth: make_ref()
         }
 
       :empty ->
         %{
           id: 0,
-          texture: texture_fixture(:empty),
-          depth: texture_fixture(:empty)
+          texture: texture_fixture(type),
+          depth: texture_fixture(type)
         }
     end
     |> Map.merge(attrs)
@@ -547,7 +684,7 @@ defmodule Zexray.TypeFixture do
 
   def shader_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           id: 0,
           locs: Enum.map(1..Zexray.Shader.max_locations(), fn _ -> -1 end)
@@ -565,7 +702,7 @@ defmodule Zexray.TypeFixture do
 
   def texture_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           id: 0,
           width: 800,
@@ -589,7 +726,7 @@ defmodule Zexray.TypeFixture do
 
   def texture_2d_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           id: 0,
           width: 800,
@@ -613,7 +750,7 @@ defmodule Zexray.TypeFixture do
 
   def texture_cubemap_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           id: 0,
           width: 800,
@@ -639,16 +776,23 @@ defmodule Zexray.TypeFixture do
     case type do
       :base ->
         %{
-          translation: vector3_fixture(:base),
-          rotation: quaternion_fixture(:base),
-          scale: vector3_fixture(:base)
+          translation: vector3_fixture(type),
+          rotation: quaternion_fixture(type),
+          scale: vector3_fixture(type)
+        }
+
+      :resource ->
+        %{
+          translation: make_ref(),
+          rotation: make_ref(),
+          scale: make_ref()
         }
 
       :empty ->
         %{
-          translation: vector3_fixture(:empty),
-          rotation: quaternion_fixture(:empty),
-          scale: vector3_fixture(:empty)
+          translation: vector3_fixture(type),
+          rotation: quaternion_fixture(type),
+          scale: vector3_fixture(type)
         }
     end
     |> Map.merge(attrs)
@@ -657,7 +801,7 @@ defmodule Zexray.TypeFixture do
 
   def vector2_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           x: 1.23,
           y: 2.34
@@ -675,7 +819,7 @@ defmodule Zexray.TypeFixture do
 
   def vector3_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           x: 1.23,
           y: 2.34,
@@ -695,7 +839,7 @@ defmodule Zexray.TypeFixture do
 
   def vector4_fixture(type \\ :base, attrs \\ %{}) do
     case type do
-      :base ->
+      t when t in [:base, :resource] ->
         %{
           x: 1.23,
           y: 2.34,
