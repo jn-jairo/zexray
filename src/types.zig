@@ -3536,3 +3536,61 @@ pub const ModelAnimation = struct {
         rl.UnloadModelAnimation(value);
     }
 };
+
+///////////
+//  Ray  //
+///////////
+
+pub const Ray = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.Ray, "ray");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Ray) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        const term_position_value = Vector3.make(env, value.position);
+        assert(e.enif_make_map_put(env, term, term_position_key, term_position_value, &term) != 0);
+
+        // direction
+
+        const term_direction_key = Atom.make(env, "direction");
+        const term_direction_value = Vector3.make(env, value.direction);
+        assert(e.enif_make_map_put(env, term, term_direction_key, term_direction_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Ray {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Ray{};
+
+        // position
+
+        const term_position_key = Atom.make(env, "position");
+        var term_position_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
+        value.position = try Vector3.get(env, term_position_value);
+
+        // direction
+
+        const term_direction_key = Atom.make(env, "direction");
+        var term_direction_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_direction_key, &term_direction_value) == 0) return error.ArgumentError;
+        value.direction = try Vector3.get(env, term_direction_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.Ray) void {
+        _ = value;
+    }
+};

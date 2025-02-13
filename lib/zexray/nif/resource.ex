@@ -137,7 +137,12 @@ defmodule Zexray.NIF.Resource do
         # ModelAnimation
         model_animation_to_resource: 1,
         model_animation_from_resource: 1,
-        model_animation_free_resource: 1
+        model_animation_free_resource: 1,
+
+        # Ray
+        ray_to_resource: 1,
+        ray_from_resource: 1,
+        ray_free_resource: 1
       ]
 
       #############
@@ -571,6 +576,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec model_animation_free_resource(resource :: reference) :: :ok
       def model_animation_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      #########
+      #  Ray  #
+      #########
+
+      @doc group: :resource
+      @spec ray_to_resource(value :: map) :: reference
+      def ray_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ray_from_resource(resource :: reference) :: map
+      def ray_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ray_free_resource(resource :: reference) :: :ok
+      def ray_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

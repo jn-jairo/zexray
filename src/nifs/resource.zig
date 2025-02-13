@@ -139,6 +139,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "model_animation_to_resource", .arity = 1, .fptr = nif_model_animation_to_resource, .flags = 0 },
     .{ .name = "model_animation_from_resource", .arity = 1, .fptr = nif_model_animation_from_resource, .flags = 0 },
     .{ .name = "model_animation_free_resource", .arity = 1, .fptr = nif_model_animation_free_resource, .flags = 0 },
+
+    // Ray
+    .{ .name = "ray_to_resource", .arity = 1, .fptr = nif_ray_to_resource, .flags = 0 },
+    .{ .name = "ray_from_resource", .arity = 1, .fptr = nif_ray_from_resource, .flags = 0 },
+    .{ .name = "ray_free_resource", .arity = 1, .fptr = nif_ray_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1244,6 +1249,47 @@ fn nif_model_animation_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     };
 
     core.ModelAnimation.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+///////////
+//  Ray  //
+///////////
+
+fn nif_ray_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.Ray.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.Ray.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.Ray.Resource.release(resource);
+
+    return core.Ray.Resource.make(env, resource);
+}
+
+fn nif_ray_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Ray.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.Ray.make(env, resource.*.*);
+}
+
+fn nif_ray_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Ray.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.Ray.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

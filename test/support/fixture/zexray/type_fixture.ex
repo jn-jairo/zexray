@@ -18,6 +18,7 @@ defmodule Zexray.TypeFixture do
     ModelAnimation,
     NPatchInfo,
     Quaternion,
+    Ray,
     Rectangle,
     RenderTexture,
     RenderTexture2D,
@@ -604,6 +605,30 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Quaternion.new()
+  end
+
+  def ray_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      :base ->
+        %{
+          position: vector3_fixture(type),
+          direction: vector3_fixture(type)
+        }
+
+      :resource ->
+        %{
+          position: make_ref(),
+          direction: make_ref()
+        }
+
+      :empty ->
+        %{
+          position: vector3_fixture(type),
+          direction: vector3_fixture(type)
+        }
+    end
+    |> Map.merge(attrs)
+    |> Ray.new()
   end
 
   def rectangle_fixture(type \\ :base, attrs \\ %{}) do
