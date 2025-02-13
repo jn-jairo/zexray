@@ -208,8 +208,7 @@ const Array = struct {
                 if (child) |c| {
                     term_value = e.enif_make_list_cell(env, make(T, c, env, values[values.len - 1 - i]), term_value);
                 } else {
-                    term_value =
-                        switch (@typeInfo(T_rl)) {
+                    term_value = switch (@typeInfo(T_rl)) {
                         .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
                         .Float => e.enif_make_list_cell(env, T.make(env, @floatCast(values[values.len - 1 - i])), term_value),
                         else => e.enif_make_list_cell(env, T.make(env, values[values.len - 1 - i]), term_value),
@@ -248,8 +247,7 @@ const Array = struct {
                 if (child) |c| {
                     term_value = e.enif_make_list_cell(env, _make_c(T, c, env, values[values.len - 1 - i], lengths_c, depth + 1), term_value);
                 } else {
-                    term_value =
-                        switch (@typeInfo(T_rl)) {
+                    term_value = switch (@typeInfo(T_rl)) {
                         .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
                         .Float => e.enif_make_list_cell(env, T.make(env, @floatCast(values[values.len - 1 - i])), term_value),
                         else => e.enif_make_list_cell(env, T.make(env, values[values.len - 1 - i]), term_value),
@@ -287,8 +285,7 @@ const Array = struct {
             if (child) |c| {
                 values[i] = try get(T, c, allocator, env, term_value_head);
             } else {
-                values[i] =
-                    switch (@typeInfo(T_rl)) {
+                values[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
@@ -348,8 +345,7 @@ const Array = struct {
             if (child) |c| {
                 values[i] = try _get_c(T, c, allocator, env, term_value_head, lengths_c, depth + 1);
             } else {
-                values[i] =
-                    switch (@typeInfo(T_rl)) {
+                values[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
@@ -392,15 +388,14 @@ const Array = struct {
                     // term is empty list
                     try get_copy(T, c, allocator, env, term, dest[i]);
                 } else {
-                    dest[i] =
-                        switch (@typeInfo(T_rl)) {
-                            .Optional => null,
-                            .Int => 0,
-                            .Float => 0.0,
-                            .Bool => false,
-                            .Struct => T_rl{},
-                            else => @compileError("Cannot set empty value for this type"),
-                        };
+                    dest[i] = switch (@typeInfo(T_rl)) {
+                        .Optional => null,
+                        .Int => 0,
+                        .Float => 0.0,
+                        .Bool => false,
+                        .Struct => T_rl{},
+                        else => @compileError("Cannot set empty value for this type"),
+                    };
                 }
             }
             return;
@@ -413,8 +408,7 @@ const Array = struct {
             if (child) |c| {
                 try get_copy(T, c, allocator, env, term_value_head, dest[i]);
             } else {
-                dest[i] =
-                    switch (@typeInfo(T_rl)) {
+                dest[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
