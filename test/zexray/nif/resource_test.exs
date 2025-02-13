@@ -1,6 +1,5 @@
 defmodule Zexray.NIF.ResourceTest do
   use ExUnit.Case, async: true
-  doctest Zexray.NIF
 
   import ExUnitParameterize
   import Zexray.Util, only: [similar?: 2]
