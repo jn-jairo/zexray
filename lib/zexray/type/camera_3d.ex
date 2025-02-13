@@ -104,22 +104,14 @@ defmodule Zexray.Type.Camera3DBase do
             fields
             |> Enum.map(fn {key, value} ->
               cond do
-                key == :position and is_struct(value, Zexray.Type.Vector3.Resource) ->
+                key in [:position, :target, :up] and
+                    is_struct(value, Zexray.Type.Vector3.Resource) ->
                   {key, value}
 
-                key == :position and not is_nil(value) ->
-                  {key, Zexray.Type.Vector3.new(value)}
+                key in [:position, :target, :up] and is_reference(value) ->
+                  {key, Zexray.Type.Vector3.Resource.new(value)}
 
-                key == :target and is_struct(value, Zexray.Type.Vector3.Resource) ->
-                  {key, value}
-
-                key == :target and not is_nil(value) ->
-                  {key, Zexray.Type.Vector3.new(value)}
-
-                key == :up and is_struct(value, Zexray.Type.Vector3.Resource) ->
-                  {key, value}
-
-                key == :up and not is_nil(value) ->
+                key in [:position, :target, :up] and not is_nil(value) ->
                   {key, Zexray.Type.Vector3.new(value)}
 
                 key == :projection and not is_nil(value) ->

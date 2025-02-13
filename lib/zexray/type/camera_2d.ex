@@ -88,11 +88,17 @@ defmodule Zexray.Type.Camera2D do
         fields
         |> Enum.map(fn {key, value} ->
           cond do
-            key == :offset and is_struct(value, Zexray.Type.Vector2.Resource) -> {key, value}
-            key == :offset and not is_nil(value) -> {key, Zexray.Type.Vector2.new(value)}
-            key == :target and is_struct(value, Zexray.Type.Vector2.Resource) -> {key, value}
-            key == :target and not is_nil(value) -> {key, Zexray.Type.Vector2.new(value)}
-            true -> {key, value}
+            key in [:offset, :target] and is_struct(value, Zexray.Type.Vector2.Resource) ->
+              {key, value}
+
+            key in [:offset, :target] and is_reference(value) ->
+              {key, Zexray.Type.Vector2.Resource.new(value)}
+
+            key in [:offset, :target] and not is_nil(value) ->
+              {key, Zexray.Type.Vector2.new(value)}
+
+            true ->
+              {key, value}
           end
         end)
       )

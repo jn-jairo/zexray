@@ -84,6 +84,9 @@ defmodule Zexray.Type.Material do
             key == :shader and is_struct(value, Zexray.Type.Shader.Resource) ->
               {key, value}
 
+            key == :shader and is_reference(value) ->
+              {key, Zexray.Type.Shader.Resource.new(value)}
+
             key == :shader and not is_nil(value) ->
               {key, Zexray.Type.Shader.new(value)}
 
@@ -92,6 +95,7 @@ defmodule Zexray.Type.Material do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.MaterialMap.Resource) -> v
+                   is_reference(v) -> Zexray.Type.MaterialMap.Resource.new(v)
                    true -> Zexray.Type.MaterialMap.new(v)
                  end
                end)}

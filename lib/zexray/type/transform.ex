@@ -81,12 +81,23 @@ defmodule Zexray.Type.Transform do
         fields
         |> Enum.map(fn {key, value} ->
           cond do
-            key == :translation and is_struct(value, Zexray.Type.Vector3.Resource) -> {key, value}
-            key == :translation and not is_nil(value) -> {key, Zexray.Type.Vector3.new(value)}
-            key == :rotation and is_struct(value, Zexray.Type.Quaternion.Resource) -> {key, value}
-            key == :rotation and not is_nil(value) -> {key, Zexray.Type.Quaternion.new(value)}
-            key == :scale and is_struct(value, Zexray.Type.Vector3.Resource) -> {key, value}
-            key == :scale and not is_nil(value) -> {key, Zexray.Type.Vector3.new(value)}
+            key in [:translation, :scale] and is_struct(value, Zexray.Type.Vector3.Resource) ->
+              {key, value}
+
+            key in [:translation, :scale] and is_reference(value) ->
+              {key, Zexray.Type.Vector3.Resource.new(value)}
+
+            key in [:translation, :scale] and not is_nil(value) ->
+              {key, Zexray.Type.Vector3.new(value)}
+
+            key == :rotation and is_struct(value, Zexray.Type.Quaternion.Resource) ->
+              {key, value}
+
+            key == :rotation and is_reference(value) ->
+              {key, Zexray.Type.Quaternion.Resource.new(value)}
+
+            key == :rotation and not is_nil(value) ->
+              {key, Zexray.Type.Quaternion.new(value)}
           end
         end)
       )

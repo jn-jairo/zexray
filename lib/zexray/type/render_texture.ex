@@ -93,6 +93,9 @@ defmodule Zexray.Type.RenderTextureBase do
                 key in [:texture, :depth] and is_struct(value, Zexray.Type.Texture.Resource) ->
                   {key, value}
 
+                key in [:texture, :depth] and is_reference(value) ->
+                  {key, Zexray.Type.Texture.Resource.new(value)}
+
                 key in [:texture, :depth] and not is_nil(value) ->
                   {key, Zexray.Type.Texture.new(value)}
 

@@ -105,6 +105,9 @@ defmodule Zexray.Type.Font do
             key == :texture and is_struct(value, Zexray.Type.Texture.Resource) ->
               {key, value}
 
+            key == :texture and is_reference(value) ->
+              {key, Zexray.Type.Texture.Resource.new(value)}
+
             key == :texture and not is_nil(value) ->
               {key, Zexray.Type.Texture.new(value)}
 
@@ -113,6 +116,7 @@ defmodule Zexray.Type.Font do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.Rectangle.Resource) -> v
+                   is_reference(v) -> Zexray.Type.Rectangle.Resource.new(v)
                    true -> Zexray.Type.Rectangle.new(v)
                  end
                end)}
@@ -122,6 +126,7 @@ defmodule Zexray.Type.Font do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.GlyphInfo.Resource) -> v
+                   is_reference(v) -> Zexray.Type.GlyphInfo.Resource.new(v)
                    true -> Zexray.Type.GlyphInfo.new(v)
                  end
                end)}

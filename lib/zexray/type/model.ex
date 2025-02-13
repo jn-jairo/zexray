@@ -136,6 +136,9 @@ defmodule Zexray.Type.Model do
             key == :transform and is_struct(value, Zexray.Type.Matrix.Resource) ->
               {key, value}
 
+            key == :transform and is_reference(value) ->
+              {key, Zexray.Type.Matrix.Resource.new(value)}
+
             key == :transform and not is_nil(value) ->
               {key, Zexray.Type.Matrix.new(value)}
 
@@ -144,6 +147,7 @@ defmodule Zexray.Type.Model do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.Mesh.Resource) -> v
+                   is_reference(v) -> Zexray.Type.Mesh.Resource.new(v)
                    true -> Zexray.Type.Mesh.new(v)
                  end
                end)}
@@ -153,6 +157,7 @@ defmodule Zexray.Type.Model do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.Material.Resource) -> v
+                   is_reference(v) -> Zexray.Type.Material.Resource.new(v)
                    true -> Zexray.Type.Material.new(v)
                  end
                end)}
@@ -162,6 +167,7 @@ defmodule Zexray.Type.Model do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
+                   is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
                    true -> Zexray.Type.BoneInfo.new(v)
                  end
                end)}
@@ -171,6 +177,7 @@ defmodule Zexray.Type.Model do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.Transform.Resource) -> v
+                   is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
                    true -> Zexray.Type.Transform.new(v)
                  end
                end)}

@@ -81,11 +81,26 @@ defmodule Zexray.Type.MaterialMap do
         fields
         |> Enum.map(fn {key, value} ->
           cond do
-            key == :texture and is_struct(value, Zexray.Type.Texture2D.Resource) -> {key, value}
-            key == :texture and not is_nil(value) -> {key, Zexray.Type.Texture2D.new(value)}
-            key == :color and is_struct(value, Zexray.Type.Color.Resource) -> {key, value}
-            key == :color and not is_nil(value) -> {key, Zexray.Type.Color.new(value)}
-            true -> {key, value}
+            key == :texture and is_struct(value, Zexray.Type.Texture2D.Resource) ->
+              {key, value}
+
+            key == :texture and is_reference(value) ->
+              {key, Zexray.Type.Texture2D.Resource.new(value)}
+
+            key == :texture and not is_nil(value) ->
+              {key, Zexray.Type.Texture2D.new(value)}
+
+            key == :color and is_struct(value, Zexray.Type.Color.Resource) ->
+              {key, value}
+
+            key == :color and is_reference(value) ->
+              {key, Zexray.Type.Color.Resource.new(value)}
+
+            key == :color and not is_nil(value) ->
+              {key, Zexray.Type.Color.new(value)}
+
+            true ->
+              {key, value}
           end
         end)
       )

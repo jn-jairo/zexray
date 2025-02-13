@@ -98,6 +98,9 @@ defmodule Zexray.Type.GlyphInfo do
             key == :image and is_struct(value, Zexray.Type.Image.Resource) ->
               {key, value}
 
+            key == :image and is_reference(value) ->
+              {key, Zexray.Type.Image.Resource.new(value)}
+
             key == :image and not is_nil(value) ->
               {key, Zexray.Type.Image.new(value)}
 

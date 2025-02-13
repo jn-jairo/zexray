@@ -109,6 +109,7 @@ defmodule Zexray.Type.ModelAnimation do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
+                   is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
                    true -> Zexray.Type.BoneInfo.new(v)
                  end
                end)}
@@ -120,6 +121,7 @@ defmodule Zexray.Type.ModelAnimation do
                  &Enum.map(&1, fn v ->
                    cond do
                      is_struct(v, Zexray.Type.Transform.Resource) -> v
+                     is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
                      true -> Zexray.Type.Transform.new(v)
                    end
                  end)

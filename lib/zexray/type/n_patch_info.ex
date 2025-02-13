@@ -102,10 +102,20 @@ defmodule Zexray.Type.NPatchInfo do
         fields
         |> Enum.map(fn {key, value} ->
           cond do
-            key == :source and is_struct(value, Zexray.Type.Rectangle.Resource) -> {key, value}
-            key == :source and not is_nil(value) -> {key, Zexray.Type.Rectangle.new(value)}
-            key == :layout and not is_nil(value) -> {key, Zexray.Enum.NPatchLayout.value(value)}
-            true -> {key, value}
+            key == :source and is_struct(value, Zexray.Type.Rectangle.Resource) ->
+              {key, value}
+
+            key == :source and is_reference(value) ->
+              {key, Zexray.Type.Rectangle.Resource.new(value)}
+
+            key == :source and not is_nil(value) ->
+              {key, Zexray.Type.Rectangle.new(value)}
+
+            key == :layout and not is_nil(value) ->
+              {key, Zexray.Enum.NPatchLayout.value(value)}
+
+            true ->
+              {key, value}
           end
         end)
       )

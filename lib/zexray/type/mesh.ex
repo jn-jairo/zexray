@@ -188,6 +188,7 @@ defmodule Zexray.Type.Mesh do
                Enum.map(value, fn v ->
                  cond do
                    is_struct(v, Zexray.Type.Matrix.Resource) -> v
+                   is_reference(v) -> Zexray.Type.Matrix.Resource.new(v)
                    true -> Zexray.Type.Matrix.new(v)
                  end
                end)}
