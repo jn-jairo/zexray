@@ -62,6 +62,8 @@ defmodule Zexray.Type.Vector4Test do
       {expected, params} = dataset
 
       assert ^expected = apply(Type, :new, params)
+      assert ^expected = apply(Type, :from_nif, params)
+      assert apply(Type, :to_nif, [expected]) == apply(Type, :to_nif, params)
     end
   end
 

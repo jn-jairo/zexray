@@ -78,6 +78,16 @@ defmodule Zexray.Type.TypeBase do
       """
       def to_nif(value)
 
+      @spec to_nif(values :: list) :: list
+      def to_nif(values) when is_list(values) do
+        values |> Enum.map(&to_nif/1)
+      end
+
+      @spec to_nif(reference :: reference) :: reference
+      def to_nif(reference) when is_reference(reference) do
+        reference
+      end
+
       @spec to_nif(resource :: __MODULE__.Resource.t()) :: reference
       def to_nif(%__MODULE__.Resource{} = resource) do
         resource.reference
@@ -88,10 +98,18 @@ defmodule Zexray.Type.TypeBase do
         value
         |> Map.from_struct()
         |> Enum.into(%{}, fn {key, value} ->
-          if is_struct(value) and String.ends_with?(Atom.to_string(value.__struct__), ".Resource") do
-            {key, value.reference}
-          else
-            {key, value}
+          cond do
+            is_list(value) ->
+              {key, list_to_nif(value)}
+
+            is_struct(value) and function_exported?(value.__struct__, :to_nif, 1) ->
+              {key, value.__struct__.to_nif(value)}
+
+            is_struct(value) and String.ends_with?(Atom.to_string(value.__struct__), ".Resource") ->
+              {key, value.reference}
+
+            true ->
+              {key, value}
           end
         end)
         |> Zexray.Util.map_from_struct()
@@ -103,10 +121,35 @@ defmodule Zexray.Type.TypeBase do
         |> to_nif()
       end
 
+      @spec list_to_nif(values :: list) :: list
+      defp list_to_nif(values) when is_list(values) do
+        values
+        |> Enum.map(fn value ->
+          cond do
+            is_list(value) ->
+              list_to_nif(value)
+
+            is_struct(value) and function_exported?(value.__struct__, :to_nif, 1) ->
+              value.__struct__.to_nif(value)
+
+            is_struct(value) and String.ends_with?(Atom.to_string(value.__struct__), ".Resource") ->
+              value.reference
+
+            true ->
+              value
+          end
+        end)
+      end
+
       @doc """
       Converts from a format returned by the NIF.
       """
       def from_nif(value)
+
+      @spec from_nif(values :: list) :: list
+      def from_nif(values) when is_list(values) do
+        values |> Enum.map(&from_nif/1)
+      end
 
       @spec from_nif(reference :: reference) :: __MODULE__.Resource.t()
       def from_nif(reference) when is_reference(reference) do
@@ -115,6 +158,11 @@ defmodule Zexray.Type.TypeBase do
 
       @spec from_nif(value :: map) :: __MODULE__.t()
       def from_nif(%{} = value) do
+        apply(__MODULE__, :new, [value])
+      end
+
+      @spec from_nif(value :: any) :: __MODULE__.t()
+      def from_nif(value) do
         apply(__MODULE__, :new, [value])
       end
     end
