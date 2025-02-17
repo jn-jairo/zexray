@@ -81,7 +81,7 @@ defmodule Zexray.Type.Rectangle do
         fields
       )
     else
-      raise ArgumentError, "Invalid rectangle: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

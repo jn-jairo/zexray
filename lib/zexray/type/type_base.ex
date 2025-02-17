@@ -11,6 +11,7 @@ defmodule Zexray.Type.TypeBase do
       |> String.to_atom()
 
     prefix = Keyword.fetch!(opts, :prefix)
+    name = String.replace(prefix, "_", " ")
     from_resource = String.to_atom("#{prefix}_from_resource")
     to_resource = String.to_atom("#{prefix}_to_resource")
     free_resource = String.to_atom("#{prefix}_free_resource")
@@ -71,7 +72,19 @@ defmodule Zexray.Type.TypeBase do
         end
       end
 
+      @name unquote(name)
+
       @type t_nif :: t | __MODULE__.Resource.t()
+
+      @spec raise_argument_error(value :: any) :: no_return
+      defp raise_argument_error(value) do
+        raise ArgumentError, "Invalid #{@name}: #{inspect(value)}"
+      end
+
+      @spec raise_argument_error(value :: any, available :: any) :: no_return
+      defp raise_argument_error(value, available) do
+        raise ArgumentError, "Invalid #{@name}: #{inspect(value)}\nAvailable: #{inspect(available)}"
+      end
 
       @doc """
       Converts to a format accepted by the NIF.

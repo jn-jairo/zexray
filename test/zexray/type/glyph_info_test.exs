@@ -73,6 +73,13 @@ defmodule Zexray.Type.GlyphInfoTest do
     assert_raise ArgumentError, fn -> Type.new({}) end
   end
 
+  test "new nil", %{value: value} do
+    map = value |> Map.from_struct()
+    Enum.each(Map.keys(map), fn key ->
+      assert apply(Type, :new, [%{map | key => nil}]) |> Map.fetch!(key) |> is_nil()
+    end)
+  end
+
   test "resource", %{value: value} do
     resource = Type.Resource.new(value)
     assert similar?(value, Type.new(resource))

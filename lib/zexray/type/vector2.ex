@@ -69,7 +69,7 @@ defmodule Zexray.Type.Vector2 do
         fields
       )
     else
-      raise ArgumentError, "Invalid vector: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

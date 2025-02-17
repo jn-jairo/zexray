@@ -94,23 +94,27 @@ defmodule Zexray.Type.GlyphInfo do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :image and is_struct(value, Zexray.Type.Image.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :image and is_reference(value) ->
-              {key, Zexray.Type.Image.Resource.new(value)}
+              key == :image ->
+                cond do
+                  is_struct(value, Zexray.Type.Image.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Image.Resource.new(value)
+                  true -> Zexray.Type.Image.new(value)
+                end
 
-            key == :image and not is_nil(value) ->
-              {key, Zexray.Type.Image.new(value)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid glyph info: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

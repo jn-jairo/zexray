@@ -103,37 +103,41 @@ defmodule Zexray.Type.ModelAnimation do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :bones and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
-                   is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
-                   true -> Zexray.Type.BoneInfo.new(v)
-                 end
-               end)}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :frame_poses and is_list(value) ->
-              {key,
-               Enum.map(
-                 value,
-                 &Enum.map(&1, fn v ->
-                   cond do
-                     is_struct(v, Zexray.Type.Transform.Resource) -> v
-                     is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
-                     true -> Zexray.Type.Transform.new(v)
-                   end
-                 end)
-               )}
+              key == :bones and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
+                    is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
+                    true -> Zexray.Type.BoneInfo.new(v)
+                  end
+                end)
 
-            true ->
-              {key, value}
-          end
+              key == :frame_poses and is_list(value) ->
+                Enum.map(
+                  value,
+                  &Enum.map(&1, fn v ->
+                    cond do
+                      is_struct(v, Zexray.Type.Transform.Resource) -> v
+                      is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
+                      true -> Zexray.Type.Transform.new(v)
+                    end
+                  end)
+                )
+
+              true ->
+                value
+            end
+
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid model animation: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

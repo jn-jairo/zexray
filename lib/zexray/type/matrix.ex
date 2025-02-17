@@ -204,7 +204,7 @@ defmodule Zexray.Type.Matrix do
         fields
       )
     else
-      raise ArgumentError, "Invalid matrix: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

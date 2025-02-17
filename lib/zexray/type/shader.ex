@@ -72,7 +72,7 @@ defmodule Zexray.Type.Shader do
         fields
       )
     else
-      raise ArgumentError, "Invalid shader: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

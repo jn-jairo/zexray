@@ -132,63 +132,63 @@ defmodule Zexray.Type.Model do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :transform and is_struct(value, Zexray.Type.Matrix.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :transform and is_reference(value) ->
-              {key, Zexray.Type.Matrix.Resource.new(value)}
+              key == :transform ->
+                cond do
+                  is_struct(value, Zexray.Type.Matrix.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Matrix.Resource.new(value)
+                  true -> Zexray.Type.Matrix.new(value)
+                end
 
-            key == :transform and not is_nil(value) ->
-              {key, Zexray.Type.Matrix.new(value)}
+              key == :meshes and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.Mesh.Resource) -> v
+                    is_reference(v) -> Zexray.Type.Mesh.Resource.new(v)
+                    true -> Zexray.Type.Mesh.new(v)
+                  end
+                end)
 
-            key == :meshes and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.Mesh.Resource) -> v
-                   is_reference(v) -> Zexray.Type.Mesh.Resource.new(v)
-                   true -> Zexray.Type.Mesh.new(v)
-                 end
-               end)}
+              key == :materials and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.Material.Resource) -> v
+                    is_reference(v) -> Zexray.Type.Material.Resource.new(v)
+                    true -> Zexray.Type.Material.new(v)
+                  end
+                end)
 
-            key == :materials and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.Material.Resource) -> v
-                   is_reference(v) -> Zexray.Type.Material.Resource.new(v)
-                   true -> Zexray.Type.Material.new(v)
-                 end
-               end)}
+              key == :bones and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
+                    is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
+                    true -> Zexray.Type.BoneInfo.new(v)
+                  end
+                end)
 
-            key == :bones and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.BoneInfo.Resource) -> v
-                   is_reference(v) -> Zexray.Type.BoneInfo.Resource.new(v)
-                   true -> Zexray.Type.BoneInfo.new(v)
-                 end
-               end)}
+              key == :bind_pose and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.Transform.Resource) -> v
+                    is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
+                    true -> Zexray.Type.Transform.new(v)
+                  end
+                end)
 
-            key == :bind_pose and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.Transform.Resource) -> v
-                   is_reference(v) -> Zexray.Type.Transform.Resource.new(v)
-                   true -> Zexray.Type.Transform.new(v)
-                 end
-               end)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid model: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

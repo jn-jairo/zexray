@@ -72,7 +72,7 @@ defmodule Zexray.Type.BoneInfo do
         fields
       )
     else
-      raise ArgumentError, "Invalid bone info: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

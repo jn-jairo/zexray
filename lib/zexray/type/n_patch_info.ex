@@ -101,26 +101,30 @@ defmodule Zexray.Type.NPatchInfo do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :source and is_struct(value, Zexray.Type.Rectangle.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :source and is_reference(value) ->
-              {key, Zexray.Type.Rectangle.Resource.new(value)}
+              key == :source ->
+                cond do
+                  is_struct(value, Zexray.Type.Rectangle.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Rectangle.Resource.new(value)
+                  true -> Zexray.Type.Rectangle.new(value)
+                end
 
-            key == :source and not is_nil(value) ->
-              {key, Zexray.Type.Rectangle.new(value)}
+              key == :layout ->
+                Zexray.Enum.NPatchLayout.value(value)
 
-            key == :layout and not is_nil(value) ->
-              {key, Zexray.Enum.NPatchLayout.value(value)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid n patch info: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

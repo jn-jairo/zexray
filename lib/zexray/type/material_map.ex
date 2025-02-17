@@ -80,32 +80,34 @@ defmodule Zexray.Type.MaterialMap do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :texture and is_struct(value, Zexray.Type.Texture2D.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :texture and is_reference(value) ->
-              {key, Zexray.Type.Texture2D.Resource.new(value)}
+              key == :texture ->
+                cond do
+                  is_struct(value, Zexray.Type.Texture2D.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Texture2D.Resource.new(value)
+                  true -> Zexray.Type.Texture2D.new(value)
+                end
 
-            key == :texture and not is_nil(value) ->
-              {key, Zexray.Type.Texture2D.new(value)}
+              key == :color ->
+                cond do
+                  is_struct(value, Zexray.Type.Color.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Color.Resource.new(value)
+                  true -> Zexray.Type.Color.new(value)
+                end
 
-            key == :color and is_struct(value, Zexray.Type.Color.Resource) ->
-              {key, value}
+              true ->
+                value
+            end
 
-            key == :color and is_reference(value) ->
-              {key, Zexray.Type.Color.Resource.new(value)}
-
-            key == :color and not is_nil(value) ->
-              {key, Zexray.Type.Color.new(value)}
-
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid material map: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

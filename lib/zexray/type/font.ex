@@ -101,43 +101,45 @@ defmodule Zexray.Type.Font do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :texture and is_struct(value, Zexray.Type.Texture.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :texture and is_reference(value) ->
-              {key, Zexray.Type.Texture.Resource.new(value)}
+              key == :texture ->
+                cond do
+                  is_struct(value, Zexray.Type.Texture.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Texture.Resource.new(value)
+                  true -> Zexray.Type.Texture.new(value)
+                end
 
-            key == :texture and not is_nil(value) ->
-              {key, Zexray.Type.Texture.new(value)}
+              key == :recs and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.Rectangle.Resource) -> v
+                    is_reference(v) -> Zexray.Type.Rectangle.Resource.new(v)
+                    true -> Zexray.Type.Rectangle.new(v)
+                  end
+                end)
 
-            key == :recs and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.Rectangle.Resource) -> v
-                   is_reference(v) -> Zexray.Type.Rectangle.Resource.new(v)
-                   true -> Zexray.Type.Rectangle.new(v)
-                 end
-               end)}
+              key == :glyphs and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.GlyphInfo.Resource) -> v
+                    is_reference(v) -> Zexray.Type.GlyphInfo.Resource.new(v)
+                    true -> Zexray.Type.GlyphInfo.new(v)
+                  end
+                end)
 
-            key == :glyphs and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.GlyphInfo.Resource) -> v
-                   is_reference(v) -> Zexray.Type.GlyphInfo.Resource.new(v)
-                   true -> Zexray.Type.GlyphInfo.new(v)
-                 end
-               end)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid font: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

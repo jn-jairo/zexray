@@ -144,7 +144,7 @@ defmodule Zexray.Type.Color do
       @colors[name]
       |> new()
     else
-      raise_invalid_color(name)
+      raise_argument_error(name, @colors |> Map.keys())
     end
   end
 
@@ -248,17 +248,20 @@ defmodule Zexray.Type.Color do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          {key, value &&& 0xFF}
+          value =
+            cond do
+              is_nil(value) ->
+                value
+
+              key in [:r, :g, :b, :a] ->
+                value &&& 0xFF
+            end
+
+          {key, value}
         end)
       )
     else
-      raise_invalid_color(fields)
+      raise_argument_error(fields)
     end
-  end
-
-  @spec raise_invalid_color(color :: any) :: no_return
-  defp raise_invalid_color(color) do
-    raise ArgumentError,
-          "Invalid color: #{inspect(color)}\nAvailable color names: #{inspect(@colors |> Map.keys())}"
   end
 end

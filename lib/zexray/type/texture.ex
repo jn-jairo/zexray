@@ -3,7 +3,6 @@ defmodule Zexray.Type.TextureBase do
 
   defmacro __using__(opts) do
     prefix = Keyword.fetch!(opts, :prefix)
-    name = String.replace(prefix, "_", " ")
 
     quote do
       @moduledoc """
@@ -105,17 +104,18 @@ defmodule Zexray.Type.TextureBase do
             __MODULE__,
             fields
             |> Enum.map(fn {key, value} ->
-              cond do
-                key == :format and not is_nil(value) and value != 0 ->
-                  {key, Zexray.Enum.PixelFormat.value(value)}
+              value =
+                cond do
+                  is_nil(value) -> value
+                  key == :format and value != 0 -> Zexray.Enum.PixelFormat.value(value)
+                  true -> value
+                end
 
-                true ->
-                  {key, value}
-              end
+              {key, value}
             end)
           )
         else
-          raise ArgumentError, "Invalid #{unquote(name)}: #{inspect(fields)}"
+            raise_argument_error(fields)
         end
       end
     end

@@ -80,33 +80,36 @@ defmodule Zexray.Type.Material do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :shader and is_struct(value, Zexray.Type.Shader.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key == :shader and is_reference(value) ->
-              {key, Zexray.Type.Shader.Resource.new(value)}
+              key == :shader ->
+                cond do
+                  is_struct(value, Zexray.Type.Shader.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Shader.Resource.new(value)
+                  true -> Zexray.Type.Shader.new(value)
+                end
 
-            key == :shader and not is_nil(value) ->
-              {key, Zexray.Type.Shader.new(value)}
+              key == :maps and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.MaterialMap.Resource) -> v
+                    is_reference(v) -> Zexray.Type.MaterialMap.Resource.new(v)
+                    true -> Zexray.Type.MaterialMap.new(v)
+                  end
+                end)
 
-            key == :maps and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.MaterialMap.Resource) -> v
-                   is_reference(v) -> Zexray.Type.MaterialMap.Resource.new(v)
-                   true -> Zexray.Type.MaterialMap.new(v)
-                 end
-               end)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid material: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

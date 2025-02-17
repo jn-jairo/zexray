@@ -87,23 +87,27 @@ defmodule Zexray.Type.Camera2D do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key in [:offset, :target] and is_struct(value, Zexray.Type.Vector2.Resource) ->
-              {key, value}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            key in [:offset, :target] and is_reference(value) ->
-              {key, Zexray.Type.Vector2.Resource.new(value)}
+              key in [:offset, :target] ->
+                cond do
+                  is_struct(value, Zexray.Type.Vector2.Resource) -> value
+                  is_reference(value) -> Zexray.Type.Vector2.Resource.new(value)
+                  true -> Zexray.Type.Vector2.new(value)
+                end
 
-            key in [:offset, :target] and not is_nil(value) ->
-              {key, Zexray.Type.Vector2.new(value)}
+              true ->
+                value
+            end
 
-            true ->
-              {key, value}
-          end
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid camera 2d: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

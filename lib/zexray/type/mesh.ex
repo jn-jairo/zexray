@@ -182,24 +182,29 @@ defmodule Zexray.Type.Mesh do
         __MODULE__,
         fields
         |> Enum.map(fn {key, value} ->
-          cond do
-            key == :bone_matrices and is_list(value) ->
-              {key,
-               Enum.map(value, fn v ->
-                 cond do
-                   is_struct(v, Zexray.Type.Matrix.Resource) -> v
-                   is_reference(v) -> Zexray.Type.Matrix.Resource.new(v)
-                   true -> Zexray.Type.Matrix.new(v)
-                 end
-               end)}
+          value =
+            cond do
+              is_nil(value) ->
+                value
 
-            true ->
-              {key, value}
-          end
+              key == :bone_matrices and is_list(value) ->
+                Enum.map(value, fn v ->
+                  cond do
+                    is_struct(v, Zexray.Type.Matrix.Resource) -> v
+                    is_reference(v) -> Zexray.Type.Matrix.Resource.new(v)
+                    true -> Zexray.Type.Matrix.new(v)
+                  end
+                end)
+
+              true ->
+                value
+            end
+
+          {key, value}
         end)
       )
     else
-      raise ArgumentError, "Invalid mesh: #{inspect(fields)}"
+      raise_argument_error(fields)
     end
   end
 end

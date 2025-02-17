@@ -3,7 +3,6 @@ defmodule Zexray.Type.Camera3DBase do
 
   defmacro __using__(opts) do
     prefix = Keyword.fetch!(opts, :prefix)
-    name = String.replace(prefix, "_", " ")
 
     quote do
       @moduledoc """
@@ -103,27 +102,30 @@ defmodule Zexray.Type.Camera3DBase do
             __MODULE__,
             fields
             |> Enum.map(fn {key, value} ->
-              cond do
-                key in [:position, :target, :up] and
-                    is_struct(value, Zexray.Type.Vector3.Resource) ->
-                  {key, value}
+              value =
+                cond do
+                  is_nil(value) ->
+                    value
 
-                key in [:position, :target, :up] and is_reference(value) ->
-                  {key, Zexray.Type.Vector3.Resource.new(value)}
+                  key in [:position, :target, :up] ->
+                    cond do
+                      is_struct(value, Zexray.Type.Vector3.Resource) -> value
+                      is_reference(value) -> Zexray.Type.Vector3.Resource.new(value)
+                      true -> Zexray.Type.Vector3.new(value)
+                    end
 
-                key in [:position, :target, :up] and not is_nil(value) ->
-                  {key, Zexray.Type.Vector3.new(value)}
+                  key == :projection ->
+                    Zexray.Enum.CameraProjection.value(value)
 
-                key == :projection and not is_nil(value) ->
-                  {key, Zexray.Enum.CameraProjection.value(value)}
+                  true ->
+                    value
+                end
 
-                true ->
-                  {key, value}
-              end
+              {key, value}
             end)
           )
         else
-          raise ArgumentError, "Invalid #{unquote(name)}: #{inspect(fields)}"
+            raise_argument_error(fields)
         end
       end
     end

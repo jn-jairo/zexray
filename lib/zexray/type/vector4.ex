@@ -3,7 +3,6 @@ defmodule Zexray.Type.Vector4Base do
 
   defmacro __using__(opts) do
     prefix = Keyword.fetch!(opts, :prefix)
-    name = String.replace(prefix, "_", " ")
 
     quote do
       @moduledoc """
@@ -90,7 +89,7 @@ defmodule Zexray.Type.Vector4Base do
             fields
           )
         else
-          raise ArgumentError, "Invalid #{unquote(name)}: #{inspect(fields)}"
+          raise_argument_error(fields)
         end
       end
     end

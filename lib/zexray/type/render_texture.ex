@@ -3,7 +3,6 @@ defmodule Zexray.Type.RenderTextureBase do
 
   defmacro __using__(opts) do
     prefix = Keyword.fetch!(opts, :prefix)
-    name = String.replace(prefix, "_", " ")
 
     quote do
       @moduledoc """
@@ -89,23 +88,27 @@ defmodule Zexray.Type.RenderTextureBase do
             __MODULE__,
             fields
             |> Enum.map(fn {key, value} ->
-              cond do
-                key in [:texture, :depth] and is_struct(value, Zexray.Type.Texture.Resource) ->
-                  {key, value}
+              value =
+                cond do
+                  is_nil(value) ->
+                    value
 
-                key in [:texture, :depth] and is_reference(value) ->
-                  {key, Zexray.Type.Texture.Resource.new(value)}
+                  key in [:texture, :depth] ->
+                    cond do
+                      is_struct(value, Zexray.Type.Texture.Resource) -> value
+                      is_reference(value) -> Zexray.Type.Texture.Resource.new(value)
+                      true -> Zexray.Type.Texture.new(value)
+                    end
 
-                key in [:texture, :depth] and not is_nil(value) ->
-                  {key, Zexray.Type.Texture.new(value)}
+                  true ->
+                    value
+                end
 
-                true ->
-                  {key, value}
-              end
+              {key, value}
             end)
           )
         else
-          raise ArgumentError, "Invalid #{unquote(name)}: #{inspect(fields)}"
+            raise_argument_error(fields)
         end
       end
     end
