@@ -71,6 +71,7 @@ defmodule Zexray.Type.MaterialMapTest do
 
   test "new nil", %{value: value} do
     map = value |> Map.from_struct()
+
     Enum.each(Map.keys(map), fn key ->
       assert apply(Type, :new, [%{map | key => nil}]) |> Map.fetch!(key) |> is_nil()
     end)

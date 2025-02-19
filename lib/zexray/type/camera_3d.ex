@@ -125,7 +125,7 @@ defmodule Zexray.Type.Camera3DBase do
             end)
           )
         else
-            raise_argument_error(fields)
+          raise_argument_error(fields)
         end
       end
     end

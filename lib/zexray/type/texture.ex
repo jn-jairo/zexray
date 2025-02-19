@@ -115,7 +115,7 @@ defmodule Zexray.Type.TextureBase do
             end)
           )
         else
-            raise_argument_error(fields)
+          raise_argument_error(fields)
         end
       end
     end

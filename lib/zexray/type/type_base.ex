@@ -83,7 +83,8 @@ defmodule Zexray.Type.TypeBase do
 
       @spec raise_argument_error(value :: any, available :: any) :: no_return
       defp raise_argument_error(value, available) do
-        raise ArgumentError, "Invalid #{@name}: #{inspect(value)}\nAvailable: #{inspect(available)}"
+        raise ArgumentError,
+              "Invalid #{@name}: #{inspect(value)}\nAvailable: #{inspect(available)}"
       end
 
       @doc """
