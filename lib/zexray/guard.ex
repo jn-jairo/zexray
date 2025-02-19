@@ -21,6 +21,7 @@ defmodule Zexray.Guard do
     NPatchInfo,
     Quaternion,
     Ray,
+    RayCollision,
     Rectangle,
     RenderTexture,
     RenderTexture2D,
@@ -88,6 +89,7 @@ defmodule Zexray.Guard do
   defguard is_n_patch_info(value) when is_struct(value, NPatchInfo)
   defguard is_quaternion(value) when is_struct(value, Quaternion)
   defguard is_ray(value) when is_struct(value, Ray)
+  defguard is_ray_collision(value) when is_struct(value, RayCollision)
   defguard is_rectangle(value) when is_struct(value, Rectangle)
   defguard is_render_texture(value) when is_struct(value, RenderTexture)
   defguard is_render_texture_2d(value) when is_struct(value, RenderTexture2D)
@@ -210,6 +212,12 @@ defmodule Zexray.Guard do
                   is_struct(value, Ray.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 2)
+
+  defguard is_ray_collision_like(value)
+           when is_ray_collision(value) or
+                  is_struct(value, RayCollision.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 4)
 
   defguard is_rectangle_like(value)
            when is_rectangle(value) or

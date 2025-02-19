@@ -19,6 +19,7 @@ defmodule Zexray.TypeFixture do
     NPatchInfo,
     Quaternion,
     Ray,
+    RayCollision,
     Rectangle,
     RenderTexture,
     RenderTexture2D,
@@ -629,6 +630,36 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Ray.new()
+  end
+
+  def ray_collision_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      :base ->
+        %{
+          hit: true,
+          distance: 2.34,
+          point: vector3_fixture(type),
+          normal: vector3_fixture(type)
+        }
+
+      :resource ->
+        %{
+          hit: true,
+          distance: 2.34,
+          point: make_ref(),
+          normal: make_ref()
+        }
+
+      :empty ->
+        %{
+          hit: false,
+          distance: 0.0,
+          point: vector3_fixture(type),
+          normal: vector3_fixture(type)
+        }
+    end
+    |> Map.merge(attrs)
+    |> RayCollision.new()
   end
 
   def rectangle_fixture(type \\ :base, attrs \\ %{}) do

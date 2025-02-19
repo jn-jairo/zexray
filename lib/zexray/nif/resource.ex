@@ -142,7 +142,12 @@ defmodule Zexray.NIF.Resource do
         # Ray
         ray_to_resource: 1,
         ray_from_resource: 1,
-        ray_free_resource: 1
+        ray_free_resource: 1,
+
+        # RayCollision
+        ray_collision_to_resource: 1,
+        ray_collision_from_resource: 1,
+        ray_collision_free_resource: 1
       ]
 
       #############
@@ -592,6 +597,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec ray_free_resource(resource :: reference) :: :ok
       def ray_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ##################
+      #  RayCollision  #
+      ##################
+
+      @doc group: :resource
+      @spec ray_collision_to_resource(value :: map) :: reference
+      def ray_collision_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ray_collision_from_resource(resource :: reference) :: map
+      def ray_collision_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ray_collision_free_resource(resource :: reference) :: :ok
+      def ray_collision_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

@@ -54,6 +54,20 @@ pub const UInt = struct {
     }
 };
 
+///////////////
+//  Boolean  //
+///////////////
+
+pub const Boolean = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: bool) e.ErlNifTerm {
+        return if (value) Atom.make(env, "true") else Atom.make(env, "false");
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !bool {
+        return e.enif_is_identical(Atom.make(env, "true"), term) != 0;
+    }
+};
+
 ////////////
 //  Atom  //
 ////////////
@@ -3591,6 +3605,90 @@ pub const Ray = struct {
     }
 
     pub fn free(value: rl.Ray) void {
+        _ = value;
+    }
+};
+
+////////////////////
+//  RayCollision  //
+////////////////////
+
+pub const RayCollision = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.RayCollision, "ray_collision");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.RayCollision) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // hit
+
+        const term_hit_key = Atom.make(env, "hit");
+        const term_hit_value = Boolean.make(env, value.hit);
+        assert(e.enif_make_map_put(env, term, term_hit_key, term_hit_value, &term) != 0);
+
+        // distance
+
+        const term_distance_key = Atom.make(env, "distance");
+        const term_distance_value = Double.make(env, @floatCast(value.distance));
+        assert(e.enif_make_map_put(env, term, term_distance_key, term_distance_value, &term) != 0);
+
+        // point
+
+        const term_point_key = Atom.make(env, "point");
+        const term_point_value = Vector3.make(env, value.point);
+        assert(e.enif_make_map_put(env, term, term_point_key, term_point_value, &term) != 0);
+
+        // normal
+
+        const term_normal_key = Atom.make(env, "normal");
+        const term_normal_value = Vector3.make(env, value.normal);
+        assert(e.enif_make_map_put(env, term, term_normal_key, term_normal_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RayCollision {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.RayCollision{};
+
+        // hit
+
+        const term_hit_key = Atom.make(env, "hit");
+        var term_hit_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_hit_key, &term_hit_value) == 0) return error.ArgumentError;
+        value.hit = try Boolean.get(env, term_hit_value);
+
+        // distance
+
+        const term_distance_key = Atom.make(env, "distance");
+        var term_distance_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_distance_key, &term_distance_value) == 0) return error.ArgumentError;
+        value.distance = @floatCast(try Double.get(env, term_distance_value));
+
+        // point
+
+        const term_point_key = Atom.make(env, "point");
+        var term_point_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_point_key, &term_point_value) == 0) return error.ArgumentError;
+        value.point = try Vector3.get(env, term_point_value);
+
+        // normal
+
+        const term_normal_key = Atom.make(env, "normal");
+        var term_normal_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_normal_key, &term_normal_value) == 0) return error.ArgumentError;
+        value.normal = try Vector3.get(env, term_normal_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.RayCollision) void {
         _ = value;
     }
 };

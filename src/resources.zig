@@ -32,6 +32,7 @@ pub const ResourceType = struct {
     model: *e.ErlNifResourceType = undefined,
     model_animation: *e.ErlNifResourceType = undefined,
     ray: *e.ErlNifResourceType = undefined,
+    ray_collision: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -146,6 +147,10 @@ pub const ResourceType = struct {
     pub fn ray_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Ray.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn ray_collision_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.RayCollision.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -181,6 +186,7 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.model = e.enif_open_resource_type(env, null, "Zexray.Resource.Model", &ResourceType.model_dtor, flags, null) orelse return false;
     resource_type.model_animation = e.enif_open_resource_type(env, null, "Zexray.Resource.ModelAnimation", &ResourceType.model_animation_dtor, flags, null) orelse return false;
     resource_type.ray = e.enif_open_resource_type(env, null, "Zexray.Resource.Ray", &ResourceType.ray_dtor, flags, null) orelse return false;
+    resource_type.ray_collision = e.enif_open_resource_type(env, null, "Zexray_collision.Resource.RayCollision", &ResourceType.ray_collision_dtor, flags, null) orelse return false;
 
     return true;
 }

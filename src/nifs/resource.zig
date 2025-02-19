@@ -144,6 +144,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "ray_to_resource", .arity = 1, .fptr = nif_ray_to_resource, .flags = 0 },
     .{ .name = "ray_from_resource", .arity = 1, .fptr = nif_ray_from_resource, .flags = 0 },
     .{ .name = "ray_free_resource", .arity = 1, .fptr = nif_ray_free_resource, .flags = 0 },
+
+    // RayCollision
+    .{ .name = "ray_collision_to_resource", .arity = 1, .fptr = nif_ray_collision_to_resource, .flags = 0 },
+    .{ .name = "ray_collision_from_resource", .arity = 1, .fptr = nif_ray_collision_from_resource, .flags = 0 },
+    .{ .name = "ray_collision_free_resource", .arity = 1, .fptr = nif_ray_collision_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1290,6 +1295,47 @@ fn nif_ray_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     };
 
     core.Ray.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+////////////////////
+//  RayCollision  //
+////////////////////
+
+fn nif_ray_collision_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.RayCollision.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.RayCollision.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.RayCollision.Resource.release(resource);
+
+    return core.RayCollision.Resource.make(env, resource);
+}
+
+fn nif_ray_collision_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.RayCollision.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.RayCollision.make(env, resource.*.*);
+}
+
+fn nif_ray_collision_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.RayCollision.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.RayCollision.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }
