@@ -149,6 +149,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "ray_collision_to_resource", .arity = 1, .fptr = nif_ray_collision_to_resource, .flags = 0 },
     .{ .name = "ray_collision_from_resource", .arity = 1, .fptr = nif_ray_collision_from_resource, .flags = 0 },
     .{ .name = "ray_collision_free_resource", .arity = 1, .fptr = nif_ray_collision_free_resource, .flags = 0 },
+
+    // BoundingBox
+    .{ .name = "bounding_box_to_resource", .arity = 1, .fptr = nif_bounding_box_to_resource, .flags = 0 },
+    .{ .name = "bounding_box_from_resource", .arity = 1, .fptr = nif_bounding_box_from_resource, .flags = 0 },
+    .{ .name = "bounding_box_free_resource", .arity = 1, .fptr = nif_bounding_box_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1336,6 +1341,47 @@ fn nif_ray_collision_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
     };
 
     core.RayCollision.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+///////////////////
+//  BoundingBox  //
+///////////////////
+
+fn nif_bounding_box_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.BoundingBox.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.BoundingBox.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.BoundingBox.Resource.release(resource);
+
+    return core.BoundingBox.Resource.make(env, resource);
+}
+
+fn nif_bounding_box_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.BoundingBox.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.BoundingBox.make(env, resource.*.*);
+}
+
+fn nif_bounding_box_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.BoundingBox.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.BoundingBox.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

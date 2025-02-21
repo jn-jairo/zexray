@@ -5,6 +5,7 @@ defmodule Zexray.Guard do
 
   alias Zexray.Type.{
     BoneInfo,
+    BoundingBox,
     Camera,
     Camera2D,
     Camera3D,
@@ -73,6 +74,7 @@ defmodule Zexray.Guard do
   ##########
 
   defguard is_bone_info(value) when is_struct(value, BoneInfo)
+  defguard is_bounding_box(value) when is_struct(value, BoundingBox)
   defguard is_camera(value) when is_struct(value, Camera)
   defguard is_camera_2d(value) when is_struct(value, Camera2D)
   defguard is_camera_3d(value) when is_struct(value, Camera3D)
@@ -105,6 +107,12 @@ defmodule Zexray.Guard do
   defguard is_bone_info_like(value)
            when is_bone_info(value) or
                   is_struct(value, BoneInfo.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 2)
+
+  defguard is_bounding_box_like(value)
+           when is_bounding_box(value) or
+                  is_struct(value, BoundingBox.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 2)
 

@@ -75,6 +75,7 @@ defmodule Zexray.TypeTest do
         model_animation: {"model_animation", :base},
         ray: {"ray", :base},
         ray_collision: {"ray_collision", :base},
+        bounding_box: {"bounding_box", :base},
         # resource
         vector2_resource: {"vector2", :resource},
         vector3_resource: {"vector3", :resource},
@@ -105,6 +106,7 @@ defmodule Zexray.TypeTest do
         model_animation_resource: {"model_animation", :resource},
         ray_resource: {"ray", :resource},
         ray_collision_resource: {"ray_collision", :resource},
+        bounding_box_resource: {"bounding_box", :resource},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -134,7 +136,8 @@ defmodule Zexray.TypeTest do
         model_empty: {"model", :empty},
         model_animation_empty: {"model_animation", :empty},
         ray_empty: {"ray", :empty},
-        ray_collision_empty: {"ray_collision", :empty}
+        ray_collision_empty: {"ray_collision", :empty},
+        bounding_box_empty: {"bounding_box", :empty}
       }
 
       %{datasets: datasets}
@@ -173,6 +176,7 @@ defmodule Zexray.TypeTest do
       [dataset: :model_animation],
       [dataset: :ray],
       [dataset: :ray_collision],
+      [dataset: :bounding_box],
       # resource
       [dataset: :vector2_resource],
       [dataset: :vector3_resource],
@@ -203,6 +207,7 @@ defmodule Zexray.TypeTest do
       [dataset: :model_animation_resource],
       [dataset: :ray_resource],
       [dataset: :ray_collision_resource],
+      [dataset: :bounding_box_resource],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -232,7 +237,8 @@ defmodule Zexray.TypeTest do
       [dataset: :model_empty],
       [dataset: :model_animation_empty],
       [dataset: :ray_empty],
-      [dataset: :ray_collision_empty]
+      [dataset: :ray_collision_empty],
+      [dataset: :bounding_box_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 

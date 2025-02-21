@@ -3,6 +3,7 @@ defmodule Zexray.TypeFixture do
 
   alias Zexray.Type.{
     BoneInfo,
+    BoundingBox,
     Camera,
     Camera2D,
     Camera3D,
@@ -51,6 +52,30 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> BoneInfo.new()
+  end
+
+  def bounding_box_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      :base ->
+        %{
+          min: vector3_fixture(type),
+          max: vector3_fixture(type)
+        }
+
+      :resource ->
+        %{
+          min: make_ref(),
+          max: make_ref()
+        }
+
+      :empty ->
+        %{
+          min: vector3_fixture(type),
+          max: vector3_fixture(type)
+        }
+    end
+    |> Map.merge(attrs)
+    |> BoundingBox.new()
   end
 
   def camera_fixture(type \\ :base, attrs \\ %{}) do

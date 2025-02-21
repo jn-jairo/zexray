@@ -1,6 +1,5 @@
 defmodule Zexray.NIF.Resource do
   @moduledoc false
-
   defmacro __using__(_opts) do
     quote do
       @nifs_resource [
@@ -147,7 +146,12 @@ defmodule Zexray.NIF.Resource do
         # RayCollision
         ray_collision_to_resource: 1,
         ray_collision_from_resource: 1,
-        ray_collision_free_resource: 1
+        ray_collision_free_resource: 1,
+
+        # BoundingBox
+        bounding_box_to_resource: 1,
+        bounding_box_from_resource: 1,
+        bounding_box_free_resource: 1
       ]
 
       #############
@@ -613,6 +617,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec ray_collision_free_resource(resource :: reference) :: :ok
       def ray_collision_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      #################
+      #  BoundingBox  #
+      #################
+
+      @doc group: :resource
+      @spec bounding_box_to_resource(value :: map) :: reference
+      def bounding_box_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec bounding_box_from_resource(resource :: reference) :: map
+      def bounding_box_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec bounding_box_free_resource(resource :: reference) :: :ok
+      def bounding_box_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end
