@@ -3876,7 +3876,7 @@ pub const Wave = struct {
     }
 
     pub fn free(value: rl.Wave) void {
-        _ = value;
+        rl.UnloadWave(value);
     }
 
     pub fn get_data_size(frame_count: c_uint, channels: c_uint, sample_size: c_uint) usize {
