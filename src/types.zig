@@ -107,6 +107,17 @@ pub const Binary = struct {
         return term;
     }
 
+    pub fn make_c(env: ?*e.ErlNifEnv, value_c: [*c]u8, length_c: usize) e.ErlNifTerm {
+        var term: e.ErlNifTerm = undefined;
+        if (length_c > 0 and value_c != null) {
+            var buf = e.enif_make_new_binary(env, length_c, &term);
+            @memcpy(buf[0..length_c], @as([*]u8, @ptrCast(value_c))[0..length_c]);
+        } else {
+            _ = e.enif_make_new_binary(env, 0, &term);
+        }
+        return term;
+    }
+
     pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
         var binary: e.ErlNifBinary = undefined;
         if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
@@ -117,6 +128,23 @@ pub const Binary = struct {
         @memcpy(value, binary.data[0..binary.size]);
 
         return value;
+    }
+
+    pub fn get_c(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, length_c: usize) ![*c]u8 {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        if (binary.size != 0 and binary.size != length_c) return error.ArgumentError;
+
+        if (binary.size <= 0) {
+            return null;
+        }
+
+        const value = try allocator.alloc(u8, binary.size);
+        errdefer allocator.free(value);
+
+        @memcpy(value, binary.data[0..binary.size]);
+
+        return @ptrCast(value);
     }
 
     pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
@@ -138,6 +166,12 @@ pub const Binary = struct {
 
     pub fn free(allocator: std.mem.Allocator, value: []u8) void {
         allocator.free(value);
+    }
+
+    pub fn free_c(allocator: std.mem.Allocator, value_c: [*c]u8, length_c: usize) void {
+        if (length_c > 0) {
+            allocator.free(@as([*]u8, @ptrCast(value_c))[0..length_c]);
+        }
     }
 };
 
@@ -1356,12 +1390,7 @@ pub const Image = struct {
         );
 
         const term_data_key = Atom.make(env, "data");
-        var term_data_value: e.ErlNifTerm = undefined;
-        if (value.data != null) {
-            term_data_value = Binary.make(env, @as([*]u8, @ptrCast(value.data))[0..data_size]);
-        } else {
-            term_data_value = Binary.make(env, "");
-        }
+        const term_data_value = Binary.make_c(env, @ptrCast(value.data), data_size);
         assert(e.enif_make_map_put(env, term, term_data_key, term_data_value, &term) != 0);
 
         return term;
@@ -1414,18 +1443,8 @@ pub const Image = struct {
         const term_data_key = Atom.make(env, "data");
         var term_data_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_data_key, &term_data_value) == 0) return error.ArgumentError;
-
-        const data_length = try Binary.get_size(env, term_data_value);
-        if (data_length > 0 and data_length != data_size) return error.ArgumentError;
-
-        if (data_length > 0) {
-            const data = try Binary.get(Self.allocator, env, term_data_value);
-            errdefer Binary.free(Self.allocator, data);
-            if (data.len != data_size) return error.ArgumentError;
-            value.data = @ptrCast(data);
-        } else {
-            value.data = null;
-        }
+        value.data = @ptrCast(try Binary.get_c(Self.allocator, env, term_data_value, data_size));
+        errdefer Binary.free_c(Self.allocator, value.data, data_size);
 
         return value;
     }
