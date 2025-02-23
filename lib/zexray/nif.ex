@@ -20,6 +20,7 @@ defmodule Zexray.NIF do
   end
 
   use Zexray.NIF.Resource
+  use Zexray.NIF.Audio
   use Zexray.NIF.Font
   use Zexray.NIF.Image
   use Zexray.NIF.Material
@@ -29,6 +30,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Util
 
   @nifs @nifs_resource ++
+          @nifs_audio ++
           @nifs_font ++
           @nifs_image ++
           @nifs_material ++

@@ -27,6 +27,7 @@ fn unload(env: ?*e.ErlNifEnv, priv_data: ?*anyopaque) callconv(.C) void {
 }
 
 const nif_resource = @import("./nifs/resource.zig");
+const nif_audio = @import("./nifs/audio.zig");
 const nif_font = @import("./nifs/font.zig");
 const nif_image = @import("./nifs/image.zig");
 const nif_material = @import("./nifs/material.zig");
@@ -36,6 +37,7 @@ const nif_shader = @import("./nifs/shader.zig");
 const nif_util = @import("./nifs/util.zig");
 
 const exported_nifs = nif_resource.exported_nifs ++
+    nif_audio.exported_nifs ++
     nif_font.exported_nifs ++
     nif_image.exported_nifs ++
     nif_material.exported_nifs ++

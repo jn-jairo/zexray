@@ -3769,3 +3769,118 @@ pub const BoundingBox = struct {
         _ = value;
     }
 };
+
+////////////
+//  Wave  //
+////////////
+
+pub const Wave = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.Wave, "wave");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Wave) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+        assert(e.enif_make_map_put(env, term, term_frame_count_key, term_frame_count_value, &term) != 0);
+
+        // sample_rate
+
+        const term_sample_rate_key = Atom.make(env, "sample_rate");
+        const term_sample_rate_value = UInt.make(env, @intCast(value.sampleRate));
+        assert(e.enif_make_map_put(env, term, term_sample_rate_key, term_sample_rate_value, &term) != 0);
+
+        // sample_size
+
+        const term_sample_size_key = Atom.make(env, "sample_size");
+        const term_sample_size_value = UInt.make(env, @intCast(value.sampleSize));
+        assert(e.enif_make_map_put(env, term, term_sample_size_key, term_sample_size_value, &term) != 0);
+
+        // channels
+
+        const term_channels_key = Atom.make(env, "channels");
+        const term_channels_value = UInt.make(env, @intCast(value.channels));
+        assert(e.enif_make_map_put(env, term, term_channels_key, term_channels_value, &term) != 0);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.channels,
+            value.sampleSize,
+        );
+
+        const term_data_key = Atom.make(env, "data");
+        const term_data_value = Binary.make_c(env, @ptrCast(value.data), data_size);
+        assert(e.enif_make_map_put(env, term, term_data_key, term_data_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Wave {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Wave{};
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        var term_frame_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_frame_count_key, &term_frame_count_value) == 0) return error.ArgumentError;
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        // sample_rate
+
+        const term_sample_rate_key = Atom.make(env, "sample_rate");
+        var term_sample_rate_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_sample_rate_key, &term_sample_rate_value) == 0) return error.ArgumentError;
+        value.sampleRate = @intCast(try UInt.get(env, term_sample_rate_value));
+
+        // sample_size
+
+        const term_sample_size_key = Atom.make(env, "sample_size");
+        var term_sample_size_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_sample_size_key, &term_sample_size_value) == 0) return error.ArgumentError;
+        value.sampleSize = @intCast(try UInt.get(env, term_sample_size_value));
+
+        // channels
+
+        const term_channels_key = Atom.make(env, "channels");
+        var term_channels_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_channels_key, &term_channels_value) == 0) return error.ArgumentError;
+        value.channels = @intCast(try UInt.get(env, term_channels_value));
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.channels,
+            value.sampleSize,
+        );
+
+        const term_data_key = Atom.make(env, "data");
+        var term_data_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_data_key, &term_data_value) == 0) return error.ArgumentError;
+        value.data = @ptrCast(try Binary.get_c(Self.allocator, env, term_data_value, data_size));
+        errdefer Binary.free_c(Self.allocator, value.data, data_size);
+
+        return value;
+    }
+
+    pub fn free(value: rl.Wave) void {
+        _ = value;
+    }
+
+    pub fn get_data_size(frame_count: c_uint, channels: c_uint, sample_size: c_uint) usize {
+        const sample_size_bytes: c_uint = @intFromFloat(@ceil(@as(f64, @floatFromInt(sample_size)) / 8));
+        return @intCast(frame_count * channels * sample_size_bytes);
+    }
+};

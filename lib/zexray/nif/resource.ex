@@ -151,7 +151,12 @@ defmodule Zexray.NIF.Resource do
         # BoundingBox
         bounding_box_to_resource: 1,
         bounding_box_from_resource: 1,
-        bounding_box_free_resource: 1
+        bounding_box_free_resource: 1,
+
+        # Wave
+        wave_to_resource: 1,
+        wave_from_resource: 1,
+        wave_free_resource: 1
       ]
 
       #############
@@ -633,6 +638,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec bounding_box_free_resource(resource :: reference) :: :ok
       def bounding_box_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ##########
+      #  Wave  #
+      ##########
+
+      @doc group: :resource
+      @spec wave_to_resource(value :: map) :: reference
+      def wave_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec wave_from_resource(resource :: reference) :: map
+      def wave_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec wave_free_resource(resource :: reference) :: :ok
+      def wave_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

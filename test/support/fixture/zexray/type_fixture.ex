@@ -31,7 +31,8 @@ defmodule Zexray.TypeFixture do
     Transform,
     Vector2,
     Vector3,
-    Vector4
+    Vector4,
+    Wave
   }
 
   def bone_info_fixture(type \\ :base, attrs \\ %{}) do
@@ -938,5 +939,38 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Vector4.new()
+  end
+
+  def wave_fixture(type \\ :base, attrs \\ %{}) do
+    frame_count = 24_000
+    sample_rate = 16_000
+    sample_size = 8
+    channels = 1
+
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          frame_count: frame_count,
+          sample_rate: sample_rate,
+          sample_size: sample_size,
+          channels: channels,
+          data:
+            Enum.map(1..Zexray.Audio.wave_data_size(frame_count, channels, sample_size), fn n ->
+              rem(n, 0x100)
+            end)
+            |> :binary.list_to_bin()
+        }
+
+      :empty ->
+        %{
+          frame_count: 0,
+          sample_rate: 0,
+          sample_size: 0,
+          channels: 0,
+          data: <<>>
+        }
+    end
+    |> Map.merge(attrs)
+    |> Wave.new()
   end
 end

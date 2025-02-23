@@ -154,6 +154,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "bounding_box_to_resource", .arity = 1, .fptr = nif_bounding_box_to_resource, .flags = 0 },
     .{ .name = "bounding_box_from_resource", .arity = 1, .fptr = nif_bounding_box_from_resource, .flags = 0 },
     .{ .name = "bounding_box_free_resource", .arity = 1, .fptr = nif_bounding_box_free_resource, .flags = 0 },
+
+    // Wave
+    .{ .name = "wave_to_resource", .arity = 1, .fptr = nif_wave_to_resource, .flags = 0 },
+    .{ .name = "wave_from_resource", .arity = 1, .fptr = nif_wave_from_resource, .flags = 0 },
+    .{ .name = "wave_free_resource", .arity = 1, .fptr = nif_wave_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1382,6 +1387,47 @@ fn nif_bounding_box_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     };
 
     core.BoundingBox.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+////////////
+//  Wave  //
+////////////
+
+fn nif_wave_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.Wave.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.Wave.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.Wave.Resource.release(resource);
+
+    return core.Wave.Resource.make(env, resource);
+}
+
+fn nif_wave_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Wave.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.Wave.make(env, resource.*.*);
+}
+
+fn nif_wave_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Wave.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.Wave.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

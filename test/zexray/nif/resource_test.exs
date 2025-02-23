@@ -41,6 +41,7 @@ defmodule Zexray.NIF.ResourceTest do
         ray: {"ray", :base},
         ray_collision: {"ray_collision", :base},
         bounding_box: {"bounding_box", :base},
+        wave: {"wave", :base},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -71,7 +72,8 @@ defmodule Zexray.NIF.ResourceTest do
         model_animation_empty: {"model_animation", :empty},
         ray_empty: {"ray", :empty},
         ray_collision_empty: {"ray_collision", :empty},
-        bounding_box_empty: {"bounding_box", :empty}
+        bounding_box_empty: {"bounding_box", :empty},
+        wave_empty: {"wave", :empty}
       }
 
       %{datasets: datasets}
@@ -111,6 +113,7 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :ray],
       [dataset: :ray_collision],
       [dataset: :bounding_box],
+      [dataset: :wave],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -141,7 +144,8 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :model_animation_empty],
       [dataset: :ray_empty],
       [dataset: :ray_collision_empty],
-      [dataset: :bounding_box_empty]
+      [dataset: :bounding_box_empty],
+      [dataset: :wave_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 
