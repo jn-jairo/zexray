@@ -196,9 +196,9 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.model = e.enif_open_resource_type(env, null, "Zexray.Resource.Model", &ResourceType.model_dtor, flags, null) orelse return false;
     resource_type.model_animation = e.enif_open_resource_type(env, null, "Zexray.Resource.ModelAnimation", &ResourceType.model_animation_dtor, flags, null) orelse return false;
     resource_type.ray = e.enif_open_resource_type(env, null, "Zexray.Resource.Ray", &ResourceType.ray_dtor, flags, null) orelse return false;
-    resource_type.ray_collision = e.enif_open_resource_type(env, null, "Zexray_collision.Resource.RayCollision", &ResourceType.ray_collision_dtor, flags, null) orelse return false;
-    resource_type.bounding_box = e.enif_open_resource_type(env, null, "Zexbounding_box.Resource.BoundingBox", &ResourceType.bounding_box_dtor, flags, null) orelse return false;
-    resource_type.wave = e.enif_open_resource_type(env, null, "Zexwave.Resource.Wave", &ResourceType.wave_dtor, flags, null) orelse return false;
+    resource_type.ray_collision = e.enif_open_resource_type(env, null, "Zexray.Resource.RayCollision", &ResourceType.ray_collision_dtor, flags, null) orelse return false;
+    resource_type.bounding_box = e.enif_open_resource_type(env, null, "Zexray.Resource.BoundingBox", &ResourceType.bounding_box_dtor, flags, null) orelse return false;
+    resource_type.wave = e.enif_open_resource_type(env, null, "Zexray.Resource.Wave", &ResourceType.wave_dtor, flags, null) orelse return false;
 
     return true;
 }
