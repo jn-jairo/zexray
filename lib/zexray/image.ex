@@ -10,7 +10,7 @@ defmodule Zexray.Image do
           height :: integer,
           format :: Zexray.Enum.PixelFormat.t_all(),
           mipmaps :: integer
-        ) :: integer
+        ) :: non_neg_integer
   def data_size(width, height, format, mipmaps \\ 1)
       when is_integer(width) and
              is_integer(height) and

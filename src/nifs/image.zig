@@ -48,7 +48,7 @@ fn nif_image_get_data_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return
 
-    return core.Int.make(env, @intCast(data_size));
+    return core.UInt.make(env, @intCast(data_size));
 }
 
 ////////////////////////

@@ -29,7 +29,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               format :: integer,
               mipmaps :: integer
-            ) :: integer
+            ) :: non_neg_integer
       def image_get_data_size(_width, _height, _format, _mipmaps),
         do: :erlang.nif_error(:undef)
 
