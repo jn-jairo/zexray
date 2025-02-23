@@ -3884,3 +3884,170 @@ pub const Wave = struct {
         return @intCast(frame_count * channels * sample_size_bytes);
     }
 };
+
+///////////////////
+//  AudioBuffer  //
+///////////////////
+
+pub const AudioBuffer = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, *rl.rAudioBuffer, "audio_buffer");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: ?*rl.rAudioBuffer) e.ErlNifTerm {
+        if (value) |v| {
+            const resource = Self.Resource.create(v) catch return Atom.make(env, "nil");
+            defer Self.Resource.release(resource);
+
+            return Self.Resource.make(env, resource);
+        }
+
+        return Atom.make(env, "nil");
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !?*rl.rAudioBuffer {
+        if (e.enif_is_identical(Atom.make(env, "nil"), term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        return null;
+    }
+
+    pub fn free(value: ?*rl.rAudioBuffer) void {
+        _ = value;
+    }
+};
+
+//////////////////////
+//  AudioProcessor  //
+//////////////////////
+
+pub const AudioProcessor = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, *rl.rAudioProcessor, "audio_processor");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: ?*rl.rAudioProcessor) e.ErlNifTerm {
+        if (value) |v| {
+            const resource = Self.Resource.create(v) catch return Atom.make(env, "nil");
+            defer Self.Resource.release(resource);
+
+            return Self.Resource.make(env, resource);
+        }
+
+        return Atom.make(env, "nil");
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !?*rl.rAudioProcessor {
+        if (e.enif_is_identical(Atom.make(env, "nil"), term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        return null;
+    }
+
+    pub fn free(value: ?*rl.rAudioProcessor) void {
+        _ = value;
+    }
+};
+
+///////////////////
+//  AudioStream  //
+///////////////////
+
+pub const AudioStream = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.AudioStream, "audio_stream");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.AudioStream) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // buffer
+
+        const term_buffer_key = Atom.make(env, "buffer");
+        const term_buffer_value = AudioBuffer.make(env, value.buffer);
+        assert(e.enif_make_map_put(env, term, term_buffer_key, term_buffer_value, &term) != 0);
+
+        // processor
+
+        const term_processor_key = Atom.make(env, "processor");
+        const term_processor_value = AudioProcessor.make(env, value.processor);
+        assert(e.enif_make_map_put(env, term, term_processor_key, term_processor_value, &term) != 0);
+
+        // sample_rate
+
+        const term_sample_rate_key = Atom.make(env, "sample_rate");
+        const term_sample_rate_value = UInt.make(env, @intCast(value.sampleRate));
+        assert(e.enif_make_map_put(env, term, term_sample_rate_key, term_sample_rate_value, &term) != 0);
+
+        // sample_size
+
+        const term_sample_size_key = Atom.make(env, "sample_size");
+        const term_sample_size_value = UInt.make(env, @intCast(value.sampleSize));
+        assert(e.enif_make_map_put(env, term, term_sample_size_key, term_sample_size_value, &term) != 0);
+
+        // channels
+
+        const term_channels_key = Atom.make(env, "channels");
+        const term_channels_value = UInt.make(env, @intCast(value.channels));
+        assert(e.enif_make_map_put(env, term, term_channels_key, term_channels_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AudioStream {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.AudioStream{};
+
+        // buffer
+
+        const term_buffer_key = Atom.make(env, "buffer");
+        var term_buffer_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_buffer_key, &term_buffer_value) == 0) return error.ArgumentError;
+        value.buffer = try AudioBuffer.get(env, term_buffer_value);
+
+        // processor
+
+        const term_processor_key = Atom.make(env, "processor");
+        var term_processor_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_processor_key, &term_processor_value) == 0) return error.ArgumentError;
+        value.processor = try AudioProcessor.get(env, term_processor_value);
+
+        // sample_rate
+
+        const term_sample_rate_key = Atom.make(env, "sample_rate");
+        var term_sample_rate_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_sample_rate_key, &term_sample_rate_value) == 0) return error.ArgumentError;
+        value.sampleRate = @intCast(try UInt.get(env, term_sample_rate_value));
+
+        // sample_size
+
+        const term_sample_size_key = Atom.make(env, "sample_size");
+        var term_sample_size_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_sample_size_key, &term_sample_size_value) == 0) return error.ArgumentError;
+        value.sampleSize = @intCast(try UInt.get(env, term_sample_size_value));
+
+        // channels
+
+        const term_channels_key = Atom.make(env, "channels");
+        var term_channels_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_channels_key, &term_channels_value) == 0) return error.ArgumentError;
+        value.channels = @intCast(try UInt.get(env, term_channels_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.AudioStream) void {
+        rl.UnloadAudioStream(value);
+    }
+};

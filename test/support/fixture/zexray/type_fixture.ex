@@ -2,6 +2,7 @@ defmodule Zexray.TypeFixture do
   @moduledoc false
 
   alias Zexray.Type.{
+    AudioStream,
     BoneInfo,
     BoundingBox,
     Camera,
@@ -34,6 +35,43 @@ defmodule Zexray.TypeFixture do
     Vector4,
     Wave
   }
+
+  def audio_stream_fixture(type \\ :base, attrs \\ %{}) do
+    sample_rate = 16_000
+    sample_size = 8
+    channels = 1
+
+    case type do
+      :base ->
+        %{
+          buffer: nil,
+          processor: nil,
+          sample_rate: sample_rate,
+          sample_size: sample_size,
+          channels: channels
+        }
+
+      :resource ->
+        %{
+          buffer: make_ref(),
+          processor: make_ref(),
+          sample_rate: sample_rate,
+          sample_size: sample_size,
+          channels: channels
+        }
+
+      :empty ->
+        %{
+          buffer: nil,
+          processor: nil,
+          sample_rate: 0,
+          sample_size: 0,
+          channels: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> AudioStream.new()
+  end
 
   def bone_info_fixture(type \\ :base, attrs \\ %{}) do
     case type do

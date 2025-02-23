@@ -35,6 +35,9 @@ pub const ResourceType = struct {
     ray_collision: *e.ErlNifResourceType = undefined,
     bounding_box: *e.ErlNifResourceType = undefined,
     wave: *e.ErlNifResourceType = undefined,
+    audio_buffer: *e.ErlNifResourceType = undefined,
+    audio_processor: *e.ErlNifResourceType = undefined,
+    audio_stream: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -161,6 +164,18 @@ pub const ResourceType = struct {
     pub fn wave_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Wave.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn audio_buffer_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.AudioBuffer.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn audio_processor_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.AudioProcessor.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn audio_stream_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.AudioStream.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -199,6 +214,9 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.ray_collision = e.enif_open_resource_type(env, null, "Zexray.Resource.RayCollision", &ResourceType.ray_collision_dtor, flags, null) orelse return false;
     resource_type.bounding_box = e.enif_open_resource_type(env, null, "Zexray.Resource.BoundingBox", &ResourceType.bounding_box_dtor, flags, null) orelse return false;
     resource_type.wave = e.enif_open_resource_type(env, null, "Zexray.Resource.Wave", &ResourceType.wave_dtor, flags, null) orelse return false;
+    resource_type.audio_buffer = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioBuffer", &ResourceType.audio_buffer_dtor, flags, null) orelse return false;
+    resource_type.audio_processor = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioProcessor", &ResourceType.audio_processor_dtor, flags, null) orelse return false;
+    resource_type.audio_stream = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioStream", &ResourceType.audio_stream_dtor, flags, null) orelse return false;
 
     return true;
 }
