@@ -1825,6 +1825,7 @@ pub const RenderTexture = struct {
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
         value.texture = try Texture.get(env, term_texture_value);
+        errdefer Texture.free(value.texture);
 
         // depth
 
@@ -1832,6 +1833,7 @@ pub const RenderTexture = struct {
         var term_depth_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
         value.depth = try Texture.get(env, term_depth_value);
+        errdefer Texture.free(value.depth);
 
         return value;
     }
@@ -1896,6 +1898,7 @@ pub const RenderTexture2D = struct {
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
         value.texture = try Texture.get(env, term_texture_value);
+        errdefer Texture.free(value.texture);
 
         // depth
 
@@ -1903,6 +1906,7 @@ pub const RenderTexture2D = struct {
         var term_depth_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
         value.depth = try Texture.get(env, term_depth_value);
+        errdefer Texture.free(value.depth);
 
         return value;
     }
@@ -1978,6 +1982,7 @@ pub const NPatchInfo = struct {
         var term_source_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_source_key, &term_source_value) == 0) return error.ArgumentError;
         value.source = try Rectangle.get(env, term_source_value);
+        errdefer Rectangle.free(value.source);
 
         // left
 
@@ -2110,6 +2115,7 @@ pub const GlyphInfo = struct {
         var term_image_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_image_key, &term_image_value) == 0) return error.ArgumentError;
         value.image = try Image.get(env, term_image_value);
+        errdefer Image.free(value.image);
 
         return value;
     }
@@ -2208,6 +2214,7 @@ pub const Font = struct {
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
         value.texture = try Texture.get(env, term_texture_value);
+        errdefer Texture.free(value.texture);
 
         // recs
 
@@ -2297,6 +2304,7 @@ pub const Camera3D = struct {
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
         value.position = try Vector3.get(env, term_position_value);
+        errdefer Vector3.free(value.position);
 
         // target
 
@@ -2304,6 +2312,7 @@ pub const Camera3D = struct {
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
         value.target = try Vector3.get(env, term_target_value);
+        errdefer Vector3.free(value.target);
 
         // up
 
@@ -2311,6 +2320,7 @@ pub const Camera3D = struct {
         var term_up_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
         value.up = try Vector3.get(env, term_up_value);
+        errdefer Vector3.free(value.up);
 
         // fovy
 
@@ -2394,6 +2404,7 @@ pub const Camera = struct {
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
         value.position = try Vector3.get(env, term_position_value);
+        errdefer Vector3.free(value.position);
 
         // target
 
@@ -2401,6 +2412,7 @@ pub const Camera = struct {
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
         value.target = try Vector3.get(env, term_target_value);
+        errdefer Vector3.free(value.target);
 
         // up
 
@@ -2408,6 +2420,7 @@ pub const Camera = struct {
         var term_up_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
         value.up = try Vector3.get(env, term_up_value);
+        errdefer Vector3.free(value.up);
 
         // fovy
 
@@ -2485,6 +2498,7 @@ pub const Camera2D = struct {
         var term_offset_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_offset_key, &term_offset_value) == 0) return error.ArgumentError;
         value.offset = try Vector2.get(env, term_offset_value);
+        errdefer Vector2.free(value.offset);
 
         // target
 
@@ -2492,6 +2506,7 @@ pub const Camera2D = struct {
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
         value.target = try Vector2.get(env, term_target_value);
+        errdefer Vector2.free(value.target);
 
         // rotation
 
@@ -2986,6 +3001,7 @@ pub const MaterialMap = struct {
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
         value.texture = try Texture2D.get(env, term_texture_value);
+        errdefer Texture2D.free(value.texture);
 
         // color
 
@@ -2993,6 +3009,7 @@ pub const MaterialMap = struct {
         var term_color_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_color_key, &term_color_value) == 0) return error.ArgumentError;
         value.color = try Color.get(env, term_color_value);
+        errdefer Color.free(value.color);
 
         // value
 
@@ -3079,6 +3096,7 @@ pub const Material = struct {
         var term_shader_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_shader_key, &term_shader_value) == 0) return error.ArgumentError;
         value.shader = try Shader.get(env, term_shader_value);
+        errdefer Shader.free(value.shader);
 
         // maps
 
@@ -3153,6 +3171,7 @@ pub const Transform = struct {
         var term_translation_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_translation_key, &term_translation_value) == 0) return error.ArgumentError;
         value.translation = try Vector3.get(env, term_translation_value);
+        errdefer Vector3.free(value.translation);
 
         // rotation
 
@@ -3160,6 +3179,7 @@ pub const Transform = struct {
         var term_rotation_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_rotation_key, &term_rotation_value) == 0) return error.ArgumentError;
         value.rotation = try Quaternion.get(env, term_rotation_value);
+        errdefer Quaternion.free(value.rotation);
 
         // scale
 
@@ -3167,6 +3187,7 @@ pub const Transform = struct {
         var term_scale_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_scale_key, &term_scale_value) == 0) return error.ArgumentError;
         value.scale = try Vector3.get(env, term_scale_value);
+        errdefer Vector3.free(value.scale);
 
         return value;
     }
@@ -3347,6 +3368,7 @@ pub const Model = struct {
         var term_transform_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_transform_key, &term_transform_value) == 0) return error.ArgumentError;
         value.transform = try Matrix.get(env, term_transform_value);
+        errdefer Matrix.free(value.transform);
 
         // mesh_count
 
@@ -3612,6 +3634,7 @@ pub const Ray = struct {
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
         value.position = try Vector3.get(env, term_position_value);
+        errdefer Vector3.free(value.position);
 
         // direction
 
@@ -3619,6 +3642,7 @@ pub const Ray = struct {
         var term_direction_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_direction_key, &term_direction_value) == 0) return error.ArgumentError;
         value.direction = try Vector3.get(env, term_direction_value);
+        errdefer Vector3.free(value.direction);
 
         return value;
     }
@@ -3696,6 +3720,7 @@ pub const RayCollision = struct {
         var term_point_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_point_key, &term_point_value) == 0) return error.ArgumentError;
         value.point = try Vector3.get(env, term_point_value);
+        errdefer Vector3.free(value.point);
 
         // normal
 
@@ -3703,6 +3728,7 @@ pub const RayCollision = struct {
         var term_normal_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_normal_key, &term_normal_value) == 0) return error.ArgumentError;
         value.normal = try Vector3.get(env, term_normal_value);
+        errdefer Vector3.free(value.normal);
 
         return value;
     }
@@ -3754,6 +3780,7 @@ pub const BoundingBox = struct {
         var term_min_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_min_key, &term_min_value) == 0) return error.ArgumentError;
         value.min = try Vector3.get(env, term_min_value);
+        errdefer Vector3.free(value.min);
 
         // max
 
@@ -3761,6 +3788,7 @@ pub const BoundingBox = struct {
         var term_max_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_max_key, &term_max_value) == 0) return error.ArgumentError;
         value.max = try Vector3.get(env, term_max_value);
+        errdefer Vector3.free(value.max);
 
         return value;
     }
@@ -4015,6 +4043,7 @@ pub const AudioStream = struct {
         var term_buffer_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_buffer_key, &term_buffer_value) == 0) return error.ArgumentError;
         value.buffer = try AudioBuffer.get(env, term_buffer_value);
+        errdefer AudioBuffer.free(value.buffer);
 
         // processor
 
@@ -4022,6 +4051,7 @@ pub const AudioStream = struct {
         var term_processor_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_processor_key, &term_processor_value) == 0) return error.ArgumentError;
         value.processor = try AudioProcessor.get(env, term_processor_value);
+        errdefer AudioProcessor.free(value.processor);
 
         // sample_rate
 
@@ -4094,6 +4124,7 @@ pub const Sound = struct {
         var term_stream_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
         value.stream = try AudioStream.get(env, term_stream_value);
+        errdefer AudioStream.free(value.stream);
 
         // frame_count
 
@@ -4205,6 +4236,7 @@ pub const Music = struct {
         var term_stream_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
         value.stream = try AudioStream.get(env, term_stream_value);
+        errdefer AudioStream.free(value.stream);
 
         // frame_count
 
@@ -4233,6 +4265,7 @@ pub const Music = struct {
         var term_ctx_data_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_ctx_data_key, &term_ctx_data_value) == 0) return error.ArgumentError;
         value.ctxData = try MusicContextData.get(env, term_ctx_data_value);
+        errdefer MusicContextData.free(value.ctxData);
 
         return value;
     }
