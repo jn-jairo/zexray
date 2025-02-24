@@ -18,6 +18,7 @@ defmodule Zexray.TypeFixture do
     Mesh,
     Model,
     ModelAnimation,
+    Music,
     NPatchInfo,
     Quaternion,
     Ray,
@@ -613,6 +614,42 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> ModelAnimation.new()
+  end
+
+  def music_fixture(type \\ :base, attrs \\ %{}) do
+    frame_count = 24_000
+    looping = true
+
+    case type do
+      :base ->
+        %{
+          stream: audio_stream_fixture(type),
+          frame_count: frame_count,
+          looping: looping,
+          ctx_type: 0,
+          ctx_data: nil
+        }
+
+      :resource ->
+        %{
+          stream: make_ref(),
+          frame_count: frame_count,
+          looping: looping,
+          ctx_type: 0,
+          ctx_data: make_ref()
+        }
+
+      :empty ->
+        %{
+          stream: audio_stream_fixture(type),
+          frame_count: 0,
+          looping: false,
+          ctx_type: 0,
+          ctx_data: nil
+        }
+    end
+    |> Map.merge(attrs)
+    |> Music.new()
   end
 
   def n_patch_info_fixture(type \\ :base, attrs \\ %{}) do

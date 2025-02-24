@@ -20,6 +20,7 @@ defmodule Zexray.Guard do
     Mesh,
     Model,
     ModelAnimation,
+    Music,
     NPatchInfo,
     Quaternion,
     Ray,
@@ -91,6 +92,7 @@ defmodule Zexray.Guard do
   defguard is_mesh(value) when is_struct(value, Mesh)
   defguard is_model(value) when is_struct(value, Model)
   defguard is_model_animation(value) when is_struct(value, ModelAnimation)
+  defguard is_music(value) when is_struct(value, Music)
   defguard is_n_patch_info(value) when is_struct(value, NPatchInfo)
   defguard is_quaternion(value) when is_struct(value, Quaternion)
   defguard is_ray(value) when is_struct(value, Ray)
@@ -209,6 +211,12 @@ defmodule Zexray.Guard do
   defguard is_model_animation_like(value)
            when is_model_animation(value) or
                   is_struct(value, ModelAnimation.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 5)
+
+  defguard is_music_like(value)
+           when is_music(value) or
+                  is_struct(value, Music.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 5)
 

@@ -169,6 +169,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "sound_to_resource", .arity = 1, .fptr = nif_sound_to_resource, .flags = 0 },
     .{ .name = "sound_from_resource", .arity = 1, .fptr = nif_sound_from_resource, .flags = 0 },
     .{ .name = "sound_free_resource", .arity = 1, .fptr = nif_sound_free_resource, .flags = 0 },
+
+    // Music
+    .{ .name = "music_to_resource", .arity = 1, .fptr = nif_music_to_resource, .flags = 0 },
+    .{ .name = "music_from_resource", .arity = 1, .fptr = nif_music_from_resource, .flags = 0 },
+    .{ .name = "music_free_resource", .arity = 1, .fptr = nif_music_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1520,6 +1525,47 @@ fn nif_sound_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     };
 
     core.Sound.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+/////////////
+//  Music  //
+/////////////
+
+fn nif_music_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.Music.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.Music.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.Music.Resource.release(resource);
+
+    return core.Music.Resource.make(env, resource);
+}
+
+fn nif_music_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Music.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.Music.make(env, resource.*.*);
+}
+
+fn nif_music_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Music.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.Music.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

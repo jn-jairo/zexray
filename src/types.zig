@@ -4109,3 +4109,135 @@ pub const Sound = struct {
         rl.UnloadSound(value);
     }
 };
+
+////////////////////////
+//  MusicContextData  //
+////////////////////////
+
+pub const MusicContextData = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, *anyopaque, "music_context_data");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: ?*anyopaque) e.ErlNifTerm {
+        if (value) |v| {
+            const resource = Self.Resource.create(v) catch return Atom.make(env, "nil");
+            defer Self.Resource.release(resource);
+
+            return Self.Resource.make(env, resource);
+        }
+
+        return Atom.make(env, "nil");
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !?*anyopaque {
+        if (e.enif_is_identical(Atom.make(env, "nil"), term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        return null;
+    }
+
+    pub fn free(value: ?*anyopaque) void {
+        _ = value;
+    }
+};
+
+/////////////
+//  Music  //
+/////////////
+
+pub const Music = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.Music, "music");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Music) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // stream
+
+        const term_stream_key = Atom.make(env, "stream");
+        const term_stream_value = AudioStream.make(env, value.stream);
+        assert(e.enif_make_map_put(env, term, term_stream_key, term_stream_value, &term) != 0);
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+        assert(e.enif_make_map_put(env, term, term_frame_count_key, term_frame_count_value, &term) != 0);
+
+        // looping
+
+        const term_looping_key = Atom.make(env, "looping");
+        const term_looping_value = Boolean.make(env, value.looping);
+        assert(e.enif_make_map_put(env, term, term_looping_key, term_looping_value, &term) != 0);
+
+        // ctx_type
+
+        const term_ctx_type_key = Atom.make(env, "ctx_type");
+        const term_ctx_type_value = Int.make(env, @intCast(value.ctxType));
+        assert(e.enif_make_map_put(env, term, term_ctx_type_key, term_ctx_type_value, &term) != 0);
+
+        // ctx_data
+
+        const term_ctx_data_key = Atom.make(env, "ctx_data");
+        const term_ctx_data_value = MusicContextData.make(env, value.ctxData);
+        assert(e.enif_make_map_put(env, term, term_ctx_data_key, term_ctx_data_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Music {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Music{};
+
+        // stream
+
+        const term_stream_key = Atom.make(env, "stream");
+        var term_stream_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
+        value.stream = try AudioStream.get(env, term_stream_value);
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        var term_frame_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_frame_count_key, &term_frame_count_value) == 0) return error.ArgumentError;
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        // looping
+
+        const term_looping_key = Atom.make(env, "looping");
+        var term_looping_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_looping_key, &term_looping_value) == 0) return error.ArgumentError;
+        value.looping = try Boolean.get(env, term_looping_value);
+
+        // ctx_type
+
+        const term_ctx_type_key = Atom.make(env, "ctx_type");
+        var term_ctx_type_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_ctx_type_key, &term_ctx_type_value) == 0) return error.ArgumentError;
+        value.ctxType = @intCast(try Int.get(env, term_ctx_type_value));
+
+        // ctx_data
+
+        const term_ctx_data_key = Atom.make(env, "ctx_data");
+        var term_ctx_data_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_ctx_data_key, &term_ctx_data_value) == 0) return error.ArgumentError;
+        value.ctxData = try MusicContextData.get(env, term_ctx_data_value);
+
+        return value;
+    }
+
+    pub fn free(value: rl.Music) void {
+        rl.UnloadMusicStream(value);
+    }
+};
