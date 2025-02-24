@@ -164,6 +164,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "audio_stream_to_resource", .arity = 1, .fptr = nif_audio_stream_to_resource, .flags = 0 },
     .{ .name = "audio_stream_from_resource", .arity = 1, .fptr = nif_audio_stream_from_resource, .flags = 0 },
     .{ .name = "audio_stream_free_resource", .arity = 1, .fptr = nif_audio_stream_free_resource, .flags = 0 },
+
+    // Sound
+    .{ .name = "sound_to_resource", .arity = 1, .fptr = nif_sound_to_resource, .flags = 0 },
+    .{ .name = "sound_from_resource", .arity = 1, .fptr = nif_sound_from_resource, .flags = 0 },
+    .{ .name = "sound_free_resource", .arity = 1, .fptr = nif_sound_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1474,6 +1479,47 @@ fn nif_audio_stream_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     };
 
     core.AudioStream.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+/////////////
+//  Sound  //
+/////////////
+
+fn nif_sound_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.Sound.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.Sound.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.Sound.Resource.release(resource);
+
+    return core.Sound.Resource.make(env, resource);
+}
+
+fn nif_sound_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Sound.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.Sound.make(env, resource.*.*);
+}
+
+fn nif_sound_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.Sound.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.Sound.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

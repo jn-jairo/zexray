@@ -28,6 +28,7 @@ defmodule Zexray.Guard do
     RenderTexture,
     RenderTexture2D,
     Shader,
+    Sound,
     Texture,
     Texture2D,
     TextureCubemap,
@@ -98,6 +99,7 @@ defmodule Zexray.Guard do
   defguard is_render_texture(value) when is_struct(value, RenderTexture)
   defguard is_render_texture_2d(value) when is_struct(value, RenderTexture2D)
   defguard is_shader(value) when is_struct(value, Shader)
+  defguard is_sound(value) when is_struct(value, Sound)
   defguard is_texture(value) when is_struct(value, Texture)
   defguard is_texture_2d(value) when is_struct(value, Texture2D)
   defguard is_texture_cubemap(value) when is_struct(value, TextureCubemap)
@@ -260,6 +262,12 @@ defmodule Zexray.Guard do
   defguard is_shader_like(value)
            when is_shader(value) or
                   is_struct(value, Shader.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 2)
+
+  defguard is_sound_like(value)
+           when is_sound(value) or
+                  is_struct(value, Sound.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 2)
 

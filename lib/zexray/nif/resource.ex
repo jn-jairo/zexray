@@ -161,7 +161,12 @@ defmodule Zexray.NIF.Resource do
         # AudioStream
         audio_stream_to_resource: 1,
         audio_stream_from_resource: 1,
-        audio_stream_free_resource: 1
+        audio_stream_free_resource: 1,
+
+        # Sound
+        sound_to_resource: 1,
+        sound_from_resource: 1,
+        sound_free_resource: 1
       ]
 
       #############
@@ -675,6 +680,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec audio_stream_free_resource(resource :: reference) :: :ok
       def audio_stream_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ###########
+      #  Sound  #
+      ###########
+
+      @doc group: :resource
+      @spec sound_to_resource(value :: map) :: reference
+      def sound_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_from_resource(resource :: reference) :: map
+      def sound_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_free_resource(resource :: reference) :: :ok
+      def sound_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

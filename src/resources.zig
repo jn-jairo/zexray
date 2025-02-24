@@ -38,6 +38,7 @@ pub const ResourceType = struct {
     audio_buffer: *e.ErlNifResourceType = undefined,
     audio_processor: *e.ErlNifResourceType = undefined,
     audio_stream: *e.ErlNifResourceType = undefined,
+    sound: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -176,6 +177,10 @@ pub const ResourceType = struct {
     pub fn audio_stream_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.AudioStream.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn sound_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.Sound.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -217,6 +222,7 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.audio_buffer = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioBuffer", &ResourceType.audio_buffer_dtor, flags, null) orelse return false;
     resource_type.audio_processor = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioProcessor", &ResourceType.audio_processor_dtor, flags, null) orelse return false;
     resource_type.audio_stream = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioStream", &ResourceType.audio_stream_dtor, flags, null) orelse return false;
+    resource_type.sound = e.enif_open_resource_type(env, null, "Zexray.Resource.Sound", &ResourceType.sound_dtor, flags, null) orelse return false;
 
     return true;
 }

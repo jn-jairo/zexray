@@ -26,6 +26,7 @@ defmodule Zexray.TypeFixture do
     RenderTexture,
     RenderTexture2D,
     Shader,
+    Sound,
     Texture,
     Texture2D,
     TextureCubemap,
@@ -818,6 +819,32 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Shader.new()
+  end
+
+  def sound_fixture(type \\ :base, attrs \\ %{}) do
+    frame_count = 24_000
+
+    case type do
+      :base ->
+        %{
+          stream: audio_stream_fixture(type),
+          frame_count: frame_count
+        }
+
+      :resource ->
+        %{
+          stream: make_ref(),
+          frame_count: frame_count
+        }
+
+      :empty ->
+        %{
+          stream: audio_stream_fixture(type),
+          frame_count: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> Sound.new()
   end
 
   def texture_fixture(type \\ :base, attrs \\ %{}) do
