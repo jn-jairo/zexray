@@ -18,7 +18,7 @@ defmodule Zexray.NIF.Model do
       Get bone info max name for BoneInfo.name
       """
       @doc group: :model
-      @spec bone_info_get_max_name() :: integer
+      @spec bone_info_get_max_name() :: non_neg_integer
       def bone_info_get_max_name(), do: :erlang.nif_error(:undef)
 
       ####################
@@ -29,7 +29,7 @@ defmodule Zexray.NIF.Model do
       Get model animation max name for ModelAnimation.name
       """
       @doc group: :model
-      @spec model_animation_get_max_name() :: integer
+      @spec model_animation_get_max_name() :: non_neg_integer
       def model_animation_get_max_name(), do: :erlang.nif_error(:undef)
     end
   end

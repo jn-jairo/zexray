@@ -2541,7 +2541,7 @@ pub const Mesh = struct {
 
     pub const Resource = ResourceBase(Self, rl.Mesh, "mesh");
 
-    pub const MAX_VERTEX_BUFFERS = rl.MAX_MESH_VERTEX_BUFFERS;
+    pub const MAX_VERTEX_BUFFERS: usize = @intCast(rl.MAX_MESH_VERTEX_BUFFERS);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Mesh) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2900,7 +2900,7 @@ pub const Shader = struct {
 
     pub const Resource = ResourceBase(Self, rl.Shader, "shader");
 
-    pub const MAX_LOCATIONS = rl.RL_MAX_SHADER_LOCATIONS;
+    pub const MAX_LOCATIONS: usize = @intCast(rl.RL_MAX_SHADER_LOCATIONS);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Shader) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3037,9 +3037,9 @@ pub const Material = struct {
 
     pub const Resource = ResourceBase(Self, rl.Material, "material");
 
-    pub const MAX_MAPS = rl.MAX_MATERIAL_MAPS;
+    pub const MAX_MAPS: usize = @intCast(rl.MAX_MATERIAL_MAPS);
 
-    pub const MAX_PARAMS = blk: {
+    pub const MAX_PARAMS: usize = @intCast(blk: {
         switch (@typeInfo(rl.Material)) {
             .Struct => |struct_info| {
                 for (struct_info.fields) |field| {
@@ -3056,7 +3056,7 @@ pub const Material = struct {
             else => @compileError("Invalid raylib.Material type"),
         }
         @compileError("Could not find the field raylib.Material.params");
-    };
+    });
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Material) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3208,7 +3208,7 @@ pub const BoneInfo = struct {
 
     pub const Resource = ResourceBase(Self, rl.BoneInfo, "bone_info");
 
-    pub const MAX_NAME = blk: {
+    pub const MAX_NAME: usize = @intCast(blk: {
         switch (@typeInfo(rl.BoneInfo)) {
             .Struct => |struct_info| {
                 for (struct_info.fields) |field| {
@@ -3225,7 +3225,7 @@ pub const BoneInfo = struct {
             else => @compileError("Invalid raylib.BoneInfo type"),
         }
         @compileError("Could not find the field raylib.BoneInfo.name");
-    };
+    });
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.BoneInfo) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3475,7 +3475,7 @@ pub const ModelAnimation = struct {
 
     pub const Resource = ResourceBase(Self, rl.ModelAnimation, "model_animation");
 
-    pub const MAX_NAME = blk: {
+    pub const MAX_NAME: usize = @intCast(blk: {
         switch (@typeInfo(rl.ModelAnimation)) {
             .Struct => |struct_info| {
                 for (struct_info.fields) |field| {
@@ -3492,7 +3492,7 @@ pub const ModelAnimation = struct {
             else => @compileError("Invalid raylib.ModelAnimation type"),
         }
         @compileError("Could not find the field raylib.ModelAnimation.name");
-    };
+    });
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.ModelAnimation) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);

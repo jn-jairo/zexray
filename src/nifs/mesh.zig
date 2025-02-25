@@ -24,5 +24,5 @@ fn nif_mesh_get_max_vertex_buffers(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
 
     // Return
 
-    return core.Int.make(env, @intCast(core.Mesh.MAX_VERTEX_BUFFERS));
+    return core.UInt.make(env, @intCast(core.Mesh.MAX_VERTEX_BUFFERS));
 }

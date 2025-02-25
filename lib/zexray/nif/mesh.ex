@@ -21,7 +21,7 @@ defmodule Zexray.NIF.Mesh do
       ```
       """
       @doc group: :mesh
-      @spec mesh_get_max_vertex_buffers() :: integer
+      @spec mesh_get_max_vertex_buffers() :: non_neg_integer
       def mesh_get_max_vertex_buffers(), do: :erlang.nif_error(:undef)
     end
   end

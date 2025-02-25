@@ -24,5 +24,5 @@ fn nif_shader_get_max_locations(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Return
 
-    return core.Int.make(env, @intCast(core.Shader.MAX_LOCATIONS));
+    return core.UInt.make(env, @intCast(core.Shader.MAX_LOCATIONS));
 }

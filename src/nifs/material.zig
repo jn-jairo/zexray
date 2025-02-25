@@ -25,7 +25,7 @@ fn nif_material_get_max_maps(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
-    return core.Int.make(env, @intCast(core.Material.MAX_MAPS));
+    return core.UInt.make(env, @intCast(core.Material.MAX_MAPS));
 }
 
 /// Get material max params for Material.params
@@ -35,5 +35,5 @@ fn nif_material_get_max_params(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return
 
-    return core.Int.make(env, @intCast(core.Material.MAX_PARAMS));
+    return core.UInt.make(env, @intCast(core.Material.MAX_PARAMS));
 }

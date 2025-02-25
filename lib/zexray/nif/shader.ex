@@ -21,7 +21,7 @@ defmodule Zexray.NIF.Shader do
       ```
       """
       @doc group: :shader
-      @spec shader_get_max_locations() :: integer
+      @spec shader_get_max_locations() :: non_neg_integer
       def shader_get_max_locations(), do: :erlang.nif_error(:undef)
     end
   end

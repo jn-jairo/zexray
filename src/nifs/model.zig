@@ -23,7 +23,7 @@ fn nif_bone_info_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return
 
-    return core.Int.make(env, @intCast(core.BoneInfo.MAX_NAME));
+    return core.UInt.make(env, @intCast(core.BoneInfo.MAX_NAME));
 }
 
 //////////////////////
@@ -37,5 +37,5 @@ fn nif_model_animation_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return
 
-    return core.Int.make(env, @intCast(core.ModelAnimation.MAX_NAME));
+    return core.UInt.make(env, @intCast(core.ModelAnimation.MAX_NAME));
 }

@@ -22,14 +22,14 @@ defmodule Zexray.NIF.Material do
       ```
       """
       @doc group: :material
-      @spec material_get_max_maps() :: integer
+      @spec material_get_max_maps() :: non_neg_integer
       def material_get_max_maps(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get material max params for Material.params
       """
       @doc group: :material
-      @spec material_get_max_params() :: integer
+      @spec material_get_max_params() :: non_neg_integer
       def material_get_max_params(), do: :erlang.nif_error(:undef)
     end
   end
