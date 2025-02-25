@@ -3041,12 +3041,12 @@ pub const Material = struct {
 
     pub const MAX_PARAMS = blk: {
         switch (@typeInfo(rl.Material)) {
-            .Struct => |material_info| {
-                for (material_info.fields) |field| {
+            .Struct => |struct_info| {
+                for (struct_info.fields) |field| {
                     if (std.mem.eql(u8, field.name, "params")) {
                         switch (@typeInfo(field.type)) {
-                            .Array => |params_info| {
-                                break :blk params_info.len;
+                            .Array => |field_info| {
+                                break :blk field_info.len;
                             },
                             else => @compileError("Invalid raylib.Material.params type"),
                         }
@@ -3210,12 +3210,12 @@ pub const BoneInfo = struct {
 
     pub const MAX_NAME = blk: {
         switch (@typeInfo(rl.BoneInfo)) {
-            .Struct => |bone_info_info| {
-                for (bone_info_info.fields) |field| {
+            .Struct => |struct_info| {
+                for (struct_info.fields) |field| {
                     if (std.mem.eql(u8, field.name, "name")) {
                         switch (@typeInfo(field.type)) {
-                            .Array => |name_info| {
-                                break :blk name_info.len;
+                            .Array => |field_info| {
+                                break :blk field_info.len;
                             },
                             else => @compileError("Invalid raylib.BoneInfo.name type"),
                         }
@@ -3477,12 +3477,12 @@ pub const ModelAnimation = struct {
 
     pub const MAX_NAME = blk: {
         switch (@typeInfo(rl.ModelAnimation)) {
-            .Struct => |model_animation_info| {
-                for (model_animation_info.fields) |field| {
+            .Struct => |struct_info| {
+                for (struct_info.fields) |field| {
                     if (std.mem.eql(u8, field.name, "name")) {
                         switch (@typeInfo(field.type)) {
-                            .Array => |name_info| {
-                                break :blk name_info.len;
+                            .Array => |field_info| {
+                                break :blk field_info.len;
                             },
                             else => @compileError("Invalid raylib.ModelAnimation.name type"),
                         }
