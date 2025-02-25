@@ -6,6 +6,27 @@ const rlgl = @import("./rlgl.zig");
 
 const resources = @import("./resources.zig");
 
+fn get_field_array_length(comptime T: type, field_name: []const u8) usize {
+    return @intCast(blk: {
+        switch (@typeInfo(T)) {
+            .Struct => |struct_info| {
+                for (struct_info.fields) |field| {
+                    if (std.mem.eql(u8, field.name, field_name)) {
+                        switch (@typeInfo(field.type)) {
+                            .Array => |field_info| {
+                                break :blk field_info.len;
+                            },
+                            else => @compileError("Invalid " ++ @typeName(T) ++ "." ++ field_name ++ " type"),
+                        }
+                    }
+                }
+            },
+            else => @compileError("Invalid " ++ @typeName(T) ++ " type"),
+        }
+        @compileError("Could not find the field " ++ @typeName(T) ++ "." ++ field_name);
+    });
+}
+
 //////////////
 //  Double  //
 //////////////
@@ -3039,24 +3060,7 @@ pub const Material = struct {
 
     pub const MAX_MAPS: usize = @intCast(rl.MAX_MATERIAL_MAPS);
 
-    pub const MAX_PARAMS: usize = @intCast(blk: {
-        switch (@typeInfo(rl.Material)) {
-            .Struct => |struct_info| {
-                for (struct_info.fields) |field| {
-                    if (std.mem.eql(u8, field.name, "params")) {
-                        switch (@typeInfo(field.type)) {
-                            .Array => |field_info| {
-                                break :blk field_info.len;
-                            },
-                            else => @compileError("Invalid raylib.Material.params type"),
-                        }
-                    }
-                }
-            },
-            else => @compileError("Invalid raylib.Material type"),
-        }
-        @compileError("Could not find the field raylib.Material.params");
-    });
+    pub const MAX_PARAMS: usize = get_field_array_length(rl.Material, "params");
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Material) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3208,24 +3212,7 @@ pub const BoneInfo = struct {
 
     pub const Resource = ResourceBase(Self, rl.BoneInfo, "bone_info");
 
-    pub const MAX_NAME: usize = @intCast(blk: {
-        switch (@typeInfo(rl.BoneInfo)) {
-            .Struct => |struct_info| {
-                for (struct_info.fields) |field| {
-                    if (std.mem.eql(u8, field.name, "name")) {
-                        switch (@typeInfo(field.type)) {
-                            .Array => |field_info| {
-                                break :blk field_info.len;
-                            },
-                            else => @compileError("Invalid raylib.BoneInfo.name type"),
-                        }
-                    }
-                }
-            },
-            else => @compileError("Invalid raylib.BoneInfo type"),
-        }
-        @compileError("Could not find the field raylib.BoneInfo.name");
-    });
+    pub const MAX_NAME: usize = get_field_array_length(rl.BoneInfo, "name");
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.BoneInfo) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3475,24 +3462,7 @@ pub const ModelAnimation = struct {
 
     pub const Resource = ResourceBase(Self, rl.ModelAnimation, "model_animation");
 
-    pub const MAX_NAME: usize = @intCast(blk: {
-        switch (@typeInfo(rl.ModelAnimation)) {
-            .Struct => |struct_info| {
-                for (struct_info.fields) |field| {
-                    if (std.mem.eql(u8, field.name, "name")) {
-                        switch (@typeInfo(field.type)) {
-                            .Array => |field_info| {
-                                break :blk field_info.len;
-                            },
-                            else => @compileError("Invalid raylib.ModelAnimation.name type"),
-                        }
-                    }
-                }
-            },
-            else => @compileError("Invalid raylib.ModelAnimation type"),
-        }
-        @compileError("Could not find the field raylib.ModelAnimation.name");
-    });
+    pub const MAX_NAME: usize = get_field_array_length(rl.ModelAnimation, "name");
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.ModelAnimation) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
