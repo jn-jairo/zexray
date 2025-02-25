@@ -4244,3 +4244,156 @@ pub const Music = struct {
         rl.UnloadMusicStream(value);
     }
 };
+
+////////////////////
+//  VrDeviceInfo  //
+////////////////////
+
+pub const VrDeviceInfo = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.VrDeviceInfo, "vr_device_info");
+
+    pub const MAX_LENS_DISTORTION_VALUES: usize = get_field_array_length(rl.VrDeviceInfo, "lensDistortionValues");
+
+    pub const MAX_CHROMA_AB_CORRECTION: usize = get_field_array_length(rl.VrDeviceInfo, "chromaAbCorrection");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.VrDeviceInfo) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // h_resolution
+
+        const term_h_resolution_key = Atom.make(env, "h_resolution");
+        const term_h_resolution_value = Int.make(env, @intCast(value.hResolution));
+        assert(e.enif_make_map_put(env, term, term_h_resolution_key, term_h_resolution_value, &term) != 0);
+
+        // v_resolution
+
+        const term_v_resolution_key = Atom.make(env, "v_resolution");
+        const term_v_resolution_value = Int.make(env, @intCast(value.vResolution));
+        assert(e.enif_make_map_put(env, term, term_v_resolution_key, term_v_resolution_value, &term) != 0);
+
+        // h_screen_size
+
+        const term_h_screen_size_key = Atom.make(env, "h_screen_size");
+        const term_h_screen_size_value = Double.make(env, @floatCast(value.hScreenSize));
+        assert(e.enif_make_map_put(env, term, term_h_screen_size_key, term_h_screen_size_value, &term) != 0);
+
+        // v_screen_size
+
+        const term_v_screen_size_key = Atom.make(env, "v_screen_size");
+        const term_v_screen_size_value = Double.make(env, @floatCast(value.vScreenSize));
+        assert(e.enif_make_map_put(env, term, term_v_screen_size_key, term_v_screen_size_value, &term) != 0);
+
+        // eye_to_screen_distance
+
+        const term_eye_to_screen_distance_key = Atom.make(env, "eye_to_screen_distance");
+        const term_eye_to_screen_distance_value = Double.make(env, @floatCast(value.eyeToScreenDistance));
+        assert(e.enif_make_map_put(env, term, term_eye_to_screen_distance_key, term_eye_to_screen_distance_value, &term) != 0);
+
+        // lens_separation_distance
+
+        const term_lens_separation_distance_key = Atom.make(env, "lens_separation_distance");
+        const term_lens_separation_distance_value = Double.make(env, @floatCast(value.lensSeparationDistance));
+        assert(e.enif_make_map_put(env, term, term_lens_separation_distance_key, term_lens_separation_distance_value, &term) != 0);
+
+        // interpupillary_distance
+
+        const term_interpupillary_distance_key = Atom.make(env, "interpupillary_distance");
+        const term_interpupillary_distance_value = Double.make(env, @floatCast(value.interpupillaryDistance));
+        assert(e.enif_make_map_put(env, term, term_interpupillary_distance_key, term_interpupillary_distance_value, &term) != 0);
+
+        // lens_distortion_values
+
+        const term_lens_distortion_values_key = Atom.make(env, "lens_distortion_values");
+        const term_lens_distortion_values_value = Array.make(Double, f32, env, &value.lensDistortionValues);
+        assert(e.enif_make_map_put(env, term, term_lens_distortion_values_key, term_lens_distortion_values_value, &term) != 0);
+
+        // chroma_ab_correction
+
+        const term_chroma_ab_correction_key = Atom.make(env, "chroma_ab_correction");
+        const term_chroma_ab_correction_value = Array.make(Double, f32, env, &value.chromaAbCorrection);
+        assert(e.enif_make_map_put(env, term, term_chroma_ab_correction_key, term_chroma_ab_correction_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.VrDeviceInfo {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.VrDeviceInfo{};
+
+        // h_resolution
+
+        const term_h_resolution_key = Atom.make(env, "h_resolution");
+        var term_h_resolution_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_h_resolution_key, &term_h_resolution_value) == 0) return error.ArgumentError;
+        value.hResolution = @intCast(try Int.get(env, term_h_resolution_value));
+
+        // v_resolution
+
+        const term_v_resolution_key = Atom.make(env, "v_resolution");
+        var term_v_resolution_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_v_resolution_key, &term_v_resolution_value) == 0) return error.ArgumentError;
+        value.vResolution = @intCast(try Int.get(env, term_v_resolution_value));
+
+        // h_screen_size
+
+        const term_h_screen_size_key = Atom.make(env, "h_screen_size");
+        var term_h_screen_size_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_h_screen_size_key, &term_h_screen_size_value) == 0) return error.ArgumentError;
+        value.hScreenSize = @floatCast(try Double.get(env, term_h_screen_size_value));
+
+        // v_screen_size
+
+        const term_v_screen_size_key = Atom.make(env, "v_screen_size");
+        var term_v_screen_size_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_v_screen_size_key, &term_v_screen_size_value) == 0) return error.ArgumentError;
+        value.vScreenSize = @floatCast(try Double.get(env, term_v_screen_size_value));
+
+        // eye_to_screen_distance
+
+        const term_eye_to_screen_distance_key = Atom.make(env, "eye_to_screen_distance");
+        var term_eye_to_screen_distance_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_eye_to_screen_distance_key, &term_eye_to_screen_distance_value) == 0) return error.ArgumentError;
+        value.eyeToScreenDistance = @floatCast(try Double.get(env, term_eye_to_screen_distance_value));
+
+        // lens_separation_distance
+
+        const term_lens_separation_distance_key = Atom.make(env, "lens_separation_distance");
+        var term_lens_separation_distance_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_lens_separation_distance_key, &term_lens_separation_distance_value) == 0) return error.ArgumentError;
+        value.lensSeparationDistance = @floatCast(try Double.get(env, term_lens_separation_distance_value));
+
+        // interpupillary_distance
+
+        const term_interpupillary_distance_key = Atom.make(env, "interpupillary_distance");
+        var term_interpupillary_distance_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_interpupillary_distance_key, &term_interpupillary_distance_value) == 0) return error.ArgumentError;
+        value.interpupillaryDistance = @floatCast(try Double.get(env, term_interpupillary_distance_value));
+
+        // lens_distortion_values
+
+        const term_lens_distortion_values_key = Atom.make(env, "lens_distortion_values");
+        var term_lens_distortion_values_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_lens_distortion_values_key, &term_lens_distortion_values_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_lens_distortion_values_value, &value.lensDistortionValues);
+
+        // chroma_ab_correction
+
+        const term_chroma_ab_correction_key = Atom.make(env, "chroma_ab_correction");
+        var term_chroma_ab_correction_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_chroma_ab_correction_key, &term_chroma_ab_correction_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_chroma_ab_correction_value, &value.chromaAbCorrection);
+
+        return value;
+    }
+
+    pub fn free(value: rl.VrDeviceInfo) void {
+        _ = value;
+    }
+};

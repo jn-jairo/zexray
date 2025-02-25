@@ -41,6 +41,7 @@ pub const ResourceType = struct {
     sound: *e.ErlNifResourceType = undefined,
     music_context_data: *e.ErlNifResourceType = undefined,
     music: *e.ErlNifResourceType = undefined,
+    vr_device_info: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -191,6 +192,10 @@ pub const ResourceType = struct {
     pub fn music_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Music.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn vr_device_info_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.VrDeviceInfo.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -235,6 +240,7 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.sound = e.enif_open_resource_type(env, null, "Zexray.Resource.Sound", &ResourceType.sound_dtor, flags, null) orelse return false;
     resource_type.music_context_data = e.enif_open_resource_type(env, null, "Zexray.Resource.MusicContextData", &ResourceType.music_context_data_dtor, flags, null) orelse return false;
     resource_type.music = e.enif_open_resource_type(env, null, "Zexray.Resource.Music", &ResourceType.music_dtor, flags, null) orelse return false;
+    resource_type.vr_device_info = e.enif_open_resource_type(env, null, "Zexray.Resource.VrDeviceInfo", &ResourceType.vr_device_info_dtor, flags, null) orelse return false;
 
     return true;
 }

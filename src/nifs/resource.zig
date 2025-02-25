@@ -174,6 +174,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "music_to_resource", .arity = 1, .fptr = nif_music_to_resource, .flags = 0 },
     .{ .name = "music_from_resource", .arity = 1, .fptr = nif_music_from_resource, .flags = 0 },
     .{ .name = "music_free_resource", .arity = 1, .fptr = nif_music_free_resource, .flags = 0 },
+
+    // VrDeviceInfo
+    .{ .name = "vr_device_info_to_resource", .arity = 1, .fptr = nif_vr_device_info_to_resource, .flags = 0 },
+    .{ .name = "vr_device_info_from_resource", .arity = 1, .fptr = nif_vr_device_info_from_resource, .flags = 0 },
+    .{ .name = "vr_device_info_free_resource", .arity = 1, .fptr = nif_vr_device_info_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1566,6 +1571,47 @@ fn nif_music_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     };
 
     core.Music.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+////////////////////
+//  VrDeviceInfo  //
+////////////////////
+
+fn nif_vr_device_info_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.VrDeviceInfo.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.VrDeviceInfo.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.VrDeviceInfo.Resource.release(resource);
+
+    return core.VrDeviceInfo.Resource.make(env, resource);
+}
+
+fn nif_vr_device_info_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.VrDeviceInfo.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.VrDeviceInfo.make(env, resource.*.*);
+}
+
+fn nif_vr_device_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.VrDeviceInfo.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.VrDeviceInfo.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

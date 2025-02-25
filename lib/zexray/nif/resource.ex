@@ -171,7 +171,12 @@ defmodule Zexray.NIF.Resource do
         # Music
         music_to_resource: 1,
         music_from_resource: 1,
-        music_free_resource: 1
+        music_free_resource: 1,
+
+        # VrDeviceInfo
+        vr_device_info_to_resource: 1,
+        vr_device_info_from_resource: 1,
+        vr_device_info_free_resource: 1
       ]
 
       #############
@@ -717,6 +722,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec music_free_resource(resource :: reference) :: :ok
       def music_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ##################
+      #  VrDeviceInfo  #
+      ##################
+
+      @doc group: :resource
+      @spec vr_device_info_to_resource(value :: map) :: reference
+      def vr_device_info_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec vr_device_info_from_resource(resource :: reference) :: map
+      def vr_device_info_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec vr_device_info_free_resource(resource :: reference) :: :ok
+      def vr_device_info_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

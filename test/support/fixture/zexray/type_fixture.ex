@@ -35,6 +35,7 @@ defmodule Zexray.TypeFixture do
     Vector2,
     Vector3,
     Vector4,
+    VrDeviceInfo,
     Wave
   }
 
@@ -1041,6 +1042,54 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Vector4.new()
+  end
+
+  def vr_device_info_fixture(type \\ :base, attrs \\ %{}) do
+    h_resolution = 800
+    v_resolution = 600
+    h_screen_size = 1920.0
+    v_screen_size = 1440.0
+    eye_to_screen_distance = 123.45
+    lens_separation_distance = 1.23
+    interpupillary_distance = 0.12
+
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          h_resolution: h_resolution,
+          v_resolution: v_resolution,
+          h_screen_size: h_screen_size,
+          v_screen_size: v_screen_size,
+          eye_to_screen_distance: eye_to_screen_distance,
+          lens_separation_distance: lens_separation_distance,
+          interpupillary_distance: interpupillary_distance,
+          lens_distortion_values:
+            Enum.map(1..Zexray.Vr.vr_device_info_max_lens_distortion_values(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          chroma_ab_correction:
+            Enum.map(1..Zexray.Vr.vr_device_info_max_chroma_ab_correction(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end)
+        }
+
+      :empty ->
+        %{
+          h_resolution: 0,
+          v_resolution: 0,
+          h_screen_size: 0.0,
+          v_screen_size: 0.0,
+          eye_to_screen_distance: 0.0,
+          lens_separation_distance: 0.0,
+          interpupillary_distance: 0.0,
+          lens_distortion_values:
+            Enum.map(1..Zexray.Vr.vr_device_info_max_lens_distortion_values(), fn _ -> 0.0 end),
+          chroma_ab_correction:
+            Enum.map(1..Zexray.Vr.vr_device_info_max_chroma_ab_correction(), fn _ -> 0.0 end)
+        }
+    end
+    |> Map.merge(attrs)
+    |> VrDeviceInfo.new()
   end
 
   def wave_fixture(type \\ :base, attrs \\ %{}) do

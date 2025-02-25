@@ -35,6 +35,7 @@ const nif_mesh = @import("./nifs/mesh.zig");
 const nif_model = @import("./nifs/model.zig");
 const nif_shader = @import("./nifs/shader.zig");
 const nif_util = @import("./nifs/util.zig");
+const nif_vr = @import("./nifs/vr.zig");
 
 const exported_nifs = nif_resource.exported_nifs ++
     nif_audio.exported_nifs ++
@@ -44,7 +45,8 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_mesh.exported_nifs ++
     nif_model.exported_nifs ++
     nif_shader.exported_nifs ++
-    nif_util.exported_nifs;
+    nif_util.exported_nifs ++
+    nif_vr.exported_nifs;
 
 const entry = e.ErlNifEntry{
     .major = e.ERL_NIF_MAJOR_VERSION,

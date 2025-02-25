@@ -28,6 +28,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Model
   use Zexray.NIF.Shader
   use Zexray.NIF.Util
+  use Zexray.NIF.Vr
 
   @nifs @nifs_resource ++
           @nifs_audio ++
@@ -37,5 +38,6 @@ defmodule Zexray.NIF do
           @nifs_mesh ++
           @nifs_model ++
           @nifs_shader ++
-          @nifs_util
+          @nifs_util ++
+          @nifs_vr
 end

@@ -45,6 +45,7 @@ defmodule Zexray.NIF.ResourceTest do
         audio_stream: {"audio_stream", :base},
         sound: {"sound", :base},
         music: {"music", :base},
+        vr_device_info: {"vr_device_info", :base},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -79,7 +80,8 @@ defmodule Zexray.NIF.ResourceTest do
         wave_empty: {"wave", :empty},
         audio_stream_empty: {"audio_stream", :empty},
         sound_empty: {"sound", :empty},
-        music_empty: {"music", :empty}
+        music_empty: {"music", :empty},
+        vr_device_info_empty: {"vr_device_info", :empty}
       }
 
       %{datasets: datasets}
@@ -123,6 +125,7 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :audio_stream],
       [dataset: :sound],
       [dataset: :music],
+      [dataset: :vr_device_info],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -157,7 +160,8 @@ defmodule Zexray.NIF.ResourceTest do
       [dataset: :wave_empty],
       [dataset: :audio_stream_empty],
       [dataset: :sound_empty],
-      [dataset: :music_empty]
+      [dataset: :music_empty],
+      [dataset: :vr_device_info_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 

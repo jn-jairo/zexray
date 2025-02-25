@@ -80,6 +80,7 @@ defmodule Zexray.TypeTest do
         audio_stream: {"audio_stream", :base},
         sound: {"sound", :base},
         music: {"music", :base},
+        vr_device_info: {"vr_device_info", :base},
         # resource
         vector2_resource: {"vector2", :resource},
         vector3_resource: {"vector3", :resource},
@@ -115,6 +116,7 @@ defmodule Zexray.TypeTest do
         audio_stream_resource: {"audio_stream", :resource},
         sound_resource: {"sound", :resource},
         music_resource: {"music", :resource},
+        vr_device_info_resource: {"vr_device_info", :resource},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -149,7 +151,8 @@ defmodule Zexray.TypeTest do
         wave_empty: {"wave", :empty},
         audio_stream_empty: {"audio_stream", :empty},
         sound_empty: {"sound", :empty},
-        music_empty: {"music", :empty}
+        music_empty: {"music", :empty},
+        vr_device_info_empty: {"vr_device_info", :empty}
       }
 
       %{datasets: datasets}
@@ -193,6 +196,7 @@ defmodule Zexray.TypeTest do
       [dataset: :audio_stream],
       [dataset: :sound],
       [dataset: :music],
+      [dataset: :vr_device_info],
       # resource
       [dataset: :vector2_resource],
       [dataset: :vector3_resource],
@@ -228,6 +232,7 @@ defmodule Zexray.TypeTest do
       [dataset: :audio_stream_resource],
       [dataset: :sound_resource],
       [dataset: :music_resource],
+      [dataset: :vr_device_info_resource],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -262,7 +267,8 @@ defmodule Zexray.TypeTest do
       [dataset: :wave_empty],
       [dataset: :audio_stream_empty],
       [dataset: :sound_empty],
-      [dataset: :music_empty]
+      [dataset: :music_empty],
+      [dataset: :vr_device_info_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 

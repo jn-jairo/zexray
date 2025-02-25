@@ -37,6 +37,7 @@ defmodule Zexray.Guard do
     Vector2,
     Vector3,
     Vector4,
+    VrDeviceInfo,
     Wave
   }
 
@@ -110,6 +111,7 @@ defmodule Zexray.Guard do
   defguard is_vector2(value) when is_struct(value, Vector2)
   defguard is_vector3(value) when is_struct(value, Vector3)
   defguard is_vector4(value) when is_struct(value, Vector4)
+  defguard is_vr_device_info(value) when is_struct(value, VrDeviceInfo)
   defguard is_wave(value) when is_struct(value, Wave)
 
   defguard is_audio_stream_like(value)
@@ -331,6 +333,12 @@ defmodule Zexray.Guard do
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 4) or
                   is_struct(value, Quaternion)
+
+  defguard is_vr_device_info_like(value)
+           when is_vr_device_info(value) or
+                  is_struct(value, VrDeviceInfo.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 9)
 
   defguard is_wave_like(value)
            when is_wave(value) or
