@@ -36,6 +36,7 @@ defmodule Zexray.TypeFixture do
     Vector3,
     Vector4,
     VrDeviceInfo,
+    VrStereoConfig,
     Wave
   }
 
@@ -1090,6 +1091,102 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> VrDeviceInfo.new()
+  end
+
+  def vr_stereo_config_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      :base ->
+        %{
+          projection:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ ->
+              matrix_fixture(type)
+            end),
+          view_offset:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ ->
+              matrix_fixture(type)
+            end),
+          left_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          right_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          left_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          right_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          scale:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          scale_in:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end)
+        }
+
+      :resource ->
+        %{
+          projection:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ -> make_ref() end),
+          view_offset:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ -> make_ref() end),
+          left_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          right_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          left_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          right_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          scale:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end),
+          scale_in:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end)
+        }
+
+      :empty ->
+        %{
+          projection:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ ->
+              matrix_fixture(type)
+            end),
+          view_offset:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ ->
+              matrix_fixture(type)
+            end),
+          left_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn _ -> 0.0 end),
+          right_lens_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn _ -> 0.0 end),
+          left_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn _ -> 0.0 end),
+          right_screen_center:
+            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn _ -> 0.0 end),
+          scale: Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn _ -> 0.0 end),
+          scale_in: Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn _ -> 0.0 end)
+        }
+    end
+    |> Map.merge(attrs)
+    |> VrStereoConfig.new()
   end
 
   def wave_fixture(type \\ :base, attrs \\ %{}) do

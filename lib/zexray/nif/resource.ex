@@ -176,7 +176,12 @@ defmodule Zexray.NIF.Resource do
         # VrDeviceInfo
         vr_device_info_to_resource: 1,
         vr_device_info_from_resource: 1,
-        vr_device_info_free_resource: 1
+        vr_device_info_free_resource: 1,
+
+        # VrStereoConfig
+        vr_stereo_config_to_resource: 1,
+        vr_stereo_config_from_resource: 1,
+        vr_stereo_config_free_resource: 1
       ]
 
       #############
@@ -738,6 +743,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec vr_device_info_free_resource(resource :: reference) :: :ok
       def vr_device_info_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ####################
+      #  VrStereoConfig  #
+      ####################
+
+      @doc group: :resource
+      @spec vr_stereo_config_to_resource(value :: map) :: reference
+      def vr_stereo_config_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec vr_stereo_config_from_resource(resource :: reference) :: map
+      def vr_stereo_config_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec vr_stereo_config_free_resource(resource :: reference) :: :ok
+      def vr_stereo_config_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

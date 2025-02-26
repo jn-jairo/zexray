@@ -4436,3 +4436,163 @@ pub const VrDeviceInfo = struct {
         _ = value;
     }
 };
+
+//////////////////////
+//  VrStereoConfig  //
+//////////////////////
+
+pub const VrStereoConfig = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.VrStereoConfig, "vr_stereo_config");
+
+    pub const MAX_PROJECTION: usize = get_field_array_length(rl.VrStereoConfig, "projection");
+
+    pub const MAX_VIEW_OFFSET: usize = get_field_array_length(rl.VrStereoConfig, "viewOffset");
+
+    pub const MAX_LEFT_LENS_CENTER: usize = get_field_array_length(rl.VrStereoConfig, "leftLensCenter");
+
+    pub const MAX_RIGHT_LENS_CENTER: usize = get_field_array_length(rl.VrStereoConfig, "rightLensCenter");
+
+    pub const MAX_LEFT_SCREEN_CENTER: usize = get_field_array_length(rl.VrStereoConfig, "leftScreenCenter");
+
+    pub const MAX_RIGHT_SCREEN_CENTER: usize = get_field_array_length(rl.VrStereoConfig, "rightScreenCenter");
+
+    pub const MAX_SCALE: usize = get_field_array_length(rl.VrStereoConfig, "scale");
+
+    pub const MAX_SCALE_IN: usize = get_field_array_length(rl.VrStereoConfig, "scaleIn");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.VrStereoConfig) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        const term_projection_value = Array.make(Matrix, rl.Matrix, env, &value.projection);
+        assert(e.enif_make_map_put(env, term, term_projection_key, term_projection_value, &term) != 0);
+
+        // view_offset
+
+        const term_view_offset_key = Atom.make(env, "view_offset");
+        const term_view_offset_value = Array.make(Matrix, rl.Matrix, env, &value.viewOffset);
+        assert(e.enif_make_map_put(env, term, term_view_offset_key, term_view_offset_value, &term) != 0);
+
+        // left_lens_center
+
+        const term_left_lens_center_key = Atom.make(env, "left_lens_center");
+        const term_left_lens_center_value = Array.make(Double, f32, env, &value.leftLensCenter);
+        assert(e.enif_make_map_put(env, term, term_left_lens_center_key, term_left_lens_center_value, &term) != 0);
+
+        // right_lens_center
+
+        const term_right_lens_center_key = Atom.make(env, "right_lens_center");
+        const term_right_lens_center_value = Array.make(Double, f32, env, &value.rightLensCenter);
+        assert(e.enif_make_map_put(env, term, term_right_lens_center_key, term_right_lens_center_value, &term) != 0);
+
+        // left_screen_center
+
+        const term_left_screen_center_key = Atom.make(env, "left_screen_center");
+        const term_left_screen_center_value = Array.make(Double, f32, env, &value.leftScreenCenter);
+        assert(e.enif_make_map_put(env, term, term_left_screen_center_key, term_left_screen_center_value, &term) != 0);
+
+        // right_screen_center
+
+        const term_right_screen_center_key = Atom.make(env, "right_screen_center");
+        const term_right_screen_center_value = Array.make(Double, f32, env, &value.rightScreenCenter);
+        assert(e.enif_make_map_put(env, term, term_right_screen_center_key, term_right_screen_center_value, &term) != 0);
+
+        // scale
+
+        const term_scale_key = Atom.make(env, "scale");
+        const term_scale_value = Array.make(Double, f32, env, &value.scale);
+        assert(e.enif_make_map_put(env, term, term_scale_key, term_scale_value, &term) != 0);
+
+        // scale_in
+
+        const term_scale_in_key = Atom.make(env, "scale_in");
+        const term_scale_in_value = Array.make(Double, f32, env, &value.scaleIn);
+        assert(e.enif_make_map_put(env, term, term_scale_in_key, term_scale_in_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.VrStereoConfig {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.VrStereoConfig{};
+
+        // projection
+
+        const term_projection_key = Atom.make(env, "projection");
+        var term_projection_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_projection_key, &term_projection_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_projection_value, &value.projection);
+        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.projection);
+
+        // view_offset
+
+        const term_view_offset_key = Atom.make(env, "view_offset");
+        var term_view_offset_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_view_offset_key, &term_view_offset_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_view_offset_value, &value.viewOffset);
+        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.viewOffset);
+
+        // left_lens_center
+
+        const term_left_lens_center_key = Atom.make(env, "left_lens_center");
+        var term_left_lens_center_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_left_lens_center_key, &term_left_lens_center_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_left_lens_center_value, &value.leftLensCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftLensCenter);
+
+        // right_lens_center
+
+        const term_right_lens_center_key = Atom.make(env, "right_lens_center");
+        var term_right_lens_center_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_right_lens_center_key, &term_right_lens_center_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_right_lens_center_value, &value.rightLensCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightLensCenter);
+
+        // left_screen_center
+
+        const term_left_screen_center_key = Atom.make(env, "left_screen_center");
+        var term_left_screen_center_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_left_screen_center_key, &term_left_screen_center_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_left_screen_center_value, &value.leftScreenCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftScreenCenter);
+
+        // right_screen_center
+
+        const term_right_screen_center_key = Atom.make(env, "right_screen_center");
+        var term_right_screen_center_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_right_screen_center_key, &term_right_screen_center_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_right_screen_center_value, &value.rightScreenCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightScreenCenter);
+
+        // scale
+
+        const term_scale_key = Atom.make(env, "scale");
+        var term_scale_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_scale_key, &term_scale_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_scale_value, &value.scale);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scale);
+
+        // scale_in
+
+        const term_scale_in_key = Atom.make(env, "scale_in");
+        var term_scale_in_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_scale_in_key, &term_scale_in_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Double, f32, Self.allocator, env, term_scale_in_value, &value.scaleIn);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scaleIn);
+
+        return value;
+    }
+
+    pub fn free(value: rl.VrStereoConfig) void {
+        rl.UnloadVrStereoConfig(value);
+    }
+};
