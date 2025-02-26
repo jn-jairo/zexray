@@ -591,6 +591,42 @@ const Array = struct {
             allocator.free(values);
         }
     }
+
+    pub fn free_copy(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values: ?[]T_rl) void {
+        if (values) |v| {
+            const child: ?type = blk: {
+                break :blk switch (@typeInfo(T_rl)) {
+                    .Pointer => |info| info.child,
+                    .Array => |info| info.child,
+                    else => null,
+                };
+            };
+
+            for (0..v.len) |i| {
+                if (child) |c| {
+                    free_copy(T, c, allocator, v[i]);
+                } else {
+                    switch (@typeInfo(T_rl)) {
+                        .Int => {},
+                        .Float => {},
+                        else => blk: {
+                            switch (@typeInfo(@TypeOf(T.free))) {
+                                .Fn => |get_info| {
+                                    if (get_info.params.len == 2) {
+                                        break :blk T.free(allocator, v[i]);
+                                    } else {
+                                        break :blk T.free(v[i]);
+                                    }
+                                },
+                                else => @compileError("Free callback is not a function"),
+                            }
+                            @compileError("Invalid free callback");
+                        },
+                    }
+                }
+            }
+        }
+    }
 };
 
 ////////////////
@@ -3118,6 +3154,7 @@ pub const Material = struct {
         var term_params_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_params_key, &term_params_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_params_value, &value.params);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.params);
 
         return value;
     }
@@ -4382,6 +4419,7 @@ pub const VrDeviceInfo = struct {
         var term_lens_distortion_values_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_lens_distortion_values_key, &term_lens_distortion_values_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_lens_distortion_values_value, &value.lensDistortionValues);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.lensDistortionValues);
 
         // chroma_ab_correction
 
@@ -4389,6 +4427,7 @@ pub const VrDeviceInfo = struct {
         var term_chroma_ab_correction_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_chroma_ab_correction_key, &term_chroma_ab_correction_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_chroma_ab_correction_value, &value.chromaAbCorrection);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.chromaAbCorrection);
 
         return value;
     }
