@@ -1,6 +1,7 @@
 defmodule Zexray.Enum.TraceLogLevel do
   @moduledoc """
   Trace log level
+
   NOTE: Organized by priority level
 
   ## Values
@@ -18,7 +19,7 @@ defmodule Zexray.Enum.TraceLogLevel do
   """
 
   use Zexray.Enum.EnumBase,
-    name: "trace log level",
+    prefix: "trace_log_level",
     values: %{
       all: 0,
       trace: 1,

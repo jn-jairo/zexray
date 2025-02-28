@@ -35,7 +35,7 @@ defmodule Zexray.Enum.PixelFormat do
   """
 
   use Zexray.Enum.EnumBase,
-    name: "pixel format",
+    prefix: "pixel_format",
     values: %{
       uncompressed_grayscale: 1,
       uncompressed_gray_alpha: 2,

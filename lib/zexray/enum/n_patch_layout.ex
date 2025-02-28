@@ -12,7 +12,7 @@ defmodule Zexray.Enum.NPatchLayout do
   """
 
   use Zexray.Enum.EnumBase,
-    name: "n patch layout",
+    prefix: "n_patch_layout",
     values: %{
       nine_patch: 0,
       three_patch_vertical: 1,

@@ -2,7 +2,8 @@ defmodule Zexray.Enum.EnumBase do
   @moduledoc false
 
   defmacro __using__(opts) do
-    name = Keyword.fetch!(opts, :name)
+    prefix = Keyword.fetch!(opts, :prefix)
+    name = String.replace(prefix, "_", " ")
     values_by_name = Keyword.fetch!(opts, :values)
 
     quote do

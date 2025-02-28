@@ -11,7 +11,7 @@ defmodule Zexray.Enum.CameraProjection do
   """
 
   use Zexray.Enum.EnumBase,
-    name: "camera projection",
+    prefix: "camera_projection",
     values: %{
       perspective: 0,
       orthographic: 1
