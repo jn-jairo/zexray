@@ -61,6 +61,9 @@ defmodule Zexray.Guard do
   defguard is_camera_projection(value) when is_integer(value)
 
   @doc group: :enum
+  defguard is_config_flag(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_n_patch_layout(value) when is_integer(value)
 
   @doc group: :enum
@@ -72,6 +75,11 @@ defmodule Zexray.Guard do
   @doc group: :enum
   defguard is_camera_projection_like(value)
            when is_camera_projection(value) or
+                  is_atom(value)
+
+  @doc group: :enum
+  defguard is_config_flag_like(value)
+           when is_config_flag(value) or
                   is_atom(value)
 
   @doc group: :enum

@@ -3,6 +3,7 @@ defmodule Zexray.EnumFixture do
 
   alias Zexray.Enum.{
     CameraProjection,
+    ConfigFlag,
     NPatchLayout,
     PixelFormat,
     TraceLogLevel
@@ -11,6 +12,19 @@ defmodule Zexray.EnumFixture do
   def camera_projection_fixture(attrs \\ %{}) do
     {name, value} =
       CameraProjection.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def config_flag_fixture(attrs \\ %{}) do
+    {name, value} =
+      ConfigFlag.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
