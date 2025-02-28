@@ -5002,3 +5002,82 @@ pub const AutomationEvent = struct {
         _ = value;
     }
 };
+
+///////////////////////////
+//  AutomationEventList  //
+///////////////////////////
+
+pub const AutomationEventList = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.AutomationEventList, "automation_event_list");
+
+    pub const MAX_AUTOMATION_EVENTS: usize = @intCast(rl.MAX_AUTOMATION_EVENTS);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.AutomationEventList) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // capacity
+
+        const term_capacity_key = Atom.make(env, "capacity");
+        const term_capacity_value = UInt.make(env, @intCast(value.capacity));
+        assert(e.enif_make_map_put(env, term, term_capacity_key, term_capacity_value, &term) != 0);
+
+        // count
+
+        const term_count_key = Atom.make(env, "count");
+        const term_count_value = UInt.make(env, @intCast(value.count));
+        assert(e.enif_make_map_put(env, term, term_count_key, term_count_value, &term) != 0);
+
+        // events
+        // = capacity
+
+        const term_events_key = Atom.make(env, "events");
+        const events_lengths = [_]usize{@intCast(value.capacity)};
+        const term_events_value = Array.make_c(AutomationEvent, rl.AutomationEvent, env, value.events, &events_lengths);
+        assert(e.enif_make_map_put(env, term, term_events_key, term_events_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AutomationEventList {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.AutomationEventList{};
+
+        // capacity
+
+        const term_capacity_key = Atom.make(env, "capacity");
+        var term_capacity_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_capacity_key, &term_capacity_value) == 0) return error.ArgumentError;
+        value.capacity = @intCast(try UInt.get(env, term_capacity_value));
+
+        // count
+
+        const term_count_key = Atom.make(env, "count");
+        var term_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_count_key, &term_count_value) == 0) return error.ArgumentError;
+        value.count = @intCast(try UInt.get(env, term_count_value));
+
+        // events
+        // = capacity
+
+        const term_events_key = Atom.make(env, "events");
+        var term_events_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_events_key, &term_events_value) == 0) return error.ArgumentError;
+
+        const events_lengths = [_]usize{@intCast(value.capacity)};
+        value.events = try Array.get_c(AutomationEvent, rl.AutomationEvent, Self.allocator, env, term_events_value, &events_lengths);
+        errdefer Array.free_c(AutomationEvent, rl.AutomationEvent, Self.allocator, value.events, &events_lengths);
+
+        return value;
+    }
+
+    pub fn free(value: rl.AutomationEventList) void {
+        rl.UnloadAutomationEventList(value);
+    }
+};

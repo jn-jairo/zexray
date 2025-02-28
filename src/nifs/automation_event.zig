@@ -8,6 +8,9 @@ const core = @import("../core.zig");
 pub const exported_nifs = [_]e.ErlNifFunc{
     // AutomationEvent
     .{ .name = "automation_event_get_max_params", .arity = 0, .fptr = nif_automation_event_get_max_params, .flags = 0 },
+
+    // AutomationEventList
+    .{ .name = "automation_event_list_get_max_automation_events", .arity = 0, .fptr = nif_automation_event_list_get_max_automation_events, .flags = 0 },
 };
 
 ///////////////////////
@@ -22,4 +25,18 @@ fn nif_automation_event_get_max_params(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     // Return
 
     return core.UInt.make(env, @intCast(core.AutomationEvent.MAX_PARAMS));
+}
+
+///////////////////////////
+//  AutomationEventList  //
+///////////////////////////
+
+/// Get automation event list max automation events for AutomationEventList.events
+fn nif_automation_event_list_get_max_automation_events(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(core.AutomationEventList.MAX_AUTOMATION_EVENTS));
 }
