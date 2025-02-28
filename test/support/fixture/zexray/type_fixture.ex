@@ -9,6 +9,7 @@ defmodule Zexray.TypeFixture do
     Camera2D,
     Camera3D,
     Color,
+    FilePathList,
     Font,
     GlyphInfo,
     Image,
@@ -241,6 +242,39 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Color.new()
+  end
+
+  def file_path_list_fixture(type \\ :base, attrs \\ %{}) do
+    capacity = min(4, Zexray.FileSystem.file_path_list_max_filepath_capacity())
+    count = capacity
+
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          capacity: capacity,
+          count: count,
+          paths:
+            Enum.map(1..capacity, fn i ->
+              Enum.map(
+                1..max(
+                  1,
+                  trunc(Zexray.FileSystem.file_path_list_max_filepath_length() * i / capacity)
+                ),
+                fn n -> "#{rem(n, 10)}" end
+              )
+              |> Enum.join()
+            end)
+        }
+
+      :empty ->
+        %{
+          capacity: 0,
+          count: 0,
+          paths: []
+        }
+    end
+    |> Map.merge(attrs)
+    |> FilePathList.new()
   end
 
   def font_fixture(type \\ :base, attrs \\ %{}) do

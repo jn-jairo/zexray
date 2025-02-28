@@ -4847,3 +4847,84 @@ pub const VrStereoConfig = struct {
         rl.UnloadVrStereoConfig(value);
     }
 };
+
+////////////////////
+//  FilePathList  //
+////////////////////
+
+pub const FilePathList = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.FilePathList, "file_path_list");
+
+    pub const MAX_FILEPATH_CAPACITY: usize = @intCast(rl.MAX_FILEPATH_CAPACITY);
+
+    pub const MAX_FILEPATH_LENGTH: usize = @intCast(rl.MAX_FILEPATH_LENGTH);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.FilePathList) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // capacity
+
+        const term_capacity_key = Atom.make(env, "capacity");
+        const term_capacity_value = UInt.make(env, @intCast(value.capacity));
+        assert(e.enif_make_map_put(env, term, term_capacity_key, term_capacity_value, &term) != 0);
+
+        // count
+
+        const term_count_key = Atom.make(env, "count");
+        const term_count_value = UInt.make(env, @intCast(value.count));
+        assert(e.enif_make_map_put(env, term, term_count_key, term_count_value, &term) != 0);
+
+        // paths
+        // = capacity , MAX_FILEPATH_LENGTH
+
+        const term_paths_key = Atom.make(env, "paths");
+        const paths_lengths = [_]usize{ @intCast(value.capacity), MAX_FILEPATH_LENGTH };
+        const term_paths_value = Array.make_c(CString, [*c]u8, env, value.paths, &paths_lengths);
+        assert(e.enif_make_map_put(env, term, term_paths_key, term_paths_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.FilePathList {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.FilePathList{};
+
+        // capacity
+
+        const term_capacity_key = Atom.make(env, "capacity");
+        var term_capacity_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_capacity_key, &term_capacity_value) == 0) return error.ArgumentError;
+        value.capacity = @intCast(try UInt.get(env, term_capacity_value));
+
+        // count
+
+        const term_count_key = Atom.make(env, "count");
+        var term_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_count_key, &term_count_value) == 0) return error.ArgumentError;
+        value.count = @intCast(try UInt.get(env, term_count_value));
+
+        // paths
+        // = capacity , MAX_FILEPATH_LENGTH
+
+        const term_paths_key = Atom.make(env, "paths");
+        var term_paths_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_paths_key, &term_paths_value) == 0) return error.ArgumentError;
+
+        const paths_lengths = [_]usize{ @intCast(value.capacity), MAX_FILEPATH_LENGTH };
+        value.paths = try Array.get_c(CString, [*c]u8, Self.allocator, env, term_paths_value, &paths_lengths);
+        errdefer Array.free_c(CString, [*c]u8, Self.allocator, value.paths, &paths_lengths);
+
+        return value;
+    }
+
+    pub fn free(value: rl.FilePathList) void {
+        rl.UnloadDirectoryFiles(value);
+    }
+};

@@ -181,7 +181,12 @@ defmodule Zexray.NIF.Resource do
         # VrStereoConfig
         vr_stereo_config_to_resource: 1,
         vr_stereo_config_from_resource: 1,
-        vr_stereo_config_free_resource: 1
+        vr_stereo_config_free_resource: 1,
+
+        # FilePathList
+        file_path_list_to_resource: 1,
+        file_path_list_from_resource: 1,
+        file_path_list_free_resource: 1
       ]
 
       #############
@@ -759,6 +764,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec vr_stereo_config_free_resource(resource :: reference) :: :ok
       def vr_stereo_config_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ##################
+      #  FilePathList  #
+      ##################
+
+      @doc group: :resource
+      @spec file_path_list_to_resource(value :: map) :: reference
+      def file_path_list_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec file_path_list_from_resource(resource :: reference) :: map
+      def file_path_list_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec file_path_list_free_resource(resource :: reference) :: :ok
+      def file_path_list_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

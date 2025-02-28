@@ -11,6 +11,7 @@ defmodule Zexray.Guard do
     Camera2D,
     Camera3D,
     Color,
+    FilePathList,
     Font,
     GlyphInfo,
     Image,
@@ -86,6 +87,7 @@ defmodule Zexray.Guard do
   defguard is_camera_2d(value) when is_struct(value, Camera2D)
   defguard is_camera_3d(value) when is_struct(value, Camera3D)
   defguard is_color(value) when is_struct(value, Color)
+  defguard is_file_path_list(value) when is_struct(value, FilePathList)
   defguard is_font(value) when is_struct(value, Font)
   defguard is_glyph_info(value) when is_struct(value, GlyphInfo)
   defguard is_image(value) when is_struct(value, Image)
@@ -160,6 +162,12 @@ defmodule Zexray.Guard do
                   is_atom(value) or
                   (is_bitstring(value) and bit_size(value) in [24, 32]) or
                   (is_tuple(value) and tuple_size(value) in [2, 3, 4])
+
+  defguard is_file_path_list_like(value)
+           when is_file_path_list(value) or
+                  is_struct(value, FilePathList.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 3)
 
   defguard is_font_like(value)
            when is_font(value) or

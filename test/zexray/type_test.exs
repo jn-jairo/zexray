@@ -82,6 +82,7 @@ defmodule Zexray.TypeTest do
         music: {"music", :base},
         vr_device_info: {"vr_device_info", :base},
         vr_stereo_config: {"vr_stereo_config", :base},
+        file_path_list: {"file_path_list", :base},
         # resource
         vector2_resource: {"vector2", :resource},
         vector3_resource: {"vector3", :resource},
@@ -119,6 +120,7 @@ defmodule Zexray.TypeTest do
         music_resource: {"music", :resource},
         vr_device_info_resource: {"vr_device_info", :resource},
         vr_stereo_config_resource: {"vr_stereo_config", :resource},
+        file_path_list_resource: {"file_path_list", :resource},
         # empty
         vector2_empty: {"vector2", :empty},
         vector3_empty: {"vector3", :empty},
@@ -155,7 +157,8 @@ defmodule Zexray.TypeTest do
         sound_empty: {"sound", :empty},
         music_empty: {"music", :empty},
         vr_device_info_empty: {"vr_device_info", :empty},
-        vr_stereo_config_empty: {"vr_stereo_config", :empty}
+        vr_stereo_config_empty: {"vr_stereo_config", :empty},
+        file_path_list_empty: {"file_path_list", :empty}
       }
 
       %{datasets: datasets}
@@ -201,6 +204,7 @@ defmodule Zexray.TypeTest do
       [dataset: :music],
       [dataset: :vr_device_info],
       [dataset: :vr_stereo_config],
+      [dataset: :file_path_list],
       # resource
       [dataset: :vector2_resource],
       [dataset: :vector3_resource],
@@ -238,6 +242,7 @@ defmodule Zexray.TypeTest do
       [dataset: :music_resource],
       [dataset: :vr_device_info_resource],
       [dataset: :vr_stereo_config_resource],
+      [dataset: :file_path_list_resource],
       # empty
       [dataset: :vector2_empty],
       [dataset: :vector3_empty],
@@ -274,7 +279,8 @@ defmodule Zexray.TypeTest do
       [dataset: :sound_empty],
       [dataset: :music_empty],
       [dataset: :vr_device_info_empty],
-      [dataset: :vr_stereo_config_empty]
+      [dataset: :vr_stereo_config_empty],
+      [dataset: :file_path_list_empty]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 
