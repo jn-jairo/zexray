@@ -186,7 +186,12 @@ defmodule Zexray.NIF.Resource do
         # FilePathList
         file_path_list_to_resource: 1,
         file_path_list_from_resource: 1,
-        file_path_list_free_resource: 1
+        file_path_list_free_resource: 1,
+
+        # AutomationEvent
+        automation_event_to_resource: 1,
+        automation_event_from_resource: 1,
+        automation_event_free_resource: 1
       ]
 
       #############
@@ -780,6 +785,22 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec file_path_list_free_resource(resource :: reference) :: :ok
       def file_path_list_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      #####################
+      #  AutomationEvent  #
+      #####################
+
+      @doc group: :resource
+      @spec automation_event_to_resource(value :: map) :: reference
+      def automation_event_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec automation_event_from_resource(resource :: reference) :: map
+      def automation_event_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec automation_event_free_resource(resource :: reference) :: :ok
+      def automation_event_free_resource(_resource), do: :erlang.nif_error(:undef)
     end
   end
 end

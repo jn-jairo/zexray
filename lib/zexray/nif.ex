@@ -21,6 +21,7 @@ defmodule Zexray.NIF do
 
   use Zexray.NIF.Resource
   use Zexray.NIF.Audio
+  use Zexray.NIF.AutomationEvent
   use Zexray.NIF.FileSystem
   use Zexray.NIF.Font
   use Zexray.NIF.Image
@@ -33,6 +34,7 @@ defmodule Zexray.NIF do
 
   @nifs @nifs_resource ++
           @nifs_audio ++
+          @nifs_automation_event ++
           @nifs_file_system ++
           @nifs_font ++
           @nifs_image ++

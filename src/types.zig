@@ -4928,3 +4928,77 @@ pub const FilePathList = struct {
         rl.UnloadDirectoryFiles(value);
     }
 };
+
+///////////////////////
+//  AutomationEvent  //
+///////////////////////
+
+pub const AutomationEvent = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+
+    pub const Resource = ResourceBase(Self, rl.AutomationEvent, "automation_event");
+
+    pub const MAX_PARAMS: usize = get_field_array_length(rl.AutomationEvent, "params");
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.AutomationEvent) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // frame
+
+        const term_frame_key = Atom.make(env, "frame");
+        const term_frame_value = UInt.make(env, @intCast(value.frame));
+        assert(e.enif_make_map_put(env, term, term_frame_key, term_frame_value, &term) != 0);
+
+        // type
+
+        const term_type_key = Atom.make(env, "type");
+        const term_type_value = UInt.make(env, @intCast(value.type));
+        assert(e.enif_make_map_put(env, term, term_type_key, term_type_value, &term) != 0);
+
+        // params
+
+        const term_params_key = Atom.make(env, "params");
+        const term_params_value = Array.make(Int, c_int, env, &value.params);
+        assert(e.enif_make_map_put(env, term, term_params_key, term_params_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AutomationEvent {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.AutomationEvent{};
+
+        // frame
+
+        const term_frame_key = Atom.make(env, "frame");
+        var term_frame_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_frame_key, &term_frame_value) == 0) return error.ArgumentError;
+        value.frame = @intCast(try UInt.get(env, term_frame_value));
+
+        // type
+
+        const term_type_key = Atom.make(env, "type");
+        var term_type_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_type_key, &term_type_value) == 0) return error.ArgumentError;
+        value.type = @intCast(try UInt.get(env, term_type_value));
+
+        // params
+
+        const term_params_key = Atom.make(env, "params");
+        var term_params_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_params_key, &term_params_value) == 0) return error.ArgumentError;
+        try Array.get_copy(Int, c_int, Self.allocator, env, term_params_value, &value.params);
+        errdefer Array.free_copy(Int, c_int, Self.allocator, &value.params);
+
+        return value;
+    }
+
+    pub fn free(value: rl.AutomationEvent) void {
+        _ = value;
+    }
+};

@@ -189,6 +189,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "file_path_list_to_resource", .arity = 1, .fptr = nif_file_path_list_to_resource, .flags = 0 },
     .{ .name = "file_path_list_from_resource", .arity = 1, .fptr = nif_file_path_list_from_resource, .flags = 0 },
     .{ .name = "file_path_list_free_resource", .arity = 1, .fptr = nif_file_path_list_free_resource, .flags = 0 },
+
+    // AutomationEvent
+    .{ .name = "automation_event_to_resource", .arity = 1, .fptr = nif_automation_event_to_resource, .flags = 0 },
+    .{ .name = "automation_event_from_resource", .arity = 1, .fptr = nif_automation_event_from_resource, .flags = 0 },
+    .{ .name = "automation_event_free_resource", .arity = 1, .fptr = nif_automation_event_free_resource, .flags = 0 },
 };
 
 ///////////////
@@ -1704,6 +1709,47 @@ fn nif_file_path_list_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     };
 
     core.FilePathList.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+///////////////////////
+//  AutomationEvent  //
+///////////////////////
+
+fn nif_automation_event_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.AutomationEvent.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.AutomationEvent.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.AutomationEvent.Resource.release(resource);
+
+    return core.AutomationEvent.Resource.make(env, resource);
+}
+
+fn nif_automation_event_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.AutomationEvent.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.AutomationEvent.make(env, resource.*.*);
+}
+
+fn nif_automation_event_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.AutomationEvent.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.AutomationEvent.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }

@@ -3,6 +3,7 @@ defmodule Zexray.TypeFixture do
 
   alias Zexray.Type.{
     AudioStream,
+    AutomationEvent,
     BoneInfo,
     BoundingBox,
     Camera,
@@ -76,6 +77,26 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> AudioStream.new()
+  end
+
+  def automation_event_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          frame: 1,
+          type: 1,
+          params: Enum.map(1..Zexray.AutomationEvent.max_params(), fn n -> n end)
+        }
+
+      :empty ->
+        %{
+          frame: 0,
+          type: 0,
+          params: Enum.map(1..Zexray.AutomationEvent.max_params(), fn _ -> 0 end)
+        }
+    end
+    |> Map.merge(attrs)
+    |> AutomationEvent.new()
   end
 
   def bone_info_fixture(type \\ :base, attrs \\ %{}) do

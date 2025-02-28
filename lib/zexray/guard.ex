@@ -5,6 +5,7 @@ defmodule Zexray.Guard do
 
   alias Zexray.Type.{
     AudioStream,
+    AutomationEvent,
     BoneInfo,
     BoundingBox,
     Camera,
@@ -81,6 +82,7 @@ defmodule Zexray.Guard do
   ##########
 
   defguard is_audio_stream(value) when is_struct(value, AudioStream)
+  defguard is_automation_event(value) when is_struct(value, AutomationEvent)
   defguard is_bone_info(value) when is_struct(value, BoneInfo)
   defguard is_bounding_box(value) when is_struct(value, BoundingBox)
   defguard is_camera(value) when is_struct(value, Camera)
@@ -123,6 +125,12 @@ defmodule Zexray.Guard do
                   is_struct(value, AudioStream.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 5)
+
+  defguard is_automation_event_like(value)
+           when is_automation_event(value) or
+                  is_struct(value, AutomationEvent.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 3)
 
   defguard is_bone_info_like(value)
            when is_bone_info(value) or

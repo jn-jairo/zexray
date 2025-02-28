@@ -44,6 +44,7 @@ pub const ResourceType = struct {
     vr_device_info: *e.ErlNifResourceType = undefined,
     vr_stereo_config: *e.ErlNifResourceType = undefined,
     file_path_list: *e.ErlNifResourceType = undefined,
+    automation_event: *e.ErlNifResourceType = undefined,
 
     pub const allocator: std.mem.Allocator = e.allocator;
 
@@ -206,6 +207,10 @@ pub const ResourceType = struct {
     pub fn file_path_list_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.FilePathList.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
+
+    pub fn automation_event_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.AutomationEvent.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
 };
 
 pub var resource_type = ResourceType{};
@@ -253,6 +258,7 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.vr_device_info = e.enif_open_resource_type(env, null, "Zexray.Resource.VrDeviceInfo", &ResourceType.vr_device_info_dtor, flags, null) orelse return false;
     resource_type.vr_stereo_config = e.enif_open_resource_type(env, null, "Zexray.Resource.VrStereoConfig", &ResourceType.vr_stereo_config_dtor, flags, null) orelse return false;
     resource_type.file_path_list = e.enif_open_resource_type(env, null, "Zexray.Resource.FilePathList", &ResourceType.file_path_list_dtor, flags, null) orelse return false;
+    resource_type.automation_event = e.enif_open_resource_type(env, null, "Zexray.Resource.AutomationEvent", &ResourceType.automation_event_dtor, flags, null) orelse return false;
 
     return true;
 }
