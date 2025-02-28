@@ -40,7 +40,10 @@ defmodule Zexray.Type.BoneInfo do
           name :: binary,
           parent :: integer
         }) :: t()
-  def new({name, parent})
+  def new({
+        name,
+        parent
+      })
       when is_binary(name) and
              is_integer(parent) do
     new(

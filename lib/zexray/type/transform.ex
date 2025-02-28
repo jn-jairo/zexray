@@ -47,7 +47,11 @@ defmodule Zexray.Type.Transform do
           rotation :: Zexray.Type.Quaternion.t_all(),
           scale :: Zexray.Type.Vector3.t_all()
         }) :: t()
-  def new({translation, rotation, scale})
+  def new({
+        translation,
+        rotation,
+        scale
+      })
       when is_vector3_like(translation) and
              is_quaternion_like(rotation) and
              is_vector3_like(scale) do

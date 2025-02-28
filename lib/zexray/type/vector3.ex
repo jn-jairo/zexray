@@ -41,7 +41,11 @@ defmodule Zexray.Type.Vector3 do
           y :: float,
           z :: float
         }) :: t()
-  def new({x, y, z})
+  def new({
+        x,
+        y,
+        z
+      })
       when is_float(x) and
              is_float(y) and
              is_float(z) do

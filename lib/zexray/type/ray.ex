@@ -42,7 +42,10 @@ defmodule Zexray.Type.Ray do
           position :: Zexray.Type.Vector3.t_all(),
           direction :: Zexray.Type.Vector3.t_all()
         }) :: t()
-  def new({position, direction})
+  def new({
+        position,
+        direction
+      })
       when is_vector3_like(position) and
              is_vector3_like(direction) do
     new(

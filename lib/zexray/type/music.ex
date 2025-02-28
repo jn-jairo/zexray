@@ -57,7 +57,13 @@ defmodule Zexray.Type.Music do
           ctx_type :: integer,
           ctx_data :: reference | nil
         }) :: t()
-  def new({stream, frame_count, looping, ctx_type, ctx_data})
+  def new({
+        stream,
+        frame_count,
+        looping,
+        ctx_type,
+        ctx_data
+      })
       when is_audio_stream_like(stream) and
              is_integer(frame_count) and
              is_boolean(looping) and

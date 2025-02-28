@@ -55,7 +55,11 @@ defmodule Zexray.Type.RenderTextureBase do
               texture :: Zexray.Type.Texture.t_all(),
               depth :: Zexray.Type.Texture.t_all()
             }) :: t()
-      def new({id, texture, depth})
+      def new({
+            id,
+            texture,
+            depth
+          })
           when is_integer(id) and
                  is_texture_like(texture) and
                  is_texture_like(depth) do

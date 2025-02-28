@@ -65,7 +65,13 @@ defmodule Zexray.Type.Camera3DBase do
               fovy :: float,
               projection :: Zexray.Enum.CameraProjection.t_all()
             }) :: t()
-      def new({position, target, up, fovy, projection})
+      def new({
+            position,
+            target,
+            up,
+            fovy,
+            projection
+          })
           when is_vector3_like(position) and
                  is_vector3_like(target) and
                  is_vector3_like(up) and

@@ -55,7 +55,13 @@ defmodule Zexray.Type.AudioStream do
           sample_size :: non_neg_integer,
           channels :: non_neg_integer
         }) :: t()
-  def new({buffer, processor, sample_rate, sample_size, channels})
+  def new({
+        buffer,
+        processor,
+        sample_rate,
+        sample_size,
+        channels
+      })
       when (is_reference(buffer) or is_nil(buffer)) and
              (is_reference(processor) or is_nil(processor)) and
              is_integer(sample_rate) and

@@ -40,7 +40,10 @@ defmodule Zexray.Type.Shader do
           id :: non_neg_integer,
           locs :: [integer]
         }) :: t()
-  def new({id, locs})
+  def new({
+        id,
+        locs
+      })
       when is_integer(id) and
              is_list(locs) and (locs == [] or is_integer(hd(locs))) do
     new(

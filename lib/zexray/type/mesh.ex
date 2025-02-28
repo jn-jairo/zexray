@@ -117,11 +117,25 @@ defmodule Zexray.Type.Mesh do
           vao_id :: non_neg_integer,
           vbo_id :: [non_neg_integer]
         }) :: t()
-  def new(
-        {vertex_count, triangle_count, vertices, texcoords, texcoords2, normals, tangents, colors,
-         indices, anim_vertices, anim_normals, bone_ids, bone_weights, bone_matrices, bone_count,
-         vao_id, vbo_id}
-      )
+  def new({
+        vertex_count,
+        triangle_count,
+        vertices,
+        texcoords,
+        texcoords2,
+        normals,
+        tangents,
+        colors,
+        indices,
+        anim_vertices,
+        anim_normals,
+        bone_ids,
+        bone_weights,
+        bone_matrices,
+        bone_count,
+        vao_id,
+        vbo_id
+      })
       when is_integer(vertex_count) and
              is_integer(triangle_count) and
              is_list(vertices) and (vertices == [] or is_float(hd(vertices))) and

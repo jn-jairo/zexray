@@ -67,7 +67,13 @@ defmodule Zexray.Type.TextureBase do
               mipmaps :: integer,
               format :: Zexray.Enum.PixelFormat.t_all()
             }) :: t()
-      def new({id, width, height, mipmaps, format})
+      def new({
+            id,
+            width,
+            height,
+            mipmaps,
+            format
+          })
           when is_integer(id) and
                  is_integer(width) and
                  is_integer(height) and

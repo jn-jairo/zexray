@@ -47,7 +47,11 @@ defmodule Zexray.Type.Material do
           maps :: [Zexray.Type.MaterialMap.t_all()],
           params :: [float]
         }) :: t()
-  def new({shader, maps, params})
+  def new({
+        shader,
+        maps,
+        params
+      })
       when is_shader_like(shader) and
              is_list(maps) and (maps == [] or is_material_map_like(hd(maps))) and
              is_list(params) and (params == [] or is_float(hd(params))) do

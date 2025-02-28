@@ -55,7 +55,13 @@ defmodule Zexray.Type.Wave do
           channels :: non_neg_integer,
           data :: binary
         }) :: t()
-  def new({frame_count, sample_rate, sample_size, channels, data})
+  def new({
+        frame_count,
+        sample_rate,
+        sample_size,
+        channels,
+        data
+      })
       when is_integer(frame_count) and
              is_integer(sample_rate) and
              is_integer(sample_size) and

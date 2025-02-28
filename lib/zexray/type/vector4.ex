@@ -53,7 +53,12 @@ defmodule Zexray.Type.Vector4Base do
               z :: float,
               w :: float
             }) :: t()
-      def new({x, y, z, w})
+      def new({
+            x,
+            y,
+            z,
+            w
+          })
           when is_float(x) and
                  is_float(y) and
                  is_float(z) and

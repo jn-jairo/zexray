@@ -196,7 +196,11 @@ defmodule Zexray.Type.Color do
           g :: byte,
           b :: byte
         }) :: t()
-  def new({r, g, b})
+  def new({
+        r,
+        g,
+        b
+      })
       when is_integer(r) and
              is_integer(g) and
              is_integer(b) do
@@ -213,7 +217,12 @@ defmodule Zexray.Type.Color do
           b :: byte,
           a :: byte
         }) :: t()
-  def new({r, g, b, a})
+  def new({
+        r,
+        g,
+        b,
+        a
+      })
       when is_integer(r) and
              is_integer(g) and
              is_integer(b) and

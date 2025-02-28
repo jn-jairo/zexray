@@ -52,7 +52,12 @@ defmodule Zexray.Type.RayCollision do
           point :: Zexray.Type.Vector3.t_all(),
           normal :: Zexray.Type.Vector3.t_all()
         }) :: t()
-  def new({hit, distance, point, normal})
+  def new({
+        hit,
+        distance,
+        point,
+        normal
+      })
       when is_boolean(hit) and
              is_float(distance) and
              is_vector3_like(point) and

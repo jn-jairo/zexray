@@ -47,7 +47,11 @@ defmodule Zexray.Type.MaterialMap do
           color :: Zexray.Type.Color.t_all(),
           value :: float
         }) :: t()
-  def new({texture, color, value})
+  def new({
+        texture,
+        color,
+        value
+      })
       when is_texture_2d_like(texture) and
              is_color_like(color) and
              is_float(value) do

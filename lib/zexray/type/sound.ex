@@ -42,7 +42,10 @@ defmodule Zexray.Type.Sound do
           stream :: Zexray.Type.AudioStream.t_all(),
           frame_count :: non_neg_integer
         }) :: t()
-  def new({stream, frame_count})
+  def new({
+        stream,
+        frame_count
+      })
       when is_audio_stream_like(stream) and
              is_integer(frame_count) do
     new(

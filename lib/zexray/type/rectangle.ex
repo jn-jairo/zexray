@@ -45,7 +45,12 @@ defmodule Zexray.Type.Rectangle do
           width :: float,
           height :: float
         }) :: t()
-  def new({x, y, width, height})
+  def new({
+        x,
+        y,
+        width,
+        height
+      })
       when is_float(x) and
              is_float(y) and
              is_float(width) and

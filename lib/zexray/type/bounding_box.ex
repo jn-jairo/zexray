@@ -42,7 +42,10 @@ defmodule Zexray.Type.BoundingBox do
           min :: Zexray.Type.Vector3.t_all(),
           max :: Zexray.Type.Vector3.t_all()
         }) :: t()
-  def new({min, max})
+  def new({
+        min,
+        max
+      })
       when is_vector3_like(min) and
              is_vector3_like(max) do
     new(

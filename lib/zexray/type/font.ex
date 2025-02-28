@@ -62,7 +62,14 @@ defmodule Zexray.Type.Font do
           recs :: [Zexray.Type.Rectangle.t_all()],
           glyphs :: [Zexray.Type.GlyphInfo.t_all()]
         }) :: t()
-  def new({base_size, glyph_count, glyph_padding, texture, recs, glyphs})
+  def new({
+        base_size,
+        glyph_count,
+        glyph_padding,
+        texture,
+        recs,
+        glyphs
+      })
       when is_integer(base_size) and
              is_integer(glyph_count) and
              is_integer(glyph_padding) and

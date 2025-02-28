@@ -57,7 +57,13 @@ defmodule Zexray.Type.GlyphInfo do
           advance_x :: integer,
           image :: Zexray.Type.Image.t_all()
         }) :: t()
-  def new({value, offset_x, offset_y, advance_x, image})
+  def new({
+        value,
+        offset_x,
+        offset_y,
+        advance_x,
+        image
+      })
       when is_integer(value) and
              is_integer(offset_x) and
              is_integer(offset_y) and

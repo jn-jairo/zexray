@@ -62,7 +62,14 @@ defmodule Zexray.Type.NPatchInfo do
           bottom :: integer,
           layout :: Zexray.Enum.NPatchLayout.t_all()
         }) :: t()
-  def new({source, left, top, right, bottom, layout})
+  def new({
+        source,
+        left,
+        top,
+        right,
+        bottom,
+        layout
+      })
       when is_rectangle_like(source) and
              is_integer(left) and
              is_integer(top) and

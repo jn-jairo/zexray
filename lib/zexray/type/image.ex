@@ -57,7 +57,13 @@ defmodule Zexray.Type.Image do
           mipmaps :: integer,
           format :: Zexray.Enum.PixelFormat.t_all()
         }) :: t()
-  def new({data, width, height, mipmaps, format})
+  def new({
+        data,
+        width,
+        height,
+        mipmaps,
+        format
+      })
       when is_binary(data) and
              is_integer(width) and
              is_integer(height) and

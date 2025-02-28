@@ -52,7 +52,12 @@ defmodule Zexray.Type.Camera2D do
           rotation :: float,
           zoom :: float
         }) :: t()
-  def new({offset, target, rotation, zoom})
+  def new({
+        offset,
+        target,
+        rotation,
+        zoom
+      })
       when is_vector2_like(offset) and
              is_vector2_like(target) and
              is_float(rotation) and
