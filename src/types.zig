@@ -194,6 +194,11 @@ pub const Binary = struct {
             allocator.free(@as([*]u8, @ptrCast(value_c))[0..length_c]);
         }
     }
+
+    pub fn free_copy(allocator: std.mem.Allocator, value: []u8) void {
+        _ = allocator;
+        _ = value;
+    }
 };
 
 ///////////////
@@ -219,6 +224,27 @@ pub const CString = struct {
         return term;
     }
 
+    pub fn make_c(env: ?*e.ErlNifEnv, value_c: [*c]u8, length_c: usize) e.ErlNifTerm {
+        var term: e.ErlNifTerm = undefined;
+        if (length_c > 0 and value_c != null) {
+            const value = @as([*]u8, @ptrCast(value_c))[0..length_c];
+            const value_length: usize = @intCast(blk: {
+                for (0..value.len) |i| {
+                    if (value[i] == 0) {
+                        break :blk i;
+                    }
+                }
+                break :blk value.len;
+            });
+
+            var buf = e.enif_make_new_binary(env, value_length, &term);
+            std.mem.copyForwards(u8, buf[0..value_length], value[0..value_length]);
+        } else {
+            _ = e.enif_make_new_binary(env, 0, &term);
+        }
+        return term;
+    }
+
     pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
         var binary: e.ErlNifBinary = undefined;
         if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
@@ -230,6 +256,28 @@ pub const CString = struct {
         value[binary.size] = 0;
 
         return value;
+    }
+
+    pub fn get_c(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, length_c: usize) ![*c]u8 {
+        var binary: e.ErlNifBinary = undefined;
+        if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
+        if (binary.size != 0 and (binary.size + 1) > length_c) return error.ArgumentError;
+
+        if (binary.size <= 0) {
+            return null;
+        }
+
+        const value = try allocator.alloc(u8, length_c);
+        errdefer allocator.free(value);
+
+        for (0..value.len) |i| {
+            if (i < binary.size) {
+                value[i] = binary.data[i];
+            } else {
+                value[i] = 0;
+            }
+        }
+        return @ptrCast(value);
     }
 
     pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
@@ -255,6 +303,17 @@ pub const CString = struct {
     pub fn free(allocator: std.mem.Allocator, value: []u8) void {
         allocator.free(value);
     }
+
+    pub fn free_c(allocator: std.mem.Allocator, value_c: [*c]u8, length_c: usize) void {
+        if (length_c > 0) {
+            allocator.free(@as([*]u8, @ptrCast(value_c))[0..length_c]);
+        }
+    }
+
+    pub fn free_copy(allocator: std.mem.Allocator, value: []u8) void {
+        _ = allocator;
+        _ = value;
+    }
 };
 
 /////////////
@@ -273,9 +332,24 @@ const Array = struct {
                 };
             };
 
+            const child_child: ?type = blk: {
+                if (child) |c| {
+                    break :blk switch (@typeInfo(c)) {
+                        .Pointer => |info| info.child,
+                        .Array => |info| info.child,
+                        else => null,
+                    };
+                }
+                break :blk null;
+            };
+
             for (0..values.len) |i| {
                 if (child) |c| {
-                    term_value = e.enif_make_list_cell(env, make(T, c, env, values[values.len - 1 - i]), term_value);
+                    if (child_child == null and (T == Binary or T == CString)) {
+                        term_value = e.enif_make_list_cell(env, T.make(env, values[values.len - 1 - i]), term_value);
+                    } else {
+                        term_value = e.enif_make_list_cell(env, make(T, c, env, values[values.len - 1 - i]), term_value);
+                    }
                 } else {
                     term_value = switch (@typeInfo(T_rl)) {
                         .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
@@ -312,9 +386,24 @@ const Array = struct {
             const child_is_array = depth < (lengths_c.len - 1);
             assert(child_is_array and child != null or !child_is_array and child == null);
 
+            const child_child: ?type = blk: {
+                if (child) |c| {
+                    break :blk switch (@typeInfo(c)) {
+                        .Pointer => |info| info.child,
+                        .Array => |info| info.child,
+                        else => null,
+                    };
+                }
+                break :blk null;
+            };
+
             for (0..values.len) |i| {
                 if (child) |c| {
-                    term_value = e.enif_make_list_cell(env, _make_c(T, c, env, values[values.len - 1 - i], lengths_c, depth + 1), term_value);
+                    if (child_child == null and (T == Binary or T == CString)) {
+                        term_value = e.enif_make_list_cell(env, T.make_c(env, values[values.len - 1 - i], lengths_c[depth + 1]), term_value);
+                    } else {
+                        term_value = e.enif_make_list_cell(env, _make_c(T, c, env, values[values.len - 1 - i], lengths_c, depth + 1), term_value);
+                    }
                 } else {
                     term_value = switch (@typeInfo(T_rl)) {
                         .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
@@ -347,20 +436,47 @@ const Array = struct {
             };
         };
 
+        const child_child: ?type = blk: {
+            if (child) |c| {
+                break :blk switch (@typeInfo(c)) {
+                    .Pointer => |info| info.child,
+                    .Array => |info| info.child,
+                    else => null,
+                };
+            }
+            break :blk null;
+        };
+
         var term_value = term;
         var term_value_head: e.ErlNifTerm = undefined;
         for (0..@intCast(length)) |i| {
             if (e.enif_get_list_cell(env, term_value, &term_value_head, &term_value) == 0) return error.ArgumentError;
             if (child) |c| {
-                values[i] = try get(T, c, allocator, env, term_value_head);
+                if (child_child == null and (T == Binary or T == CString)) {
+                    values[i] = blk: {
+                        switch (@typeInfo(@TypeOf(T.get))) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 3) {
+                                    break :blk try T.get(allocator, env, term_value_head);
+                                } else {
+                                    break :blk try T.get(env, term_value_head);
+                                }
+                            },
+                            else => @compileError("Get callback is not a function"),
+                        }
+                        @compileError("Invalid get callback");
+                    };
+                } else {
+                    values[i] = try get(T, c, allocator, env, term_value_head);
+                }
             } else {
                 values[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |get_info| {
-                                if (get_info.params.len == 3) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
                                     break :blk try T.get(env, term_value_head);
@@ -407,20 +523,47 @@ const Array = struct {
         const child_is_array = depth < (lengths_c.len - 1);
         assert(child_is_array and child != null or !child_is_array and child == null);
 
+        const child_child: ?type = blk: {
+            if (child) |c| {
+                break :blk switch (@typeInfo(c)) {
+                    .Pointer => |info| info.child,
+                    .Array => |info| info.child,
+                    else => null,
+                };
+            }
+            break :blk null;
+        };
+
         var term_value = term;
         var term_value_head: e.ErlNifTerm = undefined;
         for (0..@intCast(length)) |i| {
             if (e.enif_get_list_cell(env, term_value, &term_value_head, &term_value) == 0) return error.ArgumentError;
             if (child) |c| {
-                values[i] = try _get_c(T, c, allocator, env, term_value_head, lengths_c, depth + 1);
+                if (child_child == null and (T == Binary or T == CString)) {
+                    values[i] = blk: {
+                        switch (@typeInfo(@TypeOf(T.get_c))) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 4) {
+                                    break :blk try T.get_c(allocator, env, term_value_head, lengths_c[depth + 1]);
+                                } else {
+                                    break :blk try T.get_c(env, term_value_head, lengths_c[depth + 1]);
+                                }
+                            },
+                            else => @compileError("Get callback is not a function"),
+                        }
+                        @compileError("Invalid get callback");
+                    };
+                } else {
+                    values[i] = try _get_c(T, c, allocator, env, term_value_head, lengths_c, depth + 1);
+                }
             } else {
                 values[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |get_info| {
-                                if (get_info.params.len == 3) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
                                     break :blk try T.get(env, term_value_head);
@@ -450,9 +593,20 @@ const Array = struct {
             };
         };
 
-        if (length <= 0) {
+        const child_child: ?type = blk: {
+            if (child) |c| {
+                break :blk switch (@typeInfo(c)) {
+                    .Pointer => |info| info.child,
+                    .Array => |info| info.child,
+                    else => null,
+                };
+            }
+            break :blk null;
+        };
+
+        if (length < dest.len) {
             // fill with empty
-            for (0..dest.len) |i| {
+            for (length..dest.len) |i| {
                 if (child) |c| {
                     // term is empty list
                     try get_copy(T, c, allocator, env, term, dest[i]);
@@ -475,15 +629,31 @@ const Array = struct {
         for (0..@intCast(length)) |i| {
             if (e.enif_get_list_cell(env, term_value, &term_value_head, &term_value) == 0) return error.ArgumentError;
             if (child) |c| {
-                try get_copy(T, c, allocator, env, term_value_head, dest[i]);
+                if (child_child == null and (T == Binary or T == CString)) {
+                    blk: {
+                        switch (@typeInfo(@TypeOf(T.get_copy))) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 4) {
+                                    break :blk try T.get_copy(allocator, env, term_value_head, dest[i]);
+                                } else {
+                                    break :blk try T.get_copy(env, term_value_head, dest[i]);
+                                }
+                            },
+                            else => @compileError("Get callback is not a function"),
+                        }
+                        @compileError("Invalid get callback");
+                    }
+                } else {
+                    try get_copy(T, c, allocator, env, term_value_head, dest[i]);
+                }
             } else {
                 dest[i] = switch (@typeInfo(T_rl)) {
                     .Int => @intCast(try T.get(env, term_value_head)),
                     .Float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |get_info| {
-                                if (get_info.params.len == 3) {
+                            .Fn => |fn_info| {
+                                if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
                                     break :blk try T.get(env, term_value_head);
@@ -514,17 +684,44 @@ const Array = struct {
                 };
             };
 
+            const child_child: ?type = blk: {
+                if (child) |c| {
+                    break :blk switch (@typeInfo(c)) {
+                        .Pointer => |info| info.child,
+                        .Array => |info| info.child,
+                        else => null,
+                    };
+                }
+                break :blk null;
+            };
+
             for (0..v.len) |i| {
                 if (child) |c| {
-                    free(T, c, allocator, v[i]);
+                    if (child_child == null and (T == Binary or T == CString)) {
+                        blk: {
+                            switch (@typeInfo(@TypeOf(T.free))) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 2) {
+                                        break :blk T.free(allocator, v[i]);
+                                    } else {
+                                        break :blk T.free(v[i]);
+                                    }
+                                },
+                                else => @compileError("Free callback is not a function"),
+                            }
+                            @compileError("Invalid free callback");
+                        }
+                    } else {
+                        free(T, c, allocator, v[i]);
+                    }
                 } else {
                     switch (@typeInfo(T_rl)) {
                         .Int => {},
                         .Float => {},
                         else => blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |get_info| {
-                                    if (get_info.params.len == 2) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 2) {
                                         break :blk T.free(allocator, v[i]);
                                     } else {
                                         break :blk T.free(v[i]);
@@ -564,17 +761,44 @@ const Array = struct {
             const child_is_array = depth < (lengths_c.len - 1);
             assert(child_is_array and child != null or !child_is_array and child == null);
 
+            const child_child: ?type = blk: {
+                if (child) |c| {
+                    break :blk switch (@typeInfo(c)) {
+                        .Pointer => |info| info.child,
+                        .Array => |info| info.child,
+                        else => null,
+                    };
+                }
+                break :blk null;
+            };
+
             for (0..length_c) |i| {
                 if (child) |c| {
-                    _free_c(T, c, allocator, values[i], lengths_c, depth + 1);
+                    if (child_child == null and (T == Binary or T == CString)) {
+                        blk: {
+                            switch (@typeInfo(@TypeOf(T.free))) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 3) {
+                                        break :blk T.free_c(allocator, values[i], lengths_c[depth + 1]);
+                                    } else {
+                                        break :blk T.free_c(values[i], lengths_c[depth + 1]);
+                                    }
+                                },
+                                else => @compileError("Free callback is not a function"),
+                            }
+                            @compileError("Invalid free callback");
+                        }
+                    } else {
+                        _free_c(T, c, allocator, values[i], lengths_c, depth + 1);
+                    }
                 } else {
                     switch (@typeInfo(T_rl)) {
                         .Int => {},
                         .Float => {},
                         else => blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |get_info| {
-                                    if (get_info.params.len == 2) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 2) {
                                         break :blk T.free(allocator, values[i]);
                                     } else {
                                         break :blk T.free(values[i]);
@@ -602,17 +826,44 @@ const Array = struct {
                 };
             };
 
+            const child_child: ?type = blk: {
+                if (child) |c| {
+                    break :blk switch (@typeInfo(c)) {
+                        .Pointer => |info| info.child,
+                        .Array => |info| info.child,
+                        else => null,
+                    };
+                }
+                break :blk null;
+            };
+
             for (0..v.len) |i| {
                 if (child) |c| {
-                    free_copy(T, c, allocator, v[i]);
+                    if (child_child == null and (T == Binary or T == CString)) {
+                        blk: {
+                            switch (@typeInfo(@TypeOf(T.free))) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 2) {
+                                        break :blk T.free_copy(allocator, v[i]);
+                                    } else {
+                                        break :blk T.free_copy(v[i]);
+                                    }
+                                },
+                                else => @compileError("Free callback is not a function"),
+                            }
+                            @compileError("Invalid free callback");
+                        }
+                    } else {
+                        free_copy(T, c, allocator, v[i]);
+                    }
                 } else {
                     switch (@typeInfo(T_rl)) {
                         .Int => {},
                         .Float => {},
                         else => blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |get_info| {
-                                    if (get_info.params.len == 2) {
+                                .Fn => |fn_info| {
+                                    if (fn_info.params.len == 2) {
                                         break :blk T.free(allocator, v[i]);
                                     } else {
                                         break :blk T.free(v[i]);
