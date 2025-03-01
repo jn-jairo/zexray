@@ -4,6 +4,7 @@ defmodule Zexray.EnumFixture do
   alias Zexray.Enum.{
     CameraProjection,
     ConfigFlag,
+    GamepadButton,
     KeyboardKey,
     MouseButton,
     MouseCursor,
@@ -28,6 +29,19 @@ defmodule Zexray.EnumFixture do
   def config_flag_fixture(attrs \\ %{}) do
     {name, value} =
       ConfigFlag.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def gamepad_button_fixture(attrs \\ %{}) do
+    {name, value} =
+      GamepadButton.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
