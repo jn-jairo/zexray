@@ -6,6 +6,7 @@ defmodule Zexray.EnumFixture do
     ConfigFlag,
     KeyboardKey,
     MouseButton,
+    MouseCursor,
     NPatchLayout,
     PixelFormat,
     TraceLogLevel
@@ -53,6 +54,19 @@ defmodule Zexray.EnumFixture do
   def mouse_button_fixture(attrs \\ %{}) do
     {name, value} =
       MouseButton.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def mouse_cursor_fixture(attrs \\ %{}) do
+    {name, value} =
+      MouseCursor.values_by_name()
       |> Enum.to_list()
       |> List.first()
 

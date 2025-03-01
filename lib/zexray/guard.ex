@@ -70,6 +70,9 @@ defmodule Zexray.Guard do
   defguard is_mouse_button(value) when is_integer(value)
 
   @doc group: :enum
+  defguard is_mouse_cursor(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_n_patch_layout(value) when is_integer(value)
 
   @doc group: :enum
@@ -89,6 +92,9 @@ defmodule Zexray.Guard do
 
   @doc group: :enum
   defguard is_mouse_button_like(value) when is_mouse_button(value) or is_atom(value)
+
+  @doc group: :enum
+  defguard is_mouse_cursor_like(value) when is_mouse_cursor(value) or is_atom(value)
 
   @doc group: :enum
   defguard is_n_patch_layout_like(value) when is_n_patch_layout(value) or is_atom(value)
