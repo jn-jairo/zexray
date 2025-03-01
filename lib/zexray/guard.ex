@@ -76,34 +76,22 @@ defmodule Zexray.Guard do
   defguard is_trace_log_level(value) when is_integer(value)
 
   @doc group: :enum
-  defguard is_camera_projection_like(value)
-           when is_camera_projection(value) or
-                  is_atom(value)
+  defguard is_camera_projection_like(value) when is_camera_projection(value) or is_atom(value)
 
   @doc group: :enum
-  defguard is_config_flag_like(value)
-           when is_config_flag(value) or
-                  is_atom(value)
+  defguard is_config_flag_like(value) when is_config_flag(value) or is_atom(value)
 
   @doc group: :enum
-  defguard is_keyboard_key_like(value)
-           when is_keyboard_key(value) or
-                  is_atom(value)
+  defguard is_keyboard_key_like(value) when is_keyboard_key(value) or is_atom(value)
 
   @doc group: :enum
-  defguard is_n_patch_layout_like(value)
-           when is_n_patch_layout(value) or
-                  is_atom(value)
+  defguard is_n_patch_layout_like(value) when is_n_patch_layout(value) or is_atom(value)
 
   @doc group: :enum
-  defguard is_pixel_format_like(value)
-           when is_pixel_format(value) or
-                  is_atom(value)
+  defguard is_pixel_format_like(value) when is_pixel_format(value) or is_atom(value)
 
   @doc group: :enum
-  defguard is_trace_log_level_like(value)
-           when is_trace_log_level(value) or
-                  is_atom(value)
+  defguard is_trace_log_level_like(value) when is_trace_log_level(value) or is_atom(value)
 
   ##########
   #  Type  #
