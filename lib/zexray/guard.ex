@@ -91,6 +91,9 @@ defmodule Zexray.Guard do
   defguard is_shader_location_index(value) when is_integer(value)
 
   @doc group: :enum
+  defguard is_shader_uniform_data_type(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_trace_log_level(value) when is_integer(value)
 
   @doc group: :enum
@@ -126,6 +129,10 @@ defmodule Zexray.Guard do
   @doc group: :enum
   defguard is_shader_location_index_like(value)
            when is_shader_location_index(value) or is_atom(value)
+
+  @doc group: :enum
+  defguard is_shader_uniform_data_type_like(value)
+           when is_shader_uniform_data_type(value) or is_atom(value)
 
   @doc group: :enum
   defguard is_trace_log_level_like(value) when is_trace_log_level(value) or is_atom(value)
