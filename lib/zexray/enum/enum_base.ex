@@ -78,21 +78,28 @@ defmodule Zexray.Enum.EnumBase do
 
   defp get_names({_, _, values_by_name}) do
     Keyword.keys(values_by_name)
+    |> Enum.uniq()
   end
 
   defp get_values({_, _, values_by_name}) do
     Keyword.values(values_by_name)
+    |> Enum.uniq()
   end
 
   defp get_names_by_value({_, _, values_by_name}) do
-    {:%{}, [],
-     Enum.into(values_by_name, [], fn {name, value} ->
-       {value, name}
-     end)}
+    {
+      :%{},
+      [],
+      Enum.into(values_by_name, %{}, fn {name, value} ->
+        {value, name}
+      end)
+      |> Map.to_list()
+    }
   end
 
   defp get_type_t({_, _, values_by_name}) do
     Keyword.values(values_by_name)
+    |> Enum.uniq()
     |> Enum.reverse()
     |> Enum.reduce(nil, fn value, acc ->
       if acc do
@@ -105,6 +112,7 @@ defmodule Zexray.Enum.EnumBase do
 
   defp get_type_t_name({_, _, values_by_name}) do
     Keyword.keys(values_by_name)
+    |> Enum.uniq()
     |> Enum.reverse()
     |> Enum.reduce(nil, fn value, acc ->
       if acc do
