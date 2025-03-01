@@ -4,6 +4,7 @@ defmodule Zexray.EnumFixture do
   alias Zexray.Enum.{
     CameraProjection,
     ConfigFlag,
+    KeyboardKey,
     NPatchLayout,
     PixelFormat,
     TraceLogLevel
@@ -25,6 +26,19 @@ defmodule Zexray.EnumFixture do
   def config_flag_fixture(attrs \\ %{}) do
     {name, value} =
       ConfigFlag.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def keyboard_key_fixture(attrs \\ %{}) do
+    {name, value} =
+      KeyboardKey.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
