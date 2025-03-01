@@ -7,6 +7,7 @@ defmodule Zexray.EnumFixture do
     GamepadAxis,
     GamepadButton,
     KeyboardKey,
+    MaterialMapIndex,
     MouseButton,
     MouseCursor,
     NPatchLayout,
@@ -69,6 +70,19 @@ defmodule Zexray.EnumFixture do
   def keyboard_key_fixture(attrs \\ %{}) do
     {name, value} =
       KeyboardKey.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def material_map_index_fixture(attrs \\ %{}) do
+    {name, value} =
+      MaterialMapIndex.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
