@@ -64,6 +64,9 @@ defmodule Zexray.Guard do
   defguard is_config_flag(value) when is_integer(value)
 
   @doc group: :enum
+  defguard is_gamepad_axis(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_gamepad_button(value) when is_integer(value)
 
   @doc group: :enum
@@ -89,6 +92,9 @@ defmodule Zexray.Guard do
 
   @doc group: :enum
   defguard is_config_flag_like(value) when is_config_flag(value) or is_atom(value)
+
+  @doc group: :enum
+  defguard is_gamepad_axis_like(value) when is_gamepad_axis(value) or is_atom(value)
 
   @doc group: :enum
   defguard is_gamepad_button_like(value) when is_gamepad_button(value) or is_atom(value)
