@@ -6,13 +6,13 @@ defmodule Zexray.Enum.MouseButton do
 
   | id | name     | description                                  |
   | -- | -------- | -------------------------------------------- |
-  | 0  | :left    | Mouse button left                            |
-  | 1  | :right   | Mouse button right                           |
-  | 2  | :middle  | Mouse button middle (pressed wheel)          |
-  | 3  | :side    | Mouse button side (advanced mouse device)    |
-  | 4  | :extra   | Mouse button extra (advanced mouse device)   |
-  | 5  | :forward | Mouse button forward (advanced mouse device) |
-  | 6  | :back    | Mouse button back (advanced mouse device)    |
+  |  0 | :left    | Mouse button left                            |
+  |  1 | :right   | Mouse button right                           |
+  |  2 | :middle  | Mouse button middle (pressed wheel)          |
+  |  3 | :side    | Mouse button side (advanced mouse device)    |
+  |  4 | :extra   | Mouse button extra (advanced mouse device)   |
+  |  5 | :forward | Mouse button forward (advanced mouse device) |
+  |  6 | :back    | Mouse button back (advanced mouse device)    |
   """
 
   use Zexray.Enum.EnumBase,

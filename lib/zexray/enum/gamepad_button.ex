@@ -6,16 +6,16 @@ defmodule Zexray.Enum.GamepadButton do
 
   | id | name              | description                                                            |
   | -- | ----------------- | ---------------------------------------------------------------------- |
-  | 0  | :unknown          | Unknown button, just for error checking                                |
-  | 1  | :left_face_up     | Gamepad left DPAD up button                                            |
-  | 2  | :left_face_right  | Gamepad left DPAD right button                                         |
-  | 3  | :left_face_down   | Gamepad left DPAD down button                                          |
-  | 4  | :left_face_left   | Gamepad left DPAD left button                                          |
-  | 5  | :right_face_up    | Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)                  |
-  | 6  | :right_face_right | Gamepad right button right (i.e. PS3: Circle, Xbox: B)                 |
-  | 7  | :right_face_down  | Gamepad right button down (i.e. PS3: Cross, Xbox: A)                   |
-  | 8  | :right_face_left  | Gamepad right button left (i.e. PS3: Square, Xbox: X)                  |
-  | 9  | :left_trigger_1   | Gamepad top/back trigger left (first), it could be a trailing button   |
+  |  0 | :unknown          | Unknown button, just for error checking                                |
+  |  1 | :left_face_up     | Gamepad left DPAD up button                                            |
+  |  2 | :left_face_right  | Gamepad left DPAD right button                                         |
+  |  3 | :left_face_down   | Gamepad left DPAD down button                                          |
+  |  4 | :left_face_left   | Gamepad left DPAD left button                                          |
+  |  5 | :right_face_up    | Gamepad right button up (i.e. PS3: Triangle, Xbox: Y)                  |
+  |  6 | :right_face_right | Gamepad right button right (i.e. PS3: Circle, Xbox: B)                 |
+  |  7 | :right_face_down  | Gamepad right button down (i.e. PS3: Cross, Xbox: A)                   |
+  |  8 | :right_face_left  | Gamepad right button left (i.e. PS3: Square, Xbox: X)                  |
+  |  9 | :left_trigger_1   | Gamepad top/back trigger left (first), it could be a trailing button   |
   | 10 | :left_trigger_2   | Gamepad top/back trigger left (second), it could be a trailing button  |
   | 11 | :right_trigger_1  | Gamepad top/back trigger right (first), it could be a trailing button  |
   | 12 | :right_trigger_2  | Gamepad top/back trigger right (second), it could be a trailing button |

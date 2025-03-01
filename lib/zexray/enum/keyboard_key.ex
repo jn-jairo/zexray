@@ -8,7 +8,7 @@ defmodule Zexray.Enum.KeyboardKey do
 
   | id | name  | description                        |
   | -- | ----- | ---------------------------------- |
-  | 0  | :null | Key: NULL, used for no key pressed |
+  |  0 | :null | Key: NULL, used for no key pressed |
 
   ### Values - Alphanumeric keys
 
@@ -66,7 +66,7 @@ defmodule Zexray.Enum.KeyboardKey do
 
   | id  | name           | description        |
   | --- | -------------- | ------------------ |
-  | 32  | :space         | Key: Space         |
+  |  32 | :space         | Key: Space         |
   | 256 | :escape        | Key: Esc           |
   | 257 | :enter         | Key: Enter         |
   | 258 | :tab           | Key: Tab           |
@@ -134,8 +134,8 @@ defmodule Zexray.Enum.KeyboardKey do
 
   | id | name         | description                     |
   | -- | ------------ | ------------------------------- |
-  | 4  | :back        | Key: Android back button        |
-  | 5  | :menu        | Key: Android menu button        |
+  |  4 | :back        | Key: Android back button        |
+  |  5 | :menu        | Key: Android menu button        |
   | 24 | :volume_up   | Key: Android volume up button   |
   | 25 | :volume_down | Key: Android volume down button |
   """
