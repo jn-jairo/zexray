@@ -153,6 +153,10 @@ defmodule Zexray.MixProject do
         Enums: ~r"Zexray\.Enum\.",
         Types: ~r"Zexray\.Type\.(?!.*Resource)",
         "Types Resource": ~r"Zexray\.Type\..*Resource"
+      ],
+      nest_modules_by_prefix: [
+        Zexray.Enum,
+        Zexray.Type
       ]
     ]
   end
