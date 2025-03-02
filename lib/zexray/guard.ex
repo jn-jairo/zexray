@@ -58,6 +58,9 @@ defmodule Zexray.Guard do
   ##########
 
   @doc group: :enum
+  defguard is_blend_mode(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_camera_projection(value) when is_integer(value)
 
   @doc group: :enum
@@ -110,6 +113,9 @@ defmodule Zexray.Guard do
 
   @doc group: :enum
   defguard is_trace_log_level(value) when is_integer(value)
+
+  @doc group: :enum
+  defguard is_like_blend_mode(value) when is_blend_mode(value) or is_atom(value)
 
   @doc group: :enum
   defguard is_like_camera_projection(value) when is_camera_projection(value) or is_atom(value)

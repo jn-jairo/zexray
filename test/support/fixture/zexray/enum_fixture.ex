@@ -2,6 +2,7 @@ defmodule Zexray.EnumFixture do
   @moduledoc false
 
   alias Zexray.Enum.{
+    BlendMode,
     CameraProjection,
     ConfigFlag,
     CubemapLayout,
@@ -21,6 +22,19 @@ defmodule Zexray.EnumFixture do
     TextureWrap,
     TraceLogLevel
   }
+
+  def blend_mode_fixture(attrs \\ %{}) do
+    {name, value} =
+      BlendMode.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
 
   def camera_projection_fixture(attrs \\ %{}) do
     {name, value} =
