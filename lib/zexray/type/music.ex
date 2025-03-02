@@ -64,7 +64,7 @@ defmodule Zexray.Type.Music do
         ctx_type,
         ctx_data
       })
-      when is_audio_stream_like(stream) and
+      when is_like_audio_stream(stream) and
              is_integer(frame_count) and
              is_boolean(looping) and
              is_integer(ctx_type) and

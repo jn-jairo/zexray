@@ -68,7 +68,7 @@ defmodule Zexray.Type.GlyphInfo do
              is_integer(offset_x) and
              is_integer(offset_y) and
              is_integer(advance_x) and
-             is_image_like(image) do
+             is_like_image(image) do
     new(
       value: value,
       offset_x: offset_x,

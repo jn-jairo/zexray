@@ -46,8 +46,8 @@ defmodule Zexray.Type.Ray do
         position,
         direction
       })
-      when is_vector3_like(position) and
-             is_vector3_like(direction) do
+      when is_like_vector3(position) and
+             is_like_vector3(direction) do
     new(
       position: position,
       direction: direction

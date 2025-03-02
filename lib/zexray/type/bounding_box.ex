@@ -46,8 +46,8 @@ defmodule Zexray.Type.BoundingBox do
         min,
         max
       })
-      when is_vector3_like(min) and
-             is_vector3_like(max) do
+      when is_like_vector3(min) and
+             is_like_vector3(max) do
     new(
       min: min,
       max: max

@@ -52,8 +52,8 @@ defmodule Zexray.Type.Material do
         maps,
         params
       })
-      when is_shader_like(shader) and
-             is_list(maps) and (maps == [] or is_material_map_like(hd(maps))) and
+      when is_like_shader(shader) and
+             is_list(maps) and (maps == [] or is_like_material_map(hd(maps))) and
              is_list(params) and (params == [] or is_float(hd(params))) do
     new(
       shader: shader,

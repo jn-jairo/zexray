@@ -73,9 +73,9 @@ defmodule Zexray.Type.Font do
       when is_integer(base_size) and
              is_integer(glyph_count) and
              is_integer(glyph_padding) and
-             is_texture_like(texture) and
-             is_list(recs) and (recs == [] or is_rectangle_like(hd(recs))) and
-             is_list(glyphs) and (glyphs == [] or is_glyph_info_like(hd(glyphs))) do
+             is_like_texture(texture) and
+             is_list(recs) and (recs == [] or is_like_rectangle(hd(recs))) and
+             is_list(glyphs) and (glyphs == [] or is_like_glyph_info(hd(glyphs))) do
     new(
       base_size: base_size,
       glyph_count: glyph_count,

@@ -131,7 +131,7 @@ defmodule Zexray.Util do
   """
   @spec set_trace_log_level(log_level :: Zexray.Enum.TraceLogLevel.t_all()) :: :ok
   def set_trace_log_level(log_level)
-      when is_trace_log_level_like(log_level) do
+      when is_like_trace_log_level(log_level) do
     NIF.set_trace_log_level(Zexray.Enum.TraceLogLevel.value(log_level))
   end
 end

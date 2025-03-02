@@ -60,8 +60,8 @@ defmodule Zexray.Type.RayCollision do
       })
       when is_boolean(hit) and
              is_float(distance) and
-             is_vector3_like(point) and
-             is_vector3_like(normal) do
+             is_like_vector3(point) and
+             is_like_vector3(normal) do
     new(
       hit: hit,
       distance: distance,

@@ -66,11 +66,11 @@ defmodule Zexray.Type.ModelAnimation do
       })
       when is_integer(bone_count) and
              is_integer(frame_count) and
-             is_list(bones) and (bones == [] or is_bone_info_like(hd(bones))) and
+             is_list(bones) and (bones == [] or is_like_bone_info(hd(bones))) and
              (is_list(frame_poses) and
                 (frame_poses == [] or
                    (is_list(hd(frame_poses)) and
-                      (hd(frame_poses) == [] or is_transform_like(hd(hd(frame_poses))))))) and
+                      (hd(frame_poses) == [] or is_like_transform(hd(hd(frame_poses))))))) and
              is_binary(name) do
     new(
       bone_count: bone_count,

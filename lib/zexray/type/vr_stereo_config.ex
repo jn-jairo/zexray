@@ -82,8 +82,8 @@ defmodule Zexray.Type.VrStereoConfig do
         scale,
         scale_in
       })
-      when is_list(projection) and (projection == [] or is_matrix_like(hd(projection))) and
-             is_list(view_offset) and (view_offset == [] or is_matrix_like(hd(view_offset))) and
+      when is_list(projection) and (projection == [] or is_like_matrix(hd(projection))) and
+             is_list(view_offset) and (view_offset == [] or is_like_matrix(hd(view_offset))) and
              is_list(left_lens_center) and
              (left_lens_center == [] or is_float(hd(left_lens_center))) and
              is_list(right_lens_center) and

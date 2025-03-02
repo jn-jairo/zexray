@@ -68,7 +68,7 @@ defmodule Zexray.Type.Image do
              is_integer(width) and
              is_integer(height) and
              is_integer(mipmaps) and
-             is_pixel_format_like(format) do
+             is_like_pixel_format(format) do
     new(
       data: data,
       width: width,

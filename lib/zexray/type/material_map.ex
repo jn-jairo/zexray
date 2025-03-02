@@ -52,8 +52,8 @@ defmodule Zexray.Type.MaterialMap do
         color,
         value
       })
-      when is_texture_2d_like(texture) and
-             is_color_like(color) and
+      when is_like_texture_2d(texture) and
+             is_like_color(color) and
              is_float(value) do
     new(
       texture: texture,

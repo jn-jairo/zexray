@@ -88,15 +88,15 @@ defmodule Zexray.Type.Model do
         bones,
         bind_pose
       })
-      when is_transform_like(transform) and
+      when is_like_transform(transform) and
              is_integer(mesh_count) and
              is_integer(material_count) and
-             is_list(meshes) and (meshes == [] or is_mesh_like(hd(meshes))) and
-             is_list(materials) and (materials == [] or is_material_like(hd(materials))) and
+             is_list(meshes) and (meshes == [] or is_like_mesh(hd(meshes))) and
+             is_list(materials) and (materials == [] or is_like_material(hd(materials))) and
              is_list(mesh_material) and (mesh_material == [] or is_integer(hd(mesh_material))) and
              is_integer(bone_count) and
-             is_list(bones) and (bones == [] or is_bone_info_like(hd(bones))) and
-             is_list(bind_pose) and (bind_pose == [] or is_transform_like(hd(bind_pose))) do
+             is_list(bones) and (bones == [] or is_like_bone_info(hd(bones))) and
+             is_list(bind_pose) and (bind_pose == [] or is_like_transform(hd(bind_pose))) do
     new(
       transform: transform,
       mesh_count: mesh_count,

@@ -54,7 +54,7 @@ defmodule Zexray.Type.AutomationEventList do
       })
       when is_integer(capacity) and
              is_integer(count) and
-             is_list(events) and (events == [] or is_automation_event_like(hd(events))) do
+             is_list(events) and (events == [] or is_like_automation_event(hd(events))) do
     new(
       capacity: capacity,
       count: count,

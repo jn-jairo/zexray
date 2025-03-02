@@ -46,7 +46,7 @@ defmodule Zexray.Type.Sound do
         stream,
         frame_count
       })
-      when is_audio_stream_like(stream) and
+      when is_like_audio_stream(stream) and
              is_integer(frame_count) do
     new(
       stream: stream,

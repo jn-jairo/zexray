@@ -52,9 +52,9 @@ defmodule Zexray.Type.Transform do
         rotation,
         scale
       })
-      when is_vector3_like(translation) and
-             is_quaternion_like(rotation) and
-             is_vector3_like(scale) do
+      when is_like_vector3(translation) and
+             is_like_quaternion(rotation) and
+             is_like_vector3(scale) do
     new(
       translation: translation,
       rotation: rotation,

@@ -58,8 +58,8 @@ defmodule Zexray.Type.Camera2D do
         rotation,
         zoom
       })
-      when is_vector2_like(offset) and
-             is_vector2_like(target) and
+      when is_like_vector2(offset) and
+             is_like_vector2(target) and
              is_float(rotation) and
              is_float(zoom) do
     new(

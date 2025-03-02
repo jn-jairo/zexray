@@ -72,11 +72,11 @@ defmodule Zexray.Type.Camera3DBase do
             fovy,
             projection
           })
-          when is_vector3_like(position) and
-                 is_vector3_like(target) and
-                 is_vector3_like(up) and
+          when is_like_vector3(position) and
+                 is_like_vector3(target) and
+                 is_like_vector3(up) and
                  is_float(fovy) and
-                 is_camera_projection_like(projection) do
+                 is_like_camera_projection(projection) do
         new(
           position: position,
           target: target,

@@ -70,12 +70,12 @@ defmodule Zexray.Type.NPatchInfo do
         bottom,
         layout
       })
-      when is_rectangle_like(source) and
+      when is_like_rectangle(source) and
              is_integer(left) and
              is_integer(top) and
              is_integer(right) and
              is_integer(bottom) and
-             is_n_patch_layout_like(layout) do
+             is_like_n_patch_layout(layout) do
     new(
       source: source,
       left: left,

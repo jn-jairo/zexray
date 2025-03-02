@@ -78,7 +78,7 @@ defmodule Zexray.Type.TextureBase do
                  is_integer(width) and
                  is_integer(height) and
                  is_integer(mipmaps) and
-                 is_pixel_format_like(format) do
+                 is_like_pixel_format(format) do
         new(
           id: id,
           width: width,

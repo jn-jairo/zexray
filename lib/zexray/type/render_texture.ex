@@ -61,8 +61,8 @@ defmodule Zexray.Type.RenderTextureBase do
             depth
           })
           when is_integer(id) and
-                 is_texture_like(texture) and
-                 is_texture_like(depth) do
+                 is_like_texture(texture) and
+                 is_like_texture(depth) do
         new(
           id: id,
           texture: texture,

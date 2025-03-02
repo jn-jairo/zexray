@@ -14,7 +14,7 @@ defmodule Zexray.Image do
   def data_size(width, height, format, mipmaps \\ 1)
       when is_integer(width) and
              is_integer(height) and
-             is_pixel_format_like(format) and
+             is_like_pixel_format(format) and
              is_integer(mipmaps) do
     NIF.image_get_data_size(
       width,
@@ -41,7 +41,7 @@ defmodule Zexray.Image do
   def gen_color(width, height, color, return \\ :value)
       when is_integer(width) and
              is_integer(height) and
-             is_color_like(color) and
+             is_like_color(color) and
              is_nif_return(return) do
     NIF.gen_image_color(
       width,

@@ -149,7 +149,7 @@ defmodule Zexray.Type.Mesh do
              is_list(anim_normals) and (anim_normals == [] or is_float(hd(anim_normals))) and
              is_list(bone_ids) and (bone_ids == [] or is_integer(hd(bone_ids))) and
              is_list(bone_weights) and (bone_weights == [] or is_float(hd(bone_weights))) and
-             is_list(bone_matrices) and (bone_matrices == [] or is_matrix_like(hd(bone_matrices))) and
+             is_list(bone_matrices) and (bone_matrices == [] or is_like_matrix(hd(bone_matrices))) and
              is_integer(bone_count) and
              is_integer(vao_id) and
              is_list(vbo_id) and (vbo_id == [] or is_integer(hd(vbo_id))) do
