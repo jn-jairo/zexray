@@ -67,6 +67,9 @@ defmodule Zexray.Guard do
   defguard is_cubemap_layout(value) when is_integer(value)
 
   @doc group: :enum
+  defguard is_font_type(value) when is_integer(value)
+
+  @doc group: :enum
   defguard is_gamepad_axis(value) when is_integer(value)
 
   @doc group: :enum
@@ -116,6 +119,9 @@ defmodule Zexray.Guard do
 
   @doc group: :enum
   defguard is_like_cubemap_layout(value) when is_cubemap_layout(value) or is_atom(value)
+
+  @doc group: :enum
+  defguard is_like_font_type(value) when is_font_type(value) or is_atom(value)
 
   @doc group: :enum
   defguard is_like_gamepad_axis(value) when is_gamepad_axis(value) or is_atom(value)

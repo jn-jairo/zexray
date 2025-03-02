@@ -5,6 +5,7 @@ defmodule Zexray.EnumFixture do
     CameraProjection,
     ConfigFlag,
     CubemapLayout,
+    FontType,
     GamepadAxis,
     GamepadButton,
     KeyboardKey,
@@ -50,6 +51,19 @@ defmodule Zexray.EnumFixture do
   def cubemap_layout_fixture(attrs \\ %{}) do
     {name, value} =
       CubemapLayout.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def font_type_fixture(attrs \\ %{}) do
+    {name, value} =
+      FontType.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
