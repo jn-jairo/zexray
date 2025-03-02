@@ -15,6 +15,7 @@ defmodule Zexray.EnumFixture do
     ShaderAttributeDataType,
     ShaderLocationIndex,
     ShaderUniformDataType,
+    TextureFilter,
     TraceLogLevel
   }
 
@@ -177,6 +178,19 @@ defmodule Zexray.EnumFixture do
   def shader_uniform_data_type_fixture(attrs \\ %{}) do
     {name, value} =
       ShaderUniformDataType.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def texture_filter_fixture(attrs \\ %{}) do
+    {name, value} =
+      TextureFilter.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
