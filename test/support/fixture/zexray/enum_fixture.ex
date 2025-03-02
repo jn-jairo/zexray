@@ -3,6 +3,7 @@ defmodule Zexray.EnumFixture do
 
   alias Zexray.Enum.{
     BlendMode,
+    CameraMode,
     CameraProjection,
     ConfigFlag,
     CubemapLayout,
@@ -27,6 +28,19 @@ defmodule Zexray.EnumFixture do
   def blend_mode_fixture(attrs \\ %{}) do
     {name, value} =
       BlendMode.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def camera_mode_fixture(attrs \\ %{}) do
+    {name, value} =
+      CameraMode.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
