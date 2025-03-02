@@ -12,6 +12,7 @@ defmodule Zexray.EnumFixture do
     MouseCursor,
     NPatchLayout,
     PixelFormat,
+    ShaderAttributeDataType,
     ShaderLocationIndex,
     ShaderUniformDataType,
     TraceLogLevel
@@ -137,6 +138,19 @@ defmodule Zexray.EnumFixture do
   def pixel_format_fixture(attrs \\ %{}) do
     {name, value} =
       PixelFormat.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def shader_attribute_data_type_fixture(attrs \\ %{}) do
+    {name, value} =
+      ShaderAttributeDataType.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
