@@ -9,6 +9,7 @@ defmodule Zexray.EnumFixture do
     FontType,
     GamepadAxis,
     GamepadButton,
+    Gesture,
     KeyboardKey,
     MaterialMapIndex,
     MouseButton,
@@ -104,6 +105,19 @@ defmodule Zexray.EnumFixture do
   def gamepad_button_fixture(attrs \\ %{}) do
     {name, value} =
       GamepadButton.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def gesture_fixture(attrs \\ %{}) do
+    {name, value} =
+      Gesture.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
