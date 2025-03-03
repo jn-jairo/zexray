@@ -93,7 +93,9 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return
 
-    return core.maybe_return_struct_as_resource(core.Image, rl.Image, e.allocator, env, image, return_resource);
+    return core.maybe_make_struct_as_resource(core.Image, rl.Image, env, image, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }
 
 //////////////////////////
@@ -131,13 +133,7 @@ fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return
 
-    if (image_is_resource) {
-        core.Image.Resource.update(env, argv[0], image) catch |err| {
-            return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to update resource.");
-        };
-
-        return core.maybe_return_resource_as_struct(core.Image, e.allocator, env, argv[0], return_resource);
-    } else {
-        return core.maybe_return_struct_as_resource(core.Image, rl.Image, e.allocator, env, image, return_resource);
-    }
+    return core.maybe_make_struct_or_resource(core.Image, rl.Image, env, argv[0], image, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }
