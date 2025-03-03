@@ -47,3 +47,28 @@ fn get_error_module(err: anyerror) []u8 {
         else => "Elixir.RuntimeError",
     }));
 }
+
+pub fn maybe_return_struct_as_resource(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, value: T_rl, return_resource: bool) e.ErlNifTerm {
+    if (return_resource) {
+        const image_resource = T.Resource.create(value) catch |err| {
+            return raise_exception(allocator, env, err, @errorReturnTrace(), "Failed to create resource for return value.");
+        };
+        defer T.Resource.release(image_resource);
+
+        return T.Resource.make(env, image_resource);
+    } else {
+        return T.make(env, value);
+    }
+}
+
+pub fn maybe_return_resource_as_struct(comptime T: type, allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, return_resource: bool) e.ErlNifTerm {
+    if (return_resource) {
+        return term;
+    } else {
+        const resource = T.Resource.get(env, term) catch |err| {
+            return raise_exception(allocator, env, err, @errorReturnTrace(), "Failed to get resource for return value.");
+        };
+
+        return T.make(env, resource.*.*);
+    }
+}
