@@ -25,7 +25,7 @@ defmodule Zexray.Image do
   end
 
   ######################
-  #  Image Generation  #
+  #  Image generation  #
   ######################
 
   @doc """
@@ -47,6 +47,31 @@ defmodule Zexray.Image do
       width,
       height,
       color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  ########################
+  #  Image manipulation  #
+  ########################
+
+  @doc """
+  Crop an image to a defined rectangle
+  """
+  @doc group: :manipulation
+  @spec crop(
+          image :: Zexray.Type.Image.t_all(),
+          crop :: Zexray.Type.Rectangle.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def crop(image, crop, return \\ :value)
+      when is_like_image(image) and
+             is_like_rectangle(crop) and
+             is_nif_return(return) do
+    NIF.image_crop(
+      image |> Zexray.Type.Image.to_nif(),
+      crop |> Zexray.Type.Rectangle.to_nif(),
       return
     )
     |> Zexray.Type.Image.from_nif()

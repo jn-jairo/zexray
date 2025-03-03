@@ -9,7 +9,11 @@ defmodule Zexray.NIF.Image do
 
         # Image generation
         gen_image_color: 3,
-        gen_image_color: 4
+        gen_image_color: 4,
+
+        # Image manipulation
+        image_crop: 2,
+        image_crop: 3
       ]
 
       ###########
@@ -53,6 +57,27 @@ defmodule Zexray.NIF.Image do
               return :: :value | :resource
             ) :: map | reference
       def gen_image_color(_width, _height, _color, _return \\ :value),
+        do: :erlang.nif_error(:undef)
+
+      ########################
+      #  Image manipulation  #
+      ########################
+
+      @doc """
+      Crop an image to a defined rectangle
+
+      ```c
+      // raylib.h
+      RLAPI void ImageCrop(Image *image, Rectangle crop);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_crop(
+              image :: map | reference,
+              crop :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_crop(_image, _crop, _return \\ :value),
         do: :erlang.nif_error(:undef)
     end
   end

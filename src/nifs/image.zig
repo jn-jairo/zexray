@@ -12,6 +12,10 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     // Image generation
     .{ .name = "gen_image_color", .arity = 3, .fptr = nif_gen_image_color, .flags = 0 },
     .{ .name = "gen_image_color", .arity = 4, .fptr = nif_gen_image_color, .flags = 0 },
+
+    // Image manipulation
+    .{ .name = "image_crop", .arity = 2, .fptr = nif_image_crop, .flags = 0 },
+    .{ .name = "image_crop", .arity = 3, .fptr = nif_image_crop, .flags = 0 },
 };
 
 /////////////
@@ -89,14 +93,51 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return
 
-    if (return_resource) {
-        const image_resource = core.Image.Resource.create(image) catch |err| {
-            return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource for return value.");
-        };
-        defer core.Image.Resource.release(image_resource);
+    return core.maybe_return_struct_as_resource(core.Image, rl.Image, e.allocator, env, image, return_resource);
+}
 
-        return core.Image.Resource.make(env, image_resource);
+//////////////////////////
+//  Image manipulation  //
+//////////////////////////
+
+/// Crop an image to a defined rectangle
+///
+/// raylib.h
+/// RLAPI void ImageCrop(Image *image, Rectangle crop);
+fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Resource check
+
+    const return_resource = if (argc == 3) e.enif_is_identical(core.Atom.make(env, "resource"), argv[2]) != 0 else false;
+    const image_is_resource: bool = e.enif_is_map(env, argv[0]) == 0;
+    const crop_is_resource: bool = e.enif_is_map(env, argv[1]) == 0;
+
+    // Arguments
+
+    var image: rl.Image = core.Image.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'image'.");
+    };
+    defer if (!image_is_resource and !return_resource) core.Image.free(image);
+
+    const crop: rl.Rectangle = core.Rectangle.get(env, argv[1]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'crop'.");
+    };
+    defer if (!crop_is_resource) core.Rectangle.free(crop);
+
+    // Function
+
+    rl.ImageCrop(&image, crop);
+
+    // Return
+
+    if (image_is_resource) {
+        core.Image.Resource.update(env, argv[0], image) catch |err| {
+            return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to update resource.");
+        };
+
+        return core.maybe_return_resource_as_struct(core.Image, e.allocator, env, argv[0], return_resource);
     } else {
-        return core.Image.make(env, image);
+        return core.maybe_return_struct_as_resource(core.Image, rl.Image, e.allocator, env, image, return_resource);
     }
 }
