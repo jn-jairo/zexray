@@ -928,6 +928,11 @@ pub fn ResourceBase(comptime T: type, comptime T_rl: type, resource_name: []cons
             return resource;
         }
 
+        pub fn update(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T_rl) !void {
+            const resource = try get(env, term);
+            resource.*.* = value;
+        }
+
         pub fn destroy(resource: **T_rl) void {
             const allocator = resources.ResourceType.allocator;
 
