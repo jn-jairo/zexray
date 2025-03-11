@@ -27,6 +27,44 @@ fn get_field_array_length(comptime T: type, field_name: []const u8) usize {
     });
 }
 
+fn keep_type(comptime T: type) type {
+    switch (@typeInfo(T)) {
+        .Pointer => |info| {
+            return @Type(.{
+                .Pointer = .{
+                    .size = info.size,
+                    .is_const = info.is_const,
+                    .is_volatile = info.is_volatile,
+                    .alignment = 1,
+                    .address_space = info.address_space,
+                    .child = keep_type(info.child),
+                    .is_allowzero = info.is_allowzero,
+                    .sentinel = info.sentinel,
+                },
+            });
+        },
+        .Array => |info| {
+            return @Type(.{
+                .Array = .{
+                    .len = info.len,
+                    .child = keep_type(info.child),
+                    .sentinel = info.sentinel,
+                },
+            });
+        },
+        .Optional => |info| {
+            return @Type(.{
+                .Optional = .{
+                    .child = keep_type(info.child),
+                },
+            });
+        },
+        else => {},
+    }
+
+    return bool;
+}
+
 //////////////
 //  Double  //
 //////////////
@@ -72,6 +110,16 @@ pub const UInt = struct {
         var value: c_uint = undefined;
         if (e.enif_get_uint(env, term, &value) == 0) return error.ArgumentError;
         return value;
+    }
+};
+
+//////////////////////
+//  TermIsResource  //
+//////////////////////
+
+pub const TermIsResource = struct {
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !bool {
+        return e.enif_is_ref(env, term) != 0;
     }
 };
 
@@ -320,7 +368,7 @@ pub const CString = struct {
 //  Array  //
 /////////////
 
-const Array = struct {
+pub const Array = struct {
     pub fn make(comptime T: type, comptime T_rl: type, env: ?*e.ErlNifEnv, values: []const T_rl) e.ErlNifTerm {
         var term_value = e.enif_make_list_from_array(env, null, 0);
         if (values.len > 0) {
@@ -351,11 +399,12 @@ const Array = struct {
                         term_value = e.enif_make_list_cell(env, make(T, c, env, values[values.len - 1 - i]), term_value);
                     }
                 } else {
-                    term_value = switch (@typeInfo(T_rl)) {
-                        .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
-                        .Float => e.enif_make_list_cell(env, T.make(env, @floatCast(values[values.len - 1 - i])), term_value),
-                        else => e.enif_make_list_cell(env, T.make(env, values[values.len - 1 - i]), term_value),
+                    const term = switch (@typeInfo(T_rl)) {
+                        .Int => T.make(env, @intCast(values[values.len - 1 - i])),
+                        .Float => T.make(env, @floatCast(values[values.len - 1 - i])),
+                        else => T.make(env, values[values.len - 1 - i]),
                     };
+                    term_value = e.enif_make_list_cell(env, term, term_value);
                 }
             }
         }
@@ -405,11 +454,12 @@ const Array = struct {
                         term_value = e.enif_make_list_cell(env, _make_c(T, c, env, values[values.len - 1 - i], lengths_c, depth + 1), term_value);
                     }
                 } else {
-                    term_value = switch (@typeInfo(T_rl)) {
-                        .Int => e.enif_make_list_cell(env, T.make(env, @intCast(values[values.len - 1 - i])), term_value),
-                        .Float => e.enif_make_list_cell(env, T.make(env, @floatCast(values[values.len - 1 - i])), term_value),
-                        else => e.enif_make_list_cell(env, T.make(env, values[values.len - 1 - i]), term_value),
+                    const term = switch (@typeInfo(T_rl)) {
+                        .Int => T.make(env, @intCast(values[values.len - 1 - i])),
+                        .Float => T.make(env, @floatCast(values[values.len - 1 - i])),
+                        else => T.make(env, values[values.len - 1 - i]),
                     };
+                    term_value = e.enif_make_list_cell(env, term, term_value);
                 }
             }
         }
@@ -674,7 +724,7 @@ const Array = struct {
         return @intCast(length);
     }
 
-    pub fn free(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values: ?[]T_rl) void {
+    pub fn free(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values: ?[]T_rl, keep: keep_type(@TypeOf(values))) void {
         if (values) |v| {
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
@@ -712,25 +762,30 @@ const Array = struct {
                             @compileError("Invalid free callback");
                         }
                     } else {
-                        free(T, c, allocator, v[i]);
+                        const k = if (keep) |k| k[i] else null;
+                        free(T, c, allocator, v[i], k);
                     }
                 } else {
-                    switch (@typeInfo(T_rl)) {
-                        .Int => {},
-                        .Float => {},
-                        else => blk: {
-                            switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
-                                    if (fn_info.params.len == 2) {
-                                        break :blk T.free(allocator, v[i]);
-                                    } else {
-                                        break :blk T.free(v[i]);
-                                    }
-                                },
-                                else => @compileError("Free callback is not a function"),
-                            }
-                            @compileError("Invalid free callback");
-                        },
+                    const do_free = if (keep) |k| !k[i] else true;
+                    if (do_free) {
+                        switch (@typeInfo(T_rl)) {
+                            .Int => {},
+                            .Float => {},
+                            .Bool => {},
+                            else => blk: {
+                                switch (@typeInfo(@TypeOf(T.free))) {
+                                    .Fn => |fn_info| {
+                                        if (fn_info.params.len == 2) {
+                                            break :blk T.free(allocator, v[i]);
+                                        } else {
+                                            break :blk T.free(v[i]);
+                                        }
+                                    },
+                                    else => @compileError("Free callback is not a function"),
+                                }
+                                @compileError("Invalid free callback");
+                            },
+                        }
                     }
                 }
             }
@@ -739,11 +794,11 @@ const Array = struct {
         }
     }
 
-    pub fn free_c(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values_c: [*c]T_rl, lengths_c: []const usize) void {
-        _free_c(T, T_rl, allocator, values_c, lengths_c, 0);
+    pub fn free_c(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values_c: [*c]T_rl, lengths_c: []const usize, keep: keep_type(@TypeOf(values_c))) void {
+        _free_c(T, T_rl, allocator, values_c, lengths_c, 0, keep);
     }
 
-    fn _free_c(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values_c: [*c]T_rl, lengths_c: []const usize, depth: usize) void {
+    fn _free_c(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values_c: [*c]T_rl, lengths_c: []const usize, depth: usize, keep: keep_type(@TypeOf(values_c))) void {
         assert(lengths_c.len > 0 and depth < lengths_c.len);
 
         const length_c = lengths_c[depth];
@@ -789,25 +844,30 @@ const Array = struct {
                             @compileError("Invalid free callback");
                         }
                     } else {
-                        _free_c(T, c, allocator, values[i], lengths_c, depth + 1);
+                        const k = if (keep) |k| k[i] else null;
+                        _free_c(T, c, allocator, values[i], lengths_c, depth + 1, k);
                     }
                 } else {
-                    switch (@typeInfo(T_rl)) {
-                        .Int => {},
-                        .Float => {},
-                        else => blk: {
-                            switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
-                                    if (fn_info.params.len == 2) {
-                                        break :blk T.free(allocator, values[i]);
-                                    } else {
-                                        break :blk T.free(values[i]);
-                                    }
-                                },
-                                else => @compileError("Free callback is not a function"),
-                            }
-                            @compileError("Invalid free callback");
-                        },
+                    const do_free = if (keep) |k| !k[i] else true;
+                    if (do_free) {
+                        switch (@typeInfo(T_rl)) {
+                            .Int => {},
+                            .Float => {},
+                            .Bool => {},
+                            else => blk: {
+                                switch (@typeInfo(@TypeOf(T.free))) {
+                                    .Fn => |fn_info| {
+                                        if (fn_info.params.len == 2) {
+                                            break :blk T.free(allocator, values[i]);
+                                        } else {
+                                            break :blk T.free(values[i]);
+                                        }
+                                    },
+                                    else => @compileError("Free callback is not a function"),
+                                }
+                                @compileError("Invalid free callback");
+                            },
+                        }
                     }
                 }
             }
@@ -816,7 +876,7 @@ const Array = struct {
         }
     }
 
-    pub fn free_copy(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values: ?[]T_rl) void {
+    pub fn free_copy(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, values: ?[]T_rl, keep: keep_type(@TypeOf(values))) void {
         if (values) |v| {
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
@@ -854,25 +914,40 @@ const Array = struct {
                             @compileError("Invalid free callback");
                         }
                     } else {
-                        free_copy(T, c, allocator, v[i]);
+                        const k = if (keep) |k| k[i] else null;
+                        free_copy(T, c, allocator, v[i], k);
                     }
                 } else {
-                    switch (@typeInfo(T_rl)) {
-                        .Int => {},
-                        .Float => {},
-                        else => blk: {
-                            switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
-                                    if (fn_info.params.len == 2) {
-                                        break :blk T.free(allocator, v[i]);
-                                    } else {
-                                        break :blk T.free(v[i]);
-                                    }
-                                },
-                                else => @compileError("Free callback is not a function"),
+                    const do_free = blk: {
+                        if (keep) |k| {
+                            if (k.len > i) {
+                                break :blk !k[i];
+                            } else {
+                                break :blk true;
                             }
-                            @compileError("Invalid free callback");
-                        },
+                        }
+                        break :blk true;
+                    };
+
+                    if (do_free) {
+                        switch (@typeInfo(T_rl)) {
+                            .Int => {},
+                            .Float => {},
+                            .Bool => {},
+                            else => blk: {
+                                switch (@typeInfo(@TypeOf(T.free))) {
+                                    .Fn => |fn_info| {
+                                        if (fn_info.params.len == 2) {
+                                            break :blk T.free(allocator, v[i]);
+                                        } else {
+                                            break :blk T.free(v[i]);
+                                        }
+                                    },
+                                    else => @compileError("Free callback is not a function"),
+                                }
+                                @compileError("Invalid free callback");
+                            },
+                        }
                     }
                 }
             }
@@ -2536,8 +2611,9 @@ pub const Font = struct {
         if (e.enif_get_map_value(env, term, term_recs_key, &term_recs_value) == 0) return error.ArgumentError;
 
         const recs_lengths = [_]usize{@intCast(value.glyphCount)};
+        const recs_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_recs_value, &recs_lengths);
         value.recs = try Array.get_c(Rectangle, rl.Rectangle, Self.allocator, env, term_recs_value, &recs_lengths);
-        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.recs, &recs_lengths);
+        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.recs, &recs_lengths, recs_keep);
 
         // glyphs
 
@@ -2546,8 +2622,9 @@ pub const Font = struct {
         if (e.enif_get_map_value(env, term, term_glyphs_key, &term_glyphs_value) == 0) return error.ArgumentError;
 
         const glyphs_lengths = [_]usize{@intCast(value.glyphCount)};
+        const glyphs_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_glyphs_value, &glyphs_lengths);
         value.glyphs = try Array.get_c(GlyphInfo, rl.GlyphInfo, Self.allocator, env, term_glyphs_value, &glyphs_lengths);
-        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.glyphs, &glyphs_lengths);
+        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.glyphs, &glyphs_lengths, glyphs_keep);
 
         return value;
     }
@@ -3025,7 +3102,7 @@ pub const Mesh = struct {
 
         const vertices_lengths = [_]usize{@intCast(value.vertexCount * 3)};
         value.vertices = try Array.get_c(Double, f32, Self.allocator, env, term_vertices_value, &vertices_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.vertices, &vertices_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.vertices, &vertices_lengths, null);
 
         // texcoords
         // = vertex_count * 2
@@ -3036,7 +3113,7 @@ pub const Mesh = struct {
 
         const texcoords_lengths = [_]usize{@intCast(value.vertexCount * 2)};
         value.texcoords = try Array.get_c(Double, f32, Self.allocator, env, term_texcoords_value, &texcoords_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.texcoords, &texcoords_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.texcoords, &texcoords_lengths, null);
 
         // texcoords2
         // = vertex_count * 2
@@ -3047,7 +3124,7 @@ pub const Mesh = struct {
 
         const texcoords2_lengths = [_]usize{@intCast(value.vertexCount * 2)};
         value.texcoords2 = try Array.get_c(Double, f32, Self.allocator, env, term_texcoords2_value, &texcoords2_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.texcoords2, &texcoords2_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.texcoords2, &texcoords2_lengths, null);
 
         // normals
         // = vertex_count * 3
@@ -3058,7 +3135,7 @@ pub const Mesh = struct {
 
         const normals_lengths = [_]usize{@intCast(value.vertexCount * 3)};
         value.normals = try Array.get_c(Double, f32, Self.allocator, env, term_normals_value, &normals_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.normals, &normals_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.normals, &normals_lengths, null);
 
         // tangents
         // = vertex_count * 4
@@ -3069,7 +3146,7 @@ pub const Mesh = struct {
 
         const tangents_lengths = [_]usize{@intCast(value.vertexCount * 4)};
         value.tangents = try Array.get_c(Double, f32, Self.allocator, env, term_tangents_value, &tangents_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.tangents, &tangents_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.tangents, &tangents_lengths, null);
 
         // colors
         // = vertex_count * 4
@@ -3080,7 +3157,7 @@ pub const Mesh = struct {
 
         const colors_lengths = [_]usize{@intCast(value.vertexCount * 4)};
         value.colors = try Array.get_c(UInt, u8, Self.allocator, env, term_colors_value, &colors_lengths);
-        errdefer Array.free_c(UInt, u8, Self.allocator, value.colors, &colors_lengths);
+        errdefer Array.free_c(UInt, u8, Self.allocator, value.colors, &colors_lengths, null);
 
         // indices
         // = triangle_count * 3
@@ -3091,7 +3168,7 @@ pub const Mesh = struct {
 
         const indices_lengths = [_]usize{@intCast(value.triangleCount * 3)};
         value.indices = try Array.get_c(UInt, c_ushort, Self.allocator, env, term_indices_value, &indices_lengths);
-        errdefer Array.free_c(UInt, c_ushort, Self.allocator, value.indices, &indices_lengths);
+        errdefer Array.free_c(UInt, c_ushort, Self.allocator, value.indices, &indices_lengths, null);
 
         // anim_vertices
         // = vertex_count * 3
@@ -3102,7 +3179,7 @@ pub const Mesh = struct {
 
         const anim_vertices_lengths = [_]usize{@intCast(value.vertexCount * 3)};
         value.animVertices = try Array.get_c(Double, f32, Self.allocator, env, term_anim_vertices_value, &anim_vertices_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.animVertices, &anim_vertices_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.animVertices, &anim_vertices_lengths, null);
 
         // anim_normals
         // = vertex_count * 3
@@ -3113,7 +3190,7 @@ pub const Mesh = struct {
 
         const anim_normals_lengths = [_]usize{@intCast(value.vertexCount * 3)};
         value.animNormals = try Array.get_c(Double, f32, Self.allocator, env, term_anim_normals_value, &anim_normals_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.animNormals, &anim_normals_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.animNormals, &anim_normals_lengths, null);
 
         // bone_ids
         // = vertex_count * 4
@@ -3124,7 +3201,7 @@ pub const Mesh = struct {
 
         const bone_ids_lengths = [_]usize{@intCast(value.vertexCount * 4)};
         value.boneIds = try Array.get_c(UInt, u8, Self.allocator, env, term_bone_ids_value, &bone_ids_lengths);
-        errdefer Array.free_c(UInt, u8, Self.allocator, value.boneIds, &bone_ids_lengths);
+        errdefer Array.free_c(UInt, u8, Self.allocator, value.boneIds, &bone_ids_lengths, null);
 
         // bone_weights
         // = vertex_count * 4
@@ -3135,7 +3212,7 @@ pub const Mesh = struct {
 
         const bone_weights_lengths = [_]usize{@intCast(value.vertexCount * 4)};
         value.boneWeights = try Array.get_c(Double, f32, Self.allocator, env, term_bone_weights_value, &bone_weights_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.boneWeights, &bone_weights_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.boneWeights, &bone_weights_lengths, null);
 
         // bone_count
 
@@ -3152,8 +3229,9 @@ pub const Mesh = struct {
         if (e.enif_get_map_value(env, term, term_bone_matrices_key, &term_bone_matrices_value) == 0) return error.ArgumentError;
 
         const bone_matrices_lengths = [_]usize{@intCast(value.boneCount)};
+        const bone_matrices_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bone_matrices_value, &bone_matrices_lengths);
         value.boneMatrices = try Array.get_c(Matrix, rl.Matrix, Self.allocator, env, term_bone_matrices_value, &bone_matrices_lengths);
-        errdefer Array.free_c(Matrix, rl.Matrix, Self.allocator, value.boneMatrices, &bone_matrices_lengths);
+        errdefer Array.free_c(Matrix, rl.Matrix, Self.allocator, value.boneMatrices, &bone_matrices_lengths, bone_matrices_keep);
 
         // vao_id
 
@@ -3170,7 +3248,7 @@ pub const Mesh = struct {
 
         const vbo_id_lengths = [_]usize{@intCast(Self.MAX_VERTEX_BUFFERS)};
         value.vboId = try Array.get_c(UInt, c_uint, Self.allocator, env, term_vbo_id_value, &vbo_id_lengths);
-        errdefer Array.free_c(UInt, c_uint, Self.allocator, value.vboId, &vbo_id_lengths);
+        errdefer Array.free_c(UInt, c_uint, Self.allocator, value.vboId, &vbo_id_lengths, null);
 
         return value;
     }
@@ -3193,7 +3271,7 @@ pub const Mesh = struct {
 
             if (test_vbo_id == Self.MAX_VERTEX_BUFFERS) {
                 const vbo_id_lengths = [_]usize{@intCast(Self.MAX_VERTEX_BUFFERS)};
-                Array.free_c(UInt, c_uint, Self.allocator, v.vboId, &vbo_id_lengths);
+                Array.free_c(UInt, c_uint, Self.allocator, v.vboId, &vbo_id_lengths, null);
                 v.vboId = null;
             }
         }
@@ -3256,7 +3334,7 @@ pub const Shader = struct {
 
         const locs_lengths = [_]usize{@intCast(Self.MAX_LOCATIONS)};
         value.locs = try Array.get_c(Int, c_int, Self.allocator, env, term_locs_value, &locs_lengths);
-        errdefer Array.free_c(Double, f32, Self.allocator, value.locs, &locs_lengths);
+        errdefer Array.free_c(Double, f32, Self.allocator, value.locs, &locs_lengths, null);
 
         return value;
     }
@@ -3401,8 +3479,9 @@ pub const Material = struct {
         if (e.enif_get_map_value(env, term, term_maps_key, &term_maps_value) == 0) return error.ArgumentError;
 
         const maps_lengths = [_]usize{@intCast(Self.MAX_MAPS)};
+        const maps_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_maps_value, &maps_lengths);
         value.maps = try Array.get_c(MaterialMap, rl.MaterialMap, Self.allocator, env, term_maps_value, &maps_lengths);
-        errdefer Array.free_c(MaterialMap, rl.MaterialMap, Self.allocator, value.maps, &maps_lengths);
+        errdefer Array.free_c(MaterialMap, rl.MaterialMap, Self.allocator, value.maps, &maps_lengths, maps_keep);
 
         // params
 
@@ -3410,7 +3489,7 @@ pub const Material = struct {
         var term_params_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_params_key, &term_params_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_params_value, &value.params);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.params);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.params, null);
 
         return value;
     }
@@ -3679,8 +3758,9 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_meshes_key, &term_meshes_value) == 0) return error.ArgumentError;
 
         const meshes_lengths = [_]usize{@intCast(value.meshCount)};
+        const meshes_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_meshes_value, &meshes_lengths);
         value.meshes = try Array.get_c(Mesh, rl.Mesh, Self.allocator, env, term_meshes_value, &meshes_lengths);
-        errdefer Array.free_c(Mesh, rl.Mesh, Self.allocator, value.meshes, &meshes_lengths);
+        errdefer Array.free_c(Mesh, rl.Mesh, Self.allocator, value.meshes, &meshes_lengths, meshes_keep);
 
         // materials
         // = material_count
@@ -3690,8 +3770,9 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_materials_key, &term_materials_value) == 0) return error.ArgumentError;
 
         const materials_lengths = [_]usize{@intCast(value.materialCount)};
+        const materials_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_materials_value, &materials_lengths);
         value.materials = try Array.get_c(Material, rl.Material, Self.allocator, env, term_materials_value, &materials_lengths);
-        errdefer Array.free_c(Material, rl.Material, Self.allocator, value.materials, &materials_lengths);
+        errdefer Array.free_c(Material, rl.Material, Self.allocator, value.materials, &materials_lengths, materials_keep);
 
         // mesh_material
         // = mesh_count
@@ -3702,7 +3783,7 @@ pub const Model = struct {
 
         const mesh_material_lengths = [_]usize{@intCast(value.meshCount)};
         value.meshMaterial = try Array.get_c(Int, c_int, Self.allocator, env, term_mesh_material_value, &mesh_material_lengths);
-        errdefer Array.free_c(Int, c_int, Self.allocator, value.meshMaterial, &mesh_material_lengths);
+        errdefer Array.free_c(Int, c_int, Self.allocator, value.meshMaterial, &mesh_material_lengths, null);
 
         // bones
         // = bone_count
@@ -3712,8 +3793,9 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_bones_key, &term_bones_value) == 0) return error.ArgumentError;
 
         const bones_lengths = [_]usize{@intCast(value.boneCount)};
+        const bones_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bones_value, &bones_lengths);
         value.bones = try Array.get_c(BoneInfo, rl.BoneInfo, Self.allocator, env, term_bones_value, &bones_lengths);
-        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths);
+        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths, bones_keep);
 
         // bind_pose
         // = bone_count
@@ -3723,8 +3805,9 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_bind_pose_key, &term_bind_pose_value) == 0) return error.ArgumentError;
 
         const bind_pose_lengths = [_]usize{@intCast(value.boneCount)};
+        const bind_pose_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bind_pose_value, &bind_pose_lengths);
         value.bindPose = try Array.get_c(Transform, rl.Transform, Self.allocator, env, term_bind_pose_value, &bind_pose_lengths);
-        errdefer Array.free_c(Transform, rl.Transform, Self.allocator, value.bindPose, &bind_pose_lengths);
+        errdefer Array.free_c(Transform, rl.Transform, Self.allocator, value.bindPose, &bind_pose_lengths, bind_pose_keep);
 
         return value;
     }
@@ -3826,8 +3909,9 @@ pub const ModelAnimation = struct {
         if (e.enif_get_map_value(env, term, term_bones_key, &term_bones_value) == 0) return error.ArgumentError;
 
         const bones_lengths = [_]usize{@intCast(value.boneCount)};
+        const bones_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bones_value, &bones_lengths);
         value.bones = try Array.get_c(BoneInfo, rl.BoneInfo, Self.allocator, env, term_bones_value, &bones_lengths);
-        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths);
+        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths, bones_keep);
 
         // frame_poses
         // = frame_count , bone_count
@@ -3837,8 +3921,9 @@ pub const ModelAnimation = struct {
         if (e.enif_get_map_value(env, term, term_frame_poses_key, &term_frame_poses_value) == 0) return error.ArgumentError;
 
         const frame_poses_lengths = [_]usize{ @intCast(value.frameCount), @intCast(value.boneCount) };
+        const frame_poses_keep = try Array.get_c(TermIsResource, [*c]bool, Self.allocator, env, term_frame_poses_value, &frame_poses_lengths);
         value.framePoses = try Array.get_c(Transform, [*c]rl.Transform, Self.allocator, env, term_frame_poses_value, &frame_poses_lengths);
-        errdefer Array.free_c(Transform, [*c]rl.Transform, Self.allocator, value.framePoses, &frame_poses_lengths);
+        errdefer Array.free_c(Transform, [*c]rl.Transform, Self.allocator, value.framePoses, &frame_poses_lengths, frame_poses_keep);
 
         // name
 
@@ -4675,7 +4760,7 @@ pub const VrDeviceInfo = struct {
         var term_lens_distortion_values_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_lens_distortion_values_key, &term_lens_distortion_values_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_lens_distortion_values_value, &value.lensDistortionValues);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.lensDistortionValues);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.lensDistortionValues, null);
 
         // chroma_ab_correction
 
@@ -4683,7 +4768,7 @@ pub const VrDeviceInfo = struct {
         var term_chroma_ab_correction_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_chroma_ab_correction_key, &term_chroma_ab_correction_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_chroma_ab_correction_value, &value.chromaAbCorrection);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.chromaAbCorrection);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.chromaAbCorrection, null);
 
         return value;
     }
@@ -4786,16 +4871,18 @@ pub const VrStereoConfig = struct {
         const term_projection_key = Atom.make(env, "projection");
         var term_projection_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_projection_key, &term_projection_value) == 0) return error.ArgumentError;
+        const projection_keep = try Array.get(TermIsResource, bool, Self.allocator, env, term_projection_value);
         try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_projection_value, &value.projection);
-        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.projection);
+        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.projection, projection_keep);
 
         // view_offset
 
         const term_view_offset_key = Atom.make(env, "view_offset");
         var term_view_offset_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_view_offset_key, &term_view_offset_value) == 0) return error.ArgumentError;
+        const view_offset_keep = try Array.get(TermIsResource, bool, Self.allocator, env, term_view_offset_value);
         try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_view_offset_value, &value.viewOffset);
-        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.viewOffset);
+        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.viewOffset, view_offset_keep);
 
         // left_lens_center
 
@@ -4803,7 +4890,7 @@ pub const VrStereoConfig = struct {
         var term_left_lens_center_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_left_lens_center_key, &term_left_lens_center_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_left_lens_center_value, &value.leftLensCenter);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftLensCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftLensCenter, null);
 
         // right_lens_center
 
@@ -4811,7 +4898,7 @@ pub const VrStereoConfig = struct {
         var term_right_lens_center_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_right_lens_center_key, &term_right_lens_center_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_right_lens_center_value, &value.rightLensCenter);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightLensCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightLensCenter, null);
 
         // left_screen_center
 
@@ -4819,7 +4906,7 @@ pub const VrStereoConfig = struct {
         var term_left_screen_center_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_left_screen_center_key, &term_left_screen_center_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_left_screen_center_value, &value.leftScreenCenter);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftScreenCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.leftScreenCenter, null);
 
         // right_screen_center
 
@@ -4827,7 +4914,7 @@ pub const VrStereoConfig = struct {
         var term_right_screen_center_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_right_screen_center_key, &term_right_screen_center_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_right_screen_center_value, &value.rightScreenCenter);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightScreenCenter);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.rightScreenCenter, null);
 
         // scale
 
@@ -4835,7 +4922,7 @@ pub const VrStereoConfig = struct {
         var term_scale_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_scale_key, &term_scale_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_scale_value, &value.scale);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scale);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scale, null);
 
         // scale_in
 
@@ -4843,7 +4930,7 @@ pub const VrStereoConfig = struct {
         var term_scale_in_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_scale_in_key, &term_scale_in_value) == 0) return error.ArgumentError;
         try Array.get_copy(Double, f32, Self.allocator, env, term_scale_in_value, &value.scaleIn);
-        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scaleIn);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.scaleIn, null);
 
         return value;
     }
@@ -4924,7 +5011,7 @@ pub const FilePathList = struct {
 
         const paths_lengths = [_]usize{ @intCast(value.capacity), MAX_FILEPATH_LENGTH };
         value.paths = try Array.get_c(CString, [*c]u8, Self.allocator, env, term_paths_value, &paths_lengths);
-        errdefer Array.free_c(CString, [*c]u8, Self.allocator, value.paths, &paths_lengths);
+        errdefer Array.free_c(CString, [*c]u8, Self.allocator, value.paths, &paths_lengths, null);
 
         return value;
     }
@@ -4998,7 +5085,7 @@ pub const AutomationEvent = struct {
         var term_params_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_params_key, &term_params_value) == 0) return error.ArgumentError;
         try Array.get_copy(Int, c_int, Self.allocator, env, term_params_value, &value.params);
-        errdefer Array.free_copy(Int, c_int, Self.allocator, &value.params);
+        errdefer Array.free_copy(Int, c_int, Self.allocator, &value.params, null);
 
         return value;
     }
