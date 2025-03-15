@@ -17,6 +17,8 @@ defmodule Zexray.NIF do
     Application.fetch_env!(:zexray, :trace_log_level)
     |> Zexray.Enum.TraceLogLevel.value()
     |> set_trace_log_level()
+
+    set_trace_log_callback()
   end
 
   use Zexray.NIF.Resource
