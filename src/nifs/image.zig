@@ -66,10 +66,9 @@ fn nif_image_get_data_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
     assert(argc == 3 or argc == 4);
 
-    // Resource check
+    // Return type
 
     const return_resource = if (argc == 4) e.enif_is_identical(core.Atom.make(env, "resource"), argv[3]) != 0 else false;
-    const color_is_resource: bool = e.enif_is_map(env, argv[2]) == 0;
 
     // Arguments
 
@@ -81,10 +80,11 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
     };
 
-    const color: rl.Color = core.Color.get(env, argv[2]) catch |err| {
+    const arg_color = core.Argument(core.Color).get(env, argv[2]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'color'.");
     };
-    defer if (!color_is_resource) core.Color.free(color);
+    defer arg_color.free();
+    const color = arg_color.data;
 
     // Function
 
@@ -93,7 +93,7 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Image, rl.Image, env, image, return_resource) catch |err| {
+    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
     };
 }
@@ -109,23 +109,24 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
     assert(argc == 2 or argc == 3);
 
-    // Resource check
+    // Return type
 
     const return_resource = if (argc == 3) e.enif_is_identical(core.Atom.make(env, "resource"), argv[2]) != 0 else false;
-    const image_is_resource: bool = e.enif_is_map(env, argv[0]) == 0;
-    const crop_is_resource: bool = e.enif_is_map(env, argv[1]) == 0;
 
     // Arguments
 
-    var image: rl.Image = core.Image.get(env, argv[0]) catch |err| {
+    const arg_image = core.Argument(core.Image).get(env, argv[0]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'image'.");
     };
-    defer if (!image_is_resource and !return_resource) core.Image.free(image);
+    defer if (!return_resource) arg_image.free();
+    errdefer if (return_resource) arg_image.free();
+    var image = arg_image.data;
 
-    const crop: rl.Rectangle = core.Rectangle.get(env, argv[1]) catch |err| {
+    const arg_crop = core.Argument(core.Rectangle).get(env, argv[1]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'crop'.");
     };
-    defer if (!crop_is_resource) core.Rectangle.free(crop);
+    defer arg_crop.free();
+    const crop = arg_crop.data;
 
     // Function
 
@@ -133,7 +134,7 @@ fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Image, rl.Image, env, argv[0], image, return_resource) catch |err| {
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], image, return_resource) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
     };
 }

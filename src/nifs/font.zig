@@ -22,32 +22,26 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 fn nif_load_font(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
     assert(argc == 1 or argc == 2);
 
-    // Resource check
+    // Return type
 
     const return_resource = if (argc == 2) e.enif_is_identical(core.Atom.make(env, "resource"), argv[1]) != 0 else false;
 
     // Arguments
 
-    const file_name: []u8 = core.CString.get(e.allocator, env, argv[0]) catch |err| {
+    const arg_file_name = core.ArgumentBinary(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'file_name'.");
     };
-    defer e.allocator.free(file_name);
+    defer arg_file_name.free();
+    const file_name = arg_file_name.data;
 
     // Function
 
-    const font = rl.LoadFont(@as([*:0]u8, @ptrCast(file_name)));
+    const font = rl.LoadFont(@ptrCast(file_name));
     defer if (!return_resource) core.Font.free(font);
 
     // Return
 
-    if (return_resource) {
-        const font_resource = core.Font.Resource.create(font) catch |err| {
-            return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource for return value.");
-        };
-        defer core.Font.Resource.release(font_resource);
-
-        return core.Font.Resource.make(env, font_resource);
-    } else {
-        return core.Font.make(env, font);
-    }
+    return core.maybe_make_struct_as_resource(core.Font, env, font, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }
