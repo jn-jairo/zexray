@@ -1,14 +1,19 @@
 defmodule Zexray.Enum.EnumBase do
   @moduledoc false
 
+  import Bitwise
+
   defmacro __using__(opts) do
     prefix = Keyword.fetch!(opts, :prefix)
     name = String.replace(prefix, "_", " ")
     values_by_name = Keyword.fetch!(opts, :values)
 
     quote do
+      import Bitwise
+
       @name unquote(name)
       @values unquote(get_values(values_by_name))
+      @flag_all unquote(get_flag_all(values_by_name))
       @names unquote(get_names(values_by_name))
       @values_by_name unquote(values_by_name)
       @names_by_value unquote(get_names_by_value(values_by_name))
@@ -17,6 +22,8 @@ defmodule Zexray.Enum.EnumBase do
       @type t_name :: unquote(get_type_t_name(values_by_name))
 
       @type t_all :: t | t_name
+
+      @type t_all_flag :: integer | t_name | :all | list(integer | t_name | :all)
 
       @spec values() :: nonempty_list(integer)
       def values(), do: @values
@@ -43,6 +50,32 @@ defmodule Zexray.Enum.EnumBase do
 
       def value(value) when is_integer(value) do
         if Map.has_key?(@names_by_value, value) do
+          value
+        else
+          raise_invalid_value(@values, value)
+        end
+      end
+
+      @spec value_flag(name :: atom | integer | list) :: integer
+      def value_flag(name)
+
+      def value_flag([]), do: 0
+
+      def value_flag(values) when is_list(values) do
+        values
+        |> Enum.reduce(0, fn value, acc ->
+          value_flag(value) ||| acc
+        end)
+      end
+
+      def value_flag(:all), do: @flag_all
+
+      def value_flag(name) when is_atom(name) do
+        value(name)
+      end
+
+      def value_flag(value) when is_integer(value) do
+        if value >= 0 and value <= @flag_all do
           value
         else
           raise_invalid_value(@values, value)
@@ -84,6 +117,14 @@ defmodule Zexray.Enum.EnumBase do
   defp get_values({_, _, values_by_name}) do
     Keyword.values(values_by_name)
     |> Enum.uniq()
+  end
+
+  defp get_flag_all({_, _, values_by_name}) do
+    Keyword.values(values_by_name)
+    |> Enum.uniq()
+    |> Enum.reduce(0, fn value, acc ->
+      value ||| acc
+    end)
   end
 
   defp get_names_by_value({_, _, values_by_name}) do

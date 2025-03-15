@@ -4,6 +4,7 @@ defmodule Zexray.Enum.ConfigFlagTest do
 
   import ExUnitParameterize
 
+  import Bitwise
   import Zexray.EnumFixture
 
   alias Zexray.Enum.ConfigFlag, as: Type
@@ -31,6 +32,7 @@ defmodule Zexray.Enum.ConfigFlagTest do
       {expected, params} = dataset
 
       assert ^expected = apply(Type, :value, params)
+      assert ^expected = apply(Type, :value_flag, params)
     end
   end
 
@@ -68,5 +70,14 @@ defmodule Zexray.Enum.ConfigFlagTest do
   test "name invalid" do
     assert_raise ArgumentError, fn -> Type.name(-100) end
     assert_raise ArgumentError, fn -> Type.name(:foo) end
+  end
+
+  test "value flag all" do
+    value_all = Type.value_flag(:all)
+
+    Type.values()
+    |> Enum.each(fn value ->
+      assert (value_all &&& value) == value
+    end)
   end
 end
