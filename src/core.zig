@@ -48,7 +48,7 @@ fn get_error_module(err: anyerror) []u8 {
     }));
 }
 
-pub fn maybe_make_struct_as_resource(comptime T: type, comptime T_rl: type, env: ?*e.ErlNifEnv, value: T_rl, return_resource: bool) !e.ErlNifTerm {
+pub fn maybe_make_struct_as_resource(comptime T: type, env: ?*e.ErlNifEnv, value: T.data_type, return_resource: bool) !e.ErlNifTerm {
     if (return_resource) {
         const image_resource = try T.Resource.create(value);
         defer T.Resource.release(image_resource);
@@ -67,13 +67,13 @@ pub fn maybe_make_resource_as_struct(comptime T: type, env: ?*e.ErlNifEnv, term:
     }
 }
 
-pub fn maybe_make_struct_or_resource(comptime T: type, comptime T_rl: type, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T_rl, return_resource: bool) !e.ErlNifTerm {
+pub fn maybe_make_struct_or_resource(comptime T: type, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type, return_resource: bool) !e.ErlNifTerm {
     const term_is_resource: bool = e.enif_is_map(env, term) == 0;
 
     if (term_is_resource) {
         try T.Resource.update(env, term, value);
         return maybe_make_resource_as_struct(T, env, term, return_resource);
     } else {
-        return maybe_make_struct_as_resource(T, T_rl, env, value, return_resource);
+        return maybe_make_struct_as_resource(T, env, value, return_resource);
     }
 }

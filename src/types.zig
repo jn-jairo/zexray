@@ -27,7 +27,7 @@ fn get_field_array_length(comptime T: type, field_name: []const u8) usize {
     });
 }
 
-fn keep_type(comptime T: type) type {
+pub fn keep_type(comptime T: type) type {
     switch (@typeInfo(T)) {
         .Pointer => |info| {
             return @Type(.{
@@ -35,7 +35,7 @@ fn keep_type(comptime T: type) type {
                     .size = info.size,
                     .is_const = info.is_const,
                     .is_volatile = info.is_volatile,
-                    .alignment = 1,
+                    .alignment = 0,
                     .address_space = info.address_space,
                     .child = keep_type(info.child),
                     .is_allowzero = info.is_allowzero,
@@ -70,6 +70,8 @@ fn keep_type(comptime T: type) type {
 //////////////
 
 pub const Double = struct {
+    pub const data_type = f64;
+
     pub fn make(env: ?*e.ErlNifEnv, value: f64) e.ErlNifTerm {
         return e.enif_make_double(env, value);
     }
@@ -86,6 +88,8 @@ pub const Double = struct {
 ////////////
 
 pub const Int = struct {
+    pub const data_type = c_int;
+
     pub fn make(env: ?*e.ErlNifEnv, value: c_int) e.ErlNifTerm {
         return e.enif_make_int(env, value);
     }
@@ -102,6 +106,8 @@ pub const Int = struct {
 ////////////
 
 pub const UInt = struct {
+    pub const data_type = c_uint;
+
     pub fn make(env: ?*e.ErlNifEnv, value: c_uint) e.ErlNifTerm {
         return e.enif_make_uint(env, value);
     }
@@ -118,6 +124,8 @@ pub const UInt = struct {
 //////////////////////
 
 pub const TermIsResource = struct {
+    pub const data_type = bool;
+
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !bool {
         return e.enif_is_ref(env, term) != 0;
     }
@@ -128,6 +136,8 @@ pub const TermIsResource = struct {
 ///////////////
 
 pub const Boolean = struct {
+    pub const data_type = bool;
+
     pub fn make(env: ?*e.ErlNifEnv, value: bool) e.ErlNifTerm {
         return if (value) Atom.make(env, "true") else Atom.make(env, "false");
     }
@@ -142,6 +152,8 @@ pub const Boolean = struct {
 ////////////
 
 pub const Atom = struct {
+    pub const data_type = u8;
+
     pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
         return e.enif_make_atom_len(env, value.ptr, value.len);
     }
@@ -169,6 +181,8 @@ pub const Atom = struct {
 //////////////
 
 pub const Binary = struct {
+    pub const data_type = u8;
+
     pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
         var term: e.ErlNifTerm = undefined;
         var buf = e.enif_make_new_binary(env, value.len, &term);
@@ -254,6 +268,8 @@ pub const Binary = struct {
 ///////////////
 
 pub const CString = struct {
+    pub const data_type = u8;
+
     pub fn make(env: ?*e.ErlNifEnv, value: []const u8) e.ErlNifTerm {
         var term: e.ErlNifTerm = undefined;
         const value_length: usize = @intCast(blk: {
@@ -272,10 +288,10 @@ pub const CString = struct {
         return term;
     }
 
-    pub fn make_c(env: ?*e.ErlNifEnv, value_c: [*c]u8, length_c: usize) e.ErlNifTerm {
+    pub fn make_c(env: ?*e.ErlNifEnv, value_c: [*c]const u8, length_c: usize) e.ErlNifTerm {
         var term: e.ErlNifTerm = undefined;
         if (length_c > 0 and value_c != null) {
-            const value = @as([*]u8, @ptrCast(value_c))[0..length_c];
+            const value = @as([*]const u8, @ptrCast(value_c))[0..length_c];
             const value_length: usize = @intCast(blk: {
                 for (0..value.len) |i| {
                     if (value[i] == 0) {
@@ -291,6 +307,10 @@ pub const CString = struct {
             _ = e.enif_make_new_binary(env, 0, &term);
         }
         return term;
+    }
+
+    pub fn make_c_unknown(env: ?*e.ErlNifEnv, value_c: [*c]const u8) e.ErlNifTerm {
+        return make_c(env, value_c, get_value_length_c(value_c));
     }
 
     pub fn get(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![]u8 {
@@ -328,6 +348,10 @@ pub const CString = struct {
         return @ptrCast(value);
     }
 
+    pub fn get_c_unknown(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![*c]u8 {
+        return get_c(allocator, env, term, get_size(env, term));
+    }
+
     pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
         var binary: e.ErlNifBinary = undefined;
         if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
@@ -348,14 +372,39 @@ pub const CString = struct {
         return @intCast(binary.size + 1);
     }
 
+    pub fn get_value_length(value_c: [*c]const u8) usize {
+        var i: usize = 0;
+        if (value_c != null) {
+            while (value_c[i] != 0) {
+                i += 1;
+            }
+        }
+        return i;
+    }
+
+    pub fn get_value_length_c(value_c: [*c]const u8) usize {
+        var i: usize = 0;
+        if (value_c != null) {
+            while (value_c[i] != 0) {
+                i += 1;
+            }
+            i += 1;
+        }
+        return i;
+    }
+
     pub fn free(allocator: std.mem.Allocator, value: []u8) void {
         allocator.free(value);
     }
 
-    pub fn free_c(allocator: std.mem.Allocator, value_c: [*c]u8, length_c: usize) void {
+    pub fn free_c(allocator: std.mem.Allocator, value_c: [*c]const u8, length_c: usize) void {
         if (length_c > 0) {
-            allocator.free(@as([*]u8, @ptrCast(value_c))[0..length_c]);
+            allocator.free(@as([*]const u8, @ptrCast(value_c))[0..length_c]);
         }
+    }
+
+    pub fn free_c_unknown(allocator: std.mem.Allocator, value_c: [*c]const u8) void {
+        free_c(allocator, value_c, get_value_length_c(value_c));
     }
 
     pub fn free_copy(allocator: std.mem.Allocator, value: []u8) void {
@@ -979,48 +1028,242 @@ const Resource = struct {
     }
 };
 
-pub fn ResourceBase(comptime T: type, comptime T_rl: type, resource_name: []const u8) type {
+pub fn ResourceBase(comptime T: type) type {
     return struct {
-        pub fn make(env: ?*e.ErlNifEnv, resource: **T_rl) e.ErlNifTerm {
+        pub fn make(env: ?*e.ErlNifEnv, resource: **T.data_type) e.ErlNifTerm {
             return Resource.make(env, @ptrCast(@alignCast(resource)));
         }
 
-        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !**T_rl {
-            const resource_type = @field(resources.resource_type, resource_name);
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !**T.data_type {
+            const resource_type = @field(resources.resource_type, T.resource_name);
 
             return @ptrCast(@alignCast(try Resource.get(env, term, resource_type)));
         }
 
-        pub fn create(value: T_rl) !**T_rl {
+        pub fn create(value: T.data_type) !**T.data_type {
             const allocator = resources.ResourceType.allocator;
-            const resource_type = @field(resources.resource_type, resource_name);
+            const resource_type = @field(resources.resource_type, T.resource_name);
 
-            const resource: **T_rl = @ptrCast(@alignCast(try Resource.create(resource_type, @sizeOf(*T_rl))));
+            const resource: **T.data_type = @ptrCast(@alignCast(try Resource.create(resource_type, @sizeOf(*T.data_type))));
 
-            resource.* = try allocator.create(T_rl);
+            resource.* = try allocator.create(T.data_type);
             resource.*.* = value;
 
             return resource;
         }
 
-        pub fn update(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T_rl) !void {
+        pub fn update(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type) !void {
             const resource = try get(env, term);
             resource.*.* = value;
         }
 
-        pub fn destroy(resource: **T_rl) void {
+        pub fn destroy(resource: **T.data_type) void {
             const allocator = resources.ResourceType.allocator;
 
             allocator.destroy(resource.*);
         }
 
-        pub fn release(resource: **T_rl) void {
+        pub fn release(resource: **T.data_type) void {
             Resource.release(@ptrCast(@alignCast(resource)));
         }
 
-        pub fn free(resource: **T_rl) void {
+        pub fn free(resource: **T.data_type) void {
             defer release(resource);
             T.free(resource.*.*);
+        }
+    };
+}
+
+////////////////
+//  Argument  //
+////////////////
+
+pub fn Argument(comptime T: type) type {
+    return struct {
+        data: T.data_type,
+        keep: bool,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !Self {
+            const data = try T.get(env, term);
+            const keep = e.enif_is_ref(env, term) != 0;
+
+            return Self{
+                .data = data,
+                .keep = keep,
+            };
+        }
+
+        pub fn free(value: Self) void {
+            if (!value.keep) {
+                T.free(value.data);
+            }
+        }
+    };
+}
+
+pub fn ArgumentBinary(comptime T: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: []T.data_type,
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !Self {
+            const data = try T.get(allocator, env, term);
+            const length = try T.get_size(env, term);
+
+            return Self{
+                .data = data,
+                .length = length,
+            };
+        }
+
+        pub fn free(value: Self) void {
+            T.free(allocator, value.data);
+        }
+    };
+}
+
+pub fn ArgumentBinaryC(comptime T: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: [*c]T.data_type,
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, length_c: usize) !Self {
+            const data = try T.get_c(allocator, env, term, length_c);
+
+            return Self{
+                .data = data,
+                .length = length_c,
+            };
+        }
+
+        pub fn free(value: Self) void {
+            T.free_c(allocator, value.data, value.length);
+        }
+    };
+}
+
+pub fn ArgumentBinaryCopy(comptime T: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: []T.data_type,
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []T.data_type) !Self {
+            try T.get_copy(env, term, dest);
+            const length = try T.get_size(env, term);
+
+            return Self{
+                .data = dest,
+                .length = length,
+            };
+        }
+
+        pub fn free(value: Self) void {
+            T.free_copy(allocator, value.data);
+        }
+    };
+}
+
+pub fn ArgumentArray(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: ?[]T_rl,
+        keep: keep_type(?[]T_rl),
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !Self {
+            const data = try Array.get(T, T_rl, allocator, env, term);
+            const keep = try Array.get(TermIsResource, keep_type(T_rl), allocator, env, term);
+            const length = try Array.get_length(env, term);
+
+            return Self{
+                .data = data,
+                .keep = keep,
+                .length = length,
+            };
+        }
+
+        pub fn free(value: *Self) void {
+            Array.free(T, T_rl, allocator, value.data, value.keep);
+            Array.free(TermIsResource, keep_type(T_rl), allocator, value.keep, null);
+            value.keep = null;
+        }
+
+        pub fn free_keep(value: *Self) void {
+            if (value.keep == null) return;
+            Array.free(TermIsResource, keep_type(T_rl), allocator, value.keep, null);
+            value.keep = null;
+        }
+    };
+}
+
+pub fn ArgumentArrayC(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: [*c]T_rl,
+        keep: keep_type([*c]T_rl),
+        lengths: []const usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, lengths_c: []const usize) !Self {
+            const data = try Array.get_c(T, T_rl, allocator, env, term, lengths_c);
+            const keep = try Array.get_c(TermIsResource, keep_type(T_rl), allocator, env, term, lengths_c);
+
+            return Self{ .data = data, .keep = keep, .lengths = lengths_c };
+        }
+
+        pub fn free(value: *Self) void {
+            Array.free_c(T, T_rl, allocator, value.data, value.lengths, value.keep);
+            Array.free_c(TermIsResource, keep_type(T_rl), allocator, value.keep, value.lengths, null);
+            value.keep = null;
+        }
+
+        pub fn free_keep(value: *Self) void {
+            if (value.keep == null) return;
+            Array.free_c(TermIsResource, keep_type(T_rl), allocator, value.keep, value.lengths, null);
+            value.keep = null;
+        }
+    };
+}
+
+pub fn ArgumentArrayCopy(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: ?[]T_rl,
+        keep: keep_type(?[]T_rl),
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []T_rl) !Self {
+            try Array.get_copy(T, T_rl, allocator, env, term, dest);
+            const keep = try Array.get(TermIsResource, keep_type(T_rl), allocator, env, term);
+            const length = try Array.get_length(env, term);
+
+            return Self{
+                .data = dest,
+                .keep = keep,
+                .length = length,
+            };
+        }
+
+        pub fn free(value: *Self) void {
+            Array.free_copy(T, T_rl, allocator, value.data, value.keep);
+            Array.free(TermIsResource, keep_type(T_rl), allocator, value.keep, null);
+            value.keep = null;
+        }
+
+        pub fn free_keep(value: *Self) void {
+            if (value.keep == null) return;
+            Array.free(TermIsResource, keep_type(T_rl), allocator, value.keep, null);
+            value.keep = null;
         }
     };
 }
@@ -1033,8 +1276,10 @@ pub const Vector2 = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Vector2;
+    pub const resource_name = "vector2";
 
-    pub const Resource = ResourceBase(Self, rl.Vector2, "vector2");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector2) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1091,8 +1336,10 @@ pub const Vector3 = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Vector3;
+    pub const resource_name = "vector3";
 
-    pub const Resource = ResourceBase(Self, rl.Vector3, "vector3");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector3) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1162,8 +1409,10 @@ pub const Vector4 = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Vector4;
+    pub const resource_name = "vector4";
 
-    pub const Resource = ResourceBase(Self, rl.Vector4, "vector4");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Vector4) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1246,8 +1495,10 @@ pub const Quaternion = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Quaternion;
+    pub const resource_name = "quaternion";
 
-    pub const Resource = ResourceBase(Self, rl.Quaternion, "quaternion");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Quaternion) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1330,8 +1581,10 @@ pub const Matrix = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Matrix;
+    pub const resource_name = "matrix";
 
-    pub const Resource = ResourceBase(Self, rl.Matrix, "matrix");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Matrix) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1570,8 +1823,10 @@ pub const Color = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Color;
+    pub const resource_name = "color";
 
-    pub const Resource = ResourceBase(Self, rl.Color, "color");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Color) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1654,8 +1909,10 @@ pub const Rectangle = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Rectangle;
+    pub const resource_name = "rectangle";
 
-    pub const Resource = ResourceBase(Self, rl.Rectangle, "rectangle");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Rectangle) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1738,8 +1995,10 @@ pub const Image = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Image;
+    pub const resource_name = "image";
 
-    pub const Resource = ResourceBase(Self, rl.Image, "image");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Image) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1831,8 +2090,9 @@ pub const Image = struct {
         const term_data_key = Atom.make(env, "data");
         var term_data_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_data_key, &term_data_value) == 0) return error.ArgumentError;
-        value.data = @ptrCast(try Binary.get_c(Self.allocator, env, term_data_value, data_size));
-        errdefer Binary.free_c(Self.allocator, value.data, data_size);
+        const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
+        errdefer data.free();
+        value.data = data.data;
 
         return value;
     }
@@ -1875,8 +2135,10 @@ pub const Texture = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Texture;
+    pub const resource_name = "texture";
 
-    pub const Resource = ResourceBase(Self, rl.Texture, "texture");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Texture) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -1972,8 +2234,10 @@ pub const Texture2D = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Texture2D;
+    pub const resource_name = "texture_2d";
 
-    pub const Resource = ResourceBase(Self, rl.Texture2D, "texture_2d");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Texture2D) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2069,8 +2333,10 @@ pub const TextureCubemap = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.TextureCubemap;
+    pub const resource_name = "texture_cubemap";
 
-    pub const Resource = ResourceBase(Self, rl.TextureCubemap, "texture_cubemap");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.TextureCubemap) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2166,8 +2432,10 @@ pub const RenderTexture = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.RenderTexture;
+    pub const resource_name = "render_texture";
 
-    pub const Resource = ResourceBase(Self, rl.RenderTexture, "render_texture");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.RenderTexture) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2212,16 +2480,18 @@ pub const RenderTexture = struct {
         const term_texture_key = Atom.make(env, "texture");
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
-        value.texture = try Texture.get(env, term_texture_value);
-        errdefer Texture.free(value.texture);
+        const texture = try Argument(Texture).get(env, term_texture_value);
+        errdefer texture.free();
+        value.texture = texture.data;
 
         // depth
 
         const term_depth_key = Atom.make(env, "depth");
         var term_depth_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
-        value.depth = try Texture.get(env, term_depth_value);
-        errdefer Texture.free(value.depth);
+        const depth = try Argument(Texture).get(env, term_depth_value);
+        errdefer depth.free();
+        value.depth = depth.data;
 
         return value;
     }
@@ -2239,8 +2509,10 @@ pub const RenderTexture2D = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.RenderTexture2D;
+    pub const resource_name = "render_texture_2d";
 
-    pub const Resource = ResourceBase(Self, rl.RenderTexture2D, "render_texture_2d");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.RenderTexture2D) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2285,16 +2557,18 @@ pub const RenderTexture2D = struct {
         const term_texture_key = Atom.make(env, "texture");
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
-        value.texture = try Texture.get(env, term_texture_value);
-        errdefer Texture.free(value.texture);
+        const texture = try Argument(Texture).get(env, term_texture_value);
+        errdefer texture.free();
+        value.texture = texture.data;
 
         // depth
 
         const term_depth_key = Atom.make(env, "depth");
         var term_depth_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_depth_key, &term_depth_value) == 0) return error.ArgumentError;
-        value.depth = try Texture.get(env, term_depth_value);
-        errdefer Texture.free(value.depth);
+        const depth = try Argument(Texture).get(env, term_depth_value);
+        errdefer depth.free();
+        value.depth = depth.data;
 
         return value;
     }
@@ -2312,8 +2586,10 @@ pub const NPatchInfo = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.NPatchInfo;
+    pub const resource_name = "n_patch_info";
 
-    pub const Resource = ResourceBase(Self, rl.NPatchInfo, "n_patch_info");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.NPatchInfo) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2369,8 +2645,9 @@ pub const NPatchInfo = struct {
         const term_source_key = Atom.make(env, "source");
         var term_source_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_source_key, &term_source_value) == 0) return error.ArgumentError;
-        value.source = try Rectangle.get(env, term_source_value);
-        errdefer Rectangle.free(value.source);
+        const source = try Argument(Rectangle).get(env, term_source_value);
+        errdefer source.free();
+        value.source = source.data;
 
         // left
 
@@ -2423,8 +2700,10 @@ pub const GlyphInfo = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.GlyphInfo;
+    pub const resource_name = "glyph_info";
 
-    pub const Resource = ResourceBase(Self, rl.GlyphInfo, "glyph_info");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.GlyphInfo) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2502,8 +2781,9 @@ pub const GlyphInfo = struct {
         const term_image_key = Atom.make(env, "image");
         var term_image_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_image_key, &term_image_value) == 0) return error.ArgumentError;
-        value.image = try Image.get(env, term_image_value);
-        errdefer Image.free(value.image);
+        const image = try Argument(Image).get(env, term_image_value);
+        errdefer image.free();
+        value.image = image.data;
 
         return value;
     }
@@ -2521,8 +2801,10 @@ pub const Font = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Font;
+    pub const resource_name = "font";
 
-    pub const Resource = ResourceBase(Self, rl.Font, "font");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Font) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2601,8 +2883,9 @@ pub const Font = struct {
         const term_texture_key = Atom.make(env, "texture");
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
-        value.texture = try Texture.get(env, term_texture_value);
-        errdefer Texture.free(value.texture);
+        const texture = try Argument(Texture).get(env, term_texture_value);
+        errdefer texture.free();
+        value.texture = texture.data;
 
         // recs
 
@@ -2611,9 +2894,10 @@ pub const Font = struct {
         if (e.enif_get_map_value(env, term, term_recs_key, &term_recs_value) == 0) return error.ArgumentError;
 
         const recs_lengths = [_]usize{@intCast(value.glyphCount)};
-        const recs_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_recs_value, &recs_lengths);
-        value.recs = try Array.get_c(Rectangle, rl.Rectangle, Self.allocator, env, term_recs_value, &recs_lengths);
-        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.recs, &recs_lengths, recs_keep);
+        var recs = try ArgumentArrayC(Rectangle, Rectangle.data_type, Self.allocator).get(env, term_recs_value, &recs_lengths);
+        defer recs.free_keep();
+        errdefer recs.free();
+        value.recs = recs.data;
 
         // glyphs
 
@@ -2622,9 +2906,10 @@ pub const Font = struct {
         if (e.enif_get_map_value(env, term, term_glyphs_key, &term_glyphs_value) == 0) return error.ArgumentError;
 
         const glyphs_lengths = [_]usize{@intCast(value.glyphCount)};
-        const glyphs_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_glyphs_value, &glyphs_lengths);
-        value.glyphs = try Array.get_c(GlyphInfo, rl.GlyphInfo, Self.allocator, env, term_glyphs_value, &glyphs_lengths);
-        errdefer Array.free_c(Rectangle, rl.Rectangle, Self.allocator, value.glyphs, &glyphs_lengths, glyphs_keep);
+        var glyphs = try ArgumentArrayC(GlyphInfo, GlyphInfo.data_type, Self.allocator).get(env, term_glyphs_value, &glyphs_lengths);
+        defer glyphs.free_keep();
+        errdefer glyphs.free();
+        value.glyphs = glyphs.data;
 
         return value;
     }
@@ -2642,8 +2927,10 @@ pub const Camera3D = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Camera3D;
+    pub const resource_name = "camera_3d";
 
-    pub const Resource = ResourceBase(Self, rl.Camera3D, "camera_3d");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera3D) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2693,24 +2980,27 @@ pub const Camera3D = struct {
         const term_position_key = Atom.make(env, "position");
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
-        value.position = try Vector3.get(env, term_position_value);
-        errdefer Vector3.free(value.position);
+        const position = try Argument(Vector3).get(env, term_position_value);
+        errdefer position.free();
+        value.position = position.data;
 
         // target
 
         const term_target_key = Atom.make(env, "target");
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
-        value.target = try Vector3.get(env, term_target_value);
-        errdefer Vector3.free(value.target);
+        const target = try Argument(Vector3).get(env, term_target_value);
+        errdefer target.free();
+        value.target = target.data;
 
         // up
 
         const term_up_key = Atom.make(env, "up");
         var term_up_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
-        value.up = try Vector3.get(env, term_up_value);
-        errdefer Vector3.free(value.up);
+        const up = try Argument(Vector3).get(env, term_up_value);
+        errdefer up.free();
+        value.up = up.data;
 
         // fovy
 
@@ -2742,8 +3032,10 @@ pub const Camera = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Camera;
+    pub const resource_name = "camera";
 
-    pub const Resource = ResourceBase(Self, rl.Camera, "camera");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2793,24 +3085,27 @@ pub const Camera = struct {
         const term_position_key = Atom.make(env, "position");
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
-        value.position = try Vector3.get(env, term_position_value);
-        errdefer Vector3.free(value.position);
+        const position = try Argument(Vector3).get(env, term_position_value);
+        errdefer position.free();
+        value.position = position.data;
 
         // target
 
         const term_target_key = Atom.make(env, "target");
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
-        value.target = try Vector3.get(env, term_target_value);
-        errdefer Vector3.free(value.target);
+        const target = try Argument(Vector3).get(env, term_target_value);
+        errdefer target.free();
+        value.target = target.data;
 
         // up
 
         const term_up_key = Atom.make(env, "up");
         var term_up_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_up_key, &term_up_value) == 0) return error.ArgumentError;
-        value.up = try Vector3.get(env, term_up_value);
-        errdefer Vector3.free(value.up);
+        const up = try Argument(Vector3).get(env, term_up_value);
+        errdefer up.free();
+        value.up = up.data;
 
         // fovy
 
@@ -2842,8 +3137,10 @@ pub const Camera2D = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Camera2D;
+    pub const resource_name = "camera_2d";
 
-    pub const Resource = ResourceBase(Self, rl.Camera2D, "camera_2d");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Camera2D) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -2887,16 +3184,18 @@ pub const Camera2D = struct {
         const term_offset_key = Atom.make(env, "offset");
         var term_offset_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_offset_key, &term_offset_value) == 0) return error.ArgumentError;
-        value.offset = try Vector2.get(env, term_offset_value);
-        errdefer Vector2.free(value.offset);
+        const offset = try Argument(Vector2).get(env, term_offset_value);
+        errdefer offset.free();
+        value.offset = offset.data;
 
         // target
 
         const term_target_key = Atom.make(env, "target");
         var term_target_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_target_key, &term_target_value) == 0) return error.ArgumentError;
-        value.target = try Vector2.get(env, term_target_value);
-        errdefer Vector2.free(value.target);
+        const target = try Argument(Vector2).get(env, term_target_value);
+        errdefer target.free();
+        value.target = target.data;
 
         // rotation
 
@@ -2928,8 +3227,10 @@ pub const Mesh = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Mesh;
+    pub const resource_name = "mesh";
 
-    pub const Resource = ResourceBase(Self, rl.Mesh, "mesh");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_VERTEX_BUFFERS: usize = @intCast(rl.MAX_MESH_VERTEX_BUFFERS);
 
@@ -3229,9 +3530,10 @@ pub const Mesh = struct {
         if (e.enif_get_map_value(env, term, term_bone_matrices_key, &term_bone_matrices_value) == 0) return error.ArgumentError;
 
         const bone_matrices_lengths = [_]usize{@intCast(value.boneCount)};
-        const bone_matrices_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bone_matrices_value, &bone_matrices_lengths);
-        value.boneMatrices = try Array.get_c(Matrix, rl.Matrix, Self.allocator, env, term_bone_matrices_value, &bone_matrices_lengths);
-        errdefer Array.free_c(Matrix, rl.Matrix, Self.allocator, value.boneMatrices, &bone_matrices_lengths, bone_matrices_keep);
+        var bone_matrices = try ArgumentArrayC(Matrix, Matrix.data_type, Self.allocator).get(env, term_bone_matrices_value, &bone_matrices_lengths);
+        defer bone_matrices.free_keep();
+        errdefer bone_matrices.free();
+        value.boneMatrices = bone_matrices.data;
 
         // vao_id
 
@@ -3288,8 +3590,10 @@ pub const Shader = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Shader;
+    pub const resource_name = "shader";
 
-    pub const Resource = ResourceBase(Self, rl.Shader, "shader");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_LOCATIONS: usize = @intCast(rl.RL_MAX_SHADER_LOCATIONS);
 
@@ -3352,8 +3656,10 @@ pub const MaterialMap = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.MaterialMap;
+    pub const resource_name = "material_map";
 
-    pub const Resource = ResourceBase(Self, rl.MaterialMap, "material_map");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.MaterialMap) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3391,16 +3697,18 @@ pub const MaterialMap = struct {
         const term_texture_key = Atom.make(env, "texture");
         var term_texture_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_texture_key, &term_texture_value) == 0) return error.ArgumentError;
-        value.texture = try Texture2D.get(env, term_texture_value);
-        errdefer Texture2D.free(value.texture);
+        const texture = try Argument(Texture2D).get(env, term_texture_value);
+        errdefer texture.free();
+        value.texture = texture.data;
 
         // color
 
         const term_color_key = Atom.make(env, "color");
         var term_color_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_color_key, &term_color_value) == 0) return error.ArgumentError;
-        value.color = try Color.get(env, term_color_value);
-        errdefer Color.free(value.color);
+        const color = try Argument(Color).get(env, term_color_value);
+        errdefer color.free();
+        value.color = color.data;
 
         // value
 
@@ -3425,8 +3733,10 @@ pub const Material = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Material;
+    pub const resource_name = "material";
 
-    pub const Resource = ResourceBase(Self, rl.Material, "material");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_MAPS: usize = @intCast(rl.MAX_MATERIAL_MAPS);
 
@@ -3469,8 +3779,9 @@ pub const Material = struct {
         const term_shader_key = Atom.make(env, "shader");
         var term_shader_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_shader_key, &term_shader_value) == 0) return error.ArgumentError;
-        value.shader = try Shader.get(env, term_shader_value);
-        errdefer Shader.free(value.shader);
+        const shader = try Argument(Shader).get(env, term_shader_value);
+        errdefer shader.free();
+        value.shader = shader.data;
 
         // maps
 
@@ -3479,9 +3790,10 @@ pub const Material = struct {
         if (e.enif_get_map_value(env, term, term_maps_key, &term_maps_value) == 0) return error.ArgumentError;
 
         const maps_lengths = [_]usize{@intCast(Self.MAX_MAPS)};
-        const maps_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_maps_value, &maps_lengths);
-        value.maps = try Array.get_c(MaterialMap, rl.MaterialMap, Self.allocator, env, term_maps_value, &maps_lengths);
-        errdefer Array.free_c(MaterialMap, rl.MaterialMap, Self.allocator, value.maps, &maps_lengths, maps_keep);
+        var maps = try ArgumentArrayC(MaterialMap, MaterialMap.data_type, Self.allocator).get(env, term_maps_value, &maps_lengths);
+        defer maps.free_keep();
+        errdefer maps.free();
+        value.maps = maps.data;
 
         // params
 
@@ -3507,8 +3819,10 @@ pub const Transform = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Transform;
+    pub const resource_name = "transform";
 
-    pub const Resource = ResourceBase(Self, rl.Transform, "transform");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Transform) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3546,24 +3860,27 @@ pub const Transform = struct {
         const term_translation_key = Atom.make(env, "translation");
         var term_translation_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_translation_key, &term_translation_value) == 0) return error.ArgumentError;
-        value.translation = try Vector3.get(env, term_translation_value);
-        errdefer Vector3.free(value.translation);
+        const translation = try Argument(Vector3).get(env, term_translation_value);
+        errdefer translation.free();
+        value.translation = translation.data;
 
         // rotation
 
         const term_rotation_key = Atom.make(env, "rotation");
         var term_rotation_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_rotation_key, &term_rotation_value) == 0) return error.ArgumentError;
-        value.rotation = try Quaternion.get(env, term_rotation_value);
-        errdefer Quaternion.free(value.rotation);
+        const rotation = try Argument(Quaternion).get(env, term_rotation_value);
+        errdefer rotation.free();
+        value.rotation = rotation.data;
 
         // scale
 
         const term_scale_key = Atom.make(env, "scale");
         var term_scale_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_scale_key, &term_scale_value) == 0) return error.ArgumentError;
-        value.scale = try Vector3.get(env, term_scale_value);
-        errdefer Vector3.free(value.scale);
+        const scale = try Argument(Vector3).get(env, term_scale_value);
+        errdefer scale.free();
+        value.scale = scale.data;
 
         return value;
     }
@@ -3581,8 +3898,10 @@ pub const BoneInfo = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.BoneInfo;
+    pub const resource_name = "bone_info";
 
-    pub const Resource = ResourceBase(Self, rl.BoneInfo, "bone_info");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_NAME: usize = get_field_array_length(rl.BoneInfo, "name");
 
@@ -3641,8 +3960,10 @@ pub const Model = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Model;
+    pub const resource_name = "model";
 
-    pub const Resource = ResourceBase(Self, rl.Model, "model");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Model) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3726,8 +4047,9 @@ pub const Model = struct {
         const term_transform_key = Atom.make(env, "transform");
         var term_transform_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_transform_key, &term_transform_value) == 0) return error.ArgumentError;
-        value.transform = try Matrix.get(env, term_transform_value);
-        errdefer Matrix.free(value.transform);
+        const transform = try Argument(Matrix).get(env, term_transform_value);
+        errdefer transform.free();
+        value.transform = transform.data;
 
         // mesh_count
 
@@ -3758,9 +4080,10 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_meshes_key, &term_meshes_value) == 0) return error.ArgumentError;
 
         const meshes_lengths = [_]usize{@intCast(value.meshCount)};
-        const meshes_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_meshes_value, &meshes_lengths);
-        value.meshes = try Array.get_c(Mesh, rl.Mesh, Self.allocator, env, term_meshes_value, &meshes_lengths);
-        errdefer Array.free_c(Mesh, rl.Mesh, Self.allocator, value.meshes, &meshes_lengths, meshes_keep);
+        var meshes = try ArgumentArrayC(Mesh, Mesh.data_type, Self.allocator).get(env, term_meshes_value, &meshes_lengths);
+        defer meshes.free_keep();
+        errdefer meshes.free();
+        value.meshes = meshes.data;
 
         // materials
         // = material_count
@@ -3770,9 +4093,10 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_materials_key, &term_materials_value) == 0) return error.ArgumentError;
 
         const materials_lengths = [_]usize{@intCast(value.materialCount)};
-        const materials_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_materials_value, &materials_lengths);
-        value.materials = try Array.get_c(Material, rl.Material, Self.allocator, env, term_materials_value, &materials_lengths);
-        errdefer Array.free_c(Material, rl.Material, Self.allocator, value.materials, &materials_lengths, materials_keep);
+        var materials = try ArgumentArrayC(Material, Material.data_type, Self.allocator).get(env, term_materials_value, &materials_lengths);
+        defer materials.free_keep();
+        errdefer materials.free();
+        value.materials = materials.data;
 
         // mesh_material
         // = mesh_count
@@ -3793,9 +4117,10 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_bones_key, &term_bones_value) == 0) return error.ArgumentError;
 
         const bones_lengths = [_]usize{@intCast(value.boneCount)};
-        const bones_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bones_value, &bones_lengths);
-        value.bones = try Array.get_c(BoneInfo, rl.BoneInfo, Self.allocator, env, term_bones_value, &bones_lengths);
-        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths, bones_keep);
+        var bones = try ArgumentArrayC(BoneInfo, BoneInfo.data_type, Self.allocator).get(env, term_bones_value, &bones_lengths);
+        defer bones.free_keep();
+        errdefer bones.free();
+        value.bones = bones.data;
 
         // bind_pose
         // = bone_count
@@ -3805,9 +4130,10 @@ pub const Model = struct {
         if (e.enif_get_map_value(env, term, term_bind_pose_key, &term_bind_pose_value) == 0) return error.ArgumentError;
 
         const bind_pose_lengths = [_]usize{@intCast(value.boneCount)};
-        const bind_pose_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bind_pose_value, &bind_pose_lengths);
-        value.bindPose = try Array.get_c(Transform, rl.Transform, Self.allocator, env, term_bind_pose_value, &bind_pose_lengths);
-        errdefer Array.free_c(Transform, rl.Transform, Self.allocator, value.bindPose, &bind_pose_lengths, bind_pose_keep);
+        var bind_pose = try ArgumentArrayC(Transform, Transform.data_type, Self.allocator).get(env, term_bind_pose_value, &bind_pose_lengths);
+        defer bind_pose.free_keep();
+        errdefer bind_pose.free();
+        value.bindPose = bind_pose.data;
 
         return value;
     }
@@ -3835,8 +4161,10 @@ pub const ModelAnimation = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.ModelAnimation;
+    pub const resource_name = "model_animation";
 
-    pub const Resource = ResourceBase(Self, rl.ModelAnimation, "model_animation");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_NAME: usize = get_field_array_length(rl.ModelAnimation, "name");
 
@@ -3909,9 +4237,10 @@ pub const ModelAnimation = struct {
         if (e.enif_get_map_value(env, term, term_bones_key, &term_bones_value) == 0) return error.ArgumentError;
 
         const bones_lengths = [_]usize{@intCast(value.boneCount)};
-        const bones_keep = try Array.get_c(TermIsResource, bool, Self.allocator, env, term_bones_value, &bones_lengths);
-        value.bones = try Array.get_c(BoneInfo, rl.BoneInfo, Self.allocator, env, term_bones_value, &bones_lengths);
-        errdefer Array.free_c(BoneInfo, rl.BoneInfo, Self.allocator, value.bones, &bones_lengths, bones_keep);
+        var bones = try ArgumentArrayC(BoneInfo, BoneInfo.data_type, Self.allocator).get(env, term_bones_value, &bones_lengths);
+        defer bones.free_keep();
+        errdefer bones.free();
+        value.bones = bones.data;
 
         // frame_poses
         // = frame_count , bone_count
@@ -3921,9 +4250,10 @@ pub const ModelAnimation = struct {
         if (e.enif_get_map_value(env, term, term_frame_poses_key, &term_frame_poses_value) == 0) return error.ArgumentError;
 
         const frame_poses_lengths = [_]usize{ @intCast(value.frameCount), @intCast(value.boneCount) };
-        const frame_poses_keep = try Array.get_c(TermIsResource, [*c]bool, Self.allocator, env, term_frame_poses_value, &frame_poses_lengths);
-        value.framePoses = try Array.get_c(Transform, [*c]rl.Transform, Self.allocator, env, term_frame_poses_value, &frame_poses_lengths);
-        errdefer Array.free_c(Transform, [*c]rl.Transform, Self.allocator, value.framePoses, &frame_poses_lengths, frame_poses_keep);
+        var frame_poses = try ArgumentArrayC(Transform, [*c]Transform.data_type, Self.allocator).get(env, term_frame_poses_value, &frame_poses_lengths);
+        defer frame_poses.free_keep();
+        errdefer frame_poses.free();
+        value.framePoses = frame_poses.data;
 
         // name
 
@@ -3948,8 +4278,10 @@ pub const Ray = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Ray;
+    pub const resource_name = "ray";
 
-    pub const Resource = ResourceBase(Self, rl.Ray, "ray");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Ray) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -3981,16 +4313,18 @@ pub const Ray = struct {
         const term_position_key = Atom.make(env, "position");
         var term_position_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_position_key, &term_position_value) == 0) return error.ArgumentError;
-        value.position = try Vector3.get(env, term_position_value);
-        errdefer Vector3.free(value.position);
+        const position = try Argument(Vector3).get(env, term_position_value);
+        errdefer position.free();
+        value.position = position.data;
 
         // direction
 
         const term_direction_key = Atom.make(env, "direction");
         var term_direction_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_direction_key, &term_direction_value) == 0) return error.ArgumentError;
-        value.direction = try Vector3.get(env, term_direction_value);
-        errdefer Vector3.free(value.direction);
+        const direction = try Argument(Vector3).get(env, term_direction_value);
+        errdefer direction.free();
+        value.direction = direction.data;
 
         return value;
     }
@@ -4008,8 +4342,10 @@ pub const RayCollision = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.RayCollision;
+    pub const resource_name = "ray_collision";
 
-    pub const Resource = ResourceBase(Self, rl.RayCollision, "ray_collision");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.RayCollision) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4067,16 +4403,18 @@ pub const RayCollision = struct {
         const term_point_key = Atom.make(env, "point");
         var term_point_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_point_key, &term_point_value) == 0) return error.ArgumentError;
-        value.point = try Vector3.get(env, term_point_value);
-        errdefer Vector3.free(value.point);
+        const point = try Argument(Vector3).get(env, term_point_value);
+        errdefer point.free();
+        value.point = point.data;
 
         // normal
 
         const term_normal_key = Atom.make(env, "normal");
         var term_normal_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_normal_key, &term_normal_value) == 0) return error.ArgumentError;
-        value.normal = try Vector3.get(env, term_normal_value);
-        errdefer Vector3.free(value.normal);
+        const normal = try Argument(Vector3).get(env, term_normal_value);
+        errdefer normal.free();
+        value.normal = normal.data;
 
         return value;
     }
@@ -4094,8 +4432,10 @@ pub const BoundingBox = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.BoundingBox;
+    pub const resource_name = "bounding_box";
 
-    pub const Resource = ResourceBase(Self, rl.BoundingBox, "bounding_box");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.BoundingBox) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4127,16 +4467,18 @@ pub const BoundingBox = struct {
         const term_min_key = Atom.make(env, "min");
         var term_min_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_min_key, &term_min_value) == 0) return error.ArgumentError;
-        value.min = try Vector3.get(env, term_min_value);
-        errdefer Vector3.free(value.min);
+        const min = try Argument(Vector3).get(env, term_min_value);
+        errdefer min.free();
+        value.min = min.data;
 
         // max
 
         const term_max_key = Atom.make(env, "max");
         var term_max_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_max_key, &term_max_value) == 0) return error.ArgumentError;
-        value.max = try Vector3.get(env, term_max_value);
-        errdefer Vector3.free(value.max);
+        const max = try Argument(Vector3).get(env, term_max_value);
+        errdefer max.free();
+        value.max = max.data;
 
         return value;
     }
@@ -4154,8 +4496,10 @@ pub const Wave = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Wave;
+    pub const resource_name = "wave";
 
-    pub const Resource = ResourceBase(Self, rl.Wave, "wave");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Wave) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4245,8 +4589,9 @@ pub const Wave = struct {
         const term_data_key = Atom.make(env, "data");
         var term_data_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_data_key, &term_data_value) == 0) return error.ArgumentError;
-        value.data = @ptrCast(try Binary.get_c(Self.allocator, env, term_data_value, data_size));
-        errdefer Binary.free_c(Self.allocator, value.data, data_size);
+        const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
+        errdefer data.free();
+        value.data = data.data;
 
         return value;
     }
@@ -4269,8 +4614,10 @@ pub const AudioBuffer = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = *rl.rAudioBuffer;
+    pub const resource_name = "audio_buffer";
 
-    pub const Resource = ResourceBase(Self, *rl.rAudioBuffer, "audio_buffer");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: ?*rl.rAudioBuffer) e.ErlNifTerm {
         if (value) |v| {
@@ -4304,8 +4651,10 @@ pub const AudioProcessor = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = *rl.rAudioProcessor;
+    pub const resource_name = "audio_processor";
 
-    pub const Resource = ResourceBase(Self, *rl.rAudioProcessor, "audio_processor");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: ?*rl.rAudioProcessor) e.ErlNifTerm {
         if (value) |v| {
@@ -4339,8 +4688,10 @@ pub const AudioStream = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.AudioStream;
+    pub const resource_name = "audio_stream";
 
-    pub const Resource = ResourceBase(Self, rl.AudioStream, "audio_stream");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.AudioStream) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4438,8 +4789,10 @@ pub const Sound = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Sound;
+    pub const resource_name = "sound";
 
-    pub const Resource = ResourceBase(Self, rl.Sound, "sound");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Sound) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4471,8 +4824,9 @@ pub const Sound = struct {
         const term_stream_key = Atom.make(env, "stream");
         var term_stream_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
-        value.stream = try AudioStream.get(env, term_stream_value);
-        errdefer AudioStream.free(value.stream);
+        const stream = try Argument(AudioStream).get(env, term_stream_value);
+        errdefer stream.free();
+        value.stream = stream.data;
 
         // frame_count
 
@@ -4497,10 +4851,12 @@ pub const MusicContextData = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = *anyopaque;
+    pub const resource_name = "music_context_data";
 
-    pub const Resource = ResourceBase(Self, *anyopaque, "music_context_data");
+    pub const Resource = ResourceBase(Self);
 
-    pub fn make(env: ?*e.ErlNifEnv, value: ?*anyopaque) e.ErlNifTerm {
+    pub fn make(env: ?*e.ErlNifEnv, value: ?data_type) e.ErlNifTerm {
         if (value) |v| {
             const resource = Self.Resource.create(v) catch return Atom.make(env, "nil");
             defer Self.Resource.release(resource);
@@ -4511,7 +4867,7 @@ pub const MusicContextData = struct {
         return Atom.make(env, "nil");
     }
 
-    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !?*anyopaque {
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !?data_type {
         if (e.enif_is_identical(Atom.make(env, "nil"), term) == 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
@@ -4519,7 +4875,7 @@ pub const MusicContextData = struct {
         return null;
     }
 
-    pub fn free(value: ?*anyopaque) void {
+    pub fn free(value: ?data_type) void {
         _ = value;
     }
 };
@@ -4532,8 +4888,10 @@ pub const Music = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.Music;
+    pub const resource_name = "music";
 
-    pub const Resource = ResourceBase(Self, rl.Music, "music");
+    pub const Resource = ResourceBase(Self);
 
     pub fn make(env: ?*e.ErlNifEnv, value: rl.Music) e.ErlNifTerm {
         var term = e.enif_make_new_map(env);
@@ -4583,8 +4941,9 @@ pub const Music = struct {
         const term_stream_key = Atom.make(env, "stream");
         var term_stream_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
-        value.stream = try AudioStream.get(env, term_stream_value);
-        errdefer AudioStream.free(value.stream);
+        const stream = try Argument(AudioStream).get(env, term_stream_value);
+        errdefer stream.free();
+        value.stream = stream.data;
 
         // frame_count
 
@@ -4631,8 +4990,10 @@ pub const VrDeviceInfo = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.VrDeviceInfo;
+    pub const resource_name = "vr_device_info";
 
-    pub const Resource = ResourceBase(Self, rl.VrDeviceInfo, "vr_device_info");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_LENS_DISTORTION_VALUES: usize = get_field_array_length(rl.VrDeviceInfo, "lensDistortionValues");
 
@@ -4786,8 +5147,10 @@ pub const VrStereoConfig = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.VrStereoConfig;
+    pub const resource_name = "vr_stereo_config";
 
-    pub const Resource = ResourceBase(Self, rl.VrStereoConfig, "vr_stereo_config");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_PROJECTION: usize = get_field_array_length(rl.VrStereoConfig, "projection");
 
@@ -4871,18 +5234,18 @@ pub const VrStereoConfig = struct {
         const term_projection_key = Atom.make(env, "projection");
         var term_projection_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_projection_key, &term_projection_value) == 0) return error.ArgumentError;
-        const projection_keep = try Array.get(TermIsResource, bool, Self.allocator, env, term_projection_value);
-        try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_projection_value, &value.projection);
-        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.projection, projection_keep);
+        var projection = try ArgumentArrayCopy(Matrix, Matrix.data_type, Self.allocator).get(env, term_projection_value, &value.projection);
+        defer projection.free_keep();
+        errdefer projection.free();
 
         // view_offset
 
         const term_view_offset_key = Atom.make(env, "view_offset");
         var term_view_offset_value: e.ErlNifTerm = undefined;
         if (e.enif_get_map_value(env, term, term_view_offset_key, &term_view_offset_value) == 0) return error.ArgumentError;
-        const view_offset_keep = try Array.get(TermIsResource, bool, Self.allocator, env, term_view_offset_value);
-        try Array.get_copy(Matrix, rl.Matrix, Self.allocator, env, term_view_offset_value, &value.viewOffset);
-        errdefer Array.free_copy(Matrix, rl.Matrix, Self.allocator, &value.viewOffset, view_offset_keep);
+        var view_offset = try ArgumentArrayCopy(Matrix, Matrix.data_type, Self.allocator).get(env, term_view_offset_value, &value.viewOffset);
+        defer view_offset.free_keep();
+        errdefer view_offset.free();
 
         // left_lens_center
 
@@ -4948,8 +5311,10 @@ pub const FilePathList = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.FilePathList;
+    pub const resource_name = "file_path_list";
 
-    pub const Resource = ResourceBase(Self, rl.FilePathList, "file_path_list");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_FILEPATH_CAPACITY: usize = @intCast(rl.MAX_FILEPATH_CAPACITY);
 
@@ -5029,8 +5394,10 @@ pub const AutomationEvent = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.AutomationEvent;
+    pub const resource_name = "automation_event";
 
-    pub const Resource = ResourceBase(Self, rl.AutomationEvent, "automation_event");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_PARAMS: usize = get_field_array_length(rl.AutomationEvent, "params");
 
@@ -5103,8 +5470,10 @@ pub const AutomationEventList = struct {
     const Self = @This();
 
     pub const allocator = rl.allocator;
+    pub const data_type = rl.AutomationEventList;
+    pub const resource_name = "automation_event_list";
 
-    pub const Resource = ResourceBase(Self, rl.AutomationEventList, "automation_event_list");
+    pub const Resource = ResourceBase(Self);
 
     pub const MAX_AUTOMATION_EVENTS: usize = @intCast(rl.MAX_AUTOMATION_EVENTS);
 
@@ -5163,8 +5532,10 @@ pub const AutomationEventList = struct {
         if (e.enif_get_map_value(env, term, term_events_key, &term_events_value) == 0) return error.ArgumentError;
 
         const events_lengths = [_]usize{@intCast(value.capacity)};
-        value.events = try Array.get_c(AutomationEvent, rl.AutomationEvent, Self.allocator, env, term_events_value, &events_lengths);
-        errdefer Array.free_c(AutomationEvent, rl.AutomationEvent, Self.allocator, value.events, &events_lengths);
+        var events = try ArgumentArrayC(AutomationEvent, AutomationEvent.data_type, Self.allocator).get(env, term_events_value, &events_lengths);
+        defer events.free_keep();
+        errdefer events.free();
+        value.events = events.data;
 
         return value;
     }
