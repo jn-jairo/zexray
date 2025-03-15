@@ -77,3 +77,11 @@ pub fn maybe_make_struct_or_resource(comptime T: type, env: ?*e.ErlNifEnv, term:
         return maybe_make_struct_as_resource(T, env, value, return_resource);
     }
 }
+
+pub fn must_return_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm, index: usize) bool {
+    if (argc == index + 1) {
+        return e.enif_is_identical(types.Atom.make(env, "resource"), argv[index]) != 0;
+    }
+
+    return false;
+}
