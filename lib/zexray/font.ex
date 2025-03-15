@@ -14,7 +14,10 @@ defmodule Zexray.Font do
           file_name :: String.t(),
           return :: :value | :resource
         ) :: Zexray.Type.Font.t_nif()
-  def load(file_name, return \\ :value)
+  def load(
+        file_name,
+        return \\ :value
+      )
       when is_binary(file_name) and
              is_nif_return(return) do
     NIF.load_font(

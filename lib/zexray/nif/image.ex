@@ -34,8 +34,13 @@ defmodule Zexray.NIF.Image do
               format :: integer,
               mipmaps :: integer
             ) :: non_neg_integer
-      def image_get_data_size(_width, _height, _format, _mipmaps),
-        do: :erlang.nif_error(:undef)
+      def image_get_data_size(
+            _width,
+            _height,
+            _format,
+            _mipmaps
+          ),
+          do: :erlang.nif_error(:undef)
 
       ######################
       #  Image generation  #
@@ -56,8 +61,13 @@ defmodule Zexray.NIF.Image do
               color :: map | reference,
               return :: :value | :resource
             ) :: map | reference
-      def gen_image_color(_width, _height, _color, _return \\ :value),
-        do: :erlang.nif_error(:undef)
+      def gen_image_color(
+            _width,
+            _height,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
 
       ########################
       #  Image manipulation  #
@@ -77,8 +87,12 @@ defmodule Zexray.NIF.Image do
               crop :: map | reference,
               return :: :value | :resource
             ) :: map | reference
-      def image_crop(_image, _crop, _return \\ :value),
-        do: :erlang.nif_error(:undef)
+      def image_crop(
+            _image,
+            _crop,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
     end
   end
 end

@@ -11,7 +11,12 @@ defmodule Zexray.Image do
           format :: Zexray.Enum.PixelFormat.t_all(),
           mipmaps :: integer
         ) :: non_neg_integer
-  def data_size(width, height, format, mipmaps \\ 1)
+  def data_size(
+        width,
+        height,
+        format,
+        mipmaps \\ 1
+      )
       when is_integer(width) and
              is_integer(height) and
              is_like_pixel_format(format) and
@@ -38,7 +43,12 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_color(width, height, color, return \\ :value)
+  def gen_color(
+        width,
+        height,
+        color,
+        return \\ :value
+      )
       when is_integer(width) and
              is_integer(height) and
              is_like_color(color) and
@@ -65,7 +75,11 @@ defmodule Zexray.Image do
           crop :: Zexray.Type.Rectangle.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def crop(image, crop, return \\ :value)
+  def crop(
+        image,
+        crop,
+        return \\ :value
+      )
       when is_like_image(image) and
              is_like_rectangle(crop) and
              is_nif_return(return) do

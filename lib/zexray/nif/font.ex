@@ -26,8 +26,11 @@ defmodule Zexray.NIF.Font do
               file_name :: String.t(),
               return :: :value | :resource
             ) :: map | reference
-      def load_font(_file_name, _return \\ :value),
-        do: :erlang.nif_error(:undef)
+      def load_font(
+            _file_name,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
     end
   end
 end
