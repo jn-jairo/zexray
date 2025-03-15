@@ -26,6 +26,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.AutomationEvent
   use Zexray.NIF.FileSystem
   use Zexray.NIF.Font
+  use Zexray.NIF.FrameControl
   use Zexray.NIF.Image
   use Zexray.NIF.Material
   use Zexray.NIF.Mesh
@@ -33,17 +34,20 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Shader
   use Zexray.NIF.Util
   use Zexray.NIF.Vr
+  use Zexray.NIF.Window
 
   @nifs @nifs_resource ++
           @nifs_audio ++
           @nifs_automation_event ++
           @nifs_file_system ++
           @nifs_font ++
+          @nifs_frame_control ++
           @nifs_image ++
           @nifs_material ++
           @nifs_mesh ++
           @nifs_model ++
           @nifs_shader ++
           @nifs_util ++
-          @nifs_vr
+          @nifs_vr ++
+          @nifs_window
 end
