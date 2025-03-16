@@ -50,7 +50,7 @@ defmodule Zexray.WindowTest do
   end
 
   test "focused" do
-    assert :ok = Window.set_focused()
+    assert :ok = Window.focus()
     assert Window.focused?()
   end
 

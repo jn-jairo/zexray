@@ -3,13 +3,14 @@ defmodule Zexray.Window do
 
   import Zexray.Guard
 
-  ############
-  #  Window  #
-  ############
+  ####################
+  #  Initialization  #
+  ####################
 
   @doc """
   Initialize window and OpenGL context
   """
+  @doc group: :initialization
   @spec init(
           width :: integer,
           height :: integer,
@@ -33,14 +34,20 @@ defmodule Zexray.Window do
   @doc """
   Close window and unload OpenGL context
   """
+  @doc group: :initialization
   @spec close() :: :ok
   def close() do
     NIF.close_window()
   end
 
+  ###########
+  #  State  #
+  ###########
+
   @doc """
   Check if application should close (KEY_ESCAPE pressed or windows close icon clicked)
   """
+  @doc group: :state
   @spec should_close?() :: boolean
   def should_close?() do
     NIF.window_should_close()
@@ -49,6 +56,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window has been initialized successfully
   """
+  @doc group: :state
   @spec ready?() :: boolean
   def ready?() do
     NIF.is_window_ready()
@@ -57,6 +65,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window is currently fullscreen
   """
+  @doc group: :state
   @spec fullscreen?() :: boolean
   def fullscreen?() do
     NIF.is_window_fullscreen()
@@ -65,6 +74,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window is currently hidden
   """
+  @doc group: :state
   @spec hidden?() :: boolean
   def hidden?() do
     NIF.is_window_hidden()
@@ -73,6 +83,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window is currently minimized
   """
+  @doc group: :state
   @spec minimized?() :: boolean
   def minimized?() do
     NIF.is_window_minimized()
@@ -81,6 +92,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window is currently maximized
   """
+  @doc group: :state
   @spec maximized?() :: boolean
   def maximized?() do
     NIF.is_window_maximized()
@@ -89,6 +101,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window is currently focused
   """
+  @doc group: :state
   @spec focused?() :: boolean
   def focused?() do
     NIF.is_window_focused()
@@ -97,6 +110,7 @@ defmodule Zexray.Window do
   @doc """
   Check if window has been resized last frame
   """
+  @doc group: :state
   @spec resized?() :: boolean
   def resized?() do
     NIF.is_window_resized()
@@ -105,6 +119,7 @@ defmodule Zexray.Window do
   @doc """
   Check if one specific window flag is enabled
   """
+  @doc group: :state
   @spec state?(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: boolean
   def state?(flag)
       when is_like_config_flag(flag) or
@@ -115,6 +130,7 @@ defmodule Zexray.Window do
   @doc """
   Set window configuration state using flags
   """
+  @doc group: :state
   @spec set_state(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
   def set_state(flag)
       when is_like_config_flag(flag) or
@@ -125,6 +141,7 @@ defmodule Zexray.Window do
   @doc """
   Clear window configuration state flags
   """
+  @doc group: :state
   @spec clear_state(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
   def clear_state(flag)
       when is_like_config_flag(flag) or
@@ -133,8 +150,31 @@ defmodule Zexray.Window do
   end
 
   @doc """
+  Enable waiting for events on EndDrawing(), no automatic event polling
+  """
+  @doc group: :state
+  @spec enable_event_waiting() :: :ok
+  def enable_event_waiting() do
+    NIF.enable_event_waiting()
+  end
+
+  @doc """
+  Disable waiting for events on EndDrawing(), automatic events polling
+  """
+  @doc group: :state
+  @spec disable_event_waiting() :: :ok
+  def disable_event_waiting() do
+    NIF.disable_event_waiting()
+  end
+
+  ############
+  #  Action  #
+  ############
+
+  @doc """
   Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
   """
+  @doc group: :action
   @spec toggle_fullscreen() :: :ok
   def toggle_fullscreen() do
     NIF.toggle_fullscreen()
@@ -143,6 +183,7 @@ defmodule Zexray.Window do
   @doc """
   Toggle window state: borderless windowed, resizes window to match monitor resolution
   """
+  @doc group: :action
   @spec toggle_borderless() :: :ok
   def toggle_borderless() do
     NIF.toggle_borderless_windowed()
@@ -151,6 +192,7 @@ defmodule Zexray.Window do
   @doc """
   Set window state: maximized, if resizable
   """
+  @doc group: :action
   @spec maximize() :: :ok
   def maximize() do
     NIF.maximize_window()
@@ -159,6 +201,7 @@ defmodule Zexray.Window do
   @doc """
   Set window state: minimized, if resizable
   """
+  @doc group: :action
   @spec minimize() :: :ok
   def minimize() do
     NIF.minimize_window()
@@ -167,14 +210,29 @@ defmodule Zexray.Window do
   @doc """
   Set window state: not minimized/maximized
   """
+  @doc group: :action
   @spec restore() :: :ok
   def restore() do
     NIF.restore_window()
   end
 
   @doc """
-  Clear window configuration state flags
+  Set window focused
   """
+  @doc group: :action
+  @spec focus() :: :ok
+  def focus() do
+    NIF.set_window_focused()
+  end
+
+  ##############
+  #  Property  #
+  ##############
+
+  @doc """
+  Set icon for window (single image, RGBA 32bit)
+  """
+  @doc group: :property
   @spec set_icon(image :: Zexray.Type.Image.t_all()) :: :ok
   def set_icon(image)
       when is_like_image(image) do
@@ -184,6 +242,7 @@ defmodule Zexray.Window do
   @doc """
   Set icon for window (multiple images, RGBA 32bit)
   """
+  @doc group: :property
   @spec set_icons(images :: [Zexray.Type.Image.t_all()]) :: :ok
   def set_icons(images)
       when is_list(images) and (images == [] or is_like_image(hd(images))) do
@@ -193,6 +252,7 @@ defmodule Zexray.Window do
   @doc """
   Set title for window
   """
+  @doc group: :property
   @spec set_title(title :: binary) :: :ok
   def set_title(title)
       when is_binary(title) do
@@ -202,6 +262,7 @@ defmodule Zexray.Window do
   @doc """
   Set window position on screen
   """
+  @doc group: :property
   @spec set_position(
           x :: integer,
           y :: integer
@@ -219,17 +280,9 @@ defmodule Zexray.Window do
   end
 
   @doc """
-  Set monitor for the current window
-  """
-  @spec set_monitor(monitor :: integer) :: :ok
-  def set_monitor(monitor)
-      when is_integer(monitor) do
-    NIF.set_window_monitor(monitor)
-  end
-
-  @doc """
   Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
   """
+  @doc group: :property
   @spec set_min_size(
           width :: integer,
           height :: integer
@@ -249,6 +302,7 @@ defmodule Zexray.Window do
   @doc """
   Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
   """
+  @doc group: :property
   @spec set_max_size(
           width :: integer,
           height :: integer
@@ -268,6 +322,7 @@ defmodule Zexray.Window do
   @doc """
   Set window dimensions
   """
+  @doc group: :property
   @spec set_size(
           width :: integer,
           height :: integer
@@ -287,6 +342,7 @@ defmodule Zexray.Window do
   @doc """
   Set window opacity [0.0f..1.0f]
   """
+  @doc group: :property
   @spec set_opacity(opacity :: float) :: :ok
   def set_opacity(opacity)
       when is_float(opacity) do
@@ -294,16 +350,9 @@ defmodule Zexray.Window do
   end
 
   @doc """
-  Set window focused
-  """
-  @spec set_focused() :: :ok
-  def set_focused() do
-    NIF.set_window_focused()
-  end
-
-  @doc """
   Get current screen width
   """
+  @doc group: :property
   @spec get_screen_width() :: integer
   def get_screen_width() do
     NIF.get_screen_width()
@@ -312,6 +361,7 @@ defmodule Zexray.Window do
   @doc """
   Get current screen height
   """
+  @doc group: :property
   @spec get_screen_height() :: integer
   def get_screen_height() do
     NIF.get_screen_height()
@@ -320,6 +370,7 @@ defmodule Zexray.Window do
   @doc """
   Get current render width (it considers HiDPI)
   """
+  @doc group: :property
   @spec get_render_width() :: integer
   def get_render_width() do
     NIF.get_render_width()
@@ -328,14 +379,52 @@ defmodule Zexray.Window do
   @doc """
   Get current render height (it considers HiDPI)
   """
+  @doc group: :property
   @spec get_render_height() :: integer
   def get_render_height() do
     NIF.get_render_height()
   end
 
   @doc """
+  Get window position XY on monitor
+  """
+  @doc group: :property
+  @spec get_position(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  def get_position(return \\ :value)
+      when is_nif_return(return) do
+    NIF.get_window_position(return)
+    |> Zexray.Type.Vector2.from_nif()
+  end
+
+  @doc """
+  Get window scale DPI factor
+  """
+  @doc group: :property
+  @spec get_scale_dpi(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  def get_scale_dpi(return \\ :value)
+      when is_nif_return(return) do
+    NIF.get_window_scale_dpi(return)
+    |> Zexray.Type.Vector2.from_nif()
+  end
+
+  #############
+  #  Monitor  #
+  #############
+
+  @doc """
+  Set monitor for the current window
+  """
+  @doc group: :monitor
+  @spec set_monitor(monitor :: integer) :: :ok
+  def set_monitor(monitor)
+      when is_integer(monitor) do
+    NIF.set_window_monitor(monitor)
+  end
+
+  @doc """
   Get number of connected monitors
   """
+  @doc group: :monitor
   @spec get_monitor_count() :: integer
   def get_monitor_count() do
     NIF.get_monitor_count()
@@ -344,6 +433,7 @@ defmodule Zexray.Window do
   @doc """
   Get current monitor where window is placed
   """
+  @doc group: :monitor
   @spec get_current_monitor() :: integer
   def get_current_monitor() do
     NIF.get_current_monitor()
@@ -352,6 +442,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor position
   """
+  @doc group: :monitor
   @spec get_monitor_position(
           monitor :: integer,
           return :: :value | :resource
@@ -372,6 +463,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor width (current video mode used by monitor)
   """
+  @doc group: :monitor
   @spec get_monitor_width(monitor :: integer) :: integer
   def get_monitor_width(monitor)
       when is_integer(monitor) do
@@ -381,6 +473,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor height (current video mode used by monitor)
   """
+  @doc group: :monitor
   @spec get_monitor_height(monitor :: integer) :: integer
   def get_monitor_height(monitor)
       when is_integer(monitor) do
@@ -390,6 +483,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor physical width in millimetres
   """
+  @doc group: :monitor
   @spec get_monitor_physical_width(monitor :: integer) :: integer
   def get_monitor_physical_width(monitor)
       when is_integer(monitor) do
@@ -399,6 +493,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor physical height in millimetres
   """
+  @doc group: :monitor
   @spec get_monitor_physical_height(monitor :: integer) :: integer
   def get_monitor_physical_height(monitor)
       when is_integer(monitor) do
@@ -408,6 +503,7 @@ defmodule Zexray.Window do
   @doc """
   Get specified monitor refresh rate
   """
+  @doc group: :monitor
   @spec get_monitor_refresh_rate(monitor :: integer) :: integer
   def get_monitor_refresh_rate(monitor)
       when is_integer(monitor) do
@@ -415,28 +511,9 @@ defmodule Zexray.Window do
   end
 
   @doc """
-  Get window position XY on monitor
-  """
-  @spec get_position(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  def get_position(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_window_position(return)
-    |> Zexray.Type.Vector2.from_nif()
-  end
-
-  @doc """
-  Get window scale DPI factor
-  """
-  @spec get_scale_dpi(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  def get_scale_dpi(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_window_scale_dpi(return)
-    |> Zexray.Type.Vector2.from_nif()
-  end
-
-  @doc """
   Get the human-readable, UTF-8 encoded name of the specified monitor
   """
+  @doc group: :monitor
   @spec get_monitor_name(monitor :: integer) :: binary
   def get_monitor_name(monitor)
       when is_integer(monitor) do
@@ -446,6 +523,7 @@ defmodule Zexray.Window do
   @doc """
   Set clipboard text content
   """
+  @doc group: :clipboard
   @spec set_clipboard_text(text :: binary) :: :ok
   def set_clipboard_text(text)
       when is_binary(text) do
@@ -455,6 +533,7 @@ defmodule Zexray.Window do
   @doc """
   Get clipboard text content
   """
+  @doc group: :clipboard
   @spec get_clipboard_text() :: binary
   def get_clipboard_text() do
     NIF.get_clipboard_text()
@@ -463,26 +542,11 @@ defmodule Zexray.Window do
   @doc """
   Get clipboard image content
   """
+  @doc group: :clipboard
   @spec get_clipboard_image(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
   def get_clipboard_image(return \\ :value)
       when is_nif_return(return) do
     NIF.get_clipboard_image(return)
     |> Zexray.Type.Image.from_nif()
-  end
-
-  @doc """
-  Enable waiting for events on EndDrawing(), no automatic event polling
-  """
-  @spec enable_event_waiting() :: :ok
-  def enable_event_waiting() do
-    NIF.enable_event_waiting()
-  end
-
-  @doc """
-  Disable waiting for events on EndDrawing(), automatic events polling
-  """
-  @spec disable_event_waiting() :: :ok
-  def disable_event_waiting() do
-    NIF.disable_event_waiting()
   end
 end
