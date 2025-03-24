@@ -24,17 +24,39 @@ pub fn build(b: *std.Build) !void {
     try writer.writeAll(" ");
     try writer.writeAll(config_raylib_tracelog_debug);
 
+    if (erts_include_path) |path| {
+        const erl_nif_path = try std.fs.path.join(b.allocator, &[_][]const u8{ path, "erl_nif.h" });
+        try writer.writeAll(" -include ");
+        try writer.writeAll(erl_nif_path);
+        try writer.writeAll(" -DRL_MALLOC(sz)=enif_alloc(sz)");
+        try writer.writeAll(" -DRL_CALLOC(n,sz)=enif_alloc(n*sz)");
+        try writer.writeAll(" -DRL_REALLOC(ptr,sz)=enif_realloc(ptr,sz)");
+        try writer.writeAll(" -DRL_FREE(ptr)=enif_free(ptr)");
+    }
+
     const config: []const u8 = config_buf.items;
 
     const raylib_artifact = getRaylib(b, target, optimize, config);
 
+    if (erts_include_path) |path| {
+        raylib_artifact.addSystemIncludePath(.{ .cwd_relative = path });
+    } else {
+        raylib_artifact.step.dependOn(&b.addFail("Missing include path for nif headers").step);
+    }
+
     // nif_lib
 
-    const nif_lib = b.addSharedLibrary(.{
-        .name = "zexray",
+    const nif_mod = b.createModule(.{
         .root_source_file = b.path("src/nif.zig"),
         .target = target,
         .optimize = optimize,
+    });
+
+    const nif_lib = b.addLibrary(.{
+        .linkage = .dynamic,
+        .name = "zexray",
+        .root_module = nif_mod,
+        .use_lld = false,
     });
 
     nif_lib.linkLibrary(raylib_artifact);
@@ -42,6 +64,8 @@ pub fn build(b: *std.Build) !void {
 
     if (erts_include_path) |path| {
         nif_lib.addSystemIncludePath(.{ .cwd_relative = path });
+    } else {
+        raylib_artifact.step.dependOn(&b.addFail("Missing include path for nif headers").step);
     }
 
     b.installArtifact(nif_lib);

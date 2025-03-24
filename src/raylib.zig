@@ -1,10 +1,12 @@
 const raylib = @cImport({
     @cInclude("raylib.h");
     @cInclude("raylib_config.h");
+    @cInclude("stdio.h");
 });
 
 const std = @import("std");
+const e = @import("./erl_nif.zig");
 
-pub const allocator = std.heap.raw_c_allocator;
+pub const allocator = e.allocator;
 
 pub usingnamespace raylib;

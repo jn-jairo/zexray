@@ -29,7 +29,7 @@ pub fn raise_exception(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, err: an
         const debug_info = std.debug.getSelfDebugInfo() catch null;
         if (debug_info) |info| {
             writer.writeAll("\n\n") catch unreachable;
-            std.debug.writeStackTrace(trace.*, writer, allocator, info, std.io.tty.detectConfig(std.io.getStdErr())) catch unreachable;
+            std.debug.writeStackTrace(trace.*, writer, info, std.io.tty.detectConfig(std.io.getStdErr())) catch unreachable;
         }
     }
 

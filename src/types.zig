@@ -9,11 +9,11 @@ const resources = @import("./resources.zig");
 fn get_field_array_length(comptime T: type, field_name: []const u8) usize {
     return @intCast(blk: {
         switch (@typeInfo(T)) {
-            .Struct => |struct_info| {
+            .@"struct" => |struct_info| {
                 for (struct_info.fields) |field| {
                     if (std.mem.eql(u8, field.name, field_name)) {
                         switch (@typeInfo(field.type)) {
-                            .Array => |field_info| {
+                            .array => |field_info| {
                                 break :blk field_info.len;
                             },
                             else => @compileError("Invalid " ++ @typeName(T) ++ "." ++ field_name ++ " type"),
@@ -29,9 +29,9 @@ fn get_field_array_length(comptime T: type, field_name: []const u8) usize {
 
 pub fn keep_type(comptime T: type) type {
     switch (@typeInfo(T)) {
-        .Pointer => |info| {
+        .pointer => |info| {
             return @Type(.{
-                .Pointer = .{
+                .pointer = .{
                     .size = info.size,
                     .is_const = info.is_const,
                     .is_volatile = info.is_volatile,
@@ -39,22 +39,22 @@ pub fn keep_type(comptime T: type) type {
                     .address_space = info.address_space,
                     .child = keep_type(info.child),
                     .is_allowzero = info.is_allowzero,
-                    .sentinel = info.sentinel,
+                    .sentinel_ptr = info.sentinel_ptr,
                 },
             });
         },
-        .Array => |info| {
+        .array => |info| {
             return @Type(.{
-                .Array = .{
+                .array = .{
                     .len = info.len,
                     .child = keep_type(info.child),
-                    .sentinel = info.sentinel,
+                    .sentinel_ptr = info.sentinel_ptr,
                 },
             });
         },
-        .Optional => |info| {
+        .optional => |info| {
             return @Type(.{
-                .Optional = .{
+                .optional = .{
                     .child = keep_type(info.child),
                 },
             });
@@ -349,7 +349,7 @@ pub const CString = struct {
     }
 
     pub fn get_c_unknown(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm) ![*c]u8 {
-        return get_c(allocator, env, term, get_size(env, term));
+        return get_c(allocator, env, term, try get_size(env, term));
     }
 
     pub fn get_copy(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, dest: []u8) !void {
@@ -423,8 +423,8 @@ pub const Array = struct {
         if (values.len > 0) {
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             };
@@ -432,8 +432,8 @@ pub const Array = struct {
             const child_child: ?type = blk: {
                 if (child) |c| {
                     break :blk switch (@typeInfo(c)) {
-                        .Pointer => |info| info.child,
-                        .Array => |info| info.child,
+                        .pointer => |info| info.child,
+                        .array => |info| info.child,
                         else => null,
                     };
                 }
@@ -449,8 +449,8 @@ pub const Array = struct {
                     }
                 } else {
                     const term = switch (@typeInfo(T_rl)) {
-                        .Int => T.make(env, @intCast(values[values.len - 1 - i])),
-                        .Float => T.make(env, @floatCast(values[values.len - 1 - i])),
+                        .int => T.make(env, @intCast(values[values.len - 1 - i])),
+                        .float => T.make(env, @floatCast(values[values.len - 1 - i])),
                         else => T.make(env, values[values.len - 1 - i]),
                     };
                     term_value = e.enif_make_list_cell(env, term, term_value);
@@ -476,8 +476,8 @@ pub const Array = struct {
 
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             };
@@ -487,8 +487,8 @@ pub const Array = struct {
             const child_child: ?type = blk: {
                 if (child) |c| {
                     break :blk switch (@typeInfo(c)) {
-                        .Pointer => |info| info.child,
-                        .Array => |info| info.child,
+                        .pointer => |info| info.child,
+                        .array => |info| info.child,
                         else => null,
                     };
                 }
@@ -504,8 +504,8 @@ pub const Array = struct {
                     }
                 } else {
                     const term = switch (@typeInfo(T_rl)) {
-                        .Int => T.make(env, @intCast(values[values.len - 1 - i])),
-                        .Float => T.make(env, @floatCast(values[values.len - 1 - i])),
+                        .int => T.make(env, @intCast(values[values.len - 1 - i])),
+                        .float => T.make(env, @floatCast(values[values.len - 1 - i])),
                         else => T.make(env, values[values.len - 1 - i]),
                     };
                     term_value = e.enif_make_list_cell(env, term, term_value);
@@ -529,8 +529,8 @@ pub const Array = struct {
 
         const child: ?type = blk: {
             break :blk switch (@typeInfo(T_rl)) {
-                .Pointer => |info| info.child,
-                .Array => |info| info.child,
+                .pointer => |info| info.child,
+                .array => |info| info.child,
                 else => null,
             };
         };
@@ -538,8 +538,8 @@ pub const Array = struct {
         const child_child: ?type = blk: {
             if (child) |c| {
                 break :blk switch (@typeInfo(c)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             }
@@ -554,7 +554,7 @@ pub const Array = struct {
                 if (child_child == null and (T == Binary or T == CString)) {
                     values[i] = blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
@@ -570,11 +570,11 @@ pub const Array = struct {
                 }
             } else {
                 values[i] = switch (@typeInfo(T_rl)) {
-                    .Int => @intCast(try T.get(env, term_value_head)),
-                    .Float => @floatCast(try T.get(env, term_value_head)),
+                    .int => @intCast(try T.get(env, term_value_head)),
+                    .float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
@@ -614,8 +614,8 @@ pub const Array = struct {
 
         const child: ?type = blk: {
             break :blk switch (@typeInfo(T_rl)) {
-                .Pointer => |info| info.child,
-                .Array => |info| info.child,
+                .pointer => |info| info.child,
+                .array => |info| info.child,
                 else => null,
             };
         };
@@ -625,8 +625,8 @@ pub const Array = struct {
         const child_child: ?type = blk: {
             if (child) |c| {
                 break :blk switch (@typeInfo(c)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             }
@@ -641,7 +641,7 @@ pub const Array = struct {
                 if (child_child == null and (T == Binary or T == CString)) {
                     values[i] = blk: {
                         switch (@typeInfo(@TypeOf(T.get_c))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 4) {
                                     break :blk try T.get_c(allocator, env, term_value_head, lengths_c[depth + 1]);
                                 } else {
@@ -657,11 +657,11 @@ pub const Array = struct {
                 }
             } else {
                 values[i] = switch (@typeInfo(T_rl)) {
-                    .Int => @intCast(try T.get(env, term_value_head)),
-                    .Float => @floatCast(try T.get(env, term_value_head)),
+                    .int => @intCast(try T.get(env, term_value_head)),
+                    .float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
@@ -686,8 +686,8 @@ pub const Array = struct {
 
         const child: ?type = blk: {
             break :blk switch (@typeInfo(T_rl)) {
-                .Pointer => |info| info.child,
-                .Array => |info| info.child,
+                .pointer => |info| info.child,
+                .array => |info| info.child,
                 else => null,
             };
         };
@@ -695,8 +695,8 @@ pub const Array = struct {
         const child_child: ?type = blk: {
             if (child) |c| {
                 break :blk switch (@typeInfo(c)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             }
@@ -711,11 +711,11 @@ pub const Array = struct {
                     try get_copy(T, c, allocator, env, term, dest[i]);
                 } else {
                     dest[i] = switch (@typeInfo(T_rl)) {
-                        .Optional => null,
-                        .Int => 0,
-                        .Float => 0.0,
-                        .Bool => false,
-                        .Struct => T_rl{},
+                        .optional => null,
+                        .int => 0,
+                        .float => 0.0,
+                        .bool => false,
+                        .@"struct" => T_rl{},
                         else => @compileError("Cannot set empty value for this type"),
                     };
                 }
@@ -731,7 +731,7 @@ pub const Array = struct {
                 if (child_child == null and (T == Binary or T == CString)) {
                     blk: {
                         switch (@typeInfo(@TypeOf(T.get_copy))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 4) {
                                     break :blk try T.get_copy(allocator, env, term_value_head, dest[i]);
                                 } else {
@@ -747,11 +747,11 @@ pub const Array = struct {
                 }
             } else {
                 dest[i] = switch (@typeInfo(T_rl)) {
-                    .Int => @intCast(try T.get(env, term_value_head)),
-                    .Float => @floatCast(try T.get(env, term_value_head)),
+                    .int => @intCast(try T.get(env, term_value_head)),
+                    .float => @floatCast(try T.get(env, term_value_head)),
                     else => blk: {
                         switch (@typeInfo(@TypeOf(T.get))) {
-                            .Fn => |fn_info| {
+                            .@"fn" => |fn_info| {
                                 if (fn_info.params.len == 3) {
                                     break :blk try T.get(allocator, env, term_value_head);
                                 } else {
@@ -777,8 +777,8 @@ pub const Array = struct {
         if (values) |v| {
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             };
@@ -786,8 +786,8 @@ pub const Array = struct {
             const child_child: ?type = blk: {
                 if (child) |c| {
                     break :blk switch (@typeInfo(c)) {
-                        .Pointer => |info| info.child,
-                        .Array => |info| info.child,
+                        .pointer => |info| info.child,
+                        .array => |info| info.child,
                         else => null,
                     };
                 }
@@ -799,7 +799,7 @@ pub const Array = struct {
                     if (child_child == null and (T == Binary or T == CString)) {
                         blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
+                                .@"fn" => |fn_info| {
                                     if (fn_info.params.len == 2) {
                                         break :blk T.free(allocator, v[i]);
                                     } else {
@@ -818,12 +818,12 @@ pub const Array = struct {
                     const do_free = if (keep) |k| !k[i] else true;
                     if (do_free) {
                         switch (@typeInfo(T_rl)) {
-                            .Int => {},
-                            .Float => {},
-                            .Bool => {},
+                            .int => {},
+                            .float => {},
+                            .bool => {},
                             else => blk: {
                                 switch (@typeInfo(@TypeOf(T.free))) {
-                                    .Fn => |fn_info| {
+                                    .@"fn" => |fn_info| {
                                         if (fn_info.params.len == 2) {
                                             break :blk T.free(allocator, v[i]);
                                         } else {
@@ -857,8 +857,8 @@ pub const Array = struct {
 
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             };
@@ -868,8 +868,8 @@ pub const Array = struct {
             const child_child: ?type = blk: {
                 if (child) |c| {
                     break :blk switch (@typeInfo(c)) {
-                        .Pointer => |info| info.child,
-                        .Array => |info| info.child,
+                        .pointer => |info| info.child,
+                        .array => |info| info.child,
                         else => null,
                     };
                 }
@@ -881,7 +881,7 @@ pub const Array = struct {
                     if (child_child == null and (T == Binary or T == CString)) {
                         blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
+                                .@"fn" => |fn_info| {
                                     if (fn_info.params.len == 3) {
                                         break :blk T.free_c(allocator, values[i], lengths_c[depth + 1]);
                                     } else {
@@ -900,12 +900,12 @@ pub const Array = struct {
                     const do_free = if (keep) |k| !k[i] else true;
                     if (do_free) {
                         switch (@typeInfo(T_rl)) {
-                            .Int => {},
-                            .Float => {},
-                            .Bool => {},
+                            .int => {},
+                            .float => {},
+                            .bool => {},
                             else => blk: {
                                 switch (@typeInfo(@TypeOf(T.free))) {
-                                    .Fn => |fn_info| {
+                                    .@"fn" => |fn_info| {
                                         if (fn_info.params.len == 2) {
                                             break :blk T.free(allocator, values[i]);
                                         } else {
@@ -929,8 +929,8 @@ pub const Array = struct {
         if (values) |v| {
             const child: ?type = blk: {
                 break :blk switch (@typeInfo(T_rl)) {
-                    .Pointer => |info| info.child,
-                    .Array => |info| info.child,
+                    .pointer => |info| info.child,
+                    .array => |info| info.child,
                     else => null,
                 };
             };
@@ -938,8 +938,8 @@ pub const Array = struct {
             const child_child: ?type = blk: {
                 if (child) |c| {
                     break :blk switch (@typeInfo(c)) {
-                        .Pointer => |info| info.child,
-                        .Array => |info| info.child,
+                        .pointer => |info| info.child,
+                        .array => |info| info.child,
                         else => null,
                     };
                 }
@@ -951,7 +951,7 @@ pub const Array = struct {
                     if (child_child == null and (T == Binary or T == CString)) {
                         blk: {
                             switch (@typeInfo(@TypeOf(T.free))) {
-                                .Fn => |fn_info| {
+                                .@"fn" => |fn_info| {
                                     if (fn_info.params.len == 2) {
                                         break :blk T.free_copy(allocator, v[i]);
                                     } else {
@@ -980,12 +980,12 @@ pub const Array = struct {
 
                     if (do_free) {
                         switch (@typeInfo(T_rl)) {
-                            .Int => {},
-                            .Float => {},
-                            .Bool => {},
+                            .int => {},
+                            .float => {},
+                            .bool => {},
                             else => blk: {
                                 switch (@typeInfo(@TypeOf(T.free))) {
-                                    .Fn => |fn_info| {
+                                    .@"fn" => |fn_info| {
                                         if (fn_info.params.len == 2) {
                                             break :blk T.free(allocator, v[i]);
                                         } else {

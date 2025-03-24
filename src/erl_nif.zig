@@ -15,16 +15,17 @@ pub const allocator = Allocator{
 const raw_beam_allocator_vtable = Allocator.VTable{
     .alloc = raw_beam_alloc,
     .resize = raw_beam_resize,
+    .remap = raw_beam_remap,
     .free = raw_beam_free,
 };
 
 fn raw_beam_alloc(
     _: *anyopaque,
     len: usize,
-    ptr_align: u8,
+    ptr_align: std.mem.Alignment,
     _: usize,
 ) ?[*]u8 {
-    if (ptr_align > MAX_ALIGN) return null;
+    if (ptr_align.toByteUnits() > MAX_ALIGN) return null;
     const ptr = e.enif_alloc(len) orelse return null;
     return @as([*]u8, @ptrCast(ptr));
 }
@@ -32,7 +33,7 @@ fn raw_beam_alloc(
 fn raw_beam_resize(
     _: *anyopaque,
     buf: []u8,
-    _: u8,
+    _: std.mem.Alignment,
     new_len: usize,
     _: usize,
 ) bool {
@@ -45,10 +46,22 @@ fn raw_beam_resize(
     return false;
 }
 
+fn raw_beam_remap(
+    _: *anyopaque,
+    buf: []u8,
+    ptr_align: std.mem.Alignment,
+    new_len: usize,
+    _: usize,
+) ?[*]u8 {
+    if (ptr_align.toByteUnits() > MAX_ALIGN) return null;
+    const ptr = e.enif_realloc(@ptrCast(buf), new_len) orelse return null;
+    return @as([*]u8, @ptrCast(ptr));
+}
+
 fn raw_beam_free(
     _: *anyopaque,
     buf: []u8,
-    _: u8,
+    _: std.mem.Alignment,
     _: usize,
 ) void {
     e.enif_free(buf.ptr);
