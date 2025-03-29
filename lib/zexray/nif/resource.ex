@@ -8,15 +8,45 @@ defmodule Zexray.NIF.Resource do
         vector2_from_resource: 1,
         vector2_free_resource: 1,
 
+        # IVector2
+        ivector2_to_resource: 1,
+        ivector2_from_resource: 1,
+        ivector2_free_resource: 1,
+
+        # UIVector2
+        uivector2_to_resource: 1,
+        uivector2_from_resource: 1,
+        uivector2_free_resource: 1,
+
         # Vector3
         vector3_to_resource: 1,
         vector3_from_resource: 1,
         vector3_free_resource: 1,
 
+        # IVector3
+        ivector3_to_resource: 1,
+        ivector3_from_resource: 1,
+        ivector3_free_resource: 1,
+
+        # UIVector3
+        uivector3_to_resource: 1,
+        uivector3_from_resource: 1,
+        uivector3_free_resource: 1,
+
         # Vector4
         vector4_to_resource: 1,
         vector4_from_resource: 1,
         vector4_free_resource: 1,
+
+        # IVector4
+        ivector4_to_resource: 1,
+        ivector4_from_resource: 1,
+        ivector4_free_resource: 1,
+
+        # UIVector4
+        uivector4_to_resource: 1,
+        uivector4_from_resource: 1,
+        uivector4_free_resource: 1,
 
         # Quaternion
         quaternion_to_resource: 1,
@@ -215,6 +245,38 @@ defmodule Zexray.NIF.Resource do
       @spec vector2_free_resource(resource :: reference) :: :ok
       def vector2_free_resource(_resource), do: :erlang.nif_error(:undef)
 
+      ##############
+      #  IVector2  #
+      ##############
+
+      @doc group: :resource
+      @spec ivector2_to_resource(value :: map) :: reference
+      def ivector2_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector2_from_resource(resource :: reference) :: map
+      def ivector2_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector2_free_resource(resource :: reference) :: :ok
+      def ivector2_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ###############
+      #  UIVector2  #
+      ###############
+
+      @doc group: :resource
+      @spec uivector2_to_resource(value :: map) :: reference
+      def uivector2_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector2_from_resource(resource :: reference) :: map
+      def uivector2_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector2_free_resource(resource :: reference) :: :ok
+      def uivector2_free_resource(_resource), do: :erlang.nif_error(:undef)
+
       #############
       #  Vector3  #
       #############
@@ -231,6 +293,38 @@ defmodule Zexray.NIF.Resource do
       @spec vector3_free_resource(resource :: reference) :: :ok
       def vector3_free_resource(_resource), do: :erlang.nif_error(:undef)
 
+      ##############
+      #  IVector3  #
+      ##############
+
+      @doc group: :resource
+      @spec ivector3_to_resource(value :: map) :: reference
+      def ivector3_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector3_from_resource(resource :: reference) :: map
+      def ivector3_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector3_free_resource(resource :: reference) :: :ok
+      def ivector3_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ###############
+      #  UIVector3  #
+      ###############
+
+      @doc group: :resource
+      @spec uivector3_to_resource(value :: map) :: reference
+      def uivector3_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector3_from_resource(resource :: reference) :: map
+      def uivector3_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector3_free_resource(resource :: reference) :: :ok
+      def uivector3_free_resource(_resource), do: :erlang.nif_error(:undef)
+
       #############
       #  Vector4  #
       #############
@@ -246,6 +340,38 @@ defmodule Zexray.NIF.Resource do
       @doc group: :resource
       @spec vector4_free_resource(resource :: reference) :: :ok
       def vector4_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ##############
+      #  IVector4  #
+      ##############
+
+      @doc group: :resource
+      @spec ivector4_to_resource(value :: map) :: reference
+      def ivector4_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector4_from_resource(resource :: reference) :: map
+      def ivector4_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec ivector4_free_resource(resource :: reference) :: :ok
+      def ivector4_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      ###############
+      #  UIVector4  #
+      ###############
+
+      @doc group: :resource
+      @spec uivector4_to_resource(value :: map) :: reference
+      def uivector4_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector4_from_resource(resource :: reference) :: map
+      def uivector4_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec uivector4_free_resource(resource :: reference) :: :ok
+      def uivector4_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       ################
       #  Quaternion  #

@@ -36,8 +36,14 @@ defmodule Zexray.TypeFixture do
     TextureCubemap,
     Transform,
     Vector2,
+    IVector2,
+    UIVector2,
     Vector3,
+    IVector3,
+    UIVector3,
     Vector4,
+    IVector4,
+    UIVector4,
     VrDeviceInfo,
     VrStereoConfig,
     Wave
@@ -1089,6 +1095,42 @@ defmodule Zexray.TypeFixture do
     |> Vector2.new()
   end
 
+  def ivector2_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: -234
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> IVector2.new()
+  end
+
+  def uivector2_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: 234
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> UIVector2.new()
+  end
+
   def vector3_fixture(type \\ :base, attrs \\ %{}) do
     case type do
       t when t in [:base, :resource] ->
@@ -1107,6 +1149,46 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Vector3.new()
+  end
+
+  def ivector3_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: -234,
+          z: 345
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0,
+          z: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> IVector3.new()
+  end
+
+  def uivector3_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: 234,
+          z: 345
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0,
+          z: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> UIVector3.new()
   end
 
   def vector4_fixture(type \\ :base, attrs \\ %{}) do
@@ -1129,6 +1211,50 @@ defmodule Zexray.TypeFixture do
     end
     |> Map.merge(attrs)
     |> Vector4.new()
+  end
+
+  def ivector4_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: -234,
+          z: 345,
+          w: -456
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0,
+          z: 0,
+          w: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> IVector4.new()
+  end
+
+  def uivector4_fixture(type \\ :base, attrs \\ %{}) do
+    case type do
+      t when t in [:base, :resource] ->
+        %{
+          x: 123,
+          y: 234,
+          z: 345,
+          w: 456
+        }
+
+      :empty ->
+        %{
+          x: 0,
+          y: 0,
+          z: 0,
+          w: 0
+        }
+    end
+    |> Map.merge(attrs)
+    |> UIVector4.new()
   end
 
   def vr_device_info_fixture(type \\ :base, attrs \\ %{}) do

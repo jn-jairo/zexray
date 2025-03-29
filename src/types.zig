@@ -1328,6 +1328,126 @@ pub const Vector2 = struct {
     }
 };
 
+////////////////
+//  IVector2  //
+////////////////
+
+pub const IVector2 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.IVector2;
+    pub const resource_name = "ivector2";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.IVector2) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Int.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Int.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector2 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.IVector2{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try Int.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try Int.get(env, term_y_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.IVector2) void {
+        _ = value;
+    }
+};
+
+/////////////////
+//  UIVector2  //
+/////////////////
+
+pub const UIVector2 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.UIVector2;
+    pub const resource_name = "uivector2";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.UIVector2) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = UInt.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = UInt.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector2 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.UIVector2{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try UInt.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try UInt.get(env, term_y_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.UIVector2) void {
+        _ = value;
+    }
+};
+
 ///////////////
 //  Vector3  //
 ///////////////
@@ -1397,6 +1517,152 @@ pub const Vector3 = struct {
     }
 
     pub fn free(value: rl.Vector3) void {
+        _ = value;
+    }
+};
+
+////////////////
+//  IVector3  //
+////////////////
+
+pub const IVector3 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.IVector3;
+    pub const resource_name = "ivector3";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.IVector3) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Int.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Int.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = Int.make(env, @intCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector3 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.IVector3{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try Int.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try Int.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @intCast(try Int.get(env, term_z_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.IVector3) void {
+        _ = value;
+    }
+};
+
+/////////////////
+//  UIVector3  //
+/////////////////
+
+pub const UIVector3 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.UIVector3;
+    pub const resource_name = "uivector3";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.UIVector3) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = UInt.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = UInt.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = UInt.make(env, @intCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector3 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.UIVector3{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try UInt.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try UInt.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @intCast(try UInt.get(env, term_z_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.UIVector3) void {
         _ = value;
     }
 };
@@ -1483,6 +1749,178 @@ pub const Vector4 = struct {
     }
 
     pub fn free(value: rl.Vector4) void {
+        _ = value;
+    }
+};
+
+////////////////
+//  IVector4  //
+////////////////
+
+pub const IVector4 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.IVector4;
+    pub const resource_name = "ivector4";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.IVector4) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = Int.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = Int.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = Int.make(env, @intCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        const term_w_value = Int.make(env, @intCast(value.w));
+        assert(e.enif_make_map_put(env, term, term_w_key, term_w_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector4 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.IVector4{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try Int.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try Int.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @intCast(try Int.get(env, term_z_value));
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        var term_w_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_w_key, &term_w_value) == 0) return error.ArgumentError;
+        value.w = @intCast(try Int.get(env, term_w_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.IVector4) void {
+        _ = value;
+    }
+};
+
+/////////////////
+//  UIVector4  //
+/////////////////
+
+pub const UIVector4 = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.UIVector4;
+    pub const resource_name = "uivector4";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.UIVector4) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        const term_x_value = UInt.make(env, @intCast(value.x));
+        assert(e.enif_make_map_put(env, term, term_x_key, term_x_value, &term) != 0);
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        const term_y_value = UInt.make(env, @intCast(value.y));
+        assert(e.enif_make_map_put(env, term, term_y_key, term_y_value, &term) != 0);
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        const term_z_value = UInt.make(env, @intCast(value.z));
+        assert(e.enif_make_map_put(env, term, term_z_key, term_z_value, &term) != 0);
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        const term_w_value = UInt.make(env, @intCast(value.w));
+        assert(e.enif_make_map_put(env, term, term_w_key, term_w_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector4 {
+        if (e.enif_is_map(env, term) == 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.UIVector4{};
+
+        // x
+
+        const term_x_key = Atom.make(env, "x");
+        var term_x_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_x_key, &term_x_value) == 0) return error.ArgumentError;
+        value.x = @intCast(try UInt.get(env, term_x_value));
+
+        // y
+
+        const term_y_key = Atom.make(env, "y");
+        var term_y_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_y_key, &term_y_value) == 0) return error.ArgumentError;
+        value.y = @intCast(try UInt.get(env, term_y_value));
+
+        // z
+
+        const term_z_key = Atom.make(env, "z");
+        var term_z_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_z_key, &term_z_value) == 0) return error.ArgumentError;
+        value.z = @intCast(try UInt.get(env, term_z_value));
+
+        // w
+
+        const term_w_key = Atom.make(env, "w");
+        var term_w_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_w_key, &term_w_value) == 0) return error.ArgumentError;
+        value.w = @intCast(try UInt.get(env, term_w_value));
+
+        return value;
+    }
+
+    pub fn free(value: rl.UIVector4) void {
         _ = value;
     }
 };

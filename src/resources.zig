@@ -5,8 +5,14 @@ const core = @import("./core.zig");
 
 pub const ResourceType = struct {
     vector2: *e.ErlNifResourceType = undefined,
+    ivector2: *e.ErlNifResourceType = undefined,
+    uivector2: *e.ErlNifResourceType = undefined,
     vector3: *e.ErlNifResourceType = undefined,
+    ivector3: *e.ErlNifResourceType = undefined,
+    uivector3: *e.ErlNifResourceType = undefined,
     vector4: *e.ErlNifResourceType = undefined,
+    ivector4: *e.ErlNifResourceType = undefined,
+    uivector4: *e.ErlNifResourceType = undefined,
     quaternion: *e.ErlNifResourceType = undefined,
     matrix: *e.ErlNifResourceType = undefined,
     color: *e.ErlNifResourceType = undefined,
@@ -53,12 +59,36 @@ pub const ResourceType = struct {
         core.Vector2.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
 
+    pub fn ivector2_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.IVector2.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn uivector2_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.UIVector2.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
     pub fn vector3_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Vector3.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
 
+    pub fn ivector3_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.IVector3.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn uivector3_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.UIVector3.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
     pub fn vector4_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.Vector4.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn ivector4_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.IVector4.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn uivector4_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.UIVector4.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
 
     pub fn quaternion_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
@@ -224,8 +254,14 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     const flags = e.ERL_NIF_RT_CREATE | e.ERL_NIF_RT_TAKEOVER;
 
     resource_type.vector2 = e.enif_open_resource_type(env, null, "Zexray.Resource.Vector2", &ResourceType.vector2_dtor, flags, null) orelse return false;
+    resource_type.ivector2 = e.enif_open_resource_type(env, null, "Zexray.Resource.IVector2", &ResourceType.ivector2_dtor, flags, null) orelse return false;
+    resource_type.uivector2 = e.enif_open_resource_type(env, null, "Zexray.Resource.UIVector2", &ResourceType.uivector2_dtor, flags, null) orelse return false;
     resource_type.vector3 = e.enif_open_resource_type(env, null, "Zexray.Resource.Vector3", &ResourceType.vector3_dtor, flags, null) orelse return false;
+    resource_type.ivector3 = e.enif_open_resource_type(env, null, "Zexray.Resource.IVector3", &ResourceType.ivector3_dtor, flags, null) orelse return false;
+    resource_type.uivector3 = e.enif_open_resource_type(env, null, "Zexray.Resource.UIVector3", &ResourceType.uivector3_dtor, flags, null) orelse return false;
     resource_type.vector4 = e.enif_open_resource_type(env, null, "Zexray.Resource.Vector4", &ResourceType.vector4_dtor, flags, null) orelse return false;
+    resource_type.ivector4 = e.enif_open_resource_type(env, null, "Zexray.Resource.IVector4", &ResourceType.ivector4_dtor, flags, null) orelse return false;
+    resource_type.uivector4 = e.enif_open_resource_type(env, null, "Zexray.Resource.UIVector4", &ResourceType.uivector4_dtor, flags, null) orelse return false;
     resource_type.quaternion = e.enif_open_resource_type(env, null, "Zexray.Resource.Quaternion", &ResourceType.quaternion_dtor, flags, null) orelse return false;
     resource_type.matrix = e.enif_open_resource_type(env, null, "Zexray.Resource.Matrix", &ResourceType.matrix_dtor, flags, null) orelse return false;
     resource_type.color = e.enif_open_resource_type(env, null, "Zexray.Resource.Color", &ResourceType.color_dtor, flags, null) orelse return false;

@@ -38,14 +38,22 @@ defmodule Zexray.Guard do
     TextureCubemap,
     Transform,
     Vector2,
+    IVector2,
+    UIVector2,
     Vector3,
+    IVector3,
+    UIVector3,
     Vector4,
+    IVector4,
+    UIVector4,
     VrDeviceInfo,
     VrStereoConfig,
     Wave
   }
 
   defguard is_nif_return(value) when value in [:value, :resource]
+
+  defguard is_non_neg_integer(value) when is_integer(value) and value >= 0
 
   defguard is_structable(value)
            when is_map(value) or
@@ -293,10 +301,28 @@ defmodule Zexray.Guard do
   defguard is_vector2(value) when is_struct(value, Vector2)
 
   @doc group: :type
+  defguard is_ivector2(value) when is_struct(value, IVector2)
+
+  @doc group: :type
+  defguard is_uivector2(value) when is_struct(value, UIVector2)
+
+  @doc group: :type
   defguard is_vector3(value) when is_struct(value, Vector3)
 
   @doc group: :type
+  defguard is_ivector3(value) when is_struct(value, IVector3)
+
+  @doc group: :type
+  defguard is_uivector3(value) when is_struct(value, UIVector3)
+
+  @doc group: :type
   defguard is_vector4(value) when is_struct(value, Vector4)
+
+  @doc group: :type
+  defguard is_ivector4(value) when is_struct(value, IVector4)
+
+  @doc group: :type
+  defguard is_uivector4(value) when is_struct(value, UIVector4)
 
   @doc group: :type
   defguard is_vr_device_info(value) when is_struct(value, VrDeviceInfo)
@@ -567,9 +593,37 @@ defmodule Zexray.Guard do
                   (is_tuple(value) and tuple_size(value) == 2)
 
   @doc group: :type
+  defguard is_like_ivector2(value)
+           when is_ivector2(value) or
+                  is_struct(value, IVector2.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 2)
+
+  @doc group: :type
+  defguard is_like_uivector2(value)
+           when is_uivector2(value) or
+                  is_struct(value, UIVector2.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 2)
+
+  @doc group: :type
   defguard is_like_vector3(value)
            when is_vector3(value) or
                   is_struct(value, Vector3.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 3)
+
+  @doc group: :type
+  defguard is_like_ivector3(value)
+           when is_ivector3(value) or
+                  is_struct(value, IVector3.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 3)
+
+  @doc group: :type
+  defguard is_like_uivector3(value)
+           when is_uivector3(value) or
+                  is_struct(value, UIVector3.Resource) or
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 3)
 
@@ -580,6 +634,20 @@ defmodule Zexray.Guard do
                   is_structable(value) or
                   (is_tuple(value) and tuple_size(value) == 4) or
                   is_struct(value, Quaternion)
+
+  @doc group: :type
+  defguard is_like_ivector4(value)
+           when is_ivector4(value) or
+                  is_struct(value, IVector4.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 4)
+
+  @doc group: :type
+  defguard is_like_uivector4(value)
+           when is_uivector4(value) or
+                  is_struct(value, UIVector4.Resource) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 4)
 
   @doc group: :type
   defguard is_like_vr_device_info(value)

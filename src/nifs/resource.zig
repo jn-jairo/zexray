@@ -10,15 +10,45 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "vector2_from_resource", .arity = 1, .fptr = nif_vector2_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector2_free_resource", .arity = 1, .fptr = nif_vector2_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
+    // IVector2
+    .{ .name = "ivector2_to_resource", .arity = 1, .fptr = nif_ivector2_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector2_from_resource", .arity = 1, .fptr = nif_ivector2_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector2_free_resource", .arity = 1, .fptr = nif_ivector2_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // UIVector2
+    .{ .name = "uivector2_to_resource", .arity = 1, .fptr = nif_uivector2_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector2_from_resource", .arity = 1, .fptr = nif_uivector2_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector2_free_resource", .arity = 1, .fptr = nif_uivector2_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
     // Vector3
     .{ .name = "vector3_to_resource", .arity = 1, .fptr = nif_vector3_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector3_from_resource", .arity = 1, .fptr = nif_vector3_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector3_free_resource", .arity = 1, .fptr = nif_vector3_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
+    // IVector3
+    .{ .name = "ivector3_to_resource", .arity = 1, .fptr = nif_ivector3_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector3_from_resource", .arity = 1, .fptr = nif_ivector3_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector3_free_resource", .arity = 1, .fptr = nif_ivector3_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // UIVector3
+    .{ .name = "uivector3_to_resource", .arity = 1, .fptr = nif_uivector3_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector3_from_resource", .arity = 1, .fptr = nif_uivector3_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector3_free_resource", .arity = 1, .fptr = nif_uivector3_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
     // Vector4
     .{ .name = "vector4_to_resource", .arity = 1, .fptr = nif_vector4_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector4_from_resource", .arity = 1, .fptr = nif_vector4_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector4_free_resource", .arity = 1, .fptr = nif_vector4_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // IVector4
+    .{ .name = "ivector4_to_resource", .arity = 1, .fptr = nif_ivector4_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector4_from_resource", .arity = 1, .fptr = nif_ivector4_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector4_free_resource", .arity = 1, .fptr = nif_ivector4_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // UIVector4
+    .{ .name = "uivector4_to_resource", .arity = 1, .fptr = nif_uivector4_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector4_from_resource", .arity = 1, .fptr = nif_uivector4_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector4_free_resource", .arity = 1, .fptr = nif_uivector4_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Quaternion
     .{ .name = "quaternion_to_resource", .arity = 1, .fptr = nif_quaternion_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -242,6 +272,88 @@ fn nif_vector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+////////////////
+//  IVector2  //
+////////////////
+
+fn nif_ivector2_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.IVector2.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.IVector2.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.IVector2.Resource.release(resource);
+
+    return core.IVector2.Resource.make(env, resource);
+}
+
+fn nif_ivector2_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector2.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.IVector2.make(env, resource.*.*);
+}
+
+fn nif_ivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector2.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.IVector2.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+/////////////////
+//  UIVector2  //
+/////////////////
+
+fn nif_uivector2_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.UIVector2.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.UIVector2.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.UIVector2.Resource.release(resource);
+
+    return core.UIVector2.Resource.make(env, resource);
+}
+
+fn nif_uivector2_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector2.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.UIVector2.make(env, resource.*.*);
+}
+
+fn nif_uivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector2.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.UIVector2.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////
 //  Vector3  //
 ///////////////
@@ -283,6 +395,88 @@ fn nif_vector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+////////////////
+//  IVector3  //
+////////////////
+
+fn nif_ivector3_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.IVector3.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.IVector3.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.IVector3.Resource.release(resource);
+
+    return core.IVector3.Resource.make(env, resource);
+}
+
+fn nif_ivector3_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector3.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.IVector3.make(env, resource.*.*);
+}
+
+fn nif_ivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector3.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.IVector3.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+/////////////////
+//  UIVector3  //
+/////////////////
+
+fn nif_uivector3_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.UIVector3.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.UIVector3.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.UIVector3.Resource.release(resource);
+
+    return core.UIVector3.Resource.make(env, resource);
+}
+
+fn nif_uivector3_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector3.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.UIVector3.make(env, resource.*.*);
+}
+
+fn nif_uivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector3.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.UIVector3.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////
 //  Vector4  //
 ///////////////
@@ -320,6 +514,88 @@ fn nif_vector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     };
 
     core.Vector4.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+////////////////
+//  IVector4  //
+////////////////
+
+fn nif_ivector4_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.IVector4.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.IVector4.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.IVector4.Resource.release(resource);
+
+    return core.IVector4.Resource.make(env, resource);
+}
+
+fn nif_ivector4_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector4.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.IVector4.make(env, resource.*.*);
+}
+
+fn nif_ivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.IVector4.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.IVector4.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+/////////////////
+//  UIVector4  //
+/////////////////
+
+fn nif_uivector4_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const value = core.UIVector4.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'value'.");
+    };
+
+    const resource = core.UIVector4.Resource.create(value) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to create resource.");
+    };
+    defer core.UIVector4.Resource.release(resource);
+
+    return core.UIVector4.Resource.make(env, resource);
+}
+
+fn nif_uivector4_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector4.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    return core.UIVector4.make(env, resource.*.*);
+}
+
+fn nif_uivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.UIVector4.Resource.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'resource'.");
+    };
+
+    core.UIVector4.Resource.free(resource);
 
     return core.Atom.make(env, "ok");
 }
