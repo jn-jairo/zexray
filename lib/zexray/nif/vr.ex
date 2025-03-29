@@ -16,7 +16,9 @@ defmodule Zexray.NIF.Vr do
         vr_stereo_config_get_max_left_screen_center: 0,
         vr_stereo_config_get_max_right_screen_center: 0,
         vr_stereo_config_get_max_scale: 0,
-        vr_stereo_config_get_max_scale_in: 0
+        vr_stereo_config_get_max_scale_in: 0,
+        load_vr_stereo_config: 1,
+        load_vr_stereo_config: 2
       ]
 
       ##################
@@ -96,6 +98,25 @@ defmodule Zexray.NIF.Vr do
       @doc group: :vr
       @spec vr_stereo_config_get_max_scale_in() :: non_neg_integer
       def vr_stereo_config_get_max_scale_in(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load VR stereo config for VR simulator device parameters
+
+      ```c
+      // raylib.h
+      RLAPI VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);
+      ```
+      """
+      @doc group: :vr
+      @spec load_vr_stereo_config(
+              device :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def load_vr_stereo_config(
+            _device,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
     end
   end
 end

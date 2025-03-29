@@ -1,6 +1,8 @@
 defmodule Zexray.Vr do
   alias Zexray.NIF
 
+  import Zexray.Guard
+
   ##################
   #  VrDeviceInfo  #
   ##################
@@ -87,5 +89,26 @@ defmodule Zexray.Vr do
   @spec vr_stereo_config_max_scale_in() :: non_neg_integer
   def vr_stereo_config_max_scale_in() do
     NIF.vr_stereo_config_get_max_scale_in()
+  end
+
+  @doc """
+  Load VR stereo config for VR simulator device parameters
+  """
+  @spec load_vr_stereo_config(
+          device :: Zexray.Type.VrDeviceInfo.t_all(),
+          return :: :value | :resource
+        ) ::
+          Zexray.Type.VrStereoConfig.t_nif()
+  def load_vr_stereo_config(
+        device,
+        return \\ :value
+      )
+      when is_like_vr_device_info(device) and
+             is_nif_return(return) do
+    NIF.load_vr_stereo_config(
+      device |> Zexray.Type.VrDeviceInfo.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
   end
 end

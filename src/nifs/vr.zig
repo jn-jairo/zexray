@@ -19,6 +19,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "vr_stereo_config_get_max_right_screen_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_right_screen_center, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_stereo_config_get_max_scale", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_stereo_config_get_max_scale_in", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale_in, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "load_vr_stereo_config", .arity = 1, .fptr = nif_load_vr_stereo_config, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "load_vr_stereo_config", .arity = 2, .fptr = nif_load_vr_stereo_config, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////////
@@ -127,4 +129,35 @@ fn nif_vr_stereo_config_get_max_scale_in(env: ?*e.ErlNifEnv, argc: c_int, argv: 
     // Return
 
     return core.UInt.make(env, @intCast(core.VrStereoConfig.MAX_SCALE_IN));
+}
+
+/// Load VR stereo config for VR simulator device parameters
+///
+/// raylib.h
+/// RLAPI VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);
+fn nif_load_vr_stereo_config(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1 or argc == 2);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 1);
+
+    // Arguments
+
+    const arg_device = core.Argument(core.VrDeviceInfo).get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'device'.");
+    };
+    defer arg_device.free();
+    const device = arg_device.data;
+
+    // Function
+
+    const vr_stereo_config = rl.LoadVrStereoConfig(device);
+    defer if (!return_resource) core.VrStereoConfig.free(vr_stereo_config);
+
+    // Return
+
+    return core.maybe_make_struct_as_resource(core.VrStereoConfig, env, vr_stereo_config, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }
