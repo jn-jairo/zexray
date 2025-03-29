@@ -34,6 +34,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Mesh
   use Zexray.NIF.Model
   use Zexray.NIF.Shader
+  use Zexray.NIF.Timing
   use Zexray.NIF.Util
   use Zexray.NIF.Vr
   use Zexray.NIF.Window
@@ -49,6 +50,7 @@ defmodule Zexray.NIF do
           @nifs_mesh ++
           @nifs_model ++
           @nifs_shader ++
+          @nifs_timing ++
           @nifs_util ++
           @nifs_vr ++
           @nifs_window
