@@ -2,6 +2,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("../erl_nif.zig");
 const rl = @import("../raylib.zig");
+const rlgl = @import("../rlgl.zig");
 
 const core = @import("../core.zig");
 
@@ -10,6 +11,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "trace_log", .arity = 2, .fptr = nif_trace_log, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_trace_log_level", .arity = 1, .fptr = nif_set_trace_log_level, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_trace_log_callback", .arity = 0, .fptr = nif_set_trace_log_callback, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 0, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 1, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////
@@ -103,4 +106,33 @@ fn nif_set_trace_log_callback(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Return
 
     return core.Atom.make(env, "ok");
+}
+
+/// Takes a screenshot of current screen
+fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 0 or argc == 1);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 0);
+
+    // Function
+
+    const width = rl.GetRenderWidth();
+    const height = rl.GetRenderHeight();
+
+    const image = rl.Image{
+        .data = rlgl.rlReadScreenPixels(width, height),
+        .width = width,
+        .height = height,
+        .mipmaps = 1,
+        .format = rl.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+    };
+    defer if (!return_resource) core.Image.free(image);
+
+    // Return
+
+    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }

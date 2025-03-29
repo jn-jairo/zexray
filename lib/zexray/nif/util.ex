@@ -7,7 +7,9 @@ defmodule Zexray.NIF.Util do
         # TraceLog
         trace_log: 2,
         set_trace_log_level: 1,
-        set_trace_log_callback: 0
+        set_trace_log_callback: 0,
+        screenshot: 0,
+        screenshot: 1
       ]
 
       ##############
@@ -56,6 +58,13 @@ defmodule Zexray.NIF.Util do
       @doc group: :util
       @spec set_trace_log_callback() :: :ok
       def set_trace_log_callback(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Takes a screenshot of current screen
+      """
+      @doc group: :util
+      @spec screenshot(return :: :value | :resource) :: map | reference
+      def screenshot(_return \\ :value), do: :erlang.nif_error(:undef)
     end
   end
 end

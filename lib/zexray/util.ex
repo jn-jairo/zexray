@@ -155,6 +155,16 @@ defmodule Zexray.Util do
   end
 
   @doc """
+  Takes a screenshot of current screen
+  """
+  @spec screenshot(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
+  def screenshot(return \\ :value)
+      when is_nif_return(return) do
+    NIF.screenshot(return)
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
   Wait for some time (halt program execution)
   """
   @spec wait_time(seconds :: number) :: :ok
