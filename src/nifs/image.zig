@@ -68,7 +68,7 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = if (argc == 4) e.enif_is_identical(core.Atom.make(env, "resource"), argv[3]) != 0 else false;
+    const return_resource = core.must_return_resource(env, argc, argv, 3);
 
     // Arguments
 
@@ -111,7 +111,7 @@ fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = if (argc == 3) e.enif_is_identical(core.Atom.make(env, "resource"), argv[2]) != 0 else false;
+    const return_resource = core.must_return_resource(env, argc, argv, 2);
 
     // Arguments
 
