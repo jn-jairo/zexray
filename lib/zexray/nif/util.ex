@@ -5,6 +5,7 @@ defmodule Zexray.NIF.Util do
     quote do
       @nifs_util [
         # TraceLog
+        trace_log: 2,
         set_trace_log_level: 1,
         set_trace_log_callback: 0
       ]
@@ -24,6 +25,25 @@ defmodule Zexray.NIF.Util do
       @doc group: :util
       @spec set_trace_log_level(log_level :: integer) :: :ok
       def set_trace_log_level(_log_level), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+
+      ```c
+      // raylib.h
+      RLAPI void TraceLog(int logLevel, const char *text, ...);
+      ```
+      """
+      @doc group: :util
+      @spec trace_log(
+              log_level :: integer,
+              text :: binary
+            ) :: :ok
+      def trace_log(
+            _log_level,
+            _text
+          ),
+          do: :erlang.nif_error(:undef)
 
       @doc """
       Set custom trace log

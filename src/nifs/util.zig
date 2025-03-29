@@ -7,6 +7,7 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // TraceLog
+    .{ .name = "trace_log", .arity = 2, .fptr = nif_trace_log, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_trace_log_level", .arity = 1, .fptr = nif_set_trace_log_level, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_trace_log_callback", .arity = 0, .fptr = nif_set_trace_log_callback, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
@@ -14,6 +15,34 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ////////////////
 //  TraceLog  //
 ////////////////
+
+/// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+///
+/// raylib.h
+/// RLAPI void TraceLog(int logLevel, const char *text, ...);
+fn nif_trace_log(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 2);
+
+    // Arguments
+
+    const log_level: c_int = core.Int.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'log_level'.");
+    };
+
+    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[1]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'text'.");
+    };
+    defer arg_text.free();
+    const text = arg_text.data;
+
+    // Function
+
+    rl.TraceLog(log_level, text);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
 
 /// Set the current threshold (minimum) log level
 ///
@@ -52,7 +81,7 @@ pub fn traceLog(logLevel: c_int, text: [*c]const u8, args: [*c]rl.struct___va_li
         rl.LOG_WARNING => writer.writeAll("WARNING: ") catch return,
         rl.LOG_ERROR => writer.writeAll("ERROR:   ") catch return,
         rl.LOG_FATAL => writer.writeAll("FATAL:   ") catch return,
-        else => {},
+        else => return,
     }
 
     writer.writeAll(buf[0..len]) catch return;
