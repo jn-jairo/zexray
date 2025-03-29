@@ -30,6 +30,7 @@ const nif_resource = @import("./nifs/resource.zig");
 const nif_audio = @import("./nifs/audio.zig");
 const nif_automation_event = @import("./nifs/automation_event.zig");
 const nif_cursor = @import("./nifs/cursor.zig");
+const nif_drawing = @import("./nifs/drawing.zig");
 const nif_file_system = @import("./nifs/file_system.zig");
 const nif_font = @import("./nifs/font.zig");
 const nif_frame_control = @import("./nifs/frame_control.zig");
@@ -48,6 +49,7 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_audio.exported_nifs ++
     nif_automation_event.exported_nifs ++
     nif_cursor.exported_nifs ++
+    nif_drawing.exported_nifs ++
     nif_file_system.exported_nifs ++
     nif_font.exported_nifs ++
     nif_frame_control.exported_nifs ++
