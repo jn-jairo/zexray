@@ -7,8 +7,8 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // FilePathList
-    .{ .name = "file_path_list_get_max_filepath_capacity", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_capacity, .flags = 0 },
-    .{ .name = "file_path_list_get_max_filepath_length", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_length, .flags = 0 },
+    .{ .name = "file_path_list_get_max_filepath_capacity", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_capacity, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_get_max_filepath_length", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_length, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////////

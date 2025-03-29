@@ -7,9 +7,9 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Frame control
-    .{ .name = "swap_screen_buffer", .arity = 0, .fptr = nif_swap_screen_buffer, .flags = 0 },
-    .{ .name = "poll_input_events", .arity = 0, .fptr = nif_poll_input_events, .flags = 0 },
-    .{ .name = "wait_time", .arity = 1, .fptr = nif_wait_time, .flags = 0 },
+    .{ .name = "swap_screen_buffer", .arity = 0, .fptr = nif_swap_screen_buffer, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "poll_input_events", .arity = 0, .fptr = nif_poll_input_events, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "wait_time", .arity = 1, .fptr = nif_wait_time, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 /////////////////////

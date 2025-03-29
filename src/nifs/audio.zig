@@ -7,7 +7,7 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Wave
-    .{ .name = "wave_get_data_size", .arity = 3, .fptr = nif_wave_get_data_size, .flags = 0 },
+    .{ .name = "wave_get_data_size", .arity = 3, .fptr = nif_wave_get_data_size, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////

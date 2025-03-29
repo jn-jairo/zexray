@@ -7,18 +7,18 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // VrDeviceInfo
-    .{ .name = "vr_device_info_get_max_lens_distortion_values", .arity = 0, .fptr = nif_vr_device_info_get_max_lens_distortion_values, .flags = 0 },
-    .{ .name = "vr_device_info_get_max_chroma_ab_correction", .arity = 0, .fptr = nif_vr_device_info_get_max_chroma_ab_correction, .flags = 0 },
+    .{ .name = "vr_device_info_get_max_lens_distortion_values", .arity = 0, .fptr = nif_vr_device_info_get_max_lens_distortion_values, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_device_info_get_max_chroma_ab_correction", .arity = 0, .fptr = nif_vr_device_info_get_max_chroma_ab_correction, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // VrStereoConfig
-    .{ .name = "vr_stereo_config_get_max_projection", .arity = 0, .fptr = nif_vr_stereo_config_get_max_projection, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_view_offset", .arity = 0, .fptr = nif_vr_stereo_config_get_max_view_offset, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_left_lens_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_left_lens_center, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_right_lens_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_right_lens_center, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_left_screen_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_left_screen_center, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_right_screen_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_right_screen_center, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_scale", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale, .flags = 0 },
-    .{ .name = "vr_stereo_config_get_max_scale_in", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale_in, .flags = 0 },
+    .{ .name = "vr_stereo_config_get_max_projection", .arity = 0, .fptr = nif_vr_stereo_config_get_max_projection, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_view_offset", .arity = 0, .fptr = nif_vr_stereo_config_get_max_view_offset, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_left_lens_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_left_lens_center, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_right_lens_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_right_lens_center, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_left_screen_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_left_screen_center, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_right_screen_center", .arity = 0, .fptr = nif_vr_stereo_config_get_max_right_screen_center, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_scale", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_get_max_scale_in", .arity = 0, .fptr = nif_vr_stereo_config_get_max_scale_in, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////////

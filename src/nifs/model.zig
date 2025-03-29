@@ -7,9 +7,9 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // BoneInfo
-    .{ .name = "bone_info_get_max_name", .arity = 0, .fptr = nif_bone_info_get_max_name, .flags = 0 },
+    .{ .name = "bone_info_get_max_name", .arity = 0, .fptr = nif_bone_info_get_max_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     // ModelAnimation
-    .{ .name = "model_animation_get_max_name", .arity = 0, .fptr = nif_model_animation_get_max_name, .flags = 0 },
+    .{ .name = "model_animation_get_max_name", .arity = 0, .fptr = nif_model_animation_get_max_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////

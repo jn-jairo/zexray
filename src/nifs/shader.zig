@@ -7,7 +7,7 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Shader
-    .{ .name = "shader_get_max_locations", .arity = 0, .fptr = nif_shader_get_max_locations, .flags = 0 },
+    .{ .name = "shader_get_max_locations", .arity = 0, .fptr = nif_shader_get_max_locations, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////

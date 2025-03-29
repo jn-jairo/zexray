@@ -7,8 +7,8 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Material
-    .{ .name = "material_get_max_maps", .arity = 0, .fptr = nif_material_get_max_maps, .flags = 0 },
-    .{ .name = "material_get_max_params", .arity = 0, .fptr = nif_material_get_max_params, .flags = 0 },
+    .{ .name = "material_get_max_maps", .arity = 0, .fptr = nif_material_get_max_maps, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_get_max_params", .arity = 0, .fptr = nif_material_get_max_params, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////

@@ -7,8 +7,8 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Font loading
-    .{ .name = "load_font", .arity = 1, .fptr = nif_load_font, .flags = 0 },
-    .{ .name = "load_font", .arity = 2, .fptr = nif_load_font, .flags = 0 },
+    .{ .name = "load_font", .arity = 1, .fptr = nif_load_font, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "load_font", .arity = 2, .fptr = nif_load_font, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////////

@@ -60,15 +60,25 @@ defmodule Zexray.MixProject do
         "include"
       ])
 
-    optimize = Application.fetch_env!(:zexray, :zig_build_optimize)
-    target = Application.fetch_env!(:zexray, :zig_build_target)
-    raylib_trace_log = Application.fetch_env!(:zexray, :trace_log) |> Atom.to_string()
-    raylib_trace_log_debug = Application.fetch_env!(:zexray, :trace_log_debug) |> Atom.to_string()
+    optimize = Application.get_env(:zexray, :optimize, "ReleaseSafe")
+    target = Application.get_env(:zexray, :target, "native")
+
+    platform = Application.get_env(:zexray, :platform, "glfw")
+    linux_display_backend = Application.get_env(:zexray, :linux_display_backend, "Both")
+    opengl_version = Application.get_env(:zexray, :opengl_version, "auto")
+
+    raylib_trace_log = Application.get_env(:zexray, :trace_log, true) |> Atom.to_string()
+
+    raylib_trace_log_debug =
+      Application.get_env(:zexray, :trace_log_debug, false) |> Atom.to_string()
 
     args = [
       "build",
       "-Doptimize=#{optimize}",
       "-Dtarget=#{target}",
+      "-Dplatform=#{platform}",
+      "-Dlinux_display_backend=#{linux_display_backend}",
+      "-Dopengl_version=#{opengl_version}",
       "-Derts_include_path=#{erts_include_path}",
       "-Draylib_trace_log=#{raylib_trace_log}",
       "-Draylib_trace_log_debug=#{raylib_trace_log_debug}",

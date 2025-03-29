@@ -1,14 +1,18 @@
 import Config
 
 if config_env() == :prod do
-  config :zexray, :zig_build_optimize, "ReleaseSafe"
+  config :zexray, :optimize, "ReleaseSafe"
 else
-  config :zexray, :zig_build_optimize, "Debug"
+  config :zexray, :optimize, "Debug"
 end
 
-config :zexray, :zig_build_target, "native"
+config :zexray, :target, "native"
 
 config :zexray, :internal_docs, System.get_env("ZEXRAY_INTERNAL_DOCS") == "true"
+
+config :zexray, :platform, "glfw"
+config :zexray, :linux_display_backend, "Both"
+config :zexray, :opengl_version, "auto"
 
 case config_env() do
   :test ->

@@ -6,199 +6,199 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Vector2
-    .{ .name = "vector2_to_resource", .arity = 1, .fptr = nif_vector2_to_resource, .flags = 0 },
-    .{ .name = "vector2_from_resource", .arity = 1, .fptr = nif_vector2_from_resource, .flags = 0 },
-    .{ .name = "vector2_free_resource", .arity = 1, .fptr = nif_vector2_free_resource, .flags = 0 },
+    .{ .name = "vector2_to_resource", .arity = 1, .fptr = nif_vector2_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector2_from_resource", .arity = 1, .fptr = nif_vector2_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector2_free_resource", .arity = 1, .fptr = nif_vector2_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Vector3
-    .{ .name = "vector3_to_resource", .arity = 1, .fptr = nif_vector3_to_resource, .flags = 0 },
-    .{ .name = "vector3_from_resource", .arity = 1, .fptr = nif_vector3_from_resource, .flags = 0 },
-    .{ .name = "vector3_free_resource", .arity = 1, .fptr = nif_vector3_free_resource, .flags = 0 },
+    .{ .name = "vector3_to_resource", .arity = 1, .fptr = nif_vector3_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector3_from_resource", .arity = 1, .fptr = nif_vector3_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector3_free_resource", .arity = 1, .fptr = nif_vector3_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Vector4
-    .{ .name = "vector4_to_resource", .arity = 1, .fptr = nif_vector4_to_resource, .flags = 0 },
-    .{ .name = "vector4_from_resource", .arity = 1, .fptr = nif_vector4_from_resource, .flags = 0 },
-    .{ .name = "vector4_free_resource", .arity = 1, .fptr = nif_vector4_free_resource, .flags = 0 },
+    .{ .name = "vector4_to_resource", .arity = 1, .fptr = nif_vector4_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector4_from_resource", .arity = 1, .fptr = nif_vector4_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector4_free_resource", .arity = 1, .fptr = nif_vector4_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Quaternion
-    .{ .name = "quaternion_to_resource", .arity = 1, .fptr = nif_quaternion_to_resource, .flags = 0 },
-    .{ .name = "quaternion_from_resource", .arity = 1, .fptr = nif_quaternion_from_resource, .flags = 0 },
-    .{ .name = "quaternion_free_resource", .arity = 1, .fptr = nif_quaternion_free_resource, .flags = 0 },
+    .{ .name = "quaternion_to_resource", .arity = 1, .fptr = nif_quaternion_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "quaternion_from_resource", .arity = 1, .fptr = nif_quaternion_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "quaternion_free_resource", .arity = 1, .fptr = nif_quaternion_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Matrix
-    .{ .name = "matrix_to_resource", .arity = 1, .fptr = nif_matrix_to_resource, .flags = 0 },
-    .{ .name = "matrix_from_resource", .arity = 1, .fptr = nif_matrix_from_resource, .flags = 0 },
-    .{ .name = "matrix_free_resource", .arity = 1, .fptr = nif_matrix_free_resource, .flags = 0 },
+    .{ .name = "matrix_to_resource", .arity = 1, .fptr = nif_matrix_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "matrix_from_resource", .arity = 1, .fptr = nif_matrix_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "matrix_free_resource", .arity = 1, .fptr = nif_matrix_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Color
-    .{ .name = "color_to_resource", .arity = 1, .fptr = nif_color_to_resource, .flags = 0 },
-    .{ .name = "color_from_resource", .arity = 1, .fptr = nif_color_from_resource, .flags = 0 },
-    .{ .name = "color_free_resource", .arity = 1, .fptr = nif_color_free_resource, .flags = 0 },
+    .{ .name = "color_to_resource", .arity = 1, .fptr = nif_color_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "color_from_resource", .arity = 1, .fptr = nif_color_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "color_free_resource", .arity = 1, .fptr = nif_color_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Rectangle
-    .{ .name = "rectangle_to_resource", .arity = 1, .fptr = nif_rectangle_to_resource, .flags = 0 },
-    .{ .name = "rectangle_from_resource", .arity = 1, .fptr = nif_rectangle_from_resource, .flags = 0 },
-    .{ .name = "rectangle_free_resource", .arity = 1, .fptr = nif_rectangle_free_resource, .flags = 0 },
+    .{ .name = "rectangle_to_resource", .arity = 1, .fptr = nif_rectangle_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "rectangle_from_resource", .arity = 1, .fptr = nif_rectangle_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "rectangle_free_resource", .arity = 1, .fptr = nif_rectangle_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Image
-    .{ .name = "image_to_resource", .arity = 1, .fptr = nif_image_to_resource, .flags = 0 },
-    .{ .name = "image_from_resource", .arity = 1, .fptr = nif_image_from_resource, .flags = 0 },
-    .{ .name = "image_free_resource", .arity = 1, .fptr = nif_image_free_resource, .flags = 0 },
+    .{ .name = "image_to_resource", .arity = 1, .fptr = nif_image_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_from_resource", .arity = 1, .fptr = nif_image_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_free_resource", .arity = 1, .fptr = nif_image_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Texture
-    .{ .name = "texture_to_resource", .arity = 1, .fptr = nif_texture_to_resource, .flags = 0 },
-    .{ .name = "texture_from_resource", .arity = 1, .fptr = nif_texture_from_resource, .flags = 0 },
-    .{ .name = "texture_free_resource", .arity = 1, .fptr = nif_texture_free_resource, .flags = 0 },
+    .{ .name = "texture_to_resource", .arity = 1, .fptr = nif_texture_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_from_resource", .arity = 1, .fptr = nif_texture_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_free_resource", .arity = 1, .fptr = nif_texture_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Texture2D
-    .{ .name = "texture_2d_to_resource", .arity = 1, .fptr = nif_texture_2d_to_resource, .flags = 0 },
-    .{ .name = "texture_2d_from_resource", .arity = 1, .fptr = nif_texture_2d_from_resource, .flags = 0 },
-    .{ .name = "texture_2d_free_resource", .arity = 1, .fptr = nif_texture_2d_free_resource, .flags = 0 },
+    .{ .name = "texture_2d_to_resource", .arity = 1, .fptr = nif_texture_2d_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_2d_from_resource", .arity = 1, .fptr = nif_texture_2d_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_2d_free_resource", .arity = 1, .fptr = nif_texture_2d_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // TextureCubemap
-    .{ .name = "texture_cubemap_to_resource", .arity = 1, .fptr = nif_texture_cubemap_to_resource, .flags = 0 },
-    .{ .name = "texture_cubemap_from_resource", .arity = 1, .fptr = nif_texture_cubemap_from_resource, .flags = 0 },
-    .{ .name = "texture_cubemap_free_resource", .arity = 1, .fptr = nif_texture_cubemap_free_resource, .flags = 0 },
+    .{ .name = "texture_cubemap_to_resource", .arity = 1, .fptr = nif_texture_cubemap_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_cubemap_from_resource", .arity = 1, .fptr = nif_texture_cubemap_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_cubemap_free_resource", .arity = 1, .fptr = nif_texture_cubemap_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RenderTexture
-    .{ .name = "render_texture_to_resource", .arity = 1, .fptr = nif_render_texture_to_resource, .flags = 0 },
-    .{ .name = "render_texture_from_resource", .arity = 1, .fptr = nif_render_texture_from_resource, .flags = 0 },
-    .{ .name = "render_texture_free_resource", .arity = 1, .fptr = nif_render_texture_free_resource, .flags = 0 },
+    .{ .name = "render_texture_to_resource", .arity = 1, .fptr = nif_render_texture_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_from_resource", .arity = 1, .fptr = nif_render_texture_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_free_resource", .arity = 1, .fptr = nif_render_texture_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RenderTexture2D
-    .{ .name = "render_texture_2d_to_resource", .arity = 1, .fptr = nif_render_texture_2d_to_resource, .flags = 0 },
-    .{ .name = "render_texture_2d_from_resource", .arity = 1, .fptr = nif_render_texture_2d_from_resource, .flags = 0 },
-    .{ .name = "render_texture_2d_free_resource", .arity = 1, .fptr = nif_render_texture_2d_free_resource, .flags = 0 },
+    .{ .name = "render_texture_2d_to_resource", .arity = 1, .fptr = nif_render_texture_2d_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_2d_from_resource", .arity = 1, .fptr = nif_render_texture_2d_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_2d_free_resource", .arity = 1, .fptr = nif_render_texture_2d_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // NPatchInfo
-    .{ .name = "n_patch_info_to_resource", .arity = 1, .fptr = nif_n_patch_info_to_resource, .flags = 0 },
-    .{ .name = "n_patch_info_from_resource", .arity = 1, .fptr = nif_n_patch_info_from_resource, .flags = 0 },
-    .{ .name = "n_patch_info_free_resource", .arity = 1, .fptr = nif_n_patch_info_free_resource, .flags = 0 },
+    .{ .name = "n_patch_info_to_resource", .arity = 1, .fptr = nif_n_patch_info_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "n_patch_info_from_resource", .arity = 1, .fptr = nif_n_patch_info_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "n_patch_info_free_resource", .arity = 1, .fptr = nif_n_patch_info_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // GlyphInfo
-    .{ .name = "glyph_info_to_resource", .arity = 1, .fptr = nif_glyph_info_to_resource, .flags = 0 },
-    .{ .name = "glyph_info_from_resource", .arity = 1, .fptr = nif_glyph_info_from_resource, .flags = 0 },
-    .{ .name = "glyph_info_free_resource", .arity = 1, .fptr = nif_glyph_info_free_resource, .flags = 0 },
+    .{ .name = "glyph_info_to_resource", .arity = 1, .fptr = nif_glyph_info_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "glyph_info_from_resource", .arity = 1, .fptr = nif_glyph_info_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "glyph_info_free_resource", .arity = 1, .fptr = nif_glyph_info_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Font
-    .{ .name = "font_to_resource", .arity = 1, .fptr = nif_font_to_resource, .flags = 0 },
-    .{ .name = "font_from_resource", .arity = 1, .fptr = nif_font_from_resource, .flags = 0 },
-    .{ .name = "font_free_resource", .arity = 1, .fptr = nif_font_free_resource, .flags = 0 },
+    .{ .name = "font_to_resource", .arity = 1, .fptr = nif_font_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "font_from_resource", .arity = 1, .fptr = nif_font_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "font_free_resource", .arity = 1, .fptr = nif_font_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera3D
-    .{ .name = "camera_3d_to_resource", .arity = 1, .fptr = nif_camera_3d_to_resource, .flags = 0 },
-    .{ .name = "camera_3d_from_resource", .arity = 1, .fptr = nif_camera_3d_from_resource, .flags = 0 },
-    .{ .name = "camera_3d_free_resource", .arity = 1, .fptr = nif_camera_3d_free_resource, .flags = 0 },
+    .{ .name = "camera_3d_to_resource", .arity = 1, .fptr = nif_camera_3d_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_3d_from_resource", .arity = 1, .fptr = nif_camera_3d_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_3d_free_resource", .arity = 1, .fptr = nif_camera_3d_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera
-    .{ .name = "camera_to_resource", .arity = 1, .fptr = nif_camera_to_resource, .flags = 0 },
-    .{ .name = "camera_from_resource", .arity = 1, .fptr = nif_camera_from_resource, .flags = 0 },
-    .{ .name = "camera_free_resource", .arity = 1, .fptr = nif_camera_free_resource, .flags = 0 },
+    .{ .name = "camera_to_resource", .arity = 1, .fptr = nif_camera_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_from_resource", .arity = 1, .fptr = nif_camera_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_free_resource", .arity = 1, .fptr = nif_camera_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera2D
-    .{ .name = "camera_2d_to_resource", .arity = 1, .fptr = nif_camera_2d_to_resource, .flags = 0 },
-    .{ .name = "camera_2d_from_resource", .arity = 1, .fptr = nif_camera_2d_from_resource, .flags = 0 },
-    .{ .name = "camera_2d_free_resource", .arity = 1, .fptr = nif_camera_2d_free_resource, .flags = 0 },
+    .{ .name = "camera_2d_to_resource", .arity = 1, .fptr = nif_camera_2d_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_2d_from_resource", .arity = 1, .fptr = nif_camera_2d_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_2d_free_resource", .arity = 1, .fptr = nif_camera_2d_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Mesh
-    .{ .name = "mesh_to_resource", .arity = 1, .fptr = nif_mesh_to_resource, .flags = 0 },
-    .{ .name = "mesh_from_resource", .arity = 1, .fptr = nif_mesh_from_resource, .flags = 0 },
-    .{ .name = "mesh_free_resource", .arity = 1, .fptr = nif_mesh_free_resource, .flags = 0 },
+    .{ .name = "mesh_to_resource", .arity = 1, .fptr = nif_mesh_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "mesh_from_resource", .arity = 1, .fptr = nif_mesh_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "mesh_free_resource", .arity = 1, .fptr = nif_mesh_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Shader
-    .{ .name = "shader_to_resource", .arity = 1, .fptr = nif_shader_to_resource, .flags = 0 },
-    .{ .name = "shader_from_resource", .arity = 1, .fptr = nif_shader_from_resource, .flags = 0 },
-    .{ .name = "shader_free_resource", .arity = 1, .fptr = nif_shader_free_resource, .flags = 0 },
+    .{ .name = "shader_to_resource", .arity = 1, .fptr = nif_shader_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "shader_from_resource", .arity = 1, .fptr = nif_shader_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "shader_free_resource", .arity = 1, .fptr = nif_shader_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // MaterialMap
-    .{ .name = "material_map_to_resource", .arity = 1, .fptr = nif_material_map_to_resource, .flags = 0 },
-    .{ .name = "material_map_from_resource", .arity = 1, .fptr = nif_material_map_from_resource, .flags = 0 },
-    .{ .name = "material_map_free_resource", .arity = 1, .fptr = nif_material_map_free_resource, .flags = 0 },
+    .{ .name = "material_map_to_resource", .arity = 1, .fptr = nif_material_map_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_map_from_resource", .arity = 1, .fptr = nif_material_map_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_map_free_resource", .arity = 1, .fptr = nif_material_map_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Material
-    .{ .name = "material_to_resource", .arity = 1, .fptr = nif_material_to_resource, .flags = 0 },
-    .{ .name = "material_from_resource", .arity = 1, .fptr = nif_material_from_resource, .flags = 0 },
-    .{ .name = "material_free_resource", .arity = 1, .fptr = nif_material_free_resource, .flags = 0 },
+    .{ .name = "material_to_resource", .arity = 1, .fptr = nif_material_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_from_resource", .arity = 1, .fptr = nif_material_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_free_resource", .arity = 1, .fptr = nif_material_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Transform
-    .{ .name = "transform_to_resource", .arity = 1, .fptr = nif_transform_to_resource, .flags = 0 },
-    .{ .name = "transform_from_resource", .arity = 1, .fptr = nif_transform_from_resource, .flags = 0 },
-    .{ .name = "transform_free_resource", .arity = 1, .fptr = nif_transform_free_resource, .flags = 0 },
+    .{ .name = "transform_to_resource", .arity = 1, .fptr = nif_transform_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "transform_from_resource", .arity = 1, .fptr = nif_transform_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "transform_free_resource", .arity = 1, .fptr = nif_transform_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // BoneInfo
-    .{ .name = "bone_info_to_resource", .arity = 1, .fptr = nif_bone_info_to_resource, .flags = 0 },
-    .{ .name = "bone_info_from_resource", .arity = 1, .fptr = nif_bone_info_from_resource, .flags = 0 },
-    .{ .name = "bone_info_free_resource", .arity = 1, .fptr = nif_bone_info_free_resource, .flags = 0 },
+    .{ .name = "bone_info_to_resource", .arity = 1, .fptr = nif_bone_info_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bone_info_from_resource", .arity = 1, .fptr = nif_bone_info_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bone_info_free_resource", .arity = 1, .fptr = nif_bone_info_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Model
-    .{ .name = "model_to_resource", .arity = 1, .fptr = nif_model_to_resource, .flags = 0 },
-    .{ .name = "model_from_resource", .arity = 1, .fptr = nif_model_from_resource, .flags = 0 },
-    .{ .name = "model_free_resource", .arity = 1, .fptr = nif_model_free_resource, .flags = 0 },
+    .{ .name = "model_to_resource", .arity = 1, .fptr = nif_model_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_from_resource", .arity = 1, .fptr = nif_model_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_free_resource", .arity = 1, .fptr = nif_model_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // ModelAnimation
-    .{ .name = "model_animation_to_resource", .arity = 1, .fptr = nif_model_animation_to_resource, .flags = 0 },
-    .{ .name = "model_animation_from_resource", .arity = 1, .fptr = nif_model_animation_from_resource, .flags = 0 },
-    .{ .name = "model_animation_free_resource", .arity = 1, .fptr = nif_model_animation_free_resource, .flags = 0 },
+    .{ .name = "model_animation_to_resource", .arity = 1, .fptr = nif_model_animation_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_animation_from_resource", .arity = 1, .fptr = nif_model_animation_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_animation_free_resource", .arity = 1, .fptr = nif_model_animation_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Ray
-    .{ .name = "ray_to_resource", .arity = 1, .fptr = nif_ray_to_resource, .flags = 0 },
-    .{ .name = "ray_from_resource", .arity = 1, .fptr = nif_ray_from_resource, .flags = 0 },
-    .{ .name = "ray_free_resource", .arity = 1, .fptr = nif_ray_free_resource, .flags = 0 },
+    .{ .name = "ray_to_resource", .arity = 1, .fptr = nif_ray_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_from_resource", .arity = 1, .fptr = nif_ray_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_free_resource", .arity = 1, .fptr = nif_ray_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RayCollision
-    .{ .name = "ray_collision_to_resource", .arity = 1, .fptr = nif_ray_collision_to_resource, .flags = 0 },
-    .{ .name = "ray_collision_from_resource", .arity = 1, .fptr = nif_ray_collision_from_resource, .flags = 0 },
-    .{ .name = "ray_collision_free_resource", .arity = 1, .fptr = nif_ray_collision_free_resource, .flags = 0 },
+    .{ .name = "ray_collision_to_resource", .arity = 1, .fptr = nif_ray_collision_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_collision_from_resource", .arity = 1, .fptr = nif_ray_collision_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_collision_free_resource", .arity = 1, .fptr = nif_ray_collision_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // BoundingBox
-    .{ .name = "bounding_box_to_resource", .arity = 1, .fptr = nif_bounding_box_to_resource, .flags = 0 },
-    .{ .name = "bounding_box_from_resource", .arity = 1, .fptr = nif_bounding_box_from_resource, .flags = 0 },
-    .{ .name = "bounding_box_free_resource", .arity = 1, .fptr = nif_bounding_box_free_resource, .flags = 0 },
+    .{ .name = "bounding_box_to_resource", .arity = 1, .fptr = nif_bounding_box_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bounding_box_from_resource", .arity = 1, .fptr = nif_bounding_box_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bounding_box_free_resource", .arity = 1, .fptr = nif_bounding_box_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Wave
-    .{ .name = "wave_to_resource", .arity = 1, .fptr = nif_wave_to_resource, .flags = 0 },
-    .{ .name = "wave_from_resource", .arity = 1, .fptr = nif_wave_from_resource, .flags = 0 },
-    .{ .name = "wave_free_resource", .arity = 1, .fptr = nif_wave_free_resource, .flags = 0 },
+    .{ .name = "wave_to_resource", .arity = 1, .fptr = nif_wave_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "wave_from_resource", .arity = 1, .fptr = nif_wave_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "wave_free_resource", .arity = 1, .fptr = nif_wave_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AudioStream
-    .{ .name = "audio_stream_to_resource", .arity = 1, .fptr = nif_audio_stream_to_resource, .flags = 0 },
-    .{ .name = "audio_stream_from_resource", .arity = 1, .fptr = nif_audio_stream_from_resource, .flags = 0 },
-    .{ .name = "audio_stream_free_resource", .arity = 1, .fptr = nif_audio_stream_free_resource, .flags = 0 },
+    .{ .name = "audio_stream_to_resource", .arity = 1, .fptr = nif_audio_stream_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "audio_stream_from_resource", .arity = 1, .fptr = nif_audio_stream_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "audio_stream_free_resource", .arity = 1, .fptr = nif_audio_stream_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Sound
-    .{ .name = "sound_to_resource", .arity = 1, .fptr = nif_sound_to_resource, .flags = 0 },
-    .{ .name = "sound_from_resource", .arity = 1, .fptr = nif_sound_from_resource, .flags = 0 },
-    .{ .name = "sound_free_resource", .arity = 1, .fptr = nif_sound_free_resource, .flags = 0 },
+    .{ .name = "sound_to_resource", .arity = 1, .fptr = nif_sound_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_from_resource", .arity = 1, .fptr = nif_sound_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_free_resource", .arity = 1, .fptr = nif_sound_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Music
-    .{ .name = "music_to_resource", .arity = 1, .fptr = nif_music_to_resource, .flags = 0 },
-    .{ .name = "music_from_resource", .arity = 1, .fptr = nif_music_from_resource, .flags = 0 },
-    .{ .name = "music_free_resource", .arity = 1, .fptr = nif_music_free_resource, .flags = 0 },
+    .{ .name = "music_to_resource", .arity = 1, .fptr = nif_music_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "music_from_resource", .arity = 1, .fptr = nif_music_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "music_free_resource", .arity = 1, .fptr = nif_music_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // VrDeviceInfo
-    .{ .name = "vr_device_info_to_resource", .arity = 1, .fptr = nif_vr_device_info_to_resource, .flags = 0 },
-    .{ .name = "vr_device_info_from_resource", .arity = 1, .fptr = nif_vr_device_info_from_resource, .flags = 0 },
-    .{ .name = "vr_device_info_free_resource", .arity = 1, .fptr = nif_vr_device_info_free_resource, .flags = 0 },
+    .{ .name = "vr_device_info_to_resource", .arity = 1, .fptr = nif_vr_device_info_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_device_info_from_resource", .arity = 1, .fptr = nif_vr_device_info_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_device_info_free_resource", .arity = 1, .fptr = nif_vr_device_info_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // VrStereoConfig
-    .{ .name = "vr_stereo_config_to_resource", .arity = 1, .fptr = nif_vr_stereo_config_to_resource, .flags = 0 },
-    .{ .name = "vr_stereo_config_from_resource", .arity = 1, .fptr = nif_vr_stereo_config_from_resource, .flags = 0 },
-    .{ .name = "vr_stereo_config_free_resource", .arity = 1, .fptr = nif_vr_stereo_config_free_resource, .flags = 0 },
+    .{ .name = "vr_stereo_config_to_resource", .arity = 1, .fptr = nif_vr_stereo_config_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_from_resource", .arity = 1, .fptr = nif_vr_stereo_config_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_free_resource", .arity = 1, .fptr = nif_vr_stereo_config_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // FilePathList
-    .{ .name = "file_path_list_to_resource", .arity = 1, .fptr = nif_file_path_list_to_resource, .flags = 0 },
-    .{ .name = "file_path_list_from_resource", .arity = 1, .fptr = nif_file_path_list_from_resource, .flags = 0 },
-    .{ .name = "file_path_list_free_resource", .arity = 1, .fptr = nif_file_path_list_free_resource, .flags = 0 },
+    .{ .name = "file_path_list_to_resource", .arity = 1, .fptr = nif_file_path_list_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_from_resource", .arity = 1, .fptr = nif_file_path_list_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_free_resource", .arity = 1, .fptr = nif_file_path_list_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AutomationEvent
-    .{ .name = "automation_event_to_resource", .arity = 1, .fptr = nif_automation_event_to_resource, .flags = 0 },
-    .{ .name = "automation_event_from_resource", .arity = 1, .fptr = nif_automation_event_from_resource, .flags = 0 },
-    .{ .name = "automation_event_free_resource", .arity = 1, .fptr = nif_automation_event_free_resource, .flags = 0 },
+    .{ .name = "automation_event_to_resource", .arity = 1, .fptr = nif_automation_event_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_from_resource", .arity = 1, .fptr = nif_automation_event_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_free_resource", .arity = 1, .fptr = nif_automation_event_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AutomationEventList
-    .{ .name = "automation_event_list_to_resource", .arity = 1, .fptr = nif_automation_event_list_to_resource, .flags = 0 },
-    .{ .name = "automation_event_list_from_resource", .arity = 1, .fptr = nif_automation_event_list_from_resource, .flags = 0 },
-    .{ .name = "automation_event_list_free_resource", .arity = 1, .fptr = nif_automation_event_list_free_resource, .flags = 0 },
+    .{ .name = "automation_event_list_to_resource", .arity = 1, .fptr = nif_automation_event_list_to_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_list_from_resource", .arity = 1, .fptr = nif_automation_event_list_from_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_list_free_resource", .arity = 1, .fptr = nif_automation_event_list_free_resource, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ///////////////

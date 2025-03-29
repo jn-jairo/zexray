@@ -7,15 +7,15 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Image
-    .{ .name = "image_get_data_size", .arity = 4, .fptr = nif_image_get_data_size, .flags = 0 },
+    .{ .name = "image_get_data_size", .arity = 4, .fptr = nif_image_get_data_size, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Image generation
-    .{ .name = "gen_image_color", .arity = 3, .fptr = nif_gen_image_color, .flags = 0 },
-    .{ .name = "gen_image_color", .arity = 4, .fptr = nif_gen_image_color, .flags = 0 },
+    .{ .name = "gen_image_color", .arity = 3, .fptr = nif_gen_image_color, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "gen_image_color", .arity = 4, .fptr = nif_gen_image_color, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Image manipulation
-    .{ .name = "image_crop", .arity = 2, .fptr = nif_image_crop, .flags = 0 },
-    .{ .name = "image_crop", .arity = 3, .fptr = nif_image_crop, .flags = 0 },
+    .{ .name = "image_crop", .arity = 2, .fptr = nif_image_crop, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_crop", .arity = 3, .fptr = nif_image_crop, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 /////////////

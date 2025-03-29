@@ -7,7 +7,7 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Mesh
-    .{ .name = "mesh_get_max_vertex_buffers", .arity = 0, .fptr = nif_mesh_get_max_vertex_buffers, .flags = 0 },
+    .{ .name = "mesh_get_max_vertex_buffers", .arity = 0, .fptr = nif_mesh_get_max_vertex_buffers, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////

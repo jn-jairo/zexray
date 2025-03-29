@@ -7,8 +7,8 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // TraceLog
-    .{ .name = "set_trace_log_level", .arity = 1, .fptr = nif_set_trace_log_level, .flags = 0 },
-    .{ .name = "set_trace_log_callback", .arity = 0, .fptr = nif_set_trace_log_callback, .flags = 0 },
+    .{ .name = "set_trace_log_level", .arity = 1, .fptr = nif_set_trace_log_level, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_trace_log_callback", .arity = 0, .fptr = nif_set_trace_log_callback, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////

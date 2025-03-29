@@ -5,16 +5,18 @@ defmodule Zexray.NIF do
     """
   else
     @moduledoc false
-    alias IEx.App
   end
 
   @on_load :__on_load__
 
   def __on_load__ do
+    ld_library_path = System.get_env("LD_LIBRARY_PATH")
+    System.put_env("LD_LIBRARY_PATH", "#{:code.priv_dir(:zexray)}/lib/:#{ld_library_path}")
+
     lib = ~c"#{:code.priv_dir(:zexray)}/lib/libzexray"
     :erlang.load_nif(lib, 0)
 
-    Application.fetch_env!(:zexray, :trace_log_level)
+    Application.get_env(:zexray, :trace_log_level, :info)
     |> Zexray.Enum.TraceLogLevel.value()
     |> set_trace_log_level()
 

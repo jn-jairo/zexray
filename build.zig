@@ -1,11 +1,21 @@
 const std = @import("std");
 
+const raylib = @import("raylib");
+
+const PlatformBackend = raylib.PlatformBackend;
+const LinuxDisplayBackend = raylib.LinuxDisplayBackend;
+const OpenglVersion = raylib.OpenglVersion;
+
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
 // runner.
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+
+    const platform = b.option(PlatformBackend, "platform", "Choose the platform backend for desktop target") orelse PlatformBackend.glfw;
+    const linux_display_backend = b.option(LinuxDisplayBackend, "linux_display_backend", "Linux display backend to use") orelse LinuxDisplayBackend.Both;
+    const opengl_version = b.option(OpenglVersion, "opengl_version", "OpenGL version to use") orelse OpenglVersion.auto;
 
     const erts_include_path = b.option([]const u8, "erts_include_path", "include path for nif headers");
     const raylib_trace_log = b.option(bool, "raylib_trace_log", "raylib trace log") orelse false;
@@ -36,13 +46,15 @@ pub fn build(b: *std.Build) !void {
 
     const config: []const u8 = config_buf.items;
 
-    const raylib_artifact = getRaylib(b, target, optimize, config);
+    const raylib_artifact = getRaylib(b, target, optimize, config, platform, linux_display_backend, opengl_version);
 
     if (erts_include_path) |path| {
         raylib_artifact.addSystemIncludePath(.{ .cwd_relative = path });
     } else {
         raylib_artifact.step.dependOn(&b.addFail("Missing include path for nif headers").step);
     }
+
+    b.installArtifact(raylib_artifact);
 
     // nif_lib
 
@@ -56,7 +68,6 @@ pub fn build(b: *std.Build) !void {
         .linkage = .dynamic,
         .name = "zexray",
         .root_module = nif_mod,
-        .use_lld = false,
     });
 
     nif_lib.linkLibrary(raylib_artifact);
@@ -71,11 +82,15 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(nif_lib);
 }
 
-fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, config: []const u8) *std.Build.Step.Compile {
+fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, config: []const u8, platform: PlatformBackend, linux_display_backend: LinuxDisplayBackend, opengl_version: OpenglVersion) *std.Build.Step.Compile {
     const raylib_dep = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
         .config = config,
+        .shared = true,
+        .platform = platform,
+        .linux_display_backend = linux_display_backend,
+        .opengl_version = opengl_version,
     });
 
     const raygui_dep = b.dependency("raygui", .{

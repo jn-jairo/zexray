@@ -7,10 +7,10 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // AutomationEvent
-    .{ .name = "automation_event_get_max_params", .arity = 0, .fptr = nif_automation_event_get_max_params, .flags = 0 },
+    .{ .name = "automation_event_get_max_params", .arity = 0, .fptr = nif_automation_event_get_max_params, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AutomationEventList
-    .{ .name = "automation_event_list_get_max_automation_events", .arity = 0, .fptr = nif_automation_event_list_get_max_automation_events, .flags = 0 },
+    .{ .name = "automation_event_list_get_max_automation_events", .arity = 0, .fptr = nif_automation_event_list_get_max_automation_events, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ///////////////////////
