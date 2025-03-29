@@ -82,7 +82,7 @@ fn nif_init_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
     };
 
-    const arg_title = core.ArgumentBinary(core.CString, rl.allocator).get(env, argv[2]) catch |err| {
+    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[2]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'title'.");
     };
     defer arg_title.free();
@@ -90,7 +90,7 @@ fn nif_init_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Function
 
-    rl.InitWindow(width, height, @ptrCast(title));
+    rl.InitWindow(width, height, title);
 
     // Return
 
@@ -459,7 +459,7 @@ fn nif_set_window_title(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Arguments
 
-    const arg_title = core.ArgumentBinary(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
+    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'title'.");
     };
     defer arg_title.free();
@@ -467,7 +467,7 @@ fn nif_set_window_title(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Function
 
-    rl.SetWindowTitle(@ptrCast(title));
+    rl.SetWindowTitle(title);
 
     // Return
 
@@ -958,7 +958,7 @@ fn nif_set_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Arguments
 
-    const arg_text = core.ArgumentBinary(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
+    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'text'.");
     };
     defer arg_text.free();
@@ -966,7 +966,7 @@ fn nif_set_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.SetClipboardText(@ptrCast(text));
+    rl.SetClipboardText(text);
 
     // Return
 

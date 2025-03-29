@@ -28,7 +28,7 @@ fn nif_load_font(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Arguments
 
-    const arg_file_name = core.ArgumentBinary(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
+    const arg_file_name = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'file_name'.");
     };
     defer arg_file_name.free();
@@ -36,7 +36,7 @@ fn nif_load_font(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Function
 
-    const font = rl.LoadFont(@ptrCast(file_name));
+    const font = rl.LoadFont(file_name);
     defer if (!return_resource) core.Font.free(font);
 
     // Return

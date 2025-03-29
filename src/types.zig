@@ -1148,6 +1148,29 @@ pub fn ArgumentBinaryC(comptime T: type, allocator: std.mem.Allocator) type {
     };
 }
 
+pub fn ArgumentBinaryCUnknown(comptime T: type, allocator: std.mem.Allocator) type {
+    return struct {
+        data: [*c]T.data_type,
+        length: usize,
+
+        const Self = @This();
+
+        pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !Self {
+            const data = try T.get_c_unknown(allocator, env, term);
+            const length = try T.get_size(env, term);
+
+            return Self{
+                .data = data,
+                .length = length,
+            };
+        }
+
+        pub fn free(value: Self) void {
+            T.free_c_unknown(allocator, value.data);
+        }
+    };
+}
+
 pub fn ArgumentBinaryCopy(comptime T: type, allocator: std.mem.Allocator) type {
     return struct {
         data: []T.data_type,
