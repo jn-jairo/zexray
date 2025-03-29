@@ -3,6 +3,8 @@ Application.fetch_env!(:zexray, :trace_log_level)
 
 ExUnit.start(
   exclude: [
+    :nif,
+    :resource,
     :window
   ]
 )

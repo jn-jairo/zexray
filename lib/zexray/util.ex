@@ -134,4 +134,56 @@ defmodule Zexray.Util do
       when is_like_trace_log_level(log_level) do
     NIF.set_trace_log_level(Zexray.Enum.TraceLogLevel.value(log_level))
   end
+
+  @doc """
+  Wait for some time (halt program execution)
+  """
+  @spec wait_time(seconds :: number) :: :ok
+
+  def wait_time(seconds) when is_number(seconds) and seconds <= 0, do: :ok
+
+  def wait_time(seconds) when is_number(seconds) do
+    destination_time = System.os_time(:microsecond) + seconds * 1_000_000
+    seconds = seconds * 0.9
+
+    if seconds >= 0.001 do
+      # Process.sleep/1 only supports whole milliseconds
+      Process.sleep(trunc(seconds * 1_000))
+    end
+
+    loop = fn loop, destination_time ->
+      if System.os_time(:microsecond) < destination_time do
+        loop.(loop, destination_time)
+      end
+    end
+
+    loop.(loop, destination_time)
+
+    :ok
+  end
+
+  @doc """
+  Wait for the function to return `true`
+  """
+  @spec wait_fn(function :: (-> boolean), seconds :: number, max_seconds :: number) :: :ok
+
+  def wait_fn(function, seconds \\ 0.001, max_seconds \\ 1.0)
+
+  def wait_fn(_function, seconds, max_seconds)
+      when is_number(seconds) and
+             is_number(max_seconds) and
+             seconds >= max_seconds,
+      do: :ok
+
+  def wait_fn(function, seconds, max_seconds)
+      when is_function(function) and
+             is_number(seconds) and
+             is_number(max_seconds) do
+    if not function.() do
+      wait_time(seconds)
+      wait_fn(function, seconds, max_seconds - seconds)
+    else
+      :ok
+    end
+  end
 end

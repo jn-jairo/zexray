@@ -1,11 +1,24 @@
+defmodule Zexray.NIF.ResourceTest.DummyStruct do
+  defstruct [
+    :foo,
+    :bar
+  ]
+end
+
 defmodule Zexray.NIF.ResourceTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+
+  @moduletag :nif
+  @moduletag :resource
 
   import ExUnitParameterize
-  import Zexray.Util, only: [similar?: 2]
+  import Zexray.Util, only: [similar?: 2, wait_time: 1]
 
   alias Zexray.NIF
+  alias Zexray.Resource
   alias Zexray.TypeFixture
+
+  alias Zexray.NIF.ResourceTest.DummyStruct
 
   describe "resource conversion" do
     defp dataset_resource_conversion(_) do
@@ -220,7 +233,86 @@ defmodule Zexray.NIF.ResourceTest do
       assert is_reference(resource)
       assert similar?(value, apply(NIF, from_resource, [resource]))
 
-      apply(NIF, free_resource, [resource])
+      resource_2 = Resource.new!(value)
+      assert similar?(value, Resource.content!(resource_2))
+      assert similar?(value, apply(Resource.content_type!(resource_2), :new, [resource_2]))
+
+      resource_3 = Resource.new(value)
+      assert similar?(value, Resource.content(resource_3))
+      assert similar?(value, apply(Resource.content_type(resource_3), :new, [resource_3]))
+
+      Task.start(fn ->
+        wait_time(1.0)
+        apply(NIF, free_resource, [resource])
+      end)
+
+      Resource.free_async!(resource_2)
+      Resource.free_async(resource_3)
+    end
+  end
+
+  describe "invalid resource" do
+    defp dataset_invalid_resource(_) do
+      datasets = %{
+        atom: {:foo},
+        struct: {%DummyStruct{}}
+      }
+
+      %{datasets: datasets}
+    end
+
+    setup [:dataset_invalid_resource]
+
+    parameterized_test "", %{datasets: datasets}, [
+      # base
+      [dataset: :atom],
+      [dataset: :struct]
+    ] do
+      dataset = Map.fetch!(datasets, dataset)
+
+      {resource} = dataset
+
+      assert not Resource.resource?(resource)
+
+      assert_raise ArgumentError, fn -> Resource.content!(resource) end
+      assert ^resource = Resource.content(resource)
+
+      assert_raise ArgumentError, fn -> Resource.content_type!(resource) end
+      assert ^resource = Resource.content_type(resource)
+
+      assert_raise ArgumentError, fn -> Resource.free!(resource) end
+      assert :ok = Resource.free(resource)
+
+      assert_raise ArgumentError, fn -> Resource.free_async!(resource) end
+      assert :ok = Resource.free_async(resource)
+    end
+  end
+
+  describe "invalid resourceable" do
+    defp dataset_invalid_resourceable(_) do
+      datasets = %{
+        atom: {:foo},
+        struct: {%DummyStruct{}}
+      }
+
+      %{datasets: datasets}
+    end
+
+    setup [:dataset_invalid_resourceable]
+
+    parameterized_test "", %{datasets: datasets}, [
+      # base
+      [dataset: :atom],
+      [dataset: :struct]
+    ] do
+      dataset = Map.fetch!(datasets, dataset)
+
+      {value} = dataset
+
+      assert not Resource.resourceable?(value)
+
+      assert_raise ArgumentError, fn -> Resource.new!(value) end
+      assert ^value = Resource.new(value)
     end
   end
 end

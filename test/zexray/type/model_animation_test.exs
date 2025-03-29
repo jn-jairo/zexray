@@ -19,7 +19,7 @@ defmodule Zexray.Type.ModelAnimationTest do
   alias Zexray.Type.ModelAnimation, as: Type
   alias Zexray.Type.ModelAnimationTest.Type2
 
-  import Zexray.Util, only: [map_from_struct: 1, similar?: 2]
+  import Zexray.Util, only: [map_from_struct: 1]
 
   setup_all _ do
     %{
@@ -79,11 +79,5 @@ defmodule Zexray.Type.ModelAnimationTest do
     Enum.each(Map.keys(map), fn key ->
       assert apply(Type, :new, [%{map | key => nil}]) |> Map.fetch!(key) |> is_nil()
     end)
-  end
-
-  test "resource", %{value: value} do
-    resource = Type.Resource.new(value)
-    assert similar?(value, Type.new(resource))
-    Type.Resource.free(resource)
   end
 end

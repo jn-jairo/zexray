@@ -1,5 +1,8 @@
 defmodule Zexray.TypeTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+
+  @moduletag :nif
+  @moduletag :resource
 
   import ExUnitParameterize
 

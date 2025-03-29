@@ -2,16 +2,17 @@ defmodule Zexray.WindowTest do
   use Zexray.WindowCase
   doctest Zexray.Window
 
+  @moduletag :nif
   @moduletag :window
 
   alias Zexray.FrameControl
   alias Zexray.Image
-  alias Zexray.Type
+  alias Zexray.Resource
   alias Zexray.Window
 
   import Zexray.Guard
   import Zexray.TypeFixture
-  import Zexray.Util, only: [similar?: 2]
+  import Zexray.Util, only: [similar?: 2, wait_fn: 1]
 
   test "initialization" do
     if Window.ready?() do
@@ -101,8 +102,12 @@ defmodule Zexray.WindowTest do
     assert not Window.minimized?()
 
     Window.minimize()
-    FrameControl.wait_time(0.1)
-    FrameControl.poll_input_events()
+
+    wait_fn(fn ->
+      FrameControl.poll_input_events()
+      Window.minimized?()
+    end)
+
     assert Window.minimized?()
   end
 
@@ -145,9 +150,13 @@ defmodule Zexray.WindowTest do
       position.y |> trunc()
     )
 
-    FrameControl.wait_time(0.1)
+    wait_fn(fn -> similar?(position, Window.get_position()) end)
+
     assert similar?(position, Window.get_position())
-    assert similar?(position, Window.get_position(:resource) |> Type.Vector2.Resource.content())
+
+    position_resource = Window.get_position(:resource)
+    assert similar?(position, Resource.content!(position_resource))
+    Resource.free_async!(position_resource)
   end
 
   test "monitor" do
@@ -156,7 +165,7 @@ defmodule Zexray.WindowTest do
     0..(monitor_count - 1)
     |> Enum.each(fn monitor ->
       Window.set_monitor(monitor)
-      FrameControl.wait_time(0.1)
+      wait_fn(fn -> Window.get_current_monitor() == monitor end)
       assert ^monitor = Window.get_current_monitor()
 
       assert is_binary(Window.get_monitor_name(monitor))
@@ -170,8 +179,8 @@ defmodule Zexray.WindowTest do
       assert is_vector2(position)
 
       position_resource = Window.get_monitor_position(monitor, :resource)
-      assert is_vector2(Type.Vector2.Resource.content(position_resource))
-      Type.Vector2.Resource.free(position_resource)
+      assert is_vector2(Resource.content(position_resource))
+      Resource.free_async(position_resource)
     end)
   end
 
@@ -185,7 +194,9 @@ defmodule Zexray.WindowTest do
     assert :ok = Window.set_max_size(600, 400)
     assert :ok = Window.set_size(width, height)
 
-    FrameControl.wait_time(0.1)
+    wait_fn(fn ->
+      Window.get_screen_width() == width and Window.get_screen_height() == height
+    end)
 
     assert ^width = Window.get_screen_width()
     assert ^height = Window.get_screen_height()
@@ -212,8 +223,8 @@ defmodule Zexray.WindowTest do
     assert is_image(image)
 
     image_resource = Window.get_clipboard_image(:resource)
-    assert is_image(Type.Image.Resource.content(image_resource))
-    Type.Image.Resource.free(image_resource)
+    assert is_image(Resource.content!(image_resource))
+    Resource.free_async!(image_resource)
   end
 
   test "event waiting" do

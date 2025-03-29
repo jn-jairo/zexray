@@ -70,6 +70,14 @@ defmodule Zexray.Type.TypeBase do
           map = apply(NIF, unquote(from_resource), [resource.reference])
           apply(unquote(base_module), :new, [map])
         end
+
+        @doc """
+        Get the content type (`#{unquote(base_module_name)}`) of the resource.
+        """
+        @spec content_type() :: module
+        def content_type do
+          unquote(base_module)
+        end
       end
 
       @name unquote(name)
