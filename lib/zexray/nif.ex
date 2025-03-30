@@ -40,6 +40,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Shader
   use Zexray.NIF.Text
   use Zexray.NIF.Timing
+  use Zexray.NIF.TraceLog
   use Zexray.NIF.Util
   use Zexray.NIF.Vr
   use Zexray.NIF.Window
@@ -61,6 +62,7 @@ defmodule Zexray.NIF do
           @nifs_shader ++
           @nifs_text ++
           @nifs_timing ++
+          @nifs_trace_log ++
           @nifs_util ++
           @nifs_vr ++
           @nifs_window

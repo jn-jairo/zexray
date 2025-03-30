@@ -7,132 +7,34 @@ const rlgl = @import("../rlgl.zig");
 const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
-    // TraceLog
-    .{ .name = "trace_log", .arity = 2, .fptr = nif_trace_log, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_trace_log_level", .arity = 1, .fptr = nif_set_trace_log_level, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_trace_log_callback", .arity = 0, .fptr = nif_set_trace_log_callback, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "screenshot", .arity = 0, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "screenshot", .arity = 1, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    // Util
+    .{ .name = "open_url", .arity = 1, .fptr = nif_open_url, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
-////////////////
-//  TraceLog  //
-////////////////
+////////////
+//  Util  //
+////////////
 
-/// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+/// Open URL with default system browser (if available)
 ///
 /// raylib.h
-/// RLAPI void TraceLog(int logLevel, const char *text, ...);
-fn nif_trace_log(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
-    assert(argc == 2);
-
-    // Arguments
-
-    const log_level: c_int = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'log_level'.");
-    };
-
-    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'text'.");
-    };
-    defer arg_text.free();
-    const text = arg_text.data;
-
-    // Function
-
-    rl.TraceLog(log_level, text);
-
-    // Return
-
-    return core.Atom.make(env, "ok");
-}
-
-/// Set the current threshold (minimum) log level
-///
-/// raylib.h
-/// RLAPI void SetTraceLogLevel(int logLevel);
-fn nif_set_trace_log_level(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+/// RLAPI void OpenURL(const char *url);
+fn nif_open_url(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const log_level: c_int = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'log_level'.");
+    const arg_url = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'url'.");
     };
+    defer arg_url.free();
+    const url = arg_url.data;
 
     // Function
 
-    rl.SetTraceLogLevel(log_level);
+    rl.OpenURL(url);
 
     // Return
 
     return core.Atom.make(env, "ok");
-}
-
-pub fn traceLog(logLevel: c_int, text: [*c]const u8, args: [*c]rl.struct___va_list_tag_1) callconv(.C) void {
-    const buf_len = rl.MAX_TRACELOG_MSG_LENGTH * 4;
-    var buf: [buf_len]u8 = std.mem.zeroes([buf_len]u8);
-
-    const writer = std.io.getStdErr().writer();
-
-    const len: usize = @intCast(rl.vsnprintf(&buf, buf_len, text, args));
-
-    switch (logLevel) {
-        rl.LOG_TRACE => writer.writeAll("TRACE:   ") catch return,
-        rl.LOG_DEBUG => writer.writeAll("DEBUG:   ") catch return,
-        rl.LOG_INFO => writer.writeAll("INFO:    ") catch return,
-        rl.LOG_WARNING => writer.writeAll("WARNING: ") catch return,
-        rl.LOG_ERROR => writer.writeAll("ERROR:   ") catch return,
-        rl.LOG_FATAL => writer.writeAll("FATAL:   ") catch return,
-        else => return,
-    }
-
-    writer.writeAll(buf[0..len]) catch return;
-    writer.writeAll("\n\r") catch return;
-}
-
-/// Set custom trace log
-///
-/// raylib.h
-/// RLAPI void SetTraceLogCallback(TraceLogCallback callback);
-fn nif_set_trace_log_callback(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
-    assert(argc == 0);
-    _ = argv;
-
-    // Function
-
-    rl.SetTraceLogCallback(@ptrCast(&traceLog));
-
-    // Return
-
-    return core.Atom.make(env, "ok");
-}
-
-/// Takes a screenshot of current screen
-fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
-    assert(argc == 0 or argc == 1);
-
-    // Return type
-
-    const return_resource = core.must_return_resource(env, argc, argv, 0);
-
-    // Function
-
-    const width = rl.GetRenderWidth();
-    const height = rl.GetRenderHeight();
-
-    const image = rl.Image{
-        .data = rlgl.rlReadScreenPixels(width, height),
-        .width = width,
-        .height = height,
-        .mipmaps = 1,
-        .format = rl.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-    };
-    defer if (!return_resource) core.Image.free(image);
-
-    // Return
-
-    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
-    };
 }

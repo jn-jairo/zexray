@@ -2,6 +2,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("../erl_nif.zig");
 const rl = @import("../raylib.zig");
+const rlgl = @import("../rlgl.zig");
 
 const core = @import("../core.zig");
 
@@ -19,6 +20,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "is_window_resized", .arity = 0, .fptr = nif_is_window_resized, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "is_window_state", .arity = 1, .fptr = nif_is_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_window_state", .arity = 1, .fptr = nif_set_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_config_flags", .arity = 1, .fptr = nif_set_config_flags, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "clear_window_state", .arity = 1, .fptr = nif_clear_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "toggle_fullscreen", .arity = 0, .fptr = nif_toggle_fullscreen, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "toggle_borderless_windowed", .arity = 0, .fptr = nif_toggle_borderless_windowed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -59,6 +61,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "get_clipboard_image", .arity = 1, .fptr = nif_get_clipboard_image, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "enable_event_waiting", .arity = 0, .fptr = nif_enable_event_waiting, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "disable_event_waiting", .arity = 0, .fptr = nif_disable_event_waiting, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 0, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 1, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////
@@ -288,6 +292,28 @@ fn nif_set_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     // Function
 
     rl.SetWindowState(flag);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Setup init configuration flags (view FLAGS)
+///
+/// raylib.h
+/// RLAPI void SetConfigFlags(unsigned int flags);
+fn nif_set_config_flags(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    // Arguments
+
+    const flag = core.UInt.get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'flag'.");
+    };
+
+    // Function
+
+    rl.SetConfigFlags(flag);
 
     // Return
 
@@ -1046,4 +1072,33 @@ fn nif_disable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Return
 
     return core.Atom.make(env, "ok");
+}
+
+/// Takes a screenshot of current screen
+fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 0 or argc == 1);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 0);
+
+    // Function
+
+    const width = rl.GetRenderWidth();
+    const height = rl.GetRenderHeight();
+
+    const image = rl.Image{
+        .data = rlgl.rlReadScreenPixels(width, height),
+        .width = width,
+        .height = height,
+        .mipmaps = 1,
+        .format = rl.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+    };
+    defer if (!return_resource) core.Image.free(image);
+
+    // Return
+
+    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    };
 }

@@ -43,6 +43,7 @@ const nif_screen_space = @import("./nifs/screen_space.zig");
 const nif_shader = @import("./nifs/shader.zig");
 const nif_text = @import("./nifs/text.zig");
 const nif_timing = @import("./nifs/timing.zig");
+const nif_trace_log = @import("./nifs/trace_log.zig");
 const nif_util = @import("./nifs/util.zig");
 const nif_vr = @import("./nifs/vr.zig");
 const nif_window = @import("./nifs/window.zig");
@@ -64,6 +65,7 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_shader.exported_nifs ++
     nif_text.exported_nifs ++
     nif_timing.exported_nifs ++
+    nif_trace_log.exported_nifs ++
     nif_util.exported_nifs ++
     nif_vr.exported_nifs ++
     nif_window.exported_nifs;

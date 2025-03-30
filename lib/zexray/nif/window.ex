@@ -17,6 +17,7 @@ defmodule Zexray.NIF.Window do
         is_window_resized: 0,
         is_window_state: 1,
         set_window_state: 1,
+        set_config_flags: 1,
         clear_window_state: 1,
         toggle_fullscreen: 0,
         toggle_borderless_windowed: 0,
@@ -56,7 +57,9 @@ defmodule Zexray.NIF.Window do
         get_clipboard_image: 0,
         get_clipboard_image: 1,
         enable_event_waiting: 0,
-        disable_event_waiting: 0
+        disable_event_waiting: 0,
+        screenshot: 0,
+        screenshot: 1
       ]
 
       ############
@@ -215,6 +218,18 @@ defmodule Zexray.NIF.Window do
       @doc group: :window
       @spec set_window_state(flag :: non_neg_integer) :: :ok
       def set_window_state(_flag), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Setup init configuration flags (view FLAGS)
+
+      ```c
+      // raylib.h
+      RLAPI void SetConfigFlags(unsigned int flags);
+      ```
+      """
+      @doc group: :window
+      @spec set_config_flags(flag :: non_neg_integer) :: :ok
+      def set_config_flags(_flag), do: :erlang.nif_error(:undef)
 
       @doc """
       Clear window configuration state flags
@@ -682,6 +697,13 @@ defmodule Zexray.NIF.Window do
       @doc group: :window
       @spec disable_event_waiting() :: :ok
       def disable_event_waiting(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Takes a screenshot of current screen
+      """
+      @doc group: :window
+      @spec screenshot(return :: :value | :resource) :: map | reference
+      def screenshot(_return \\ :value), do: :erlang.nif_error(:undef)
     end
   end
 end

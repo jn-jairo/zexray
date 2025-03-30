@@ -139,6 +139,17 @@ defmodule Zexray.Window do
   end
 
   @doc """
+  Setup init configuration flags (view FLAGS)
+  """
+  @doc group: :state
+  @spec set_config_flags(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
+  def set_config_flags(flag)
+      when is_like_config_flag(flag) or
+             (is_list(flag) and (flag == [] or is_like_config_flag(hd(flag)))) do
+    NIF.set_config_flags(Zexray.Enum.ConfigFlag.value_flag(flag))
+  end
+
+  @doc """
   Clear window configuration state flags
   """
   @doc group: :state
@@ -223,6 +234,17 @@ defmodule Zexray.Window do
   @spec focus() :: :ok
   def focus() do
     NIF.set_window_focused()
+  end
+
+  @doc """
+  Takes a screenshot of current screen
+  """
+  @doc group: :action
+  @spec screenshot(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
+  def screenshot(return \\ :value)
+      when is_nif_return(return) do
+    NIF.screenshot(return)
+    |> Zexray.Type.Image.from_nif()
   end
 
   ##############

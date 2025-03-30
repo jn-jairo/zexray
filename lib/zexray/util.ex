@@ -3,7 +3,6 @@ defmodule Zexray.Util do
   Utilities
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   # @epsilon 0.000001
@@ -127,41 +126,12 @@ defmodule Zexray.Util do
   def similar?(_, _), do: false
 
   @doc """
-  Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+  Open URL with default system browser (if available)
   """
-  @spec trace_log(
-          log_level :: Zexray.Enum.TraceLogLevel.t_all(),
-          text :: binary
-        ) :: :ok
-  def trace_log(
-        log_level,
-        text
-      )
-      when is_like_trace_log_level(log_level) and
-             is_binary(text) do
-    NIF.trace_log(
-      Zexray.Enum.TraceLogLevel.value(log_level),
-      text
-    )
-  end
-
-  @doc """
-  Set the current threshold (minimum) log level
-  """
-  @spec set_trace_log_level(log_level :: Zexray.Enum.TraceLogLevel.t_all()) :: :ok
-  def set_trace_log_level(log_level)
-      when is_like_trace_log_level(log_level) do
-    NIF.set_trace_log_level(Zexray.Enum.TraceLogLevel.value(log_level))
-  end
-
-  @doc """
-  Takes a screenshot of current screen
-  """
-  @spec screenshot(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  def screenshot(return \\ :value)
-      when is_nif_return(return) do
-    NIF.screenshot(return)
-    |> Zexray.Type.Image.from_nif()
+  @spec open_url(url :: binary) :: :ok
+  def open_url(url)
+      when is_binary(url) do
+    NIF.open_url(url)
   end
 
   @doc """
