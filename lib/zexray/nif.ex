@@ -35,6 +35,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Material
   use Zexray.NIF.Mesh
   use Zexray.NIF.Model
+  use Zexray.NIF.Random
   use Zexray.NIF.ScreenSpace
   use Zexray.NIF.Shader
   use Zexray.NIF.Text
@@ -55,6 +56,7 @@ defmodule Zexray.NIF do
           @nifs_material ++
           @nifs_mesh ++
           @nifs_model ++
+          @nifs_random ++
           @nifs_screen_space ++
           @nifs_shader ++
           @nifs_text ++
