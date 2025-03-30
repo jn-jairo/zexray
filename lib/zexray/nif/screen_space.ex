@@ -35,6 +35,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Ray GetScreenToWorldRay(Vector2 position, Camera camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_screen_to_world_ray(
               position :: map | reference,
               camera :: map | reference,
@@ -55,6 +56,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Ray GetScreenToWorldRayEx(Vector2 position, Camera camera, int width, int height);
       ```
       """
+      @doc group: :screen_space
       @spec get_screen_to_world_ray_ex(
               position :: map | reference,
               camera :: map | reference,
@@ -79,6 +81,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Vector2 GetWorldToScreen(Vector3 position, Camera camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_world_to_screen(
               position :: map | reference,
               camera :: map | reference,
@@ -99,6 +102,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Vector2 GetWorldToScreenEx(Vector3 position, Camera camera, int width, int height);
       ```
       """
+      @doc group: :screen_space
       @spec get_world_to_screen_ex(
               position :: map | reference,
               camera :: map | reference,
@@ -123,6 +127,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_world_to_screen_2d(
               position :: map | reference,
               camera :: map | reference,
@@ -143,6 +148,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_screen_to_world_2d(
               position :: map | reference,
               camera :: map | reference,
@@ -163,6 +169,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Matrix GetCameraMatrix(Camera camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_camera_matrix(
               camera :: map | reference,
               return :: :value | :resource
@@ -181,6 +188,7 @@ defmodule Zexray.NIF.ScreenSpace do
       RLAPI Matrix GetCameraMatrix2D(Camera2D camera);
       ```
       """
+      @doc group: :screen_space
       @spec get_camera_matrix_2d(
               camera :: map | reference,
               return :: :value | :resource
