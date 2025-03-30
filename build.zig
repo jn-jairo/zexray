@@ -38,10 +38,17 @@ pub fn build(b: *std.Build) !void {
         const erl_nif_path = try std.fs.path.join(b.allocator, &[_][]const u8{ path, "erl_nif.h" });
         try writer.writeAll(" -include ");
         try writer.writeAll(erl_nif_path);
+
         try writer.writeAll(" -DRL_MALLOC(sz)=enif_alloc(sz)");
         try writer.writeAll(" -DRL_CALLOC(n,sz)=enif_alloc(n*sz)");
         try writer.writeAll(" -DRL_REALLOC(ptr,sz)=enif_realloc(ptr,sz)");
         try writer.writeAll(" -DRL_FREE(ptr)=enif_free(ptr)");
+
+        try writer.writeAll(" -DRPRAND_CALLOC(ptr,sz)=enif_alloc(ptr*sz)");
+        try writer.writeAll(" -DRPRAND_FREE(ptr)=enif_free(ptr)");
+
+        try writer.writeAll(" -DSTBTT_malloc(x,u)=((void)(u),enif_alloc(x))");
+        try writer.writeAll(" -DSTBTT_free(x,u)=((void)(u),enif_free(x))");
     }
 
     const config: []const u8 = config_buf.items;
