@@ -542,6 +542,10 @@ defmodule Zexray.Window do
     NIF.get_monitor_name(monitor)
   end
 
+  ###############
+  #  Clipboard  #
+  ###############
+
   @doc """
   Set clipboard text content
   """
