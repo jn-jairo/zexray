@@ -24,11 +24,18 @@ defmodule Zexray.Window do
       when is_integer(width) and
              is_integer(height) and
              is_binary(title) do
-    NIF.init_window(
-      width,
-      height,
-      title
-    )
+    ret =
+      NIF.init_window(
+        width,
+        height,
+        title
+      )
+
+    if ret == :ok do
+      Zexray.Gamepad.set_default_mappings()
+    end
+
+    ret
   end
 
   @doc """

@@ -14,13 +14,39 @@ defmodule Zexray.NIF do
     System.put_env("LD_LIBRARY_PATH", "#{:code.priv_dir(:zexray)}/lib/:#{ld_library_path}")
 
     lib = ~c"#{:code.priv_dir(:zexray)}/lib/libzexray"
-    :erlang.load_nif(lib, 0)
+
+    ret = :erlang.load_nif(lib, 0)
+
+    if ret == :ok do
+      after_load()
+    end
+
+    ret
+  end
+
+  defp after_load do
+    ###############
+    #  Trace Log  #
+    ###############
 
     Application.get_env(:zexray, :trace_log_level, :info)
     |> Zexray.Enum.TraceLogLevel.value()
     |> set_trace_log_level()
 
     set_trace_log_callback()
+
+    #####################
+    #  Gamepad Mapping  #
+    #####################
+
+    "#{:code.priv_dir(:zexray)}/gamecontrollerdb.txt"
+    |> File.read!()
+    |> set_gamepad_mappings()
+
+    System.get_env("SDL_GAMECONTROLLERCONFIG", "")
+    |> set_gamepad_mappings()
+
+    :ok
   end
 
   use Zexray.NIF.Resource
@@ -31,6 +57,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.FileSystem
   use Zexray.NIF.Font
   use Zexray.NIF.FrameControl
+  use Zexray.NIF.Gamepad
   use Zexray.NIF.Image
   use Zexray.NIF.Keyboard
   use Zexray.NIF.Material
@@ -57,6 +84,7 @@ defmodule Zexray.NIF do
           @nifs_file_system ++
           @nifs_font ++
           @nifs_frame_control ++
+          @nifs_gamepad ++
           @nifs_image ++
           @nifs_keyboard ++
           @nifs_material ++
