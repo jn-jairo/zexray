@@ -5,6 +5,8 @@ defmodule Zexray.WindowCase do
 
   alias Zexray.Window
 
+  import Zexray.Util, only: [wait_fn: 1]
+
   setup :setup_callback
 
   def setup_callback(%{test: test_name}) do
@@ -20,6 +22,8 @@ defmodule Zexray.WindowCase do
   defp window_init(title) do
     Window.init(800, 600, title)
     Window.clear_state(:all)
+
+    wait_fn(fn -> Window.ready?() end)
 
     :ok
   end
@@ -39,6 +43,8 @@ defmodule Zexray.WindowAllCase do
   use ExUnit.CaseTemplate
 
   alias Zexray.Window
+
+  import Zexray.Util, only: [wait_fn: 1]
 
   setup_all :setup_all_callback
 
@@ -65,6 +71,8 @@ defmodule Zexray.WindowAllCase do
   defp window_init() do
     Window.init(800, 600, "Zexray Test")
     Window.clear_state(:all)
+
+    wait_fn(fn -> Window.ready?() end)
 
     :ok
   end
