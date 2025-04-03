@@ -10,9 +10,17 @@ config :zexray, :target, "native"
 
 config :zexray, :internal_docs, System.get_env("ZEXRAY_INTERNAL_DOCS") == "true"
 
-config :zexray, :platform, "glfw"
-config :zexray, :linux_display_backend, "Both"
-config :zexray, :opengl_version, "auto"
+case config_env() do
+  :test ->
+    config :zexray, :platform, "glfw"
+    config :zexray, :linux_display_backend, "Both"
+    config :zexray, :opengl_version, "auto"
+
+  _ ->
+    config :zexray, :platform, "glfw"
+    config :zexray, :linux_display_backend, "Both"
+    config :zexray, :opengl_version, "auto"
+end
 
 case config_env() do
   :test ->

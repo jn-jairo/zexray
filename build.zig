@@ -107,6 +107,10 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
 
     const lib = raylib_dep.artifact("raylib");
 
+    if (platform == PlatformBackend.sdl) {
+        lib.linkSystemLibrary("SDL2");
+    }
+
     var gen_step = b.addWriteFiles();
     lib.step.dependOn(&gen_step.step);
 
