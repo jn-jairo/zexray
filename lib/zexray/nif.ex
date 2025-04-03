@@ -32,6 +32,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Font
   use Zexray.NIF.FrameControl
   use Zexray.NIF.Image
+  use Zexray.NIF.Keyboard
   use Zexray.NIF.Material
   use Zexray.NIF.Mesh
   use Zexray.NIF.Model
@@ -55,6 +56,7 @@ defmodule Zexray.NIF do
           @nifs_font ++
           @nifs_frame_control ++
           @nifs_image ++
+          @nifs_keyboard ++
           @nifs_material ++
           @nifs_mesh ++
           @nifs_model ++

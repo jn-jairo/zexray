@@ -69,4 +69,14 @@ defmodule Zexray.Enum.KeyboardKeyTest do
     assert_raise ArgumentError, fn -> Type.name(-100) end
     assert_raise ArgumentError, fn -> Type.name(:foo) end
   end
+
+  test "value free" do
+    assert :keyboard_key_161 = apply(Type, :name_free, [161])
+    assert :keyboard_key_161 = apply(Type, :name_free, [:keyboard_key_161])
+  end
+
+  test "name free" do
+    assert 161 = apply(Type, :value_free, [:keyboard_key_161])
+    assert 161 = apply(Type, :value_free, [161])
+  end
 end
