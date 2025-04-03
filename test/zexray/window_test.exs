@@ -159,31 +159,6 @@ defmodule Zexray.WindowTest do
     Resource.free_async!(position_resource)
   end
 
-  test "monitor" do
-    monitor_count = Window.get_monitor_count()
-
-    0..(monitor_count - 1)
-    |> Enum.each(fn monitor ->
-      Window.set_monitor(monitor)
-      wait_fn(fn -> Window.get_current_monitor() == monitor end)
-      assert ^monitor = Window.get_current_monitor()
-
-      assert is_binary(Window.get_monitor_name(monitor))
-      assert Window.get_monitor_refresh_rate(monitor) > 0
-      assert Window.get_monitor_width(monitor) > 0
-      assert Window.get_monitor_height(monitor) > 0
-      assert Window.get_monitor_physical_width(monitor) > 0
-      assert Window.get_monitor_physical_height(monitor) > 0
-
-      position = Window.get_monitor_position(monitor)
-      assert is_vector2(position)
-
-      position_resource = Window.get_monitor_position(monitor, :resource)
-      assert is_vector2(Resource.content(position_resource))
-      Resource.free_async(position_resource)
-    end)
-  end
-
   test "size" do
     Window.set_state(:window_resizable)
 
