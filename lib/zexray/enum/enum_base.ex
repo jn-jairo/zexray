@@ -21,7 +21,12 @@ defmodule Zexray.Enum.EnumBase do
       @type t :: unquote(get_type_t(values_by_name))
       @type t_name :: unquote(get_type_t_name(values_by_name))
 
+      @type t_free :: t | integer
+      @type t_name_free :: t_name | atom
+
       @type t_all :: t | t_name
+
+      @type t_all_free :: t_free | t_name_free
 
       @type t_all_flag :: integer | t_name | :all | list(integer | t_name | :all)
 
@@ -54,6 +59,32 @@ defmodule Zexray.Enum.EnumBase do
         else
           raise_invalid_value(@values, value)
         end
+      end
+
+      @spec value_free(name :: atom | integer) :: integer
+      def value_free(name)
+
+      def value_free(name) when is_atom(name) do
+        if Map.has_key?(@values_by_name, name) do
+          @values_by_name[name]
+        else
+          name_string = Atom.to_string(name)
+
+          if String.starts_with?(name_string, "#{unquote(prefix)}_") do
+            name_suffix = String.replace_prefix(name_string, "#{unquote(prefix)}_", "")
+
+            case Integer.parse(name_suffix) do
+              {value, _} when is_integer(value) -> value
+              _ -> raise_invalid_value(@names, name)
+            end
+          else
+            raise_invalid_value(@names, name)
+          end
+        end
+      end
+
+      def value_free(value) when is_integer(value) do
+        value
       end
 
       @spec value_flag(name :: atom | integer | list) :: integer
@@ -98,6 +129,36 @@ defmodule Zexray.Enum.EnumBase do
           name
         else
           raise_invalid_value(@names, name)
+        end
+      end
+
+      @spec name_free(value :: integer | atom) :: atom
+      def name_free(value)
+
+      def name_free(value) when is_integer(value) do
+        if Map.has_key?(@names_by_value, value) do
+          @names_by_value[value]
+        else
+          String.to_atom("#{unquote(prefix)}_#{value}")
+        end
+      end
+
+      def name_free(name) when is_atom(name) do
+        if Map.has_key?(@values_by_name, name) do
+          name
+        else
+          name_string = Atom.to_string(name)
+
+          if String.starts_with?(name_string, "#{unquote(prefix)}_") do
+            name_suffix = String.replace_prefix(name_string, "#{unquote(prefix)}_", "")
+
+            case Integer.parse(name_suffix) do
+              {value, _} when is_integer(value) -> name_free(value)
+              _ -> raise_invalid_value(@names, name)
+            end
+          else
+            raise_invalid_value(@names, name)
+          end
         end
       end
 
