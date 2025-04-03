@@ -35,6 +35,7 @@ const nif_file_system = @import("./nifs/file_system.zig");
 const nif_font = @import("./nifs/font.zig");
 const nif_frame_control = @import("./nifs/frame_control.zig");
 const nif_gamepad = @import("./nifs/gamepad.zig");
+const nif_gesture = @import("./nifs/gesture.zig");
 const nif_image = @import("./nifs/image.zig");
 const nif_keyboard = @import("./nifs/keyboard.zig");
 const nif_material = @import("./nifs/material.zig");
@@ -62,6 +63,7 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_font.exported_nifs ++
     nif_frame_control.exported_nifs ++
     nif_gamepad.exported_nifs ++
+    nif_gesture.exported_nifs ++
     nif_image.exported_nifs ++
     nif_keyboard.exported_nifs ++
     nif_material.exported_nifs ++

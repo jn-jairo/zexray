@@ -58,6 +58,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Font
   use Zexray.NIF.FrameControl
   use Zexray.NIF.Gamepad
+  use Zexray.NIF.Gesture
   use Zexray.NIF.Image
   use Zexray.NIF.Keyboard
   use Zexray.NIF.Material
@@ -85,6 +86,7 @@ defmodule Zexray.NIF do
           @nifs_font ++
           @nifs_frame_control ++
           @nifs_gamepad ++
+          @nifs_gesture ++
           @nifs_image ++
           @nifs_keyboard ++
           @nifs_material ++
