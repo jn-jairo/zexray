@@ -37,6 +37,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Mesh
   use Zexray.NIF.Model
   use Zexray.NIF.Monitor
+  use Zexray.NIF.Mouse
   use Zexray.NIF.Random
   use Zexray.NIF.ScreenSpace
   use Zexray.NIF.Shader
@@ -61,6 +62,7 @@ defmodule Zexray.NIF do
           @nifs_mesh ++
           @nifs_model ++
           @nifs_monitor ++
+          @nifs_mouse ++
           @nifs_random ++
           @nifs_screen_space ++
           @nifs_shader ++
