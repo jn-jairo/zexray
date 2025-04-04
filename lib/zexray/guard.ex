@@ -373,7 +373,9 @@ defmodule Zexray.Guard do
            when is_camera(value) or
                   is_struct(value, Camera.Resource) or
                   is_structable(value) or
-                  (is_tuple(value) and tuple_size(value) == 5)
+                  (is_tuple(value) and tuple_size(value) == 5) or
+                  is_struct(value, Camera3D) or
+                  is_struct(value, Camera3D.Resource)
 
   @doc group: :type
   defguard is_like_camera_2d(value)
@@ -387,7 +389,9 @@ defmodule Zexray.Guard do
            when is_camera_3d(value) or
                   is_struct(value, Camera3D.Resource) or
                   is_structable(value) or
-                  (is_tuple(value) and tuple_size(value) == 5)
+                  (is_tuple(value) and tuple_size(value) == 5) or
+                  is_struct(value, Camera) or
+                  is_struct(value, Camera.Resource)
 
   @doc group: :type
   defguard is_like_color(value)

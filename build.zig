@@ -124,10 +124,12 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
             "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
         },
     });
+
     lib.addIncludePath(raylib_dep.path("src"));
     lib.addIncludePath(raygui_dep.path("src"));
 
     lib.installHeader(raygui_dep.path("src/raygui.h"), "raygui.h");
+    lib.installHeader(raylib_dep.path("src/rcamera.h"), "rcamera.h");
     lib.installHeader(raylib_dep.path("src/config.h"), "raylib_config.h");
 
     return lib;

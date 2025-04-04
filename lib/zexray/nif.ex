@@ -52,6 +52,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Resource
   use Zexray.NIF.Audio
   use Zexray.NIF.AutomationEvent
+  use Zexray.NIF.Camera
   use Zexray.NIF.Cursor
   use Zexray.NIF.Drawing
   use Zexray.NIF.FileSystem
@@ -80,6 +81,7 @@ defmodule Zexray.NIF do
   @nifs @nifs_resource ++
           @nifs_audio ++
           @nifs_automation_event ++
+          @nifs_camera ++
           @nifs_cursor ++
           @nifs_drawing ++
           @nifs_file_system ++
