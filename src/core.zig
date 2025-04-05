@@ -50,9 +50,9 @@ fn get_error_module(err: anyerror) []u8 {
 
 pub fn maybe_make_struct_as_resource(comptime T: type, env: ?*e.ErlNifEnv, value: T.data_type, return_resource: bool) !e.ErlNifTerm {
     if (return_resource) {
-        const image_resource = try T.Resource.create(value);
-        defer T.Resource.release(image_resource);
-        return T.Resource.make(env, image_resource);
+        const resource = try T.Resource.create(value);
+        defer T.Resource.release(resource);
+        return T.Resource.make(env, resource);
     } else {
         return T.make(env, value);
     }
