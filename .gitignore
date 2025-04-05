@@ -23,3 +23,7 @@ zexray-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 /.zig-cache/
+
+# Generated files
+/priv/include/
+/priv/lib/

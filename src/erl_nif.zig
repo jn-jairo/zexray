@@ -1,5 +1,6 @@
 const std = @import("std");
 const e = @cImport(@cInclude("erl_nif.h"));
+const nif_allocator = @cImport(@cInclude("nif_allocator.h"));
 
 pub const ErlNifTerm = e.ERL_NIF_TERM;
 
@@ -26,7 +27,7 @@ fn raw_beam_alloc(
     _: usize,
 ) ?[*]u8 {
     if (ptr_align.toByteUnits() > MAX_ALIGN) return null;
-    const ptr = e.enif_alloc(len) orelse return null;
+    const ptr = nif_allocator.nif_alloc(len) orelse return null;
     return @as([*]u8, @ptrCast(ptr));
 }
 
@@ -39,7 +40,7 @@ fn raw_beam_resize(
 ) bool {
     if (new_len <= buf.len) return true;
     if (new_len == 0) {
-        e.enif_free(buf.ptr);
+        nif_allocator.nif_free(buf.ptr);
         return true;
     }
     // We are never able to increase the size of a pointer.
@@ -54,7 +55,7 @@ fn raw_beam_remap(
     _: usize,
 ) ?[*]u8 {
     if (ptr_align.toByteUnits() > MAX_ALIGN) return null;
-    const ptr = e.enif_realloc(@ptrCast(buf), new_len) orelse return null;
+    const ptr = nif_allocator.nif_realloc(@ptrCast(buf), new_len) orelse return null;
     return @as([*]u8, @ptrCast(ptr));
 }
 
@@ -64,7 +65,7 @@ fn raw_beam_free(
     _: std.mem.Alignment,
     _: usize,
 ) void {
-    e.enif_free(buf.ptr);
+    nif_allocator.nif_free(buf.ptr);
 }
 
 pub usingnamespace e;

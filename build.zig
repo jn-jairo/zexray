@@ -39,16 +39,20 @@ pub fn build(b: *std.Build) !void {
         try writer.writeAll(" -include ");
         try writer.writeAll(erl_nif_path);
 
-        try writer.writeAll(" -DRL_MALLOC(sz)=enif_alloc(sz)");
-        try writer.writeAll(" -DRL_CALLOC(n,sz)=enif_alloc(n*sz)");
-        try writer.writeAll(" -DRL_REALLOC(ptr,sz)=enif_realloc(ptr,sz)");
-        try writer.writeAll(" -DRL_FREE(ptr)=enif_free(ptr)");
+        const nif_allocator_path = try b.path("src/nif_allocator.h").getPath3(b, null).toString(b.allocator);
+        try writer.writeAll(" -include ");
+        try writer.writeAll(nif_allocator_path);
 
-        try writer.writeAll(" -DRPRAND_CALLOC(ptr,sz)=enif_alloc(ptr*sz)");
-        try writer.writeAll(" -DRPRAND_FREE(ptr)=enif_free(ptr)");
+        try writer.writeAll(" -DRL_MALLOC(sz)=nif_alloc(sz)");
+        try writer.writeAll(" -DRL_CALLOC(n,sz)=nif_calloc(n,sz)");
+        try writer.writeAll(" -DRL_REALLOC(ptr,sz)=nif_realloc(ptr,sz)");
+        try writer.writeAll(" -DRL_FREE(ptr)=nif_free(ptr)");
 
-        try writer.writeAll(" -DSTBTT_malloc(x,u)=((void)(u),enif_alloc(x))");
-        try writer.writeAll(" -DSTBTT_free(x,u)=((void)(u),enif_free(x))");
+        try writer.writeAll(" -DRPRAND_CALLOC(ptr,sz)=nif_calloc(ptr,sz)");
+        try writer.writeAll(" -DRPRAND_FREE(ptr)=nif_free(ptr)");
+
+        try writer.writeAll(" -DSTBTT_malloc(x,u)=((void)(u),nif_alloc(x))");
+        try writer.writeAll(" -DSTBTT_free(x,u)=((void)(u),nif_free(x))");
     }
 
     const config: []const u8 = config_buf.items;
@@ -75,6 +79,11 @@ pub fn build(b: *std.Build) !void {
         .linkage = .dynamic,
         .name = "zexray",
         .root_module = nif_mod,
+    });
+
+    nif_lib.addIncludePath(b.path("src"));
+    nif_lib.addCSourceFile(.{
+        .file = b.path("src/nif_allocator.c"),
     });
 
     nif_lib.linkLibrary(raylib_artifact);
@@ -129,7 +138,6 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
     lib.addIncludePath(raygui_dep.path("src"));
 
     lib.installHeader(raygui_dep.path("src/raygui.h"), "raygui.h");
-    lib.installHeader(raylib_dep.path("src/rcamera.h"), "rcamera.h");
     lib.installHeader(raylib_dep.path("src/config.h"), "raylib_config.h");
 
     return lib;
