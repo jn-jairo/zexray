@@ -1,5 +1,8 @@
 const std = @import("std");
+
 const e = @cImport(@cInclude("erl_nif.h"));
+pub usingnamespace e;
+
 const nif_allocator = @cImport(@cInclude("nif_allocator.h"));
 
 pub const ErlNifTerm = e.ERL_NIF_TERM;
@@ -67,5 +70,3 @@ fn raw_beam_free(
 ) void {
     nif_allocator.nif_free(buf.ptr);
 }
-
-pub usingnamespace e;

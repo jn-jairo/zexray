@@ -855,16 +855,7 @@ fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Function
 
-    const width = rl.GetRenderWidth();
-    const height = rl.GetRenderHeight();
-
-    const image = rl.Image{
-        .data = rlgl.rlReadScreenPixels(width, height),
-        .width = width,
-        .height = height,
-        .mipmaps = 1,
-        .format = rl.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-    };
+    const image = rl.Screenshot();
     defer if (!return_resource) core.Image.free(image);
 
     // Return

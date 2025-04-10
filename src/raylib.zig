@@ -4,6 +4,12 @@ const raylib = @cImport({
     @cInclude("rcamera.h");
     @cInclude("stdio.h");
 });
+pub usingnamespace raylib;
+
+const config = @import("config.zig");
+pub usingnamespace config;
+
+const rlgl = @import("rlgl.zig");
 
 const std = @import("std");
 const e = @import("./erl_nif.zig");
@@ -46,4 +52,16 @@ pub const UIVector4 = struct {
     w: c_uint = std.mem.zeroes(c_uint),
 };
 
-pub usingnamespace raylib;
+/// Takes a screenshot of current screen
+pub fn Screenshot() raylib.Image {
+    const width = raylib.GetRenderWidth();
+    const height = raylib.GetRenderHeight();
+
+    return raylib.Image{
+        .data = rlgl.rlReadScreenPixels(width, height),
+        .width = width,
+        .height = height,
+        .mipmaps = 1,
+        .format = raylib.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+    };
+}
