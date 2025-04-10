@@ -106,7 +106,7 @@ defmodule Zexray.NIF.Camera do
 
       @doc """
       Returns the cameras up vector (normalized)
-      Note: The up vector might not be perpendicular to the forward vector
+      NOTE: The up vector might not be perpendicular to the forward vector
 
       ```c
       // rcamera.h
@@ -235,7 +235,7 @@ defmodule Zexray.NIF.Camera do
       Rotates the camera around its up vector
       Yaw is "looking left and right"
       If rotateAroundTarget is false, the camera rotates around its position
-      Note: angle must be provided in radians
+      NOTE: angle must be provided in radians
 
       ```c
       // rcamera.h
@@ -291,7 +291,7 @@ defmodule Zexray.NIF.Camera do
       @doc """
       Rotates the camera around its forward vector
       Roll is "turning your head sideways to the left or right"
-      Note: angle must be provided in radians
+      NOTE: angle must be provided in radians
 
       ```c
       // rcamera.h

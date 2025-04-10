@@ -155,7 +155,7 @@ fn nif_get_camera_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 }
 
 /// Returns the cameras up vector (normalized)
-/// Note: The up vector might not be perpendicular to the forward vector
+/// NOTE: The up vector might not be perpendicular to the forward vector
 ///
 /// rcamera.h
 /// RLAPI Vector3 GetCameraUp(Camera *camera);
@@ -368,7 +368,7 @@ fn nif_camera_move_to_target(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 /// Rotates the camera around its up vector
 /// Yaw is "looking left and right"
 /// If rotateAroundTarget is false, the camera rotates around its position
-/// Note: angle must be provided in radians
+/// NOTE: angle must be provided in radians
 ///
 /// rcamera.h
 /// RLAPI void CameraYaw(Camera *camera, float angle, bool rotateAroundTarget);
@@ -460,7 +460,7 @@ fn nif_camera_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
 /// Rotates the camera around its forward vector
 /// Roll is "turning your head sideways to the left or right"
-/// Note: angle must be provided in radians
+/// NOTE: angle must be provided in radians
 ///
 /// rcamera.h
 /// RLAPI void CameraRoll(Camera *camera, float angle);
