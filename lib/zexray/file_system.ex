@@ -22,7 +22,7 @@ defmodule Zexray.FileSystem do
   end
 
   #################
-  #  File System  #
+  #  File system  #
   #################
 
   @doc """

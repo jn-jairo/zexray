@@ -4,7 +4,7 @@ defmodule Zexray.NIF.ScreenSpace do
   defmacro __using__(_opts) do
     quote do
       @nifs_screen_space [
-        # Screen Space
+        # Screen space
         get_screen_to_world_ray: 2,
         get_screen_to_world_ray: 3,
         get_screen_to_world_ray_ex: 4,
@@ -24,7 +24,7 @@ defmodule Zexray.NIF.ScreenSpace do
       ]
 
       ##################
-      #  Screen Space  #
+      #  Screen space  #
       ##################
 
       @doc """

@@ -4,7 +4,7 @@ defmodule Zexray.Text do
   import Zexray.Guard
 
   ##################
-  #  Text Drawing  #
+  #  Text drawing  #
   ##################
 
   @doc """
@@ -208,7 +208,7 @@ defmodule Zexray.Text do
   end
 
   ####################
-  #  Text Font Info  #
+  #  Text font info  #
   ####################
 
   @doc """

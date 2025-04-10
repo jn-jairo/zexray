@@ -7,6 +7,8 @@ defmodule Zexray.NIF.FileSystem do
         # FilePathList
         file_path_list_get_max_filepath_capacity: 0,
         file_path_list_get_max_filepath_length: 0,
+
+        # File system
         is_file_dropped: 0,
         load_dropped_files: 0
       ]
@@ -30,7 +32,7 @@ defmodule Zexray.NIF.FileSystem do
       def file_path_list_get_max_filepath_length(), do: :erlang.nif_error(:undef)
 
       #################
-      #  File System  #
+      #  File system  #
       #################
 
       @doc """

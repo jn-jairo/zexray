@@ -3,7 +3,7 @@ defmodule Zexray.ScreenSpace do
   alias Zexray.NIF
 
   ##################
-  #  Screen Space  #
+  #  Screen space  #
   ##################
 
   @doc """

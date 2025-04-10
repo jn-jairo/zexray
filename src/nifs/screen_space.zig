@@ -6,7 +6,7 @@ const rl = @import("../raylib.zig");
 const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
-    // ScreenSpace
+    // Screen space
     .{ .name = "get_screen_to_world_ray", .arity = 2, .fptr = nif_get_screen_to_world_ray, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_screen_to_world_ray", .arity = 3, .fptr = nif_get_screen_to_world_ray, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_screen_to_world_ray_ex", .arity = 4, .fptr = nif_get_screen_to_world_ray_ex, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -26,7 +26,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 };
 
 ////////////////////
-//  Screen Space  //
+//  Screen space  //
 ////////////////////
 
 /// Get a ray trace from screen position (i.e mouse)

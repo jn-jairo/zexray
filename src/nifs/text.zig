@@ -6,7 +6,7 @@ const rl = @import("../raylib.zig");
 const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
-    // Text Drawing
+    // Text drawing
     .{ .name = "draw_fps", .arity = 2, .fptr = nif_draw_fps, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_text", .arity = 5, .fptr = nif_draw_text, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_text_ex", .arity = 6, .fptr = nif_draw_text_ex, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -14,7 +14,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "draw_text_codepoint", .arity = 5, .fptr = nif_draw_text_codepoint, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_text_codepoints", .arity = 6, .fptr = nif_draw_text_codepoints, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
-    // Text Font Info
+    // Text font info
     .{ .name = "set_text_line_spacing", .arity = 1, .fptr = nif_set_text_line_spacing, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "measure_text", .arity = 2, .fptr = nif_measure_text, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "measure_text_ex", .arity = 4, .fptr = nif_measure_text_ex, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },

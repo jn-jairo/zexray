@@ -4,7 +4,7 @@ defmodule Zexray.NIF.Text do
   defmacro __using__(_opts) do
     quote do
       @nifs_text [
-        # Text Drawing
+        # Text drawing
         draw_fps: 2,
         draw_text: 5,
         draw_text_ex: 6,
@@ -12,7 +12,7 @@ defmodule Zexray.NIF.Text do
         draw_text_codepoint: 5,
         draw_text_codepoints: 6,
 
-        # Text Font Info
+        # Text font info
         set_text_line_spacing: 1,
         measure_text: 2,
         measure_text_ex: 4,
@@ -25,7 +25,7 @@ defmodule Zexray.NIF.Text do
       ]
 
       ##################
-      #  Text Drawing  #
+      #  Text drawing  #
       ##################
 
       @doc """
@@ -183,7 +183,7 @@ defmodule Zexray.NIF.Text do
           do: :erlang.nif_error(:undef)
 
       ####################
-      #  Text Font Info  #
+      #  Text font info  #
       ####################
 
       @doc """

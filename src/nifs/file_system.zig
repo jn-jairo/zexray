@@ -10,7 +10,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "file_path_list_get_max_filepath_capacity", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_capacity, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "file_path_list_get_max_filepath_length", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_length, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
-    // File System
+    // File system
     .{ .name = "is_file_dropped", .arity = 0, .fptr = nif_is_file_dropped, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "load_dropped_files", .arity = 0, .fptr = nif_load_dropped_files, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
@@ -40,7 +40,7 @@ fn nif_file_path_list_get_max_filepath_length(env: ?*e.ErlNifEnv, argc: c_int, a
 }
 
 ///////////////////
-//  File System  //
+//  File system  //
 ///////////////////
 
 /// Check if a file has been dropped into window
