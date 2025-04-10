@@ -1,6 +1,6 @@
 const raylib = @cImport({
     @cInclude("raylib.h");
-    @cInclude("raylib_config.h");
+    @cInclude("config.h");
     @cInclude("rcamera.h");
     @cInclude("stdio.h");
 });

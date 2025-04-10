@@ -1,6 +1,7 @@
 const std = @import("std");
 
 const raylib = @import("raylib");
+const raylib_config = @import("src/config.zig");
 
 const PlatformBackend = raylib.PlatformBackend;
 const LinuxDisplayBackend = raylib.LinuxDisplayBackend;
@@ -36,12 +37,10 @@ pub fn build(b: *std.Build) !void {
 
     if (erts_include_path) |path| {
         const erl_nif_path = try std.fs.path.join(b.allocator, &[_][]const u8{ path, "erl_nif.h" });
-        try writer.writeAll(" -include ");
-        try writer.writeAll(erl_nif_path);
+        try writer.print(" -include {s}", .{erl_nif_path});
 
         const nif_allocator_path = try b.path("src/nif_allocator.h").getPath3(b, null).toString(b.allocator);
-        try writer.writeAll(" -include ");
-        try writer.writeAll(nif_allocator_path);
+        try writer.print(" -include {s}", .{nif_allocator_path});
 
         try writer.writeAll(" -DRL_MALLOC(sz)=nif_alloc(sz)");
         try writer.writeAll(" -DRL_CALLOC(n,sz)=nif_calloc(n,sz)");
@@ -55,17 +54,24 @@ pub fn build(b: *std.Build) !void {
         try writer.writeAll(" -DSTBTT_free(x,u)=((void)(u),nif_free(x))");
     }
 
+    try writer.print(" -DFONT_TTF_DEFAULT_SIZE={}", .{raylib_config.FONT_TTF_DEFAULT_SIZE});
+    try writer.print(" -DFONT_TTF_DEFAULT_NUMCHARS={}", .{raylib_config.FONT_TTF_DEFAULT_NUMCHARS});
+    try writer.print(" -DFONT_TTF_DEFAULT_FIRST_CHAR={}", .{raylib_config.FONT_TTF_DEFAULT_FIRST_CHAR});
+    try writer.print(" -DFONT_TTF_DEFAULT_CHARS_PADDING={}", .{raylib_config.FONT_TTF_DEFAULT_CHARS_PADDING});
+
     const config: []const u8 = config_buf.items;
 
-    const raylib_artifact = getRaylib(b, target, optimize, config, platform, linux_display_backend, opengl_version);
+    const raylib_pkg = getRaylib(b, target, optimize, config, platform, linux_display_backend, opengl_version);
+    const raylib_lib = raylib_pkg.lib;
+    const raylib_dep = raylib_pkg.dep;
 
     if (erts_include_path) |path| {
-        raylib_artifact.addSystemIncludePath(.{ .cwd_relative = path });
+        raylib_lib.addSystemIncludePath(.{ .cwd_relative = path });
     } else {
-        raylib_artifact.step.dependOn(&b.addFail("Missing include path for nif headers").step);
+        raylib_lib.step.dependOn(&b.addFail("Missing include path for nif headers").step);
     }
 
-    b.installArtifact(raylib_artifact);
+    b.installArtifact(raylib_lib);
 
     // nif_lib
 
@@ -86,19 +92,20 @@ pub fn build(b: *std.Build) !void {
         .file = b.path("src/nif_allocator.c"),
     });
 
-    nif_lib.linkLibrary(raylib_artifact);
+    nif_lib.addIncludePath(raylib_dep.path("src"));
+    nif_lib.linkLibrary(raylib_lib);
     nif_lib.linkLibC();
 
     if (erts_include_path) |path| {
         nif_lib.addSystemIncludePath(.{ .cwd_relative = path });
     } else {
-        raylib_artifact.step.dependOn(&b.addFail("Missing include path for nif headers").step);
+        nif_lib.step.dependOn(&b.addFail("Missing include path for nif headers").step);
     }
 
     b.installArtifact(nif_lib);
 }
 
-fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, config: []const u8, platform: PlatformBackend, linux_display_backend: LinuxDisplayBackend, opengl_version: OpenglVersion) *std.Build.Step.Compile {
+fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, config: []const u8, platform: PlatformBackend, linux_display_backend: LinuxDisplayBackend, opengl_version: OpenglVersion) struct { lib: *std.Build.Step.Compile, dep: *std.Build.Dependency } {
     const raylib_dep = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
@@ -138,7 +145,9 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
     lib.addIncludePath(raygui_dep.path("src"));
 
     lib.installHeader(raygui_dep.path("src/raygui.h"), "raygui.h");
-    lib.installHeader(raylib_dep.path("src/config.h"), "raylib_config.h");
 
-    return lib;
+    return .{
+        .lib = lib,
+        .dep = raylib_dep,
+    };
 }
