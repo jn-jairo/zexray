@@ -39,6 +39,7 @@ fn nif_get_font_default(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     const font = rl.GetFontDefault();
     defer if (!return_resource) core.Font.free(font);
+    errdefer if (return_resource) core.Font.free(font);
 
     // Return
 
@@ -70,6 +71,7 @@ fn nif_load_font(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     const font = rl.LoadFont(file_name);
     defer if (!return_resource) core.Font.free(font);
+    errdefer if (return_resource) core.Font.free(font);
 
     // Return
 
@@ -116,6 +118,7 @@ fn nif_load_font_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     const font = rl.LoadFontEx2(file_name, font_size, @ptrCast(codepoints), @intCast(codepoints_count), font_type);
     defer if (!return_resource) core.Font.free(font);
+    errdefer if (return_resource) core.Font.free(font);
 
     // Return
 
@@ -157,6 +160,7 @@ fn nif_load_font_from_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     const font = rl.LoadFontFromImage(image, key, first_char);
     defer if (!return_resource) core.Font.free(font);
+    errdefer if (return_resource) core.Font.free(font);
 
     // Return
 
@@ -210,6 +214,7 @@ fn nif_load_font_from_memory(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     const font = rl.LoadFontFromMemoryEx(file_type, @ptrCast(file_data), @intCast(data_size), font_size, @ptrCast(codepoints), @intCast(codepoints_count), font_type);
     defer if (!return_resource) core.Font.free(font);
+    errdefer if (return_resource) core.Font.free(font);
 
     // Return
 

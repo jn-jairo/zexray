@@ -183,6 +183,7 @@ fn nif_load_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     const image = rl.LoadImage(file_name);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -230,6 +231,7 @@ fn nif_load_image_raw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     const image = rl.LoadImageRaw(file_name, width, height, format, header_size);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -262,6 +264,7 @@ fn nif_load_image_anim(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     var frames: c_int = undefined;
     const image = rl.LoadImageAnim(file_name, &frames);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -305,6 +308,7 @@ fn nif_load_image_anim_from_memory(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
     var frames: c_int = undefined;
     const image = rl.LoadImageAnimFromMemory(file_type, @ptrCast(file_data), @intCast(data_size), &frames);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -347,6 +351,7 @@ fn nif_load_image_from_memory(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const image = rl.LoadImageFromMemory(file_type, @ptrCast(file_data), @intCast(data_size));
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -378,6 +383,7 @@ fn nif_load_image_from_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     const image = rl.LoadImageFromTexture(texture);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -401,6 +407,7 @@ fn nif_load_image_from_screen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const image = rl.LoadImageFromScreen();
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -529,6 +536,7 @@ fn nif_gen_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     const image = rl.GenImageColor(width, height, color);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -578,6 +586,7 @@ fn nif_gen_image_gradient_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     const image = rl.GenImageGradientLinear(width, height, direction, color_start, color_end);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -627,6 +636,7 @@ fn nif_gen_image_gradient_radial(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     const image = rl.GenImageGradientRadial(width, height, @floatCast(density), color_inner, color_outer);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -676,6 +686,7 @@ fn nif_gen_image_gradient_square(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     const image = rl.GenImageGradientSquare(width, height, @floatCast(density), color_inner, color_outer);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -729,6 +740,7 @@ fn nif_gen_image_checked(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     const image = rl.GenImageChecked(width, height, checks_x, checks_y, color_1, color_2);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -766,6 +778,7 @@ fn nif_gen_image_white_noise(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     const image = rl.GenImageWhiteNoise(width, height, @floatCast(factor));
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -811,6 +824,7 @@ fn nif_gen_image_perlin_noise(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const image = rl.GenImagePerlinNoise(width, height, offset_x, offset_y, @floatCast(scale));
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -848,6 +862,7 @@ fn nif_gen_image_cellular(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     const image = rl.GenImageCellular(width, height, tile_size);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -888,6 +903,7 @@ fn nif_gen_image_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     const image = rl.GenImageTextEx(width, height, @ptrCast(text), @intCast(text_size));
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -923,6 +939,7 @@ fn nif_image_copy(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     const image_copy = rl.ImageCopy(image);
     defer if (!return_resource) core.Image.free(image_copy);
+    errdefer if (return_resource) core.Image.free(image_copy);
 
     // Return
 
@@ -960,6 +977,7 @@ fn nif_image_from_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     const image_from_image = rl.ImageFromImage(image, rec);
     defer if (!return_resource) core.Image.free(image_from_image);
+    errdefer if (return_resource) core.Image.free(image_from_image);
 
     // Return
 
@@ -995,6 +1013,7 @@ fn nif_image_from_channel(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     const image_from_channel = rl.ImageFromChannel(image, selected_channel);
     defer if (!return_resource) core.Image.free(image_from_channel);
+    errdefer if (return_resource) core.Image.free(image_from_channel);
 
     // Return
 
@@ -1036,6 +1055,7 @@ fn nif_image_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     const image = rl.ImageText(text, font_size, color);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -1087,6 +1107,7 @@ fn nif_image_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     const image = rl.ImageTextEx(font, text, @floatCast(font_size), @floatCast(spacing), tint);
     defer if (!return_resource) core.Image.free(image);
+    errdefer if (return_resource) core.Image.free(image);
 
     // Return
 
@@ -2023,7 +2044,7 @@ fn nif_load_image_colors(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Function
 
     const colors_c = rl.LoadImageColors(image);
-    defer if (!return_resource) rl.UnloadImageColors(colors_c) else rl.MemFree(@ptrCast(colors_c));
+    defer rl.UnloadImageColors(colors_c); // always free because colors are just numbers
 
     // Return
 
@@ -2069,7 +2090,7 @@ fn nif_load_image_palette(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     var color_count: c_int = undefined;
     const colors_c = rl.LoadImagePalette(image, max_palette_size, &color_count);
-    defer if (!return_resource) rl.UnloadImagePalette(colors_c) else rl.MemFree(@ptrCast(colors_c));
+    defer rl.UnloadImagePalette(colors_c); // always free because colors are just numbers
 
     // Return
 
@@ -2115,6 +2136,7 @@ fn nif_get_image_alpha_border(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const image_alpha_border = rl.GetImageAlphaBorder(image, @floatCast(threshold));
     defer if (!return_resource) core.Rectangle.free(image_alpha_border);
+    errdefer if (return_resource) core.Rectangle.free(image_alpha_border);
 
     // Return
 
@@ -2154,6 +2176,7 @@ fn nif_get_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     const image_color = rl.GetImageColor(image, x, y);
     defer if (!return_resource) core.Color.free(image_color);
+    errdefer if (return_resource) core.Color.free(image_color);
 
     // Return
 

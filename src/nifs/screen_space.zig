@@ -58,6 +58,7 @@ fn nif_get_screen_to_world_ray(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     const screen_to_world_ray = rl.GetScreenToWorldRay(position, camera);
     defer if (!return_resource) core.Ray.free(screen_to_world_ray);
+    errdefer if (return_resource) core.Ray.free(screen_to_world_ray);
 
     // Return
 
@@ -103,6 +104,7 @@ fn nif_get_screen_to_world_ray_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 
     const screen_to_world_ray_ex = rl.GetScreenToWorldRayEx(position, camera, width, height);
     defer if (!return_resource) core.Ray.free(screen_to_world_ray_ex);
+    errdefer if (return_resource) core.Ray.free(screen_to_world_ray_ex);
 
     // Return
 
@@ -140,6 +142,7 @@ fn nif_get_world_to_screen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     const world_to_screen = rl.GetWorldToScreen(position, camera);
     defer if (!return_resource) core.Vector2.free(world_to_screen);
+    errdefer if (return_resource) core.Vector2.free(world_to_screen);
 
     // Return
 
@@ -185,6 +188,7 @@ fn nif_get_world_to_screen_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const world_to_screen_ex = rl.GetWorldToScreenEx(position, camera, width, height);
     defer if (!return_resource) core.Vector2.free(world_to_screen_ex);
+    errdefer if (return_resource) core.Vector2.free(world_to_screen_ex);
 
     // Return
 
@@ -222,6 +226,7 @@ fn nif_get_world_to_screen_2d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const world_to_screen_2d = rl.GetWorldToScreen2D(position, camera);
     defer if (!return_resource) core.Vector2.free(world_to_screen_2d);
+    errdefer if (return_resource) core.Vector2.free(world_to_screen_2d);
 
     // Return
 
@@ -259,6 +264,7 @@ fn nif_get_screen_to_world_2d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     const screen_to_world_2d = rl.GetScreenToWorld2D(position, camera);
     defer if (!return_resource) core.Vector2.free(screen_to_world_2d);
+    errdefer if (return_resource) core.Vector2.free(screen_to_world_2d);
 
     // Return
 
@@ -290,6 +296,7 @@ fn nif_get_camera_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     const camera_matrix = rl.GetCameraMatrix(camera);
     defer if (!return_resource) core.Matrix.free(camera_matrix);
+    errdefer if (return_resource) core.Matrix.free(camera_matrix);
 
     // Return
 
@@ -321,6 +328,7 @@ fn nif_get_camera_matrix_2d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     const camera_matrix_2d = rl.GetCameraMatrix2D(camera);
     defer if (!return_resource) core.Matrix.free(camera_matrix_2d);
+    errdefer if (return_resource) core.Matrix.free(camera_matrix_2d);
 
     // Return
 

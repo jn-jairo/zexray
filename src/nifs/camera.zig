@@ -54,12 +54,12 @@ fn nif_update_camera(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const mode = core.Int.get(env, argv[1]) catch {
         return error.invalid_argument_mode;
@@ -67,11 +67,11 @@ fn nif_update_camera(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    rl.UpdateCamera(&camera, mode);
+    rl.UpdateCamera(@ptrCast(camera), mode);
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -89,12 +89,12 @@ fn nif_update_camera_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const arg_movement = core.Argument(core.Vector3).get(env, argv[1]) catch {
         return error.invalid_argument_movement;
@@ -114,11 +114,11 @@ fn nif_update_camera_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.UpdateCameraPro(&camera, movement, rotation, @floatCast(zoom));
+    rl.UpdateCameraPro(@ptrCast(camera), movement, rotation, @floatCast(zoom));
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -136,16 +136,17 @@ fn nif_get_camera_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     // Function
 
-    const camera_forward = rl.GetCameraForward(&camera);
+    const camera_forward = rl.GetCameraForward(@ptrCast(camera));
     defer if (!return_resource) core.Vector3.free(camera_forward);
+    errdefer if (return_resource) core.Vector3.free(camera_forward);
 
     // Return
 
@@ -168,16 +169,17 @@ fn nif_get_camera_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     // Function
 
-    const camera_up = rl.GetCameraUp(&camera);
+    const camera_up = rl.GetCameraUp(@ptrCast(camera));
     defer if (!return_resource) core.Vector3.free(camera_up);
+    errdefer if (return_resource) core.Vector3.free(camera_up);
 
     // Return
 
@@ -199,16 +201,17 @@ fn nif_get_camera_right(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     // Function
 
-    const camera_right = rl.GetCameraRight(&camera);
+    const camera_right = rl.GetCameraRight(@ptrCast(camera));
     defer if (!return_resource) core.Vector3.free(camera_right);
+    errdefer if (return_resource) core.Vector3.free(camera_right);
 
     // Return
 
@@ -230,12 +233,12 @@ fn nif_camera_move_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const distance = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_distance;
@@ -247,11 +250,11 @@ fn nif_camera_move_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Function
 
-    rl.CameraMoveForward(&camera, @floatCast(distance), move_in_world_plane);
+    rl.CameraMoveForward(@ptrCast(camera), @floatCast(distance), move_in_world_plane);
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -269,12 +272,12 @@ fn nif_camera_move_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const distance = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_distance;
@@ -282,11 +285,11 @@ fn nif_camera_move_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    rl.CameraMoveUp(&camera, @floatCast(distance));
+    rl.CameraMoveUp(@ptrCast(camera), @floatCast(distance));
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -304,12 +307,12 @@ fn nif_camera_move_right(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const distance = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_distance;
@@ -321,11 +324,11 @@ fn nif_camera_move_right(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.CameraMoveRight(&camera, @floatCast(distance), move_in_world_plane);
+    rl.CameraMoveRight(@ptrCast(camera), @floatCast(distance), move_in_world_plane);
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -343,12 +346,12 @@ fn nif_camera_move_to_target(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const delta = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_delta;
@@ -356,11 +359,11 @@ fn nif_camera_move_to_target(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Function
 
-    rl.CameraMoveToTarget(&camera, @floatCast(delta));
+    rl.CameraMoveToTarget(@ptrCast(camera), @floatCast(delta));
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -381,12 +384,12 @@ fn nif_camera_yaw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const angle = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_angle;
@@ -398,11 +401,11 @@ fn nif_camera_yaw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Function
 
-    rl.CameraYaw(&camera, @floatCast(angle), rotate_around_target);
+    rl.CameraYaw(@ptrCast(camera), @floatCast(angle), rotate_around_target);
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -424,12 +427,12 @@ fn nif_camera_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const angle = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_angle;
@@ -449,11 +452,11 @@ fn nif_camera_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Function
 
-    rl.CameraPitch(&camera, @floatCast(angle), lock_view, rotate_around_target, rotate_up);
+    rl.CameraPitch(@ptrCast(camera), @floatCast(angle), lock_view, rotate_around_target, rotate_up);
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -473,12 +476,12 @@ fn nif_camera_roll(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer if (!return_resource) arg_camera.free();
     errdefer if (return_resource) arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const angle = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_angle;
@@ -486,11 +489,11 @@ fn nif_camera_roll(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Function
 
-    rl.CameraRoll(&camera, @floatCast(angle));
+    rl.CameraRoll(@ptrCast(camera), @floatCast(angle));
 
     // Return
 
-    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera, return_resource) catch {
+    return core.maybe_make_struct_or_resource(core.Camera, env, argv[0], camera.*, return_resource) catch {
         return error.invalid_return;
     };
 }
@@ -508,16 +511,17 @@ fn nif_get_camera_view_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     // Function
 
-    const camera_view_matrix = rl.GetCameraViewMatrix(&camera);
+    const camera_view_matrix = rl.GetCameraViewMatrix(@ptrCast(camera));
     defer if (!return_resource) core.Matrix.free(camera_view_matrix);
+    errdefer if (return_resource) core.Matrix.free(camera_view_matrix);
 
     // Return
 
@@ -539,11 +543,11 @@ fn nif_get_camera_projection_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Arguments
 
-    const arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
+    var arg_camera = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_camera;
     };
     defer arg_camera.free();
-    var camera = arg_camera.data;
+    const camera = &arg_camera.data;
 
     const aspect = core.Double.get(env, argv[1]) catch {
         return error.invalid_argument_aspect;
@@ -551,8 +555,9 @@ fn nif_get_camera_projection_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Function
 
-    const camera_projection_matrix = rl.GetCameraProjectionMatrix(&camera, @floatCast(aspect));
+    const camera_projection_matrix = rl.GetCameraProjectionMatrix(@ptrCast(camera), @floatCast(aspect));
     defer if (!return_resource) core.Matrix.free(camera_projection_matrix);
+    errdefer if (return_resource) core.Matrix.free(camera_projection_matrix);
 
     // Return
 

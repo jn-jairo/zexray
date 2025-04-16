@@ -394,6 +394,7 @@ fn nif_measure_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     const size = rl.MeasureTextEx(font, text, @floatCast(font_size), @floatCast(spacing));
     defer if (!return_resource) core.Vector2.free(size);
+    errdefer if (return_resource) core.Vector2.free(size);
 
     // Return
 
