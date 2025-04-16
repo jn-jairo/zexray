@@ -54,16 +54,22 @@ pub const UIVector4 = struct {
 
 /// Takes a screenshot of current screen
 pub fn Screenshot() raylib.Image {
-    const width = raylib.GetRenderWidth();
-    const height = raylib.GetRenderHeight();
+    return raylib.LoadImageFromScreen();
+}
 
-    return raylib.Image{
-        .data = rlgl.rlReadScreenPixels(width, height),
-        .width = width,
-        .height = height,
-        .mipmaps = 1,
-        .format = raylib.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-    };
+pub fn TakeScreenshot2(fileName: [*c]const u8) bool {
+    const image = raylib.LoadImageFromScreen();
+    defer raylib.UnloadImage(image);
+
+    const ok = raylib.ExportImage(image, fileName);
+
+    if (ok) {
+        raylib.TraceLog(raylib.LOG_INFO, "SYSTEM: [%s] Screenshot taken successfully", fileName);
+    } else {
+        raylib.TraceLog(raylib.LOG_WARNING, "SYSTEM: [%s] Screenshot could not be saved", fileName);
+    }
+
+    return ok;
 }
 
 /// Load font from memory buffer, fileType refers to extension: i.e. ".ttf"

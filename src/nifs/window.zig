@@ -52,6 +52,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "disable_event_waiting", .arity = 0, .fptr = nif_disable_event_waiting, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "screenshot", .arity = 0, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "screenshot", .arity = 1, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "take_screenshot", .arity = 1, .fptr = nif_take_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////
@@ -863,4 +864,28 @@ fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
         return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
     };
+}
+
+/// Takes a screenshot of current screen (filename extension defines format)
+///
+/// raylib.h
+/// RLAPI void TakeScreenshot(const char *fileName);
+fn nif_take_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+    assert(argc == 1);
+
+    // Arguments
+
+    const arg_file_name = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
+        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'file_name'.");
+    };
+    defer arg_file_name.free();
+    const file_name = arg_file_name.data;
+
+    // Function
+
+    const ok = rl.TakeScreenshot2(file_name);
+
+    // Return
+
+    return core.Boolean.make(env, ok);
 }

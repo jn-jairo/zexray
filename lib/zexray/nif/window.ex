@@ -48,7 +48,8 @@ defmodule Zexray.NIF.Window do
         enable_event_waiting: 0,
         disable_event_waiting: 0,
         screenshot: 0,
-        screenshot: 1
+        screenshot: 1,
+        take_screenshot: 1
       ]
 
       ############
@@ -566,6 +567,18 @@ defmodule Zexray.NIF.Window do
       @doc group: :window
       @spec screenshot(return :: :value | :resource) :: map | reference
       def screenshot(_return \\ :value), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Takes a screenshot of current screen (filename extension defines format)
+
+      ```c
+      // raylib.h
+      RLAPI void TakeScreenshot(const char *fileName);
+      ```
+      """
+      @doc group: :window
+      @spec take_screenshot(file_name :: binary) :: boolean
+      def take_screenshot(_file_name), do: :erlang.nif_error(:undef)
     end
   end
 end

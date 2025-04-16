@@ -254,6 +254,16 @@ defmodule Zexray.Window do
     |> Zexray.Type.Image.from_nif()
   end
 
+  @doc """
+  Takes a screenshot of current screen (filename extension defines format)
+  """
+  @doc group: :action
+  @spec take_screenshot(file_name :: binary) :: boolean
+  def take_screenshot(file_name)
+      when is_binary(file_name) do
+    NIF.take_screenshot(file_name)
+  end
+
   ##############
   #  Property  #
   ##############
