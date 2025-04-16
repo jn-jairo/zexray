@@ -37,134 +37,280 @@ defmodule Zexray.Resource do
   @doc """
   Creates a new resource.
   """
+  def new!(value)
+
+  @spec new!(values :: list) :: list
+  def new!(values) when is_list(values) do
+    values |> Enum.map(&new!/1)
+  end
+
+  @spec new!(value :: map) :: map
   @spec new!(value :: any) :: struct
   def new!(value) do
-    if resourceable?(value) do
-      apply(to_resource_module(value.__struct__), :new, [value])
-    else
-      raise_invalid_resourceable(value)
+    cond do
+      resourceable?(value) ->
+        apply(to_resource_module(value.__struct__), :new, [value])
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, new!(v)}
+        end)
+
+      true ->
+        raise_invalid_resourceable(value)
     end
   end
 
   @doc """
   Creates a new resource if it is a resourceable or return the value.
   """
+  def new(value)
+
+  @spec new(values :: list) :: list
+  def new(values) when is_list(values) do
+    values |> Enum.map(&new/1)
+  end
+
+  @spec new(value :: map) :: map
   @spec new(value :: any) :: struct
   def new(value) do
-    if resourceable?(value) do
-      apply(to_resource_module(value.__struct__), :new, [value])
-    else
-      value
+    cond do
+      resourceable?(value) ->
+        apply(to_resource_module(value.__struct__), :new, [value])
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, new(v)}
+        end)
+
+      true ->
+        value
     end
   end
 
   @doc """
   Get the content from the resource.
   """
+  def content!(resource)
+
+  @spec content!(resources :: list) :: list
+  def content!(resources) when is_list(resources) do
+    resources |> Enum.map(&content!/1)
+  end
+
+  @spec content!(resource :: map) :: map
   @spec content!(resource :: any) :: struct
   def content!(resource) do
-    if resource?(resource) do
-      apply(resource.__struct__, :content, [resource])
-    else
-      raise_invalid_resource(resource)
+    cond do
+      resource?(resource) ->
+        apply(resource.__struct__, :content, [resource])
+
+      is_map(resource) ->
+        Enum.map(resource, fn {k, v} ->
+          {k, content!(v)}
+        end)
+
+      true ->
+        raise_invalid_resource(resource)
     end
   end
 
   @doc """
   Get the content from the resource if it is a resource or return the value.
   """
+  def content(value)
+
+  @spec content(values :: list) :: list
+  def content(values) when is_list(values) do
+    values |> Enum.map(&content/1)
+  end
+
+  @spec content(value :: map) :: map
   @spec content(value :: any) :: struct
   def content(value) do
-    if resource?(value) do
-      apply(value.__struct__, :content, [value])
-    else
-      value
+    cond do
+      resource?(value) ->
+        apply(value.__struct__, :content, [value])
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, content(v)}
+        end)
+
+      true ->
+        value
     end
   end
 
   @doc """
   Get the content type of the resource.
   """
+  def content_type!(resource)
+
+  @spec content_type!(resources :: list) :: list
+  def content_type!(resources) when is_list(resources) do
+    resources |> Enum.map(&content_type!/1)
+  end
+
+  @spec content_type!(resource :: map) :: map
   @spec content_type!(resource :: any) :: module
   def content_type!(resource) do
-    if resource?(resource) do
-      apply(resource.__struct__, :content_type, [])
-    else
-      raise_invalid_resource(resource)
+    cond do
+      resource?(resource) ->
+        apply(resource.__struct__, :content_type, [])
+
+      is_map(resource) ->
+        Enum.map(resource, fn {k, v} ->
+          {k, content_type!(v)}
+        end)
+
+      true ->
+        raise_invalid_resource(resource)
     end
   end
 
   @doc """
   Get the content type of the resource if it is a resource or return the value.
   """
+  def content_type(value)
+
+  @spec content_type(values :: list) :: list
+  def content_type(values) when is_list(values) do
+    values |> Enum.map(&content_type/1)
+  end
+
+  @spec content_type(value :: map) :: map
   @spec content_type(value :: any) :: module
   def content_type(value) do
-    if resource?(value) do
-      apply(value.__struct__, :content_type, [])
-    else
-      value
+    cond do
+      resource?(value) ->
+        apply(value.__struct__, :content_type, [])
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, content_type(v)}
+        end)
+
+      true ->
+        value
     end
   end
 
   @doc """
   Free the memory used by the resource.
   """
+  def free!(resource)
+
+  @spec free!(resources :: list) :: list
+  def free!(resources) when is_list(resources) do
+    resources |> Enum.map(&free!/1)
+  end
+
+  @spec free!(resource :: map) :: map
   @spec free!(resource :: any) :: :ok
   def free!(resource) do
-    if resource?(resource) do
-      apply(resource.__struct__, :free, [resource])
-    else
-      raise_invalid_resource(resource)
+    cond do
+      resource?(resource) ->
+        apply(resource.__struct__, :free, [resource])
+
+      is_map(resource) ->
+        Enum.map(resource, fn {k, v} ->
+          {k, free!(v)}
+        end)
+
+      true ->
+        raise_invalid_resource(resource)
     end
   end
 
   @doc """
   Free the memory used by the resource if it is a resource.
   """
+  def free(value)
+
+  @spec free(values :: list) :: list
+  def free(values) when is_list(values) do
+    values |> Enum.map(&free/1)
+  end
+
+  @spec free(value :: map) :: map
   @spec free(value :: any) :: :ok
   def free(value) do
-    if resource?(value) do
-      apply(value.__struct__, :free, [value])
-    else
-      :ok
+    cond do
+      resource?(value) ->
+        apply(value.__struct__, :free, [value])
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, free(v)}
+        end)
+
+      true ->
+        value
     end
   end
 
   @doc """
   Free the memory used by the resource asynchronously.
   """
-  @spec free_async!(resource :: any, seconds :: number) :: :ok
   def free_async!(resource, seconds \\ 1.0)
 
-  def free_async!(resource, seconds) do
-    if resource?(resource) do
-      Task.start(fn ->
-        wait_time(seconds)
-        free!(resource)
-      end)
+  @spec free_async!(resources :: list, seconds :: number) :: list
+  def free_async!(resources, seconds) when is_list(resources) do
+    resources |> Enum.map(&free_async!(&1, seconds))
+  end
 
-      :ok
-    else
-      raise_invalid_resource(resource)
+  @spec free_async!(resource :: map, seconds :: number) :: map
+  @spec free_async!(resource :: any, seconds :: number) :: :ok
+  def free_async!(resource, seconds) do
+    cond do
+      resource?(resource) ->
+        Task.start(fn ->
+          wait_time(seconds)
+          free!(resource)
+        end)
+
+        :ok
+
+      is_map(resource) ->
+        Enum.map(resource, fn {k, v} ->
+          {k, free_async!(v, seconds)}
+        end)
+
+      true ->
+        raise_invalid_resource(resource)
     end
   end
 
   @doc """
   Free the memory used by the resource asynchronously if it is a resource.
   """
-  @spec free_async(value :: any, seconds :: number) :: :ok
   def free_async(value, seconds \\ 1.0)
 
-  def free_async(value, seconds) do
-    if resource?(value) do
-      Task.start(fn ->
-        wait_time(seconds)
-        free(value)
-      end)
+  @spec free_async(values :: list, seconds :: number) :: list
+  def free_async(values, seconds) when is_list(values) do
+    values |> Enum.map(&free_async(&1, seconds))
+  end
 
-      :ok
-    else
-      :ok
+  @spec free_async(value :: map, seconds :: number) :: map
+  @spec free_async(value :: any, seconds :: number) :: :ok
+  def free_async(value, seconds) do
+    cond do
+      resource?(value) ->
+        Task.start(fn ->
+          wait_time(seconds)
+          free(value)
+        end)
+
+        :ok
+
+      is_map(value) ->
+        Enum.map(value, fn {k, v} ->
+          {k, free_async(v, seconds)}
+        end)
+
+      true ->
+        value
     end
   end
 
