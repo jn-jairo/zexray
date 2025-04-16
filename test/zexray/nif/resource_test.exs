@@ -233,29 +233,72 @@ defmodule Zexray.NIF.ResourceTest do
       assert is_reference(resource)
       assert similar?(value, apply(NIF, from_resource, [resource]))
 
-      resource_2 = Resource.new!(value)
-      assert similar?(value, Resource.content!(resource_2))
-      assert similar?(value, apply(Resource.content_type!(resource_2), :new, [resource_2]))
+      resource_new! = Resource.new!(value)
+      assert similar?(value, Resource.content!(resource_new!))
+      assert similar?(value, apply(Resource.content_type!(resource_new!), :new, [resource_new!]))
 
-      resource_3 = Resource.new(value)
-      assert similar?(value, Resource.content(resource_3))
-      assert similar?(value, apply(Resource.content_type(resource_3), :new, [resource_3]))
+      resource_new = Resource.new(value)
+      assert similar?(value, Resource.content(resource_new))
+      assert similar?(value, apply(Resource.content_type(resource_new), :new, [resource_new]))
+
+      content_type = Resource.content_type!(resource_new!)
+
+      value_list = [value, value]
+      content_type_list = [content_type, content_type]
+
+      resource_list_new! = Resource.new!(value_list)
+      assert similar?(value_list, Resource.content!(resource_list_new!))
+      assert similar?(content_type_list, Resource.content_type!(resource_list_new!))
+
+      resource_list_new = Resource.new(value_list)
+      assert similar?(value_list, Resource.content(resource_list_new))
+      assert similar?(content_type_list, Resource.content_type(resource_list_new))
+
+      value_map = %{foo: value, bar: value}
+      content_type_map = %{foo: content_type, bar: content_type}
+
+      resource_map_new! = Resource.new!(value_map)
+      assert similar?(value_map, Resource.content!(resource_map_new!))
+      assert similar?(content_type_map, Resource.content_type!(resource_map_new!))
+
+      resource_map_new = Resource.new(value_map)
+      assert similar?(value_map, Resource.content(resource_map_new))
+      assert similar?(content_type_map, Resource.content_type(resource_map_new))
+
+      value_struct = %DummyStruct{foo: value, bar: value}
+      content_type_struct = %DummyStruct{foo: content_type, bar: content_type}
+
+      resource_struct_new! = Resource.new!(value_struct)
+      assert similar?(value_struct, Resource.content!(resource_struct_new!))
+      assert similar?(content_type_struct, Resource.content_type!(resource_struct_new!))
+
+      resource_struct_new = Resource.new(value_struct)
+      assert similar?(value_struct, Resource.content(resource_struct_new))
+      assert similar?(content_type_struct, Resource.content_type(resource_struct_new))
 
       Task.start(fn ->
         wait_time(1.0)
         apply(NIF, free_resource, [resource])
       end)
 
-      Resource.free_async!(resource_2)
-      Resource.free_async(resource_3)
+      Resource.free_async!(resource_new!)
+      Resource.free_async(resource_new)
+
+      Resource.free_async!(resource_list_new!)
+      Resource.free_async(resource_list_new)
+
+      Resource.free_async!(resource_map_new!)
+      Resource.free_async(resource_map_new)
+
+      Resource.free_async!(resource_struct_new!)
+      Resource.free_async(resource_struct_new)
     end
   end
 
   describe "invalid resource" do
     defp dataset_invalid_resource(_) do
       datasets = %{
-        atom: {:foo},
-        struct: {%DummyStruct{}}
+        atom: {:foo}
       }
 
       %{datasets: datasets}
@@ -265,8 +308,7 @@ defmodule Zexray.NIF.ResourceTest do
 
     parameterized_test "", %{datasets: datasets}, [
       # base
-      [dataset: :atom],
-      [dataset: :struct]
+      [dataset: :atom]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 
@@ -281,18 +323,17 @@ defmodule Zexray.NIF.ResourceTest do
       assert ^resource = Resource.content_type(resource)
 
       assert_raise ArgumentError, fn -> Resource.free!(resource) end
-      assert :ok = Resource.free(resource)
+      assert ^resource = Resource.free(resource)
 
       assert_raise ArgumentError, fn -> Resource.free_async!(resource) end
-      assert :ok = Resource.free_async(resource)
+      assert ^resource = Resource.free_async(resource)
     end
   end
 
   describe "invalid resourceable" do
     defp dataset_invalid_resourceable(_) do
       datasets = %{
-        atom: {:foo},
-        struct: {%DummyStruct{}}
+        atom: {:foo}
       }
 
       %{datasets: datasets}
@@ -302,8 +343,7 @@ defmodule Zexray.NIF.ResourceTest do
 
     parameterized_test "", %{datasets: datasets}, [
       # base
-      [dataset: :atom],
-      [dataset: :struct]
+      [dataset: :atom]
     ] do
       dataset = Map.fetch!(datasets, dataset)
 

@@ -51,8 +51,17 @@ defmodule Zexray.Resource do
       resourceable?(value) ->
         apply(to_resource_module(value.__struct__), :new, [value])
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, new!(v)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, new!(v)}
         end)
 
@@ -78,8 +87,17 @@ defmodule Zexray.Resource do
       resourceable?(value) ->
         apply(to_resource_module(value.__struct__), :new, [value])
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, new(v)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, new(v)}
         end)
 
@@ -105,8 +123,17 @@ defmodule Zexray.Resource do
       resource?(resource) ->
         apply(resource.__struct__, :content, [resource])
 
+      is_struct(resource) ->
+        struct(
+          resource.__struct__,
+          Map.from_struct(resource)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, content!(v)}
+          end)
+        )
+
       is_map(resource) ->
-        Enum.map(resource, fn {k, v} ->
+        Enum.into(resource, %{}, fn {k, v} ->
           {k, content!(v)}
         end)
 
@@ -132,8 +159,17 @@ defmodule Zexray.Resource do
       resource?(value) ->
         apply(value.__struct__, :content, [value])
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, content(v)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, content(v)}
         end)
 
@@ -159,8 +195,17 @@ defmodule Zexray.Resource do
       resource?(resource) ->
         apply(resource.__struct__, :content_type, [])
 
+      is_struct(resource) ->
+        struct(
+          resource.__struct__,
+          Map.from_struct(resource)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, content_type!(v)}
+          end)
+        )
+
       is_map(resource) ->
-        Enum.map(resource, fn {k, v} ->
+        Enum.into(resource, %{}, fn {k, v} ->
           {k, content_type!(v)}
         end)
 
@@ -186,8 +231,17 @@ defmodule Zexray.Resource do
       resource?(value) ->
         apply(value.__struct__, :content_type, [])
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, content_type(v)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, content_type(v)}
         end)
 
@@ -213,8 +267,17 @@ defmodule Zexray.Resource do
       resource?(resource) ->
         apply(resource.__struct__, :free, [resource])
 
+      is_struct(resource) ->
+        struct(
+          resource.__struct__,
+          Map.from_struct(resource)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, free!(v)}
+          end)
+        )
+
       is_map(resource) ->
-        Enum.map(resource, fn {k, v} ->
+        Enum.into(resource, %{}, fn {k, v} ->
           {k, free!(v)}
         end)
 
@@ -240,8 +303,17 @@ defmodule Zexray.Resource do
       resource?(value) ->
         apply(value.__struct__, :free, [value])
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, free(v)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, free(v)}
         end)
 
@@ -272,8 +344,17 @@ defmodule Zexray.Resource do
 
         :ok
 
+      is_struct(resource) ->
+        struct(
+          resource.__struct__,
+          Map.from_struct(resource)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, free_async!(v, seconds)}
+          end)
+        )
+
       is_map(resource) ->
-        Enum.map(resource, fn {k, v} ->
+        Enum.into(resource, %{}, fn {k, v} ->
           {k, free_async!(v, seconds)}
         end)
 
@@ -304,8 +385,17 @@ defmodule Zexray.Resource do
 
         :ok
 
+      is_struct(value) ->
+        struct(
+          value.__struct__,
+          Map.from_struct(value)
+          |> Enum.into(%{}, fn {k, v} ->
+            {k, free_async(v, seconds)}
+          end)
+        )
+
       is_map(value) ->
-        Enum.map(value, fn {k, v} ->
+        Enum.into(value, %{}, fn {k, v} ->
           {k, free_async(v, seconds)}
         end)
 
