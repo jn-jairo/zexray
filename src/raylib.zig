@@ -128,3 +128,26 @@ pub fn LoadFontEx2(fileName: [*c]const u8, fontSize: c_int, codepoints: [*c]c_in
 
     return font;
 }
+
+/// Generate image: grayscale image from text data
+pub fn GenImageTextEx(width: c_int, height: c_int, text: [*c]const u8, textLength: c_int) raylib.Image {
+    var image = raylib.Image{};
+
+    const imageViewSize = width * height;
+
+    const data = allocator.alloc(u8, @intCast(imageViewSize)) catch null;
+    errdefer allocator.free(data);
+
+    image.width = width;
+    image.height = height;
+    image.format = raylib.PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+    image.data = @ptrCast(data);
+    image.mipmaps = 1;
+
+    if (data) |d| {
+        const length = if (textLength > imageViewSize) imageViewSize else textLength;
+        std.mem.copyForwards(u8, d, @as([*]const u8, @ptrCast(text))[0..@intCast(length)]);
+    }
+
+    return image;
+}

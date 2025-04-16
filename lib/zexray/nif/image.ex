@@ -7,13 +7,114 @@ defmodule Zexray.NIF.Image do
         # Image
         image_get_data_size: 4,
 
+        # Image loading
+        load_image: 1,
+        load_image: 2,
+        load_image_raw: 5,
+        load_image_raw: 6,
+        load_image_anim: 1,
+        load_image_anim: 2,
+        load_image_anim_from_memory: 2,
+        load_image_anim_from_memory: 3,
+        load_image_from_memory: 2,
+        load_image_from_memory: 3,
+        load_image_from_texture: 1,
+        load_image_from_texture: 2,
+        load_image_from_screen: 0,
+        load_image_from_screen: 1,
+        is_image_valid: 1,
+        export_image: 2,
+        export_image_to_memory: 2,
+
         # Image generation
         gen_image_color: 3,
         gen_image_color: 4,
+        gen_image_gradient_linear: 5,
+        gen_image_gradient_linear: 6,
+        gen_image_gradient_radial: 5,
+        gen_image_gradient_radial: 6,
+        gen_image_gradient_square: 5,
+        gen_image_gradient_square: 6,
+        gen_image_checked: 6,
+        gen_image_checked: 7,
+        gen_image_white_noise: 3,
+        gen_image_white_noise: 4,
+        gen_image_perlin_noise: 5,
+        gen_image_perlin_noise: 6,
+        gen_image_cellular: 3,
+        gen_image_cellular: 4,
+        gen_image_text: 3,
+        gen_image_text: 4,
 
         # Image manipulation
+        image_copy: 1,
+        image_copy: 2,
+        image_from_image: 2,
+        image_from_image: 3,
+        image_from_channel: 2,
+        image_from_channel: 3,
+        image_text: 3,
+        image_text: 4,
+        image_text_ex: 5,
+        image_text_ex: 6,
+        image_format: 2,
+        image_format: 3,
+        image_to_pot: 2,
+        image_to_pot: 3,
         image_crop: 2,
-        image_crop: 3
+        image_crop: 3,
+        image_alpha_crop: 2,
+        image_alpha_crop: 3,
+        image_alpha_clear: 3,
+        image_alpha_clear: 4,
+        image_alpha_mask: 2,
+        image_alpha_mask: 3,
+        image_alpha_premultiply: 1,
+        image_alpha_premultiply: 2,
+        image_blur_gaussian: 2,
+        image_blur_gaussian: 3,
+        image_kernel_convolution: 2,
+        image_kernel_convolution: 3,
+        image_resize: 3,
+        image_resize: 4,
+        image_resize_nn: 3,
+        image_resize_nn: 4,
+        image_resize_canvas: 6,
+        image_resize_canvas: 7,
+        image_mipmaps: 1,
+        image_mipmaps: 2,
+        image_dither: 5,
+        image_dither: 6,
+        image_flip_vertical: 1,
+        image_flip_vertical: 2,
+        image_flip_horizontal: 1,
+        image_flip_horizontal: 2,
+        image_rotate: 2,
+        image_rotate: 3,
+        image_rotate_cw: 1,
+        image_rotate_cw: 2,
+        image_rotate_ccw: 1,
+        image_rotate_ccw: 2,
+        image_color_tint: 2,
+        image_color_tint: 3,
+        image_color_invert: 1,
+        image_color_invert: 2,
+        image_color_grayscale: 1,
+        image_color_grayscale: 2,
+        image_color_contrast: 2,
+        image_color_contrast: 3,
+        image_color_brightness: 2,
+        image_color_brightness: 3,
+        image_color_replace: 3,
+        image_color_replace: 4,
+        load_image_colors: 1,
+        load_image_colors: 2,
+        load_image_palette: 2,
+        load_image_palette: 3,
+        get_image_alpha_border: 2,
+        get_image_alpha_border: 3,
+        get_image_color: 3,
+        get_image_color: 4
       ]
 
       ###########
@@ -39,6 +140,198 @@ defmodule Zexray.NIF.Image do
             _height,
             _format,
             _mipmaps
+          ),
+          do: :erlang.nif_error(:undef)
+
+      ###################
+      #  Image loading  #
+      ###################
+
+      @doc """
+      Load image from file into CPU memory (RAM)
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImage(const char *fileName);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image(
+              file_name :: binary,
+              return :: :value | :resource
+            ) :: map | reference
+      def load_image(
+            _file_name,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image from RAW file data
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageRaw(const char *fileName, int width, int height, int format, int headerSize);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_raw(
+              file_name :: binary,
+              width :: integer,
+              height :: integer,
+              format :: integer,
+              header_size :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def load_image_raw(
+            _file_name,
+            _width,
+            _height,
+            _format,
+            _header_size,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image sequence from file (frames appended to image.data)
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageAnim(const char *fileName, int *frames);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_anim(
+              file_name :: binary,
+              return :: :value | :resource
+            ) :: {image :: map | reference, frames :: integer}
+      def load_image_anim(
+            _file_name,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image sequence from memory buffer
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageAnimFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int *frames);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_anim_from_memory(
+              file_type :: binary,
+              file_data :: binary,
+              return :: :value | :resource
+            ) :: {image :: map | reference, frames :: integer}
+      def load_image_anim_from_memory(
+            _file_type,
+            _file_data,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image from memory buffer, fileType refers to extension: i.e. '.png'
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, int dataSize);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_from_memory(
+              file_type :: binary,
+              file_data :: binary,
+              return :: :value | :resource
+            ) :: map | reference
+      def load_image_from_memory(
+            _file_type,
+            _file_data,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image from GPU texture data
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageFromTexture(Texture2D texture);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_from_texture(
+              texture :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def load_image_from_texture(
+            _texture,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load image from screen buffer and (screenshot)
+
+      ```c
+      // raylib.h
+      RLAPI Image LoadImageFromScreen(void);
+      ```
+      """
+      @doc group: :image_loading
+      @spec load_image_from_screen(return :: :value | :resource) :: map | reference
+      def load_image_from_screen(_return \\ :value), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Check if an image is valid (data and parameters)
+
+      ```c
+      // raylib.h
+      RLAPI bool IsImageValid(Image image);
+      ```
+      """
+      @doc group: :image_loading
+      @spec is_image_valid(image :: map | reference) :: boolean
+      def is_image_valid(_image), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Export image data to file, returns true on success
+
+      ```c
+      // raylib.h
+      RLAPI bool ExportImage(Image image, const char *fileName);
+      ```
+      """
+      @doc group: :image_loading
+      @spec export_image(
+              image :: map | reference,
+              file_name :: binary
+            ) :: boolean
+      def export_image(
+            _image,
+            _file_name
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Export image to memory buffer
+
+      ```c
+      // raylib.h
+      RLAPI unsigned char *ExportImageToMemory(Image image, const char *fileType, int *fileSize);
+      ```
+      """
+      @doc group: :image_loading
+      @spec export_image_to_memory(
+              image :: map | reference,
+              file_type :: binary
+            ) :: binary
+      def export_image_to_memory(
+            _image,
+            _file_type
           ),
           do: :erlang.nif_error(:undef)
 
@@ -69,9 +362,368 @@ defmodule Zexray.NIF.Image do
           ),
           do: :erlang.nif_error(:undef)
 
+      @doc """
+      Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageGradientLinear(int width, int height, int direction, Color start, Color end);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_gradient_linear(
+              width :: integer,
+              height :: integer,
+              direction :: integer,
+              color_start :: map | reference,
+              color_end :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_gradient_linear(
+            _width,
+            _height,
+            _direction,
+            _color_start,
+            _color_end,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: radial gradient
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageGradientRadial(int width, int height, float density, Color inner, Color outer);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_gradient_radial(
+              width :: integer,
+              height :: integer,
+              density :: float,
+              color_inner :: map | reference,
+              color_outer :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_gradient_radial(
+            _width,
+            _height,
+            _density,
+            _color_inner,
+            _color_outer,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: square gradient
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageGradientSquare(int width, int height, float density, Color inner, Color outer);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_gradient_square(
+              width :: integer,
+              height :: integer,
+              density :: float,
+              color_inner :: map | reference,
+              color_outer :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_gradient_square(
+            _width,
+            _height,
+            _density,
+            _color_inner,
+            _color_outer,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: checked
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageChecked(int width, int height, int checksX, int checksY, Color col1, Color col2);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_checked(
+              width :: integer,
+              height :: integer,
+              checks_x :: integer,
+              checks_y :: integer,
+              color_1 :: map | reference,
+              color_2 :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_checked(
+            _width,
+            _height,
+            _checks_x,
+            _checks_y,
+            _color_1,
+            _color_2,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: white noise
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageWhiteNoise(int width, int height, float factor);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_white_noise(
+              width :: integer,
+              height :: integer,
+              factor :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_white_noise(
+            _width,
+            _height,
+            _factor,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: perlin noise
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImagePerlinNoise(int width, int height, int offsetX, int offsetY, float scale);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_perlin_noise(
+              width :: integer,
+              height :: integer,
+              offset_x :: integer,
+              offset_y :: integer,
+              scale :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_perlin_noise(
+            _width,
+            _height,
+            _offset_x,
+            _offset_y,
+            _scale,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: cellular algorithm, bigger tileSize means bigger cells
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageCellular(int width, int height, int tileSize);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_cellular(
+              width :: integer,
+              height :: integer,
+              tile_size :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_cellular(
+            _width,
+            _height,
+            _tile_size,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Generate image: grayscale image from text data
+
+      ```c
+      // raylib.h
+      RLAPI Image GenImageText(int width, int height, const char *text);
+      ```
+      """
+      @doc group: :image_generation
+      @spec gen_image_text(
+              width :: integer,
+              height :: integer,
+              text :: binary,
+              return :: :value | :resource
+            ) :: map | reference
+      def gen_image_text(
+            _width,
+            _height,
+            _text,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
       ########################
       #  Image manipulation  #
       ########################
+
+      @doc """
+      Create an image duplicate (useful for transformations)
+
+      ```c
+      // raylib.h
+      RLAPI Image ImageCopy(Image image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_copy(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_copy(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Create an image from another image piece
+
+      ```c
+      // raylib.h
+      RLAPI Image ImageFromImage(Image image, Rectangle rec);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_from_image(
+              image :: map | reference,
+              rec :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_from_image(
+            _image,
+            _rec,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Create an image from a selected channel of another image (GRAYSCALE)
+
+      ```c
+      // raylib.h
+      RLAPI Image ImageFromChannel(Image image, int selectedChannel);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_from_channel(
+              image :: map | reference,
+              selected_channel :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_from_channel(
+            _image,
+            _selected_channel,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Create an image from text (default font)
+
+      ```c
+      // raylib.h
+      RLAPI Image ImageText(const char *text, int fontSize, Color color);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_text(
+              text :: binary,
+              font_size :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_text(
+            _text,
+            _font_size,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Create an image from text (custom sprite font)
+
+      ```c
+      // raylib.h
+      RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Color tint);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_text_ex(
+              font :: map | reference,
+              text :: binary,
+              font_size :: float,
+              spacing :: float,
+              tint :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_text_ex(
+            _font,
+            _text,
+            _font_size,
+            _spacing,
+            _tint,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Convert image data to desired format
+
+      ```c
+      // raylib.h
+      RLAPI void ImageFormat(Image *image, int newFormat);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_format(
+              image :: map | reference,
+              new_format :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_format(
+            _image,
+            _new_format,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Convert image to POT (power-of-two)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageToPOT(Image *image, Color fill);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_to_pot(
+              image :: map | reference,
+              fill :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_to_pot(
+            _image,
+            _fill,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
 
       @doc """
       Crop an image to a defined rectangle
@@ -90,6 +742,558 @@ defmodule Zexray.NIF.Image do
       def image_crop(
             _image,
             _crop,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Crop image depending on alpha value
+
+      ```c
+      // raylib.h
+      RLAPI void ImageAlphaCrop(Image *image, float threshold);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_alpha_crop(
+              image :: map | reference,
+              threshold :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_alpha_crop(
+            _image,
+            _threshold,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Clear alpha channel to desired color
+
+      ```c
+      // raylib.h
+      RLAPI void ImageAlphaClear(Image *image, Color color, float threshold);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_alpha_clear(
+              image :: map | reference,
+              color :: map | reference,
+              threshold :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_alpha_clear(
+            _image,
+            _color,
+            _threshold,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Apply alpha mask to image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageAlphaMask(Image *image, Image alphaMask);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_alpha_mask(
+              image :: map | reference,
+              alpha_mask :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_alpha_mask(
+            _image,
+            _alpha_mask,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Premultiply alpha channel
+
+      ```c
+      // raylib.h
+      RLAPI void ImageAlphaPremultiply(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_alpha_premultiply(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_alpha_premultiply(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Apply Gaussian blur using a box blur approximation
+
+      ```c
+      // raylib.h
+      RLAPI void ImageBlurGaussian(Image *image, int blurSize);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_blur_gaussian(
+              image :: map | reference,
+              blur_size :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_blur_gaussian(
+            _image,
+            _blur_size,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Apply custom square convolution kernel to image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageKernelConvolution(Image *image, const float *kernel, int kernelSize);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_kernel_convolution(
+              image :: map | reference,
+              kernel :: [float],
+              return :: :value | :resource
+            ) :: map | reference
+      def image_kernel_convolution(
+            _image,
+            _kernel,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Resize image (Bicubic scaling algorithm)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageResize(Image *image, int newWidth, int newHeight);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_resize(
+              image :: map | reference,
+              new_width :: integer,
+              new_height :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_resize(
+            _image,
+            _new_width,
+            _new_height,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Resize image (Nearest-Neighbor scaling algorithm)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageResizeNN(Image *image, int newWidth, int newHeight);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_resize_nn(
+              image :: map | reference,
+              new_width :: integer,
+              new_height :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_resize_nn(
+            _image,
+            _new_width,
+            _new_height,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Resize canvas and fill with color
+
+      ```c
+      // raylib.h
+      RLAPI void ImageResizeCanvas(Image *image, int newWidth, int newHeight, int offsetX, int offsetY, Color fill);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_resize_canvas(
+              image :: map | reference,
+              new_width :: integer,
+              new_height :: integer,
+              offset_x :: integer,
+              offset_y :: integer,
+              fill :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_resize_canvas(
+            _image,
+            _new_width,
+            _new_height,
+            _offset_x,
+            _offset_y,
+            _fill,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Compute all mipmap levels for a provided image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageMipmaps(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_mipmaps(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_mipmaps(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDither(Image *image, int rBpp, int gBpp, int bBpp, int aBpp);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_dither(
+              image :: map | reference,
+              r_bpp :: integer,
+              g_bpp :: integer,
+              b_bpp :: integer,
+              a_bpp :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_dither(
+            _image,
+            _r_bpp,
+            _g_bpp,
+            _b_bpp,
+            _a_bpp,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Flip image vertically
+
+      ```c
+      // raylib.h
+      RLAPI void ImageFlipVertical(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_flip_vertical(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_flip_vertical(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Flip image horizontally
+
+      ```c
+      // raylib.h
+      RLAPI void ImageFlipHorizontal(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_flip_horizontal(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_flip_horizontal(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Rotate image by input angle in degrees (-359 to 359)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageRotate(Image *image, int degrees);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_rotate(
+              image :: map | reference,
+              degrees :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_rotate(
+            _image,
+            _degrees,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Rotate image clockwise 90deg
+
+      ```c
+      // raylib.h
+      RLAPI void ImageRotateCW(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_rotate_cw(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_rotate_cw(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Rotate image counter-clockwise 90deg
+
+      ```c
+      // raylib.h
+      RLAPI void ImageRotateCCW(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_rotate_ccw(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_rotate_ccw(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: tint
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorTint(Image *image, Color color);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_tint(
+              image :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_tint(
+            _image,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: invert
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorInvert(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_invert(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_invert(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: grayscale
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorGrayscale(Image *image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_grayscale(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_grayscale(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: contrast (-100 to 100)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorContrast(Image *image, float contrast);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_contrast(
+              image :: map | reference,
+              contrast :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_contrast(
+            _image,
+            _contrast,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: brightness (-255 to 255)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorBrightness(Image *image, int brightness);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_brightness(
+              image :: map | reference,
+              brightness :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_brightness(
+            _image,
+            _brightness,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Modify image color: replace color
+
+      ```c
+      // raylib.h
+      RLAPI void ImageColorReplace(Image *image, Color color, Color replace);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec image_color_replace(
+              image :: map | reference,
+              color :: map | reference,
+              replace :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_color_replace(
+            _image,
+            _color,
+            _replace,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load color data from image as a Color array (RGBA - 32bit)
+
+      ```c
+      // raylib.h
+      RLAPI Color *LoadImageColors(Image image);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec load_image_colors(
+              image :: map | reference,
+              return :: :value | :resource
+            ) :: [map | reference]
+      def load_image_colors(
+            _image,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load colors palette from image as a Color array (RGBA - 32bit)
+
+      ```c
+      // raylib.h
+      RLAPI Color *LoadImagePalette(Image image, int maxPaletteSize, int *colorCount);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec load_image_palette(
+              image :: map | reference,
+              max_palette_size :: integer,
+              return :: :value | :resource
+            ) :: [map | reference]
+      def load_image_palette(
+            _image,
+            _max_palette_size,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get image alpha border rectangle
+
+      ```c
+      // raylib.h
+      RLAPI Rectangle GetImageAlphaBorder(Image image, float threshold);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec get_image_alpha_border(
+              image :: map | reference,
+              threshold :: float,
+              return :: :value | :resource
+            ) :: map | reference
+      def get_image_alpha_border(
+            _image,
+            _threshold,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get image pixel color at (x, y) position
+
+      ```c
+      // raylib.h
+      RLAPI Color GetImageColor(Image image, int x, int y);
+      ```
+      """
+      @doc group: :image_manipulation
+      @spec get_image_color(
+              image :: map | reference,
+              x :: integer,
+              y :: integer,
+              return :: :value | :resource
+            ) :: map | reference
+      def get_image_color(
+            _image,
+            _x,
+            _y,
             _return \\ :value
           ),
           do: :erlang.nif_error(:undef)
