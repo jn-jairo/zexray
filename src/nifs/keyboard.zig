@@ -7,15 +7,15 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Keyboard
-    .{ .name = "is_key_pressed", .arity = 1, .fptr = nif_is_key_pressed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_key_pressed_repeat", .arity = 1, .fptr = nif_is_key_pressed_repeat, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_key_down", .arity = 1, .fptr = nif_is_key_down, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_key_released", .arity = 1, .fptr = nif_is_key_released, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_key_up", .arity = 1, .fptr = nif_is_key_up, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_key_pressed", .arity = 0, .fptr = nif_get_key_pressed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_char_pressed", .arity = 0, .fptr = nif_get_char_pressed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_key_name", .arity = 1, .fptr = nif_get_key_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_exit_key", .arity = 1, .fptr = nif_set_exit_key, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_key_pressed", .arity = 1, .fptr = core.nif_wrapper(nif_is_key_pressed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_key_pressed_repeat", .arity = 1, .fptr = core.nif_wrapper(nif_is_key_pressed_repeat), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_key_down", .arity = 1, .fptr = core.nif_wrapper(nif_is_key_down), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_key_released", .arity = 1, .fptr = core.nif_wrapper(nif_is_key_released), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_key_up", .arity = 1, .fptr = core.nif_wrapper(nif_is_key_up), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_key_pressed", .arity = 0, .fptr = core.nif_wrapper(nif_get_key_pressed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_char_pressed", .arity = 0, .fptr = core.nif_wrapper(nif_get_char_pressed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_key_name", .arity = 1, .fptr = core.nif_wrapper(nif_get_key_name), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_exit_key", .arity = 1, .fptr = core.nif_wrapper(nif_set_exit_key), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////
@@ -26,13 +26,13 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI bool IsKeyPressed(int key);
-fn nif_is_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -48,13 +48,13 @@ fn nif_is_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 ///
 /// raylib.h
 /// RLAPI bool IsKeyPressedRepeat(int key);
-fn nif_is_key_pressed_repeat(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_key_pressed_repeat(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -70,13 +70,13 @@ fn nif_is_key_pressed_repeat(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 ///
 /// raylib.h
 /// RLAPI bool IsKeyDown(int key);
-fn nif_is_key_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_key_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -92,13 +92,13 @@ fn nif_is_key_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI bool IsKeyReleased(int key);
-fn nif_is_key_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_key_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -114,13 +114,13 @@ fn nif_is_key_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI bool IsKeyUp(int key);
-fn nif_is_key_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_key_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -136,7 +136,7 @@ fn nif_is_key_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 ///
 /// raylib.h
 /// RLAPI int GetKeyPressed(void);
-fn nif_get_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -153,7 +153,7 @@ fn nif_get_key_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI int GetCharPressed(void);
-fn nif_get_char_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_char_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -170,13 +170,13 @@ fn nif_get_char_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI const char *GetKeyName(int key);
-fn nif_get_key_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_key_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function
@@ -193,13 +193,13 @@ fn nif_get_key_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 ///
 /// raylib.h
 /// RLAPI void SetExitKey(int key);
-fn nif_set_exit_key(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_exit_key(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const key = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'key'.");
+    const key = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_key;
     };
 
     // Function

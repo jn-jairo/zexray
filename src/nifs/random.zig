@@ -7,9 +7,9 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Random
-    .{ .name = "set_random_seed", .arity = 1, .fptr = nif_set_random_seed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_random_value", .arity = 2, .fptr = nif_get_random_value, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "load_random_sequence", .arity = 3, .fptr = nif_load_random_sequence, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_random_seed", .arity = 1, .fptr = core.nif_wrapper(nif_set_random_seed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_random_value", .arity = 2, .fptr = core.nif_wrapper(nif_get_random_value), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "load_random_sequence", .arity = 3, .fptr = core.nif_wrapper(nif_load_random_sequence), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////
@@ -20,13 +20,13 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI void SetRandomSeed(unsigned int seed);
-fn nif_set_random_seed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_random_seed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const seed = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'seed'.");
+    const seed = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_seed;
     };
 
     // Function
@@ -42,17 +42,17 @@ fn nif_set_random_seed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI int GetRandomValue(int min, int max);
-fn nif_get_random_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_random_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const min = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'min'.");
+    const min = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_min;
     };
 
-    const max = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'max'.");
+    const max = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_max;
     };
 
     // Function
@@ -68,21 +68,21 @@ fn nif_get_random_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI int *LoadRandomSequence(unsigned int count, int min, int max);
-fn nif_load_random_sequence(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_load_random_sequence(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 3);
 
     // Arguments
 
-    const count = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'count'.");
+    const count = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_count;
     };
 
-    const min = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'min'.");
+    const min = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_min;
     };
 
-    const max = core.Int.get(env, argv[2]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'max'.");
+    const max = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_max;
     };
 
     // Function

@@ -7,12 +7,12 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Touch
-    .{ .name = "get_touch_x", .arity = 0, .fptr = nif_get_touch_x, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_touch_y", .arity = 0, .fptr = nif_get_touch_y, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_touch_position", .arity = 1, .fptr = nif_get_touch_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_touch_position", .arity = 2, .fptr = nif_get_touch_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_touch_point_id", .arity = 1, .fptr = nif_get_touch_point_id, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_touch_point_count", .arity = 0, .fptr = nif_get_touch_point_count, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_x", .arity = 0, .fptr = core.nif_wrapper(nif_get_touch_x), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_y", .arity = 0, .fptr = core.nif_wrapper(nif_get_touch_y), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_position", .arity = 1, .fptr = core.nif_wrapper(nif_get_touch_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_position", .arity = 2, .fptr = core.nif_wrapper(nif_get_touch_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_point_id", .arity = 1, .fptr = core.nif_wrapper(nif_get_touch_point_id), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_touch_point_count", .arity = 0, .fptr = core.nif_wrapper(nif_get_touch_point_count), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 /////////////
@@ -23,7 +23,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI int GetTouchX(void);
-fn nif_get_touch_x(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_touch_x(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -40,7 +40,7 @@ fn nif_get_touch_x(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI int GetTouchY(void);
-fn nif_get_touch_y(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_touch_y(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -57,7 +57,7 @@ fn nif_get_touch_y(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI Vector2 GetTouchPosition(int index);
-fn nif_get_touch_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_touch_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1 or argc == 2);
 
     // Return type
@@ -66,8 +66,8 @@ fn nif_get_touch_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Arguments
 
-    const index = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'index'.");
+    const index = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_index;
     };
 
     // Function
@@ -77,8 +77,8 @@ fn nif_get_touch_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -86,13 +86,13 @@ fn nif_get_touch_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI int GetTouchPointId(int index);
-fn nif_get_touch_point_id(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_touch_point_id(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const index = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'index'.");
+    const index = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_index;
     };
 
     // Function
@@ -108,7 +108,7 @@ fn nif_get_touch_point_id(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI int GetTouchPointCount(void);
-fn nif_get_touch_point_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_touch_point_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 

@@ -7,12 +7,12 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // FilePathList
-    .{ .name = "file_path_list_get_max_filepath_capacity", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_capacity, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "file_path_list_get_max_filepath_length", .arity = 0, .fptr = nif_file_path_list_get_max_filepath_length, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_get_max_filepath_capacity", .arity = 0, .fptr = core.nif_wrapper(nif_file_path_list_get_max_filepath_capacity), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_get_max_filepath_length", .arity = 0, .fptr = core.nif_wrapper(nif_file_path_list_get_max_filepath_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // File system
-    .{ .name = "is_file_dropped", .arity = 0, .fptr = nif_is_file_dropped, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "load_dropped_files", .arity = 0, .fptr = nif_load_dropped_files, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_file_dropped", .arity = 0, .fptr = core.nif_wrapper(nif_is_file_dropped), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "load_dropped_files", .arity = 0, .fptr = core.nif_wrapper(nif_load_dropped_files), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////////
@@ -20,7 +20,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ////////////////////
 
 /// Get file path list max filepath capacity for FilePathList.paths
-fn nif_file_path_list_get_max_filepath_capacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_file_path_list_get_max_filepath_capacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -30,7 +30,7 @@ fn nif_file_path_list_get_max_filepath_capacity(env: ?*e.ErlNifEnv, argc: c_int,
 }
 
 /// Get file path list max filepath length for FilePathList.paths
-fn nif_file_path_list_get_max_filepath_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_file_path_list_get_max_filepath_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -47,7 +47,7 @@ fn nif_file_path_list_get_max_filepath_length(env: ?*e.ErlNifEnv, argc: c_int, a
 ///
 /// raylib.h
 /// RLAPI bool IsFileDropped(void);
-fn nif_is_file_dropped(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_file_dropped(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -64,7 +64,7 @@ fn nif_is_file_dropped(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI FilePathList LoadDroppedFiles(void);
-fn nif_load_dropped_files(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_load_dropped_files(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 

@@ -7,10 +7,10 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // BoneInfo
-    .{ .name = "bone_info_get_max_name", .arity = 0, .fptr = nif_bone_info_get_max_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bone_info_get_max_name", .arity = 0, .fptr = core.nif_wrapper(nif_bone_info_get_max_name), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // ModelAnimation
-    .{ .name = "model_animation_get_max_name", .arity = 0, .fptr = nif_model_animation_get_max_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_animation_get_max_name", .arity = 0, .fptr = core.nif_wrapper(nif_model_animation_get_max_name), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////////
@@ -18,7 +18,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ////////////////
 
 /// Get bone info max name for BoneInfo.name
-fn nif_bone_info_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_bone_info_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -32,7 +32,7 @@ fn nif_bone_info_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 //////////////////////
 
 /// Get model animation max name for ModelAnimation.name
-fn nif_model_animation_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_model_animation_get_max_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 

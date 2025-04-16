@@ -4,6 +4,42 @@ const e = @import("./erl_nif.zig");
 const types = @import("./types.zig");
 pub usingnamespace types;
 
+pub const ZigNifFuncType = fn (env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) anyerror!e.ErlNifTerm;
+pub const NifFuncType = fn (env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm;
+
+pub fn nif_wrapper(comptime func: ZigNifFuncType) NifFuncType {
+    return struct {
+        pub fn wrapped(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+            return func(env, argc, argv) catch |err| {
+                const error_name: []const u8 = @errorName(err);
+
+                var buf = std.ArrayList(u8).init(e.allocator);
+                defer buf.deinit();
+                const writer = buf.writer();
+
+                const invalid_argument = "invalid_argument_";
+                const invalid_return = "invalid_return";
+
+                var new_err: anyerror = err;
+
+                if (std.mem.startsWith(u8, error_name, invalid_argument)) {
+                    writer.print("Invalid argument '{s}'.", .{error_name[(invalid_argument.len)..(error_name.len)]}) catch unreachable;
+                    new_err = error.ArgumentError;
+                } else if (std.mem.startsWith(u8, error_name, invalid_return)) {
+                    writer.writeAll("Failed to get return value.") catch unreachable;
+                    new_err = error.ArgumentError;
+                } else {
+                    return raise_exception(e.allocator, env, new_err, @errorReturnTrace(), null);
+                }
+
+                const msg: []const u8 = buf.items;
+
+                return raise_exception(e.allocator, env, new_err, @errorReturnTrace(), msg);
+            };
+        }
+    }.wrapped;
+}
+
 pub fn raise_exception(allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, err: anyerror, stack_trace: ?*std.builtin.StackTrace, message: ?[]const u8) e.ErlNifTerm {
     var term = e.enif_make_new_map(env);
 

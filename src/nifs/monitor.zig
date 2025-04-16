@@ -7,17 +7,17 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Monitor
-    .{ .name = "set_window_monitor", .arity = 1, .fptr = nif_set_window_monitor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_count", .arity = 0, .fptr = nif_get_monitor_count, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_current_monitor", .arity = 0, .fptr = nif_get_current_monitor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_position", .arity = 1, .fptr = nif_get_monitor_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_position", .arity = 2, .fptr = nif_get_monitor_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_width", .arity = 1, .fptr = nif_get_monitor_width, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_height", .arity = 1, .fptr = nif_get_monitor_height, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_physical_width", .arity = 1, .fptr = nif_get_monitor_physical_width, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_physical_height", .arity = 1, .fptr = nif_get_monitor_physical_height, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_refresh_rate", .arity = 1, .fptr = nif_get_monitor_refresh_rate, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_monitor_name", .arity = 1, .fptr = nif_get_monitor_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_monitor", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_monitor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_count", .arity = 0, .fptr = core.nif_wrapper(nif_get_monitor_count), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_current_monitor", .arity = 0, .fptr = core.nif_wrapper(nif_get_current_monitor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_position", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_position", .arity = 2, .fptr = core.nif_wrapper(nif_get_monitor_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_width", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_width), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_height", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_height), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_physical_width", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_physical_width), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_physical_height", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_physical_height), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_refresh_rate", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_refresh_rate), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_monitor_name", .arity = 1, .fptr = core.nif_wrapper(nif_get_monitor_name), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ///////////////
@@ -28,13 +28,13 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI void SetWindowMonitor(int monitor);
-fn nif_set_window_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -50,7 +50,7 @@ fn nif_set_window_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI int GetMonitorCount(void);
-fn nif_get_monitor_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -67,7 +67,7 @@ fn nif_get_monitor_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI int GetCurrentMonitor(void);
-fn nif_get_current_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_current_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -84,7 +84,7 @@ fn nif_get_current_monitor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI Vector2 GetMonitorPosition(int monitor);
-fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1 or argc == 2);
 
     // Return type
@@ -93,8 +93,8 @@ fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -104,8 +104,8 @@ fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -113,13 +113,13 @@ fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI int GetMonitorWidth(int monitor);
-fn nif_get_monitor_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -135,13 +135,13 @@ fn nif_get_monitor_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI int GetMonitorHeight(int monitor);
-fn nif_get_monitor_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -157,13 +157,13 @@ fn nif_get_monitor_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI int GetMonitorPhysicalWidth(int monitor);
-fn nif_get_monitor_physical_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_physical_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -179,13 +179,13 @@ fn nif_get_monitor_physical_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 ///
 /// raylib.h
 /// RLAPI int GetMonitorPhysicalHeight(int monitor);
-fn nif_get_monitor_physical_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_physical_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -201,13 +201,13 @@ fn nif_get_monitor_physical_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
 ///
 /// raylib.h
 /// RLAPI int GetMonitorRefreshRate(int monitor);
-fn nif_get_monitor_refresh_rate(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_refresh_rate(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function
@@ -223,13 +223,13 @@ fn nif_get_monitor_refresh_rate(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 ///
 /// raylib.h
 /// RLAPI const char *GetMonitorName(int monitor);
-fn nif_get_monitor_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_monitor_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const monitor = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'monitor'.");
+    const monitor = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_monitor;
     };
 
     // Function

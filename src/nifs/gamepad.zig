@@ -7,17 +7,17 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Gamepad
-    .{ .name = "is_gamepad_available", .arity = 1, .fptr = nif_is_gamepad_available, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_gamepad_name", .arity = 1, .fptr = nif_get_gamepad_name, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_gamepad_button_pressed", .arity = 2, .fptr = nif_is_gamepad_button_pressed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_gamepad_button_down", .arity = 2, .fptr = nif_is_gamepad_button_down, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_gamepad_button_released", .arity = 2, .fptr = nif_is_gamepad_button_released, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_gamepad_button_up", .arity = 2, .fptr = nif_is_gamepad_button_up, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_gamepad_button_pressed", .arity = 0, .fptr = nif_get_gamepad_button_pressed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_gamepad_axis_count", .arity = 1, .fptr = nif_get_gamepad_axis_count, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_gamepad_axis_movement", .arity = 2, .fptr = nif_get_gamepad_axis_movement, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_gamepad_mappings", .arity = 1, .fptr = nif_set_gamepad_mappings, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_gamepad_vibration", .arity = 4, .fptr = nif_set_gamepad_vibration, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_gamepad_available", .arity = 1, .fptr = core.nif_wrapper(nif_is_gamepad_available), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gamepad_name", .arity = 1, .fptr = core.nif_wrapper(nif_get_gamepad_name), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_gamepad_button_pressed", .arity = 2, .fptr = core.nif_wrapper(nif_is_gamepad_button_pressed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_gamepad_button_down", .arity = 2, .fptr = core.nif_wrapper(nif_is_gamepad_button_down), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_gamepad_button_released", .arity = 2, .fptr = core.nif_wrapper(nif_is_gamepad_button_released), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_gamepad_button_up", .arity = 2, .fptr = core.nif_wrapper(nif_is_gamepad_button_up), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gamepad_button_pressed", .arity = 0, .fptr = core.nif_wrapper(nif_get_gamepad_button_pressed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gamepad_axis_count", .arity = 1, .fptr = core.nif_wrapper(nif_get_gamepad_axis_count), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gamepad_axis_movement", .arity = 2, .fptr = core.nif_wrapper(nif_get_gamepad_axis_movement), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_gamepad_mappings", .arity = 1, .fptr = core.nif_wrapper(nif_set_gamepad_mappings), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_gamepad_vibration", .arity = 4, .fptr = core.nif_wrapper(nif_set_gamepad_vibration), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ///////////////
@@ -28,13 +28,13 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI bool IsGamepadAvailable(int gamepad);
-fn nif_is_gamepad_available(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_gamepad_available(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
     // Function
@@ -50,13 +50,13 @@ fn nif_is_gamepad_available(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI const char *GetGamepadName(int gamepad);
-fn nif_get_gamepad_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_gamepad_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
     // Function
@@ -73,17 +73,17 @@ fn nif_get_gamepad_name(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI bool IsGamepadButtonPressed(int gamepad, int button);
-fn nif_is_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const button = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'button'.");
+    const button = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_button;
     };
 
     // Function
@@ -99,17 +99,17 @@ fn nif_is_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 ///
 /// raylib.h
 /// RLAPI bool IsGamepadButtonDown(int gamepad, int button);
-fn nif_is_gamepad_button_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_gamepad_button_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const button = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'button'.");
+    const button = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_button;
     };
 
     // Function
@@ -125,17 +125,17 @@ fn nif_is_gamepad_button_down(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 ///
 /// raylib.h
 /// RLAPI bool IsGamepadButtonReleased(int gamepad, int button);
-fn nif_is_gamepad_button_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_gamepad_button_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const button = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'button'.");
+    const button = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_button;
     };
 
     // Function
@@ -151,17 +151,17 @@ fn nif_is_gamepad_button_released(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 ///
 /// raylib.h
 /// RLAPI bool IsGamepadButtonUp(int gamepad, int button);
-fn nif_is_gamepad_button_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_gamepad_button_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const button = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'button'.");
+    const button = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_button;
     };
 
     // Function
@@ -177,7 +177,7 @@ fn nif_is_gamepad_button_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI int GetGamepadButtonPressed(void);
-fn nif_get_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -194,13 +194,13 @@ fn nif_get_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 ///
 /// raylib.h
 /// RLAPI int GetGamepadAxisCount(int gamepad);
-fn nif_get_gamepad_axis_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_gamepad_axis_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
     // Function
@@ -216,17 +216,17 @@ fn nif_get_gamepad_axis_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 ///
 /// raylib.h
 /// RLAPI float GetGamepadAxisMovement(int gamepad, int axis);
-fn nif_get_gamepad_axis_movement(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_gamepad_axis_movement(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const axis = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'axis'.");
+    const axis = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_axis;
     };
 
     // Function
@@ -242,13 +242,13 @@ fn nif_get_gamepad_axis_movement(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 ///
 /// raylib.h
 /// RLAPI int SetGamepadMappings(const char *mappings);
-fn nif_set_gamepad_mappings(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_gamepad_mappings(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const arg_mappings = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'mappings'.");
+    const arg_mappings = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch {
+        return error.invalid_argument_mappings;
     };
     defer arg_mappings.free();
     const mappings = arg_mappings.data;
@@ -293,25 +293,25 @@ fn nif_set_gamepad_mappings(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI void SetGamepadVibration(int gamepad, float leftMotor, float rightMotor, float duration);
-fn nif_set_gamepad_vibration(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_gamepad_vibration(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 4);
 
     // Arguments
 
-    const gamepad = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'gamepad'.");
+    const gamepad = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_gamepad;
     };
 
-    const left_motor = core.Double.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'left_motor'.");
+    const left_motor = core.Double.get(env, argv[1]) catch {
+        return error.invalid_argument_left_motor;
     };
 
-    const right_motor = core.Double.get(env, argv[2]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'right_motor'.");
+    const right_motor = core.Double.get(env, argv[2]) catch {
+        return error.invalid_argument_right_motor;
     };
 
-    const duration = core.Double.get(env, argv[3]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'duration'.");
+    const duration = core.Double.get(env, argv[3]) catch {
+        return error.invalid_argument_duration;
     };
 
     // Function

@@ -8,51 +8,51 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Window
-    .{ .name = "init_window", .arity = 3, .fptr = nif_init_window, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "close_window", .arity = 0, .fptr = nif_close_window, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "window_should_close", .arity = 0, .fptr = nif_window_should_close, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_ready", .arity = 0, .fptr = nif_is_window_ready, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_fullscreen", .arity = 0, .fptr = nif_is_window_fullscreen, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_hidden", .arity = 0, .fptr = nif_is_window_hidden, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_minimized", .arity = 0, .fptr = nif_is_window_minimized, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_maximized", .arity = 0, .fptr = nif_is_window_maximized, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_focused", .arity = 0, .fptr = nif_is_window_focused, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_resized", .arity = 0, .fptr = nif_is_window_resized, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_window_state", .arity = 1, .fptr = nif_is_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_state", .arity = 1, .fptr = nif_set_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_config_flags", .arity = 1, .fptr = nif_set_config_flags, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "clear_window_state", .arity = 1, .fptr = nif_clear_window_state, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "toggle_fullscreen", .arity = 0, .fptr = nif_toggle_fullscreen, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "toggle_borderless_windowed", .arity = 0, .fptr = nif_toggle_borderless_windowed, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "maximize_window", .arity = 0, .fptr = nif_maximize_window, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "minimize_window", .arity = 0, .fptr = nif_minimize_window, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "restore_window", .arity = 0, .fptr = nif_restore_window, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_icon", .arity = 1, .fptr = nif_set_window_icon, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_icons", .arity = 1, .fptr = nif_set_window_icons, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_title", .arity = 1, .fptr = nif_set_window_title, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_position", .arity = 2, .fptr = nif_set_window_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_min_size", .arity = 2, .fptr = nif_set_window_min_size, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_max_size", .arity = 2, .fptr = nif_set_window_max_size, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_size", .arity = 2, .fptr = nif_set_window_size, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_opacity", .arity = 1, .fptr = nif_set_window_opacity, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_window_focused", .arity = 0, .fptr = nif_set_window_focused, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_screen_width", .arity = 0, .fptr = nif_get_screen_width, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_screen_height", .arity = 0, .fptr = nif_get_screen_height, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_render_width", .arity = 0, .fptr = nif_get_render_width, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_render_height", .arity = 0, .fptr = nif_get_render_height, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_window_position", .arity = 0, .fptr = nif_get_window_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_window_position", .arity = 1, .fptr = nif_get_window_position, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_window_scale_dpi", .arity = 0, .fptr = nif_get_window_scale_dpi, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_window_scale_dpi", .arity = 1, .fptr = nif_get_window_scale_dpi, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "set_clipboard_text", .arity = 1, .fptr = nif_set_clipboard_text, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_clipboard_text", .arity = 0, .fptr = nif_get_clipboard_text, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_clipboard_image", .arity = 0, .fptr = nif_get_clipboard_image, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "get_clipboard_image", .arity = 1, .fptr = nif_get_clipboard_image, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "enable_event_waiting", .arity = 0, .fptr = nif_enable_event_waiting, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "disable_event_waiting", .arity = 0, .fptr = nif_disable_event_waiting, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "screenshot", .arity = 0, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "screenshot", .arity = 1, .fptr = nif_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "take_screenshot", .arity = 1, .fptr = nif_take_screenshot, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "init_window", .arity = 3, .fptr = core.nif_wrapper(nif_init_window), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "close_window", .arity = 0, .fptr = core.nif_wrapper(nif_close_window), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "window_should_close", .arity = 0, .fptr = core.nif_wrapper(nif_window_should_close), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_ready", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_ready), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_fullscreen", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_fullscreen), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_hidden", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_hidden), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_minimized", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_minimized), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_maximized", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_maximized), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_focused", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_focused), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_resized", .arity = 0, .fptr = core.nif_wrapper(nif_is_window_resized), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_window_state", .arity = 1, .fptr = core.nif_wrapper(nif_is_window_state), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_state", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_state), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_config_flags", .arity = 1, .fptr = core.nif_wrapper(nif_set_config_flags), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "clear_window_state", .arity = 1, .fptr = core.nif_wrapper(nif_clear_window_state), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "toggle_fullscreen", .arity = 0, .fptr = core.nif_wrapper(nif_toggle_fullscreen), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "toggle_borderless_windowed", .arity = 0, .fptr = core.nif_wrapper(nif_toggle_borderless_windowed), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "maximize_window", .arity = 0, .fptr = core.nif_wrapper(nif_maximize_window), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "minimize_window", .arity = 0, .fptr = core.nif_wrapper(nif_minimize_window), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "restore_window", .arity = 0, .fptr = core.nif_wrapper(nif_restore_window), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_icon", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_icon), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_icons", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_icons), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_title", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_title), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_position", .arity = 2, .fptr = core.nif_wrapper(nif_set_window_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_min_size", .arity = 2, .fptr = core.nif_wrapper(nif_set_window_min_size), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_max_size", .arity = 2, .fptr = core.nif_wrapper(nif_set_window_max_size), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_size", .arity = 2, .fptr = core.nif_wrapper(nif_set_window_size), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_opacity", .arity = 1, .fptr = core.nif_wrapper(nif_set_window_opacity), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_window_focused", .arity = 0, .fptr = core.nif_wrapper(nif_set_window_focused), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_screen_width", .arity = 0, .fptr = core.nif_wrapper(nif_get_screen_width), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_screen_height", .arity = 0, .fptr = core.nif_wrapper(nif_get_screen_height), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_render_width", .arity = 0, .fptr = core.nif_wrapper(nif_get_render_width), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_render_height", .arity = 0, .fptr = core.nif_wrapper(nif_get_render_height), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_window_position", .arity = 0, .fptr = core.nif_wrapper(nif_get_window_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_window_position", .arity = 1, .fptr = core.nif_wrapper(nif_get_window_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_window_scale_dpi", .arity = 0, .fptr = core.nif_wrapper(nif_get_window_scale_dpi), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_window_scale_dpi", .arity = 1, .fptr = core.nif_wrapper(nif_get_window_scale_dpi), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_clipboard_text", .arity = 1, .fptr = core.nif_wrapper(nif_set_clipboard_text), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_clipboard_text", .arity = 0, .fptr = core.nif_wrapper(nif_get_clipboard_text), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_clipboard_image", .arity = 0, .fptr = core.nif_wrapper(nif_get_clipboard_image), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_clipboard_image", .arity = 1, .fptr = core.nif_wrapper(nif_get_clipboard_image), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "enable_event_waiting", .arity = 0, .fptr = core.nif_wrapper(nif_enable_event_waiting), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "disable_event_waiting", .arity = 0, .fptr = core.nif_wrapper(nif_disable_event_waiting), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 0, .fptr = core.nif_wrapper(nif_screenshot), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "screenshot", .arity = 1, .fptr = core.nif_wrapper(nif_screenshot), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "take_screenshot", .arity = 1, .fptr = core.nif_wrapper(nif_take_screenshot), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////
@@ -63,21 +63,21 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI void InitWindow(int width, int height, const char *title);
-fn nif_init_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_init_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 3);
 
     // Arguments
 
-    const width = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'width'.");
+    const width = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_width;
     };
 
-    const height = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
+    const height = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_height;
     };
 
-    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[2]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'title'.");
+    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[2]) catch {
+        return error.invalid_argument_title;
     };
     defer arg_title.free();
     const title = arg_title.data;
@@ -95,7 +95,7 @@ fn nif_init_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI void CloseWindow(void);
-fn nif_close_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_close_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -112,7 +112,7 @@ fn nif_close_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 ///
 /// raylib.h
 /// RLAPI bool WindowShouldClose(void);
-fn nif_window_should_close(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_window_should_close(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -129,7 +129,7 @@ fn nif_window_should_close(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI bool IsWindowReady(void);
-fn nif_is_window_ready(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_ready(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -146,7 +146,7 @@ fn nif_is_window_ready(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI bool IsWindowFullscreen(void);
-fn nif_is_window_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -163,7 +163,7 @@ fn nif_is_window_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI bool IsWindowHidden(void);
-fn nif_is_window_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -180,7 +180,7 @@ fn nif_is_window_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI bool IsWindowMinimized(void);
-fn nif_is_window_minimized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_minimized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -197,7 +197,7 @@ fn nif_is_window_minimized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI bool IsWindowMaximized(void);
-fn nif_is_window_maximized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_maximized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -214,7 +214,7 @@ fn nif_is_window_maximized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI bool IsWindowFocused(void);
-fn nif_is_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -231,7 +231,7 @@ fn nif_is_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI bool IsWindowResized(void);
-fn nif_is_window_resized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_resized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -248,13 +248,13 @@ fn nif_is_window_resized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI bool IsWindowState(unsigned int flag);
-fn nif_is_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const flag = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'flag'.");
+    const flag = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_flag;
     };
 
     // Function
@@ -270,13 +270,13 @@ fn nif_is_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI void SetWindowState(unsigned int flags);
-fn nif_set_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const flag = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'flag'.");
+    const flag = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_flag;
     };
 
     // Function
@@ -292,13 +292,13 @@ fn nif_set_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI void SetConfigFlags(unsigned int flags);
-fn nif_set_config_flags(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_config_flags(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const flag = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'flag'.");
+    const flag = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_flag;
     };
 
     // Function
@@ -314,13 +314,13 @@ fn nif_set_config_flags(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI void ClearWindowState(unsigned int flags);
-fn nif_clear_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_clear_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const flag = core.UInt.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'flag'.");
+    const flag = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_flag;
     };
 
     // Function
@@ -336,7 +336,7 @@ fn nif_clear_window_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI void ToggleFullscreen(void);
-fn nif_toggle_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_toggle_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -353,7 +353,7 @@ fn nif_toggle_fullscreen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI void ToggleBorderlessWindowed(void);
-fn nif_toggle_borderless_windowed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_toggle_borderless_windowed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -370,7 +370,7 @@ fn nif_toggle_borderless_windowed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 ///
 /// raylib.h
 /// RLAPI void MaximizeWindow(void);
-fn nif_maximize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_maximize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -387,7 +387,7 @@ fn nif_maximize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI void MinimizeWindow(void);
-fn nif_minimize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_minimize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -404,7 +404,7 @@ fn nif_minimize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI void RestoreWindow(void);
-fn nif_restore_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_restore_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -421,13 +421,13 @@ fn nif_restore_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 ///
 /// raylib.h
 /// RLAPI void SetWindowIcon(Image image);
-fn nif_set_window_icon(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_icon(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const arg_image = core.Argument(core.Image).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'image'.");
+    const arg_image = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_image;
     };
     defer arg_image.free();
     const image = arg_image.data;
@@ -445,13 +445,13 @@ fn nif_set_window_icon(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI void SetWindowIcons(Image *images, int count);
-fn nif_set_window_icons(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_icons(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    var arg_images = core.ArgumentArray(core.Image, core.Image.data_type, rl.allocator).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'image'.");
+    var arg_images = core.ArgumentArray(core.Image, core.Image.data_type, rl.allocator).get(env, argv[0]) catch {
+        return error.invalid_argument_image;
     };
     defer arg_images.free();
     const images = arg_images.data;
@@ -470,13 +470,13 @@ fn nif_set_window_icons(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI void SetWindowTitle(const char *title);
-fn nif_set_window_title(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_title(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'title'.");
+    const arg_title = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch {
+        return error.invalid_argument_title;
     };
     defer arg_title.free();
     const title = arg_title.data;
@@ -494,17 +494,17 @@ fn nif_set_window_title(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI void SetWindowPosition(int x, int y);
-fn nif_set_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const x = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'x'.");
+    const x = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_x;
     };
 
-    const y = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'y'.");
+    const y = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_y;
     };
 
     // Function
@@ -520,17 +520,17 @@ fn nif_set_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI void SetWindowMinSize(int width, int height);
-fn nif_set_window_min_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_min_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const width = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'width'.");
+    const width = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_width;
     };
 
-    const height = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
+    const height = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_height;
     };
 
     // Function
@@ -546,17 +546,17 @@ fn nif_set_window_min_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI void SetWindowMaxSize(int width, int height);
-fn nif_set_window_max_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_max_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const width = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'width'.");
+    const width = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_width;
     };
 
-    const height = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
+    const height = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_height;
     };
 
     // Function
@@ -572,17 +572,17 @@ fn nif_set_window_max_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI void SetWindowSize(int width, int height);
-fn nif_set_window_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 2);
 
     // Arguments
 
-    const width = core.Int.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'width'.");
+    const width = core.Int.get(env, argv[0]) catch {
+        return error.invalid_argument_width;
     };
 
-    const height = core.Int.get(env, argv[1]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'height'.");
+    const height = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_height;
     };
 
     // Function
@@ -598,13 +598,13 @@ fn nif_set_window_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 ///
 /// raylib.h
 /// RLAPI void SetWindowOpacity(float opacity);
-fn nif_set_window_opacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_opacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const opacity = core.Double.get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'opacity'.");
+    const opacity = core.Double.get(env, argv[0]) catch {
+        return error.invalid_argument_opacity;
     };
 
     // Function
@@ -620,7 +620,7 @@ fn nif_set_window_opacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI void SetWindowFocused(void);
-fn nif_set_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -637,7 +637,7 @@ fn nif_set_window_focused(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI int GetScreenWidth(void);
-fn nif_get_screen_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_screen_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -654,7 +654,7 @@ fn nif_get_screen_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI int GetScreenHeight(void);
-fn nif_get_screen_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_screen_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -671,7 +671,7 @@ fn nif_get_screen_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI int GetRenderWidth(void);
-fn nif_get_render_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_render_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -688,7 +688,7 @@ fn nif_get_render_width(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI int GetRenderHeight(void);
-fn nif_get_render_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_render_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -705,7 +705,7 @@ fn nif_get_render_height(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 ///
 /// raylib.h
 /// RLAPI Vector2 GetWindowPosition(void);
-fn nif_get_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0 or argc == 1);
 
     // Return type
@@ -719,8 +719,8 @@ fn nif_get_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Vector2, env, position, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -728,7 +728,7 @@ fn nif_get_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI Vector2 GetWindowScaleDPI(void);
-fn nif_get_window_scale_dpi(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_window_scale_dpi(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0 or argc == 1);
 
     // Return type
@@ -742,8 +742,8 @@ fn nif_get_window_scale_dpi(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Vector2, env, scale_dpi, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Vector2, env, scale_dpi, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -751,13 +751,13 @@ fn nif_get_window_scale_dpi(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI void SetClipboardText(const char *text);
-fn nif_set_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_set_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'text'.");
+    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch {
+        return error.invalid_argument_text;
     };
     defer arg_text.free();
     const text = arg_text.data;
@@ -775,7 +775,7 @@ fn nif_set_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI const char *GetClipboardText(void);
-fn nif_get_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -793,7 +793,7 @@ fn nif_get_clipboard_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 ///
 /// raylib.h
 /// RLAPI Image GetClipboardImage(void);
-fn nif_get_clipboard_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_get_clipboard_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0 or argc == 1);
 
     // Return type
@@ -807,8 +807,8 @@ fn nif_get_clipboard_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Image, env, clipboard_image, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Image, env, clipboard_image, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -816,7 +816,7 @@ fn nif_get_clipboard_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 ///
 /// raylib.h
 /// RLAPI void EnableEventWaiting(void);
-fn nif_enable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_enable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -833,7 +833,7 @@ fn nif_enable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 ///
 /// raylib.h
 /// RLAPI void DisableEventWaiting(void);
-fn nif_disable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_disable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -847,7 +847,7 @@ fn nif_disable_event_waiting(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 }
 
 /// Takes a screenshot of current screen
-fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0 or argc == 1);
 
     // Return type
@@ -861,8 +861,8 @@ fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return
 
-    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Failed to get return value.");
+    return core.maybe_make_struct_as_resource(core.Image, env, image, return_resource) catch {
+        return error.invalid_return;
     };
 }
 
@@ -870,13 +870,13 @@ fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 ///
 /// raylib.h
 /// RLAPI void TakeScreenshot(const char *fileName);
-fn nif_take_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_take_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
     // Arguments
 
-    const arg_file_name = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch |err| {
-        return core.raise_exception(e.allocator, env, err, @errorReturnTrace(), "Invalid argument 'file_name'.");
+    const arg_file_name = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[0]) catch {
+        return error.invalid_argument_file_name;
     };
     defer arg_file_name.free();
     const file_name = arg_file_name.data;

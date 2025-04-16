@@ -7,12 +7,12 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Cursor
-    .{ .name = "show_cursor", .arity = 0, .fptr = nif_show_cursor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "hide_cursor", .arity = 0, .fptr = nif_hide_cursor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_cursor_hidden", .arity = 0, .fptr = nif_is_cursor_hidden, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "enable_cursor", .arity = 0, .fptr = nif_enable_cursor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "disable_cursor", .arity = 0, .fptr = nif_disable_cursor, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "is_cursor_on_screen", .arity = 0, .fptr = nif_is_cursor_on_screen, .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "show_cursor", .arity = 0, .fptr = core.nif_wrapper(nif_show_cursor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "hide_cursor", .arity = 0, .fptr = core.nif_wrapper(nif_hide_cursor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_cursor_hidden", .arity = 0, .fptr = core.nif_wrapper(nif_is_cursor_hidden), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "enable_cursor", .arity = 0, .fptr = core.nif_wrapper(nif_enable_cursor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "disable_cursor", .arity = 0, .fptr = core.nif_wrapper(nif_disable_cursor), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_cursor_on_screen", .arity = 0, .fptr = core.nif_wrapper(nif_is_cursor_on_screen), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 //////////////
@@ -23,7 +23,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 ///
 /// raylib.h
 /// RLAPI void ShowCursor(void);
-fn nif_show_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_show_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -40,7 +40,7 @@ fn nif_show_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI void HideCursor(void);
-fn nif_hide_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_hide_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -57,7 +57,7 @@ fn nif_hide_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 ///
 /// raylib.h
 /// RLAPI bool IsCursorHidden(void);
-fn nif_is_cursor_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_cursor_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -74,7 +74,7 @@ fn nif_is_cursor_hidden(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 ///
 /// raylib.h
 /// RLAPI void EnableCursor(void);
-fn nif_enable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_enable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -91,7 +91,7 @@ fn nif_enable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 /// raylib.h
 ///
 /// RLAPI void DisableCursor(void);
-fn nif_disable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_disable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
@@ -108,7 +108,7 @@ fn nif_disable_cursor(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 ///
 /// raylib.h
 /// RLAPI bool IsCursorOnScreen(void);
-fn nif_is_cursor_on_screen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) callconv(.C) e.ErlNifTerm {
+fn nif_is_cursor_on_screen(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 0);
     _ = argv;
 
