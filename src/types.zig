@@ -1323,7 +1323,7 @@ pub const Vector2 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector2 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1383,7 +1383,7 @@ pub const IVector2 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector2 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1443,7 +1443,7 @@ pub const UIVector2 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector2 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1509,7 +1509,7 @@ pub const Vector3 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector3 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1582,7 +1582,7 @@ pub const IVector3 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector3 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1655,7 +1655,7 @@ pub const UIVector3 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector3 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1734,7 +1734,7 @@ pub const Vector4 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Vector4 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1820,7 +1820,7 @@ pub const IVector4 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.IVector4 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1906,7 +1906,7 @@ pub const UIVector4 = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.UIVector4 {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -1992,7 +1992,7 @@ pub const Quaternion = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Quaternion {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2150,7 +2150,7 @@ pub const Matrix = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Matrix {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2320,7 +2320,7 @@ pub const Color = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Color {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2406,7 +2406,7 @@ pub const Rectangle = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Rectangle {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2505,7 +2505,7 @@ pub const Image = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Image {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2638,7 +2638,7 @@ pub const Texture = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Texture {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2737,7 +2737,7 @@ pub const Texture2D = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Texture2D {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2836,7 +2836,7 @@ pub const TextureCubemap = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.TextureCubemap {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -2923,7 +2923,7 @@ pub const RenderTexture = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RenderTexture {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3000,7 +3000,7 @@ pub const RenderTexture2D = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RenderTexture2D {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3095,7 +3095,7 @@ pub const NPatchInfo = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.NPatchInfo {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3203,7 +3203,7 @@ pub const GlyphInfo = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.GlyphInfo {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3312,7 +3312,7 @@ pub const Font = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Font {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3430,7 +3430,7 @@ pub const Camera3D = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera3D {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3535,7 +3535,7 @@ pub const Camera = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3634,7 +3634,7 @@ pub const Camera2D = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Camera2D {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -3835,7 +3835,7 @@ pub const Mesh = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Mesh {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4078,7 +4078,7 @@ pub const Shader = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Shader {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4147,7 +4147,7 @@ pub const MaterialMap = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.MaterialMap {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4229,7 +4229,7 @@ pub const Material = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Material {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4310,7 +4310,7 @@ pub const Transform = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Transform {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4385,7 +4385,7 @@ pub const BoneInfo = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.BoneInfo {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4497,7 +4497,7 @@ pub const Model = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Model {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4670,7 +4670,7 @@ pub const ModelAnimation = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.ModelAnimation {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4763,7 +4763,7 @@ pub const Ray = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Ray {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4839,7 +4839,7 @@ pub const RayCollision = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.RayCollision {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -4917,7 +4917,7 @@ pub const BoundingBox = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.BoundingBox {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5005,7 +5005,7 @@ pub const Wave = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Wave {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5191,7 +5191,7 @@ pub const AudioStream = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AudioStream {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5274,7 +5274,7 @@ pub const Sound = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Sound {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5391,7 +5391,7 @@ pub const Music = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Music {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5521,7 +5521,7 @@ pub const VrDeviceInfo = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.VrDeviceInfo {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5684,7 +5684,7 @@ pub const VrStereoConfig = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.VrStereoConfig {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5808,7 +5808,7 @@ pub const FilePathList = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.FilePathList {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5887,7 +5887,7 @@ pub const AutomationEvent = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AutomationEvent {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 
@@ -5965,7 +5965,7 @@ pub const AutomationEventList = struct {
     }
 
     pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AutomationEventList {
-        if (e.enif_is_map(env, term) == 0) {
+        if (e.enif_is_ref(env, term) != 0) {
             return (try Self.Resource.get(env, term)).*.*;
         }
 

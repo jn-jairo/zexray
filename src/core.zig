@@ -68,7 +68,7 @@ pub fn maybe_make_resource_as_struct(comptime T: type, env: ?*e.ErlNifEnv, term:
 }
 
 pub fn maybe_make_struct_or_resource(comptime T: type, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type, return_resource: bool) !e.ErlNifTerm {
-    const term_is_resource: bool = e.enif_is_map(env, term) == 0;
+    const term_is_resource: bool = e.enif_is_ref(env, term) != 0;
 
     if (term_is_resource) {
         try T.Resource.update(env, term, value);
