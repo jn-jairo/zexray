@@ -114,7 +114,53 @@ defmodule Zexray.NIF.Image do
         get_image_alpha_border: 2,
         get_image_alpha_border: 3,
         get_image_color: 3,
-        get_image_color: 4
+        get_image_color: 4,
+
+        # Image drawing
+        image_clear_background: 2,
+        image_clear_background: 3,
+        image_draw_pixel: 4,
+        image_draw_pixel: 5,
+        image_draw_pixel_v: 3,
+        image_draw_pixel_v: 4,
+        image_draw_line: 6,
+        image_draw_line: 7,
+        image_draw_line_v: 4,
+        image_draw_line_v: 5,
+        image_draw_line_ex: 5,
+        image_draw_line_ex: 6,
+        image_draw_circle: 5,
+        image_draw_circle: 6,
+        image_draw_circle_v: 4,
+        image_draw_circle_v: 5,
+        image_draw_circle_lines: 5,
+        image_draw_circle_lines: 6,
+        image_draw_circle_lines_v: 4,
+        image_draw_circle_lines_v: 5,
+        image_draw_rectangle: 6,
+        image_draw_rectangle: 7,
+        image_draw_rectangle_v: 4,
+        image_draw_rectangle_v: 5,
+        image_draw_rectangle_rec: 3,
+        image_draw_rectangle_rec: 4,
+        image_draw_rectangle_lines: 4,
+        image_draw_rectangle_lines: 5,
+        image_draw_triangle: 5,
+        image_draw_triangle: 6,
+        image_draw_triangle_ex: 7,
+        image_draw_triangle_ex: 8,
+        image_draw_triangle_lines: 5,
+        image_draw_triangle_lines: 6,
+        image_draw_triangle_fan: 3,
+        image_draw_triangle_fan: 4,
+        image_draw_triangle_strip: 3,
+        image_draw_triangle_strip: 4,
+        image_draw: 5,
+        image_draw: 6,
+        image_draw_text: 6,
+        image_draw_text: 7,
+        image_draw_text_ex: 7,
+        image_draw_text_ex: 8
       ]
 
       ###########
@@ -1294,6 +1340,584 @@ defmodule Zexray.NIF.Image do
             _image,
             _x,
             _y,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      ###################
+      #  Image drawing  #
+      ###################
+
+      @doc """
+      Clear image background with given color
+
+      ```c
+      // raylib.h
+      RLAPI void ImageClearBackground(Image *dst, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_clear_background(
+              dst :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_clear_background(
+            _dst,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw pixel within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_pixel(
+              dst :: map | reference,
+              pos_x :: integer,
+              pos_y :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_pixel(
+            _dst,
+            _pos_x,
+            _pos_y,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw pixel within an image (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_pixel_v(
+              dst :: map | reference,
+              position :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_pixel_v(
+            _dst,
+            _position,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw line within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_line(
+              dst :: map | reference,
+              start_pos_x :: integer,
+              start_pos_y :: integer,
+              end_pos_x :: integer,
+              end_pos_y :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_line(
+            _dst,
+            _start_pos_x,
+            _start_pos_y,
+            _end_pos_x,
+            _end_pos_y,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw line within an image (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_line_v(
+              dst :: map | reference,
+              start_position :: map | reference,
+              end_position :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_line_v(
+            _dst,
+            _start_position,
+            _end_position,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a line defining thickness within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_line_ex(
+              dst :: map | reference,
+              start_position :: map | reference,
+              end_position :: map | reference,
+              thick :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_line_ex(
+            _dst,
+            _start_position,
+            _end_position,
+            _thick,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a filled circle within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_circle(
+              dst :: map | reference,
+              center_x :: integer,
+              center_y :: integer,
+              radius :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_circle(
+            _dst,
+            _center_x,
+            _center_y,
+            _radius,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a filled circle within an image (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_circle_v(
+              dst :: map | reference,
+              center :: map | reference,
+              radius :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_circle_v(
+            _dst,
+            _center,
+            _radius,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw circle outline within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_circle_lines(
+              dst :: map | reference,
+              center_x :: integer,
+              center_y :: integer,
+              radius :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_circle_lines(
+            _dst,
+            _center_x,
+            _center_y,
+            _radius,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw circle outline within an image (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_circle_lines_v(
+              dst :: map | reference,
+              center :: map | reference,
+              radius :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_circle_lines_v(
+            _dst,
+            _center,
+            _radius,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw rectangle within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_rectangle(
+              dst :: map | reference,
+              pos_x :: integer,
+              pos_y :: integer,
+              width :: integer,
+              height :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_rectangle(
+            _dst,
+            _pos_x,
+            _pos_y,
+            _width,
+            _height,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw rectangle within an image (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_rectangle_v(
+              dst :: map | reference,
+              position :: map | reference,
+              size :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_rectangle_v(
+            _dst,
+            _position,
+            _size,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw rectangle within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_rectangle_rec(
+              dst :: map | reference,
+              rec :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_rectangle_rec(
+            _dst,
+            _rec,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw rectangle lines within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_rectangle_lines(
+              dst :: map | reference,
+              rec :: map | reference,
+              thick :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_rectangle_lines(
+            _dst,
+            _rec,
+            _thick,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw triangle within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_triangle(
+              dst :: map | reference,
+              v1 :: map | reference,
+              v2 :: map | reference,
+              v3 :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_triangle(
+            _dst,
+            _v1,
+            _v2,
+            _v3,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw triangle with interpolated colors within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_triangle_ex(
+              dst :: map | reference,
+              v1 :: map | reference,
+              v2 :: map | reference,
+              v3 :: map | reference,
+              c1 :: map | reference,
+              c2 :: map | reference,
+              c3 :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_triangle_ex(
+            _dst,
+            _v1,
+            _v2,
+            _v3,
+            _c1,
+            _c2,
+            _c3,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw triangle outline within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_triangle_lines(
+              dst :: map | reference,
+              v1 :: map | reference,
+              v2 :: map | reference,
+              v3 :: map | reference,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_triangle_lines(
+            _dst,
+            _v1,
+            _v2,
+            _v3,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a triangle fan defined by points within an image (first vertex is the center)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_triangle_fan(
+              dst :: map | reference,
+              points :: [map | reference],
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_triangle_fan(
+            _dst,
+            _points,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a triangle strip defined by points within an image
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_triangle_strip(
+              dst :: map | reference,
+              points :: [map | reference],
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_triangle_strip(
+            _dst,
+            _points,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw a source image within a destination image (tint applied to source)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw(
+              dst :: map | reference,
+              src :: map | reference,
+              src_rec :: map | reference,
+              dst_rec :: map | reference,
+              tint :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw(
+            _dst,
+            _src,
+            _src_rec,
+            _dst_rec,
+            _tint,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw text (using default font) within an image (destination)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_text(
+              dst :: map | reference,
+              text :: binary,
+              pos_x :: integer,
+              pos_y :: integer,
+              font_size :: integer,
+              color :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_text(
+            _dst,
+            _text,
+            _pos_x,
+            _pos_y,
+            _font_size,
+            _color,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw text (custom sprite font) within an image (destination)
+
+      ```c
+      // raylib.h
+      RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);
+      ```
+      """
+      @doc group: :image_drawing
+      @spec image_draw_text_ex(
+              dst :: map | reference,
+              font :: map | reference,
+              text :: binary,
+              position :: map | reference,
+              font_size :: float,
+              spacing :: float,
+              tint :: map | reference,
+              return :: :value | :resource
+            ) :: map | reference
+      def image_draw_text_ex(
+            _dst,
+            _font,
+            _text,
+            _position,
+            _font_size,
+            _spacing,
+            _tint,
             _return \\ :value
           ),
           do: :erlang.nif_error(:undef)

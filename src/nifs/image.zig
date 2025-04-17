@@ -117,6 +117,52 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "get_image_alpha_border", .arity = 3, .fptr = core.nif_wrapper(nif_get_image_alpha_border), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_image_color", .arity = 3, .fptr = core.nif_wrapper(nif_get_image_color), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_image_color", .arity = 4, .fptr = core.nif_wrapper(nif_get_image_color), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // Image drawing
+    .{ .name = "image_clear_background", .arity = 2, .fptr = core.nif_wrapper(nif_image_clear_background), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_clear_background", .arity = 3, .fptr = core.nif_wrapper(nif_image_clear_background), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_pixel", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_pixel), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_pixel", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_pixel), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_pixel_v", .arity = 3, .fptr = core.nif_wrapper(nif_image_draw_pixel_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_pixel_v", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_pixel_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_line), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line", .arity = 7, .fptr = core.nif_wrapper(nif_image_draw_line), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line_v", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_line_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line_v", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_line_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line_ex", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_line_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_line_ex", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_line_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_circle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_circle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_v", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_circle_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_v", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_circle_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_lines", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_circle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_lines", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_circle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_lines_v", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_circle_lines_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_circle_lines_v", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_circle_lines_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_rectangle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle", .arity = 7, .fptr = core.nif_wrapper(nif_image_draw_rectangle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_v", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_rectangle_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_v", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_rectangle_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_rec", .arity = 3, .fptr = core.nif_wrapper(nif_image_draw_rectangle_rec), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_rec", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_rectangle_rec), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_lines", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_rectangle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_rectangle_lines", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_rectangle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_triangle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_triangle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_ex", .arity = 7, .fptr = core.nif_wrapper(nif_image_draw_triangle_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_ex", .arity = 8, .fptr = core.nif_wrapper(nif_image_draw_triangle_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_lines", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw_triangle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_lines", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_triangle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_fan", .arity = 3, .fptr = core.nif_wrapper(nif_image_draw_triangle_fan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_fan", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_triangle_fan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_strip", .arity = 3, .fptr = core.nif_wrapper(nif_image_draw_triangle_strip), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_triangle_strip", .arity = 4, .fptr = core.nif_wrapper(nif_image_draw_triangle_strip), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw", .arity = 5, .fptr = core.nif_wrapper(nif_image_draw), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_text", .arity = 6, .fptr = core.nif_wrapper(nif_image_draw_text), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_text", .arity = 7, .fptr = core.nif_wrapper(nif_image_draw_text), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_text_ex", .arity = 7, .fptr = core.nif_wrapper(nif_image_draw_text_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_draw_text_ex", .arity = 8, .fptr = core.nif_wrapper(nif_image_draw_text_ex), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 /////////////
@@ -2181,6 +2227,1112 @@ fn nif_get_image_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     // Return
 
     return core.maybe_make_struct_as_resource(core.Color, env, image_color, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/////////////////////
+//  Image drawing  //
+/////////////////////
+
+/// Clear image background with given color
+///
+/// raylib.h
+/// RLAPI void ImageClearBackground(Image *dst, Color color);
+fn nif_image_clear_background(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 2);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[1]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageClearBackground(@ptrCast(dst), color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw pixel within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawPixel(Image *dst, int posX, int posY, Color color);
+fn nif_image_draw_pixel(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const pos_x = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_pos_x;
+    };
+
+    const pos_y = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_pos_y;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawPixel(@ptrCast(dst), pos_x, pos_y, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw pixel within an image (Vector version)
+///
+/// raylib.h
+/// RLAPI void ImageDrawPixelV(Image *dst, Vector2 position, Color color);
+fn nif_image_draw_pixel_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 3 or argc == 4);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 3);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_position;
+    };
+    defer arg_position.free();
+    const position = arg_position.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[2]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawPixelV(@ptrCast(dst), position, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw line within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawLine(Image *dst, int startPosX, int startPosY, int endPosX, int endPosY, Color color);
+fn nif_image_draw_line(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 6 or argc == 7);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 6);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const start_pos_x = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_start_pos_x;
+    };
+
+    const start_pos_y = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_start_pos_y;
+    };
+
+    const end_pos_x = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_end_pos_x;
+    };
+
+    const end_pos_y = core.Int.get(env, argv[4]) catch {
+        return error.invalid_argument_end_pos_y;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[5]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawLine(@ptrCast(dst), start_pos_x, start_pos_y, end_pos_x, end_pos_y, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw line within an image (Vector version)
+///
+/// raylib.h
+/// RLAPI void ImageDrawLineV(Image *dst, Vector2 start, Vector2 end, Color color);
+fn nif_image_draw_line_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_start_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_start_position;
+    };
+    defer arg_start_position.free();
+    const start_position = arg_start_position.data;
+
+    const arg_end_position = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_end_position;
+    };
+    defer arg_end_position.free();
+    const end_position = arg_end_position.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawLineV(@ptrCast(dst), start_position, end_position, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a line defining thickness within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawLineEx(Image *dst, Vector2 start, Vector2 end, int thick, Color color);
+fn nif_image_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_start_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_start_position;
+    };
+    defer arg_start_position.free();
+    const start_position = arg_start_position.data;
+
+    const arg_end_position = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_end_position;
+    };
+    defer arg_end_position.free();
+    const end_position = arg_end_position.data;
+
+    const thick = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_thick;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawLineEx(@ptrCast(dst), start_position, end_position, thick, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a filled circle within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);
+fn nif_image_draw_circle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const center_x = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_center_x;
+    };
+
+    const center_y = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_center_y;
+    };
+
+    const radius = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_radius;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawCircle(@ptrCast(dst), center_x, center_y, radius, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a filled circle within an image (Vector version)
+///
+/// raylib.h
+/// RLAPI void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);
+fn nif_image_draw_circle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_center = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_center;
+    };
+    defer arg_center.free();
+    const center = arg_center.data;
+
+    const radius = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_radius;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawCircleV(@ptrCast(dst), center, radius, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw circle outline within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);
+fn nif_image_draw_circle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const center_x = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_center_x;
+    };
+
+    const center_y = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_center_y;
+    };
+
+    const radius = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_radius;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawCircleLines(@ptrCast(dst), center_x, center_y, radius, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw circle outline within an image (Vector version)
+///
+/// raylib.h
+/// RLAPI void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);
+fn nif_image_draw_circle_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_center = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_center;
+    };
+    defer arg_center.free();
+    const center = arg_center.data;
+
+    const radius = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_radius;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawCircleLinesV(@ptrCast(dst), center, radius, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw rectangle within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);
+fn nif_image_draw_rectangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 6 or argc == 7);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 6);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const pos_x = core.Int.get(env, argv[1]) catch {
+        return error.invalid_argument_pos_x;
+    };
+
+    const pos_y = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_pos_y;
+    };
+
+    const width = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_width;
+    };
+
+    const height = core.Int.get(env, argv[4]) catch {
+        return error.invalid_argument_height;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[5]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawRectangle(@ptrCast(dst), pos_x, pos_y, width, height, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw rectangle within an image (Vector version)
+///
+/// raylib.h
+/// RLAPI void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);
+fn nif_image_draw_rectangle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_position;
+    };
+    defer arg_position.free();
+    const position = arg_position.data;
+
+    const arg_size = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_size;
+    };
+    defer arg_size.free();
+    const size = arg_size.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawRectangleV(@ptrCast(dst), position, size, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw rectangle within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);
+fn nif_image_draw_rectangle_rec(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 3 or argc == 4);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 3);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_rec = core.Argument(core.Rectangle).get(env, argv[1]) catch {
+        return error.invalid_argument_rec;
+    };
+    defer arg_rec.free();
+    const rec = arg_rec.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[2]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawRectangleRec(@ptrCast(dst), rec, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw rectangle lines within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);
+fn nif_image_draw_rectangle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4 or argc == 5);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 4);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_rec = core.Argument(core.Rectangle).get(env, argv[1]) catch {
+        return error.invalid_argument_rec;
+    };
+    defer arg_rec.free();
+    const rec = arg_rec.data;
+
+    const thick = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_thick;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawRectangleLines(@ptrCast(dst), rec, thick, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw triangle within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawTriangle(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);
+fn nif_image_draw_triangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_v1 = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_v1;
+    };
+    defer arg_v1.free();
+    const v1 = arg_v1.data;
+
+    const arg_v2 = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_v2;
+    };
+    defer arg_v2.free();
+    const v2 = arg_v2.data;
+
+    const arg_v3 = core.Argument(core.Vector2).get(env, argv[3]) catch {
+        return error.invalid_argument_v3;
+    };
+    defer arg_v3.free();
+    const v3 = arg_v3.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawTriangle(@ptrCast(dst), v1, v2, v3, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw triangle with interpolated colors within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawTriangleEx(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color c1, Color c2, Color c3);
+fn nif_image_draw_triangle_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 7 or argc == 8);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 7);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_v1 = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_v1;
+    };
+    defer arg_v1.free();
+    const v1 = arg_v1.data;
+
+    const arg_v2 = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_v2;
+    };
+    defer arg_v2.free();
+    const v2 = arg_v2.data;
+
+    const arg_v3 = core.Argument(core.Vector2).get(env, argv[3]) catch {
+        return error.invalid_argument_v3;
+    };
+    defer arg_v3.free();
+    const v3 = arg_v3.data;
+
+    const arg_c1 = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_c1;
+    };
+    defer arg_c1.free();
+    const c1 = arg_c1.data;
+
+    const arg_c2 = core.Argument(core.Color).get(env, argv[5]) catch {
+        return error.invalid_argument_c2;
+    };
+    defer arg_c2.free();
+    const c2 = arg_c2.data;
+
+    const arg_c3 = core.Argument(core.Color).get(env, argv[6]) catch {
+        return error.invalid_argument_c3;
+    };
+    defer arg_c3.free();
+    const c3 = arg_c3.data;
+
+    // Function
+
+    rl.ImageDrawTriangleEx(@ptrCast(dst), v1, v2, v3, c1, c2, c3);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw triangle outline within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawTriangleLines(Image *dst, Vector2 v1, Vector2 v2, Vector2 v3, Color color);
+fn nif_image_draw_triangle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_v1 = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_v1;
+    };
+    defer arg_v1.free();
+    const v1 = arg_v1.data;
+
+    const arg_v2 = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_v2;
+    };
+    defer arg_v2.free();
+    const v2 = arg_v2.data;
+
+    const arg_v3 = core.Argument(core.Vector2).get(env, argv[3]) catch {
+        return error.invalid_argument_v3;
+    };
+    defer arg_v3.free();
+    const v3 = arg_v3.data;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawTriangleLines(@ptrCast(dst), v1, v2, v3, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a triangle fan defined by points within an image (first vertex is the center)
+///
+/// raylib.h
+/// RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);
+fn nif_image_draw_triangle_fan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 3 or argc == 4);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 3);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    var arg_points = core.ArgumentArray(core.Vector2, core.Vector2.data_type, rl.allocator).get(env, argv[1]) catch {
+        return error.invalid_argument_image;
+    };
+    defer arg_points.free();
+    const points = arg_points.data;
+    const point_count = arg_points.length;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[2]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawTriangleFan(@ptrCast(dst), @ptrCast(points), @intCast(point_count), color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a triangle strip defined by points within an image
+///
+/// raylib.h
+/// RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);
+fn nif_image_draw_triangle_strip(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 3 or argc == 4);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 3);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    var arg_points = core.ArgumentArray(core.Vector2, core.Vector2.data_type, rl.allocator).get(env, argv[1]) catch {
+        return error.invalid_argument_image;
+    };
+    defer arg_points.free();
+    const points = arg_points.data;
+    const point_count = arg_points.length;
+
+    const arg_color = core.Argument(core.Color).get(env, argv[2]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawTriangleStrip(@ptrCast(dst), @ptrCast(points), @intCast(point_count), color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw a source image within a destination image (tint applied to source)
+///
+/// raylib.h
+/// RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);
+fn nif_image_draw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 5 or argc == 6);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 5);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_src = core.Argument(core.Image).get(env, argv[1]) catch {
+        return error.invalid_argument_src;
+    };
+    defer arg_src.free();
+    const src = arg_src.data;
+
+    const arg_src_rec = core.Argument(core.Rectangle).get(env, argv[2]) catch {
+        return error.invalid_argument_src_rec;
+    };
+    defer arg_src_rec.free();
+    const src_rec = arg_src_rec.data;
+
+    const arg_dst_rec = core.Argument(core.Rectangle).get(env, argv[3]) catch {
+        return error.invalid_argument_dst_rec;
+    };
+    defer arg_dst_rec.free();
+    const dst_rec = arg_dst_rec.data;
+
+    const arg_tint = core.Argument(core.Color).get(env, argv[4]) catch {
+        return error.invalid_argument_tint;
+    };
+    defer arg_tint.free();
+    const tint = arg_tint.data;
+
+    // Function
+
+    rl.ImageDraw(@ptrCast(dst), src, src_rec, dst_rec, tint);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw text (using default font) within an image (destination)
+///
+/// raylib.h
+/// RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);
+fn nif_image_draw_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 6 or argc == 7);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 6);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[1]) catch {
+        return error.invalid_argument_text;
+    };
+    defer arg_text.free();
+    const text = arg_text.data;
+
+    const pos_x = core.Int.get(env, argv[2]) catch {
+        return error.invalid_argument_pos_x;
+    };
+
+    const pos_y = core.Int.get(env, argv[3]) catch {
+        return error.invalid_argument_pos_y;
+    };
+
+    const font_size = core.Int.get(env, argv[4]) catch {
+        return error.invalid_argument_font_size;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[5]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.ImageDrawText(@ptrCast(dst), text, pos_x, pos_y, font_size, color);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Draw text (custom sprite font) within an image (destination)
+///
+/// raylib.h
+/// RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);
+fn nif_image_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 7 or argc == 8);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 7);
+
+    // Arguments
+
+    var arg_dst = core.Argument(core.Image).get(env, argv[0]) catch {
+        return error.invalid_argument_dst;
+    };
+    defer if (!return_resource) arg_dst.free();
+    errdefer if (return_resource) arg_dst.free();
+    const dst = &arg_dst.data;
+
+    const arg_font = core.Argument(core.Font).get(env, argv[1]) catch {
+        return error.invalid_argument_font;
+    };
+    defer arg_font.free();
+    const font = arg_font.data;
+
+    const arg_text = core.ArgumentBinaryCUnknown(core.CString, rl.allocator).get(env, argv[2]) catch {
+        return error.invalid_argument_text;
+    };
+    defer arg_text.free();
+    const text = arg_text.data;
+
+    const arg_position = core.Argument(core.Vector2).get(env, argv[3]) catch {
+        return error.invalid_argument_position;
+    };
+    defer arg_position.free();
+    const position = arg_position.data;
+
+    const font_size = core.Double.get(env, argv[4]) catch {
+        return error.invalid_argument_font_size;
+    };
+
+    const spacing = core.Double.get(env, argv[5]) catch {
+        return error.invalid_argument_spacing;
+    };
+
+    const arg_tint = core.Argument(core.Color).get(env, argv[6]) catch {
+        return error.invalid_argument_tint;
+    };
+    defer arg_tint.free();
+    const tint = arg_tint.data;
+
+    // Function
+
+    rl.ImageDrawTextEx(@ptrCast(dst), font, text, position, @floatCast(font_size), @floatCast(spacing), tint);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Image, env, argv[0], dst.*, return_resource) catch {
         return error.invalid_return;
     };
 }

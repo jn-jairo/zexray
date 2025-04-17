@@ -1434,4 +1434,782 @@ defmodule Zexray.Image do
     )
     |> Zexray.Type.Rectangle.from_nif()
   end
+
+  ###################
+  #  Image drawing  #
+  ###################
+
+  @doc """
+  Clear image background with given color
+  """
+  @doc group: :drawing
+  @spec clear_background(
+          dst :: Zexray.Type.Image.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def clear_background(
+        dst,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_clear_background(
+      dst |> Zexray.Type.Image.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw pixel within an image
+  """
+  @doc group: :drawing
+  @spec draw_pixel(
+          dst :: Zexray.Type.Image.t_all(),
+          pos_x :: integer,
+          pos_y :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_pixel(
+        dst,
+        pos_x,
+        pos_y,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_integer(pos_x) and
+             is_integer(pos_y) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_pixel(
+      dst |> Zexray.Type.Image.to_nif(),
+      pos_x,
+      pos_y,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw pixel within an image (Vector version)
+  """
+  @doc group: :drawing
+  @spec draw_pixel_v(
+          dst :: Zexray.Type.Image.t_all(),
+          position :: Zexray.Type.Vector2.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_pixel_v(
+        dst,
+        position,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(position) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_pixel_v(
+      dst |> Zexray.Type.Image.to_nif(),
+      position |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw line within an image
+  """
+  @doc group: :drawing
+  @spec draw_line(
+          dst :: Zexray.Type.Image.t_all(),
+          start_pos_x :: integer,
+          start_pos_y :: integer,
+          end_pos_x :: integer,
+          end_pos_y :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_line(
+        dst,
+        start_pos_x,
+        start_pos_y,
+        end_pos_x,
+        end_pos_y,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_integer(start_pos_x) and
+             is_integer(start_pos_y) and
+             is_integer(end_pos_x) and
+             is_integer(end_pos_y) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_line(
+      dst |> Zexray.Type.Image.to_nif(),
+      start_pos_x,
+      start_pos_y,
+      end_pos_x,
+      end_pos_y,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw line within an image (Vector version)
+  """
+  @doc group: :drawing
+  @spec draw_line_v(
+          dst :: Zexray.Type.Image.t_all(),
+          start_position :: Zexray.Type.Vector2.t_all(),
+          end_position :: Zexray.Type.Vector2.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_line_v(
+        dst,
+        start_position,
+        end_position,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(start_position) and
+             is_like_vector2(end_position) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_line_v(
+      dst |> Zexray.Type.Image.to_nif(),
+      start_position |> Zexray.Type.Vector2.to_nif(),
+      end_position |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a line defining thickness within an image
+  """
+  @doc group: :drawing
+  @spec draw_line_ex(
+          dst :: Zexray.Type.Image.t_all(),
+          start_position :: Zexray.Type.Vector2.t_all(),
+          end_position :: Zexray.Type.Vector2.t_all(),
+          thick :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_line_ex(
+        dst,
+        start_position,
+        end_position,
+        thick,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(start_position) and
+             is_like_vector2(end_position) and
+             is_integer(thick) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_line_ex(
+      dst |> Zexray.Type.Image.to_nif(),
+      start_position |> Zexray.Type.Vector2.to_nif(),
+      end_position |> Zexray.Type.Vector2.to_nif(),
+      thick,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a filled circle within an image
+  """
+  @doc group: :drawing
+  @spec draw_circle(
+          dst :: Zexray.Type.Image.t_all(),
+          center_x :: integer,
+          center_y :: integer,
+          radius :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_circle(
+        dst,
+        center_x,
+        center_y,
+        radius,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_integer(center_x) and
+             is_integer(center_y) and
+             is_integer(radius) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_circle(
+      dst |> Zexray.Type.Image.to_nif(),
+      center_x,
+      center_y,
+      radius,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a filled circle within an image (Vector version)
+  """
+  @doc group: :drawing
+  @spec draw_circle_v(
+          dst :: Zexray.Type.Image.t_all(),
+          center :: Zexray.Type.Vector2.t_all(),
+          radius :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_circle_v(
+        dst,
+        center,
+        radius,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(center) and
+             is_integer(radius) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_circle_v(
+      dst |> Zexray.Type.Image.to_nif(),
+      center |> Zexray.Type.Vector2.to_nif(),
+      radius,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw circle outline within an image
+  """
+  @doc group: :drawing
+  @spec draw_circle_lines(
+          dst :: Zexray.Type.Image.t_all(),
+          center_x :: integer,
+          center_y :: integer,
+          radius :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_circle_lines(
+        dst,
+        center_x,
+        center_y,
+        radius,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_integer(center_x) and
+             is_integer(center_y) and
+             is_integer(radius) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_circle_lines(
+      dst |> Zexray.Type.Image.to_nif(),
+      center_x,
+      center_y,
+      radius,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw circle outline within an image (Vector version)
+  """
+  @doc group: :drawing
+  @spec draw_circle_lines_v(
+          dst :: Zexray.Type.Image.t_all(),
+          center :: Zexray.Type.Vector2.t_all(),
+          radius :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_circle_lines_v(
+        dst,
+        center,
+        radius,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(center) and
+             is_integer(radius) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_circle_lines_v(
+      dst |> Zexray.Type.Image.to_nif(),
+      center |> Zexray.Type.Vector2.to_nif(),
+      radius,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw rectangle within an image
+  """
+  @doc group: :drawing
+  @spec draw_rectangle(
+          dst :: Zexray.Type.Image.t_all(),
+          pos_x :: integer,
+          pos_y :: integer,
+          width :: integer,
+          height :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_rectangle(
+        dst,
+        pos_x,
+        pos_y,
+        width,
+        height,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_integer(pos_x) and
+             is_integer(pos_y) and
+             is_integer(width) and
+             is_integer(height) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_rectangle(
+      dst |> Zexray.Type.Image.to_nif(),
+      pos_x,
+      pos_y,
+      width,
+      height,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw rectangle within an image (Vector version)
+  """
+  @doc group: :drawing
+  @spec draw_rectangle_v(
+          dst :: Zexray.Type.Image.t_all(),
+          position :: Zexray.Type.Vector2.t_all(),
+          size :: Zexray.Type.Vector2.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_rectangle_v(
+        dst,
+        position,
+        size,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(position) and
+             is_like_vector2(size) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_rectangle_v(
+      dst |> Zexray.Type.Image.to_nif(),
+      position |> Zexray.Type.Vector2.to_nif(),
+      size |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw rectangle within an image
+  """
+  @doc group: :drawing
+  @spec draw_rectangle_rec(
+          dst :: Zexray.Type.Image.t_all(),
+          rec :: Zexray.Type.Rectangle.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_rectangle_rec(
+        dst,
+        rec,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_rectangle(rec) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_rectangle_rec(
+      dst |> Zexray.Type.Image.to_nif(),
+      rec |> Zexray.Type.Rectangle.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw rectangle lines within an image
+  """
+  @doc group: :drawing
+  @spec draw_rectangle_lines(
+          dst :: Zexray.Type.Image.t_all(),
+          rec :: Zexray.Type.Rectangle.t_all(),
+          thick :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_rectangle_lines(
+        dst,
+        rec,
+        thick,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_rectangle(rec) and
+             is_integer(thick) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_rectangle_lines(
+      dst |> Zexray.Type.Image.to_nif(),
+      rec |> Zexray.Type.Rectangle.to_nif(),
+      thick,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw triangle within an image
+  """
+  @doc group: :drawing
+  @spec draw_triangle(
+          dst :: Zexray.Type.Image.t_all(),
+          v1 :: Zexray.Type.Vector2.t_all(),
+          v2 :: Zexray.Type.Vector2.t_all(),
+          v3 :: Zexray.Type.Vector2.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_triangle(
+        dst,
+        v1,
+        v2,
+        v3,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(v1) and
+             is_like_vector2(v2) and
+             is_like_vector2(v3) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_triangle(
+      dst |> Zexray.Type.Image.to_nif(),
+      v1 |> Zexray.Type.Vector2.to_nif(),
+      v2 |> Zexray.Type.Vector2.to_nif(),
+      v3 |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw triangle with interpolated colors within an image
+  """
+  @doc group: :drawing
+  @spec draw_triangle_ex(
+          dst :: Zexray.Type.Image.t_all(),
+          v1 :: Zexray.Type.Vector2.t_all(),
+          v2 :: Zexray.Type.Vector2.t_all(),
+          v3 :: Zexray.Type.Vector2.t_all(),
+          c1 :: Zexray.Type.Color.t_all(),
+          c2 :: Zexray.Type.Color.t_all(),
+          c3 :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_triangle_ex(
+        dst,
+        v1,
+        v2,
+        v3,
+        c1,
+        c2,
+        c3,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(v1) and
+             is_like_vector2(v2) and
+             is_like_vector2(v3) and
+             is_like_color(c1) and
+             is_like_color(c2) and
+             is_like_color(c3) and
+             is_nif_return(return) do
+    NIF.image_draw_triangle_ex(
+      dst |> Zexray.Type.Image.to_nif(),
+      v1 |> Zexray.Type.Vector2.to_nif(),
+      v2 |> Zexray.Type.Vector2.to_nif(),
+      v3 |> Zexray.Type.Vector2.to_nif(),
+      c1 |> Zexray.Type.Color.to_nif(),
+      c2 |> Zexray.Type.Color.to_nif(),
+      c3 |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw triangle outline within an image
+  """
+  @doc group: :drawing
+  @spec draw_triangle_lines(
+          dst :: Zexray.Type.Image.t_all(),
+          v1 :: Zexray.Type.Vector2.t_all(),
+          v2 :: Zexray.Type.Vector2.t_all(),
+          v3 :: Zexray.Type.Vector2.t_all(),
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_triangle_lines(
+        dst,
+        v1,
+        v2,
+        v3,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_vector2(v1) and
+             is_like_vector2(v2) and
+             is_like_vector2(v3) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_triangle_lines(
+      dst |> Zexray.Type.Image.to_nif(),
+      v1 |> Zexray.Type.Vector2.to_nif(),
+      v2 |> Zexray.Type.Vector2.to_nif(),
+      v3 |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a triangle fan defined by points within an image (first vertex is the center)
+  """
+  @doc group: :drawing
+  @spec draw_triangle_fan(
+          dst :: Zexray.Type.Image.t_all(),
+          points :: [Zexray.Type.Vector2.t_all()],
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_triangle_fan(
+        dst,
+        points,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_list(points) and (points == [] or is_like_vector2(hd(points))) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_triangle_fan(
+      dst |> Zexray.Type.Image.to_nif(),
+      points |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a triangle strip defined by points within an image
+  """
+  @doc group: :drawing
+  @spec draw_triangle_strip(
+          dst :: Zexray.Type.Image.t_all(),
+          points :: [Zexray.Type.Vector2.t_all()],
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_triangle_strip(
+        dst,
+        points,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_list(points) and (points == [] or is_like_vector2(hd(points))) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_triangle_strip(
+      dst |> Zexray.Type.Image.to_nif(),
+      points |> Zexray.Type.Vector2.to_nif(),
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw a source image within a destination image (tint applied to source)
+  """
+  @doc group: :drawing
+  @spec draw(
+          dst :: Zexray.Type.Image.t_all(),
+          src :: Zexray.Type.Image.t_all(),
+          src_rec :: Zexray.Type.Rectangle.t_all(),
+          dst_rec :: Zexray.Type.Rectangle.t_all(),
+          tint :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw(
+        dst,
+        src,
+        src_rec,
+        dst_rec,
+        tint,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_image(src) and
+             is_like_rectangle(src_rec) and
+             is_like_rectangle(dst_rec) and
+             is_like_color(tint) and
+             is_nif_return(return) do
+    NIF.image_draw(
+      dst |> Zexray.Type.Image.to_nif(),
+      src |> Zexray.Type.Image.to_nif(),
+      src_rec |> Zexray.Type.Rectangle.to_nif(),
+      dst_rec |> Zexray.Type.Rectangle.to_nif(),
+      tint |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw text (using default font) within an image (destination)
+  """
+  @doc group: :drawing
+  @spec draw_text(
+          dst :: Zexray.Type.Image.t_all(),
+          text :: binary,
+          pos_x :: integer,
+          pos_y :: integer,
+          font_size :: integer,
+          color :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_text(
+        dst,
+        text,
+        pos_x,
+        pos_y,
+        font_size,
+        color,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_binary(text) and
+             is_integer(pos_x) and
+             is_integer(pos_y) and
+             is_integer(font_size) and
+             is_like_color(color) and
+             is_nif_return(return) do
+    NIF.image_draw_text(
+      dst |> Zexray.Type.Image.to_nif(),
+      text,
+      pos_x,
+      pos_y,
+      font_size,
+      color |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
+
+  @doc """
+  Draw text (custom sprite font) within an image (destination)
+  """
+  @doc group: :drawing
+  @spec draw_text_ex(
+          dst :: Zexray.Type.Image.t_all(),
+          font :: Zexray.Type.Font.t_all(),
+          text :: binary,
+          position :: Zexray.Type.Vector2.t_all(),
+          font_size :: float,
+          spacing :: float,
+          tint :: Zexray.Type.Color.t_all(),
+          return :: :value | :resource
+        ) :: Zexray.Type.Image.t_nif()
+  def draw_text_ex(
+        dst,
+        font,
+        text,
+        position,
+        font_size,
+        spacing,
+        tint,
+        return \\ :value
+      )
+      when is_like_image(dst) and
+             is_like_font(font) and
+             is_binary(text) and
+             is_like_vector2(position) and
+             is_float(font_size) and
+             is_float(spacing) and
+             is_like_color(tint) and
+             is_nif_return(return) do
+    NIF.image_draw_text_ex(
+      dst |> Zexray.Type.Image.to_nif(),
+      font |> Zexray.Type.Font.to_nif(),
+      text,
+      position |> Zexray.Type.Vector2.to_nif(),
+      font_size,
+      spacing,
+      tint |> Zexray.Type.Color.to_nif(),
+      return
+    )
+    |> Zexray.Type.Image.from_nif()
+  end
 end
