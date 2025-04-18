@@ -181,7 +181,7 @@ defmodule Zexray.Image do
       when is_like_texture_2d(texture) and
              is_nif_return(return) do
     NIF.load_image_from_texture(
-      texture |> Zexray.Type.Texture2D.to_nif() |> IO.inspect(label: :texture),
+      texture |> Zexray.Type.Texture2D.to_nif(),
       return
     )
     |> Zexray.Type.Image.from_nif()
