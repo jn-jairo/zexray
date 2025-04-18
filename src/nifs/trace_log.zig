@@ -71,7 +71,7 @@ fn nif_set_trace_log_level(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
-pub fn traceLog(log_level: c_int, text: [*c]const u8, args: [*c]rl.struct___va_list_tag_1) !void {
+pub fn traceLog(log_level: c_int, text: [*c]const u8, args: [*c]rl.struct___va_list_tag_1) callconv(.C) void {
     const buf_len = rl.MAX_TRACELOG_MSG_LENGTH * 4;
     var buf: [buf_len]u8 = std.mem.zeroes([buf_len]u8);
 
