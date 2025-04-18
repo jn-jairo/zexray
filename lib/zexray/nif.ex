@@ -71,6 +71,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.ScreenSpace
   use Zexray.NIF.Shader
   use Zexray.NIF.Text
+  use Zexray.NIF.Texture
   use Zexray.NIF.Timing
   use Zexray.NIF.Touch
   use Zexray.NIF.TraceLog
@@ -100,6 +101,7 @@ defmodule Zexray.NIF do
           @nifs_screen_space ++
           @nifs_shader ++
           @nifs_text ++
+          @nifs_texture ++
           @nifs_timing ++
           @nifs_touch ++
           @nifs_trace_log ++
