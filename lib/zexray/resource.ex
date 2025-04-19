@@ -446,6 +446,63 @@ defmodule Zexray.Resource do
     end
   end
 
+  @doc """
+  Run function with resource and free it after.
+  """
+  @spec with_resource(
+          resource :: (-> list | map) | list | map,
+          func :: (list | map -> any)
+        ) :: any
+  def with_resource(
+        resource,
+        func
+      )
+      when (is_function(resource) or is_list(resource) or is_map(resource)) and
+             is_function(func) do
+    resource =
+      if is_function(resource) do
+        resource.()
+      else
+        resource
+      end
+
+    try do
+      func.(resource)
+    after
+      free(resource)
+    end
+  end
+
+  @doc """
+  Run function with resource and free it after asynchronously.
+  """
+  @spec with_resource_async(
+          resource :: (-> list | map) | list | map,
+          func :: (list | map -> any),
+          seconds :: number
+        ) :: any
+  def with_resource_async(
+        resource,
+        func,
+        seconds \\ 1.0
+      )
+      when (is_function(resource) or is_list(resource) or is_map(resource)) and
+             is_function(func) and
+             is_number(seconds) do
+    resource =
+      if is_function(resource) do
+        resource.()
+      else
+        resource
+      end
+
+    try do
+      func.(resource)
+    after
+      free_async(resource, seconds)
+    end
+  end
+
   @spec to_resource_module(module :: module) :: module
   defp to_resource_module(module) when is_atom(module) do
     String.to_atom("#{Atom.to_string(module)}.Resource")
