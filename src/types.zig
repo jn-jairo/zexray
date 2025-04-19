@@ -1068,7 +1068,6 @@ pub fn ResourceBase(comptime T: type) type {
         }
 
         pub fn free(resource: **T.data_type) void {
-            defer release(resource);
             T.free(resource.*.*);
         }
     };
