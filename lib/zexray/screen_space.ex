@@ -1,4 +1,8 @@
 defmodule Zexray.ScreenSpace do
+  @moduledoc """
+  Screen Space
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

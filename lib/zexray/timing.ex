@@ -1,4 +1,8 @@
 defmodule Zexray.Timing do
+  @moduledoc """
+  Timing
+  """
+
   alias Zexray.NIF
 
   ############

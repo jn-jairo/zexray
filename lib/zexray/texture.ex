@@ -1,4 +1,8 @@
 defmodule Zexray.Texture do
+  @moduledoc """
+  Texture
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

@@ -1,4 +1,8 @@
 defmodule Zexray.Cursor do
+  @moduledoc """
+  Cursor
+  """
+
   alias Zexray.NIF
 
   ############

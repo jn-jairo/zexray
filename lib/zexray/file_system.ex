@@ -1,4 +1,8 @@
 defmodule Zexray.FileSystem do
+  @moduledoc """
+  File System
+  """
+
   alias Zexray.NIF
 
   ##################

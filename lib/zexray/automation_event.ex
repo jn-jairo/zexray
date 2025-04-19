@@ -1,4 +1,8 @@
 defmodule Zexray.AutomationEvent do
+  @moduledoc """
+  Automation Event
+  """
+
   alias Zexray.NIF
 
   @doc """

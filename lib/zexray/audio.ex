@@ -1,4 +1,8 @@
 defmodule Zexray.Audio do
+  @moduledoc """
+  Audio
+  """
+
   alias Zexray.NIF
 
   @doc """

@@ -1,7 +1,10 @@
 defmodule Zexray.Random do
-  alias Zexray.NIF
+  @moduledoc """
+  Random
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   ############
   #  Random  #

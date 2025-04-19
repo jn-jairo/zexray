@@ -1,4 +1,8 @@
 defmodule Zexray.Material do
+  @moduledoc """
+  Material
+  """
+
   alias Zexray.NIF
 
   @doc """

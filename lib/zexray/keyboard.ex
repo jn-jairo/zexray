@@ -1,4 +1,8 @@
 defmodule Zexray.Keyboard do
+  @moduledoc """
+  Keyboard
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

@@ -1,7 +1,10 @@
 defmodule Zexray.Text do
-  alias Zexray.NIF
+  @moduledoc """
+  Text
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   ##################
   #  Text drawing  #

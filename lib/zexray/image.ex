@@ -1,4 +1,8 @@
 defmodule Zexray.Image do
+  @moduledoc """
+  Image
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

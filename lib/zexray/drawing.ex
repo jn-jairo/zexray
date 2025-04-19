@@ -1,7 +1,10 @@
 defmodule Zexray.Drawing do
-  alias Zexray.NIF
+  @moduledoc """
+  Drawing
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   #############
   #  Drawing  #

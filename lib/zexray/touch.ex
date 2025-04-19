@@ -1,4 +1,8 @@
 defmodule Zexray.Touch do
+  @moduledoc """
+  Touch
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

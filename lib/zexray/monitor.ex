@@ -1,7 +1,10 @@
 defmodule Zexray.Monitor do
-  alias Zexray.NIF
+  @moduledoc """
+  Monitor
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   #############
   #  Monitor  #

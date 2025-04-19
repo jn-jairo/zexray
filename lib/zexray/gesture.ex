@@ -1,4 +1,8 @@
 defmodule Zexray.Gesture do
+  @moduledoc """
+  Gesture
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

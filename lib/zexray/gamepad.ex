@@ -1,4 +1,8 @@
 defmodule Zexray.Gamepad do
+  @moduledoc """
+  Gamepad
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

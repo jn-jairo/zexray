@@ -1,4 +1,8 @@
 defmodule Zexray.Mesh do
+  @moduledoc """
+  Mesh
+  """
+
   alias Zexray.NIF
 
   @doc """

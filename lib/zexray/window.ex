@@ -1,7 +1,10 @@
 defmodule Zexray.Window do
-  alias Zexray.NIF
+  @moduledoc """
+  Window
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   ####################
   #  Initialization  #

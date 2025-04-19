@@ -9,5 +9,9 @@ defmodule Zexray do
 end
 
 defmodule Zexray.OutOfMemoryError do
+  @moduledoc """
+  Out Of Memory Error
+  """
+
   defexception message: nil
 end

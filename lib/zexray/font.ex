@@ -1,4 +1,8 @@
 defmodule Zexray.Font do
+  @moduledoc """
+  Font
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

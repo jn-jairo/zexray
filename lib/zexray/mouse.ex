@@ -1,4 +1,8 @@
 defmodule Zexray.Mouse do
+  @moduledoc """
+  Mouse
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

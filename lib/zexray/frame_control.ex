@@ -1,4 +1,8 @@
 defmodule Zexray.FrameControl do
+  @moduledoc """
+  Frame Control
+  """
+
   alias Zexray.NIF
 
   ###################

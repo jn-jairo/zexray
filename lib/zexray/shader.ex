@@ -1,4 +1,8 @@
 defmodule Zexray.Shader do
+  @moduledoc """
+  Shader
+  """
+
   import Zexray.Guard
   alias Zexray.NIF
 

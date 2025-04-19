@@ -1,7 +1,10 @@
 defmodule Zexray.Vr do
-  alias Zexray.NIF
+  @moduledoc """
+  VR
+  """
 
   import Zexray.Guard
+  alias Zexray.NIF
 
   ##################
   #  VrDeviceInfo  #
