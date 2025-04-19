@@ -22,6 +22,10 @@ pub fn build(b: *std.Build) !void {
     const raylib_trace_log = b.option(bool, "raylib_trace_log", "raylib trace log") orelse false;
     const raylib_trace_log_debug = b.option(bool, "raylib_trace_log_debug", "raylib trace log debug") orelse false;
 
+    const options = b.addOptions();
+    options.addOption(bool, "trace_log", raylib_trace_log);
+    options.addOption(bool, "trace_log_debug", raylib_trace_log_debug);
+
     // depedency
 
     const config_raylib_tracelog = if (raylib_trace_log) "-DSUPPORT_TRACELOG=1" else "-DSUPPORT_TRACELOG= -USUPPORT_TRACELOG";
@@ -86,6 +90,8 @@ pub fn build(b: *std.Build) !void {
         .name = "zexray",
         .root_module = nif_mod,
     });
+
+    nif_lib.root_module.addOptions("config", options);
 
     nif_lib.addIncludePath(b.path("src"));
     nif_lib.addCSourceFile(.{
