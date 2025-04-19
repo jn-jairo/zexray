@@ -325,16 +325,37 @@ defmodule Zexray.Resource do
   @doc """
   Free the memory used by the resource asynchronously.
   """
-  def free_async!(resource, seconds \\ 1.0)
+  def free_async!(
+        resource,
+        seconds \\ 1.0
+      )
 
-  @spec free_async!(resources :: list, seconds :: number) :: list
-  def free_async!(resources, seconds) when is_list(resources) do
+  @spec free_async!(
+          resources :: list,
+          seconds :: number
+        ) :: list
+  def free_async!(
+        resources,
+        seconds
+      )
+      when is_list(resources) and
+             is_number(seconds) do
     resources |> Enum.map(&free_async!(&1, seconds))
   end
 
-  @spec free_async!(resource :: map, seconds :: number) :: map
-  @spec free_async!(resource :: any, seconds :: number) :: :ok
-  def free_async!(resource, seconds) do
+  @spec free_async!(
+          resource :: map,
+          seconds :: number
+        ) :: map
+  @spec free_async!(
+          resource :: any,
+          seconds :: number
+        ) :: :ok
+  def free_async!(
+        resource,
+        seconds
+      )
+      when is_number(seconds) do
     cond do
       resource?(resource) ->
         Task.start(fn ->
@@ -366,16 +387,37 @@ defmodule Zexray.Resource do
   @doc """
   Free the memory used by the resource asynchronously if it is a resource.
   """
-  def free_async(value, seconds \\ 1.0)
+  def free_async(
+        value,
+        seconds \\ 1.0
+      )
 
-  @spec free_async(values :: list, seconds :: number) :: list
-  def free_async(values, seconds) when is_list(values) do
+  @spec free_async(
+          values :: list,
+          seconds :: number
+        ) :: list
+  def free_async(
+        values,
+        seconds
+      )
+      when is_list(values) and
+             is_number(seconds) do
     values |> Enum.map(&free_async(&1, seconds))
   end
 
-  @spec free_async(value :: map, seconds :: number) :: map
-  @spec free_async(value :: any, seconds :: number) :: :ok
-  def free_async(value, seconds) do
+  @spec free_async(
+          value :: map,
+          seconds :: number
+        ) :: map
+  @spec free_async(
+          value :: any,
+          seconds :: number
+        ) :: :ok
+  def free_async(
+        value,
+        seconds
+      )
+      when is_number(seconds) do
     cond do
       resource?(value) ->
         Task.start(fn ->
