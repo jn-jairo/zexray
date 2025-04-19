@@ -11,6 +11,34 @@ defmodule Zexray.Window do
   ####################
 
   @doc """
+  Run function with window and close it after.
+  """
+  @doc group: :initialization
+  @spec with_window(
+          width :: integer,
+          height :: integer,
+          title :: binary,
+          func :: (-> any)
+        ) :: :ok
+  def with_window(
+        width,
+        height,
+        title,
+        func
+      )
+      when is_integer(width) and
+             is_integer(height) and
+             is_binary(title) and
+             is_function(func) do
+    try do
+      init(width, height, title)
+      func.()
+    after
+      close()
+    end
+  end
+
+  @doc """
   Initialize window and OpenGL context
   """
   @doc group: :initialization
