@@ -71,6 +71,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Random
   use Zexray.NIF.ScreenSpace
   use Zexray.NIF.Shader
+  use Zexray.NIF.Shape
   use Zexray.NIF.Text
   use Zexray.NIF.Texture
   use Zexray.NIF.Timing
@@ -102,6 +103,7 @@ defmodule Zexray.NIF do
           @nifs_random ++
           @nifs_screen_space ++
           @nifs_shader ++
+          @nifs_shape ++
           @nifs_text ++
           @nifs_texture ++
           @nifs_timing ++
