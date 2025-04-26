@@ -1577,27 +1577,27 @@ defmodule Zexray.Image do
   @doc group: :drawing
   @spec draw_line_v(
           dst :: Zexray.Type.Image.t_all(),
-          start_position :: Zexray.Type.Vector2.t_all(),
-          end_position :: Zexray.Type.Vector2.t_all(),
+          start_pos :: Zexray.Type.Vector2.t_all(),
+          end_pos :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   def draw_line_v(
         dst,
-        start_position,
-        end_position,
+        start_pos,
+        end_pos,
         color,
         return \\ :value
       )
       when is_like_image(dst) and
-             is_like_vector2(start_position) and
-             is_like_vector2(end_position) and
+             is_like_vector2(start_pos) and
+             is_like_vector2(end_pos) and
              is_like_color(color) and
              is_nif_return(return) do
     NIF.image_draw_line_v(
       dst |> Zexray.Type.Image.to_nif(),
-      start_position |> Zexray.Type.Vector2.to_nif(),
-      end_position |> Zexray.Type.Vector2.to_nif(),
+      start_pos |> Zexray.Type.Vector2.to_nif(),
+      end_pos |> Zexray.Type.Vector2.to_nif(),
       color |> Zexray.Type.Color.to_nif(),
       return
     )
@@ -1610,30 +1610,30 @@ defmodule Zexray.Image do
   @doc group: :drawing
   @spec draw_line_ex(
           dst :: Zexray.Type.Image.t_all(),
-          start_position :: Zexray.Type.Vector2.t_all(),
-          end_position :: Zexray.Type.Vector2.t_all(),
+          start_pos :: Zexray.Type.Vector2.t_all(),
+          end_pos :: Zexray.Type.Vector2.t_all(),
           thick :: integer,
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   def draw_line_ex(
         dst,
-        start_position,
-        end_position,
+        start_pos,
+        end_pos,
         thick,
         color,
         return \\ :value
       )
       when is_like_image(dst) and
-             is_like_vector2(start_position) and
-             is_like_vector2(end_position) and
+             is_like_vector2(start_pos) and
+             is_like_vector2(end_pos) and
              is_integer(thick) and
              is_like_color(color) and
              is_nif_return(return) do
     NIF.image_draw_line_ex(
       dst |> Zexray.Type.Image.to_nif(),
-      start_position |> Zexray.Type.Vector2.to_nif(),
-      end_position |> Zexray.Type.Vector2.to_nif(),
+      start_pos |> Zexray.Type.Vector2.to_nif(),
+      end_pos |> Zexray.Type.Vector2.to_nif(),
       thick,
       color |> Zexray.Type.Color.to_nif(),
       return

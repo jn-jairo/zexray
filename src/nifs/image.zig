@@ -2433,17 +2433,17 @@ fn nif_image_draw_line_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     errdefer if (return_resource) arg_dst.free();
     const dst = &arg_dst.data;
 
-    const arg_start_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
-        return error.invalid_argument_start_position;
+    const arg_start_pos = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_start_pos;
     };
-    defer arg_start_position.free();
-    const start_position = arg_start_position.data;
+    defer arg_start_pos.free();
+    const start_pos = arg_start_pos.data;
 
-    const arg_end_position = core.Argument(core.Vector2).get(env, argv[2]) catch {
-        return error.invalid_argument_end_position;
+    const arg_end_pos = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_end_pos;
     };
-    defer arg_end_position.free();
-    const end_position = arg_end_position.data;
+    defer arg_end_pos.free();
+    const end_pos = arg_end_pos.data;
 
     const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
         return error.invalid_argument_color;
@@ -2453,7 +2453,7 @@ fn nif_image_draw_line_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.ImageDrawLineV(@ptrCast(dst), start_position, end_position, color);
+    rl.ImageDrawLineV(@ptrCast(dst), start_pos, end_pos, color);
 
     // Return
 
@@ -2482,17 +2482,17 @@ fn nif_image_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     errdefer if (return_resource) arg_dst.free();
     const dst = &arg_dst.data;
 
-    const arg_start_position = core.Argument(core.Vector2).get(env, argv[1]) catch {
-        return error.invalid_argument_start_position;
+    const arg_start_pos = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_start_pos;
     };
-    defer arg_start_position.free();
-    const start_position = arg_start_position.data;
+    defer arg_start_pos.free();
+    const start_pos = arg_start_pos.data;
 
-    const arg_end_position = core.Argument(core.Vector2).get(env, argv[2]) catch {
-        return error.invalid_argument_end_position;
+    const arg_end_pos = core.Argument(core.Vector2).get(env, argv[2]) catch {
+        return error.invalid_argument_end_pos;
     };
-    defer arg_end_position.free();
-    const end_position = arg_end_position.data;
+    defer arg_end_pos.free();
+    const end_pos = arg_end_pos.data;
 
     const thick = core.Int.get(env, argv[3]) catch {
         return error.invalid_argument_thick;
@@ -2506,7 +2506,7 @@ fn nif_image_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.ImageDrawLineEx(@ptrCast(dst), start_position, end_position, thick, color);
+    rl.ImageDrawLineEx(@ptrCast(dst), start_pos, end_pos, thick, color);
 
     // Return
 

@@ -1457,15 +1457,15 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_line_v(
               dst :: map | reference,
-              start_position :: map | reference,
-              end_position :: map | reference,
+              start_pos :: map | reference,
+              end_pos :: map | reference,
               color :: map | reference,
               return :: :value | :resource
             ) :: map | reference
       def image_draw_line_v(
             _dst,
-            _start_position,
-            _end_position,
+            _start_pos,
+            _end_pos,
             _color,
             _return \\ :value
           ),
@@ -1482,16 +1482,16 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_line_ex(
               dst :: map | reference,
-              start_position :: map | reference,
-              end_position :: map | reference,
+              start_pos :: map | reference,
+              end_pos :: map | reference,
               thick :: integer,
               color :: map | reference,
               return :: :value | :resource
             ) :: map | reference
       def image_draw_line_ex(
             _dst,
-            _start_position,
-            _end_position,
+            _start_pos,
+            _end_pos,
             _thick,
             _color,
             _return \\ :value
