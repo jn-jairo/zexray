@@ -1160,7 +1160,7 @@ fn nif_draw_rectangle_gradient_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 
     // Function
 
-    rl.DrawRectangleGradientEx(rec, top_left, bottom_left, top_right, bottom_right);
+    rl.DrawRectangleGradientEx(rec, top_left, bottom_left, bottom_right, top_right);
 
     // Return
 
