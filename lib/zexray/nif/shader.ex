@@ -162,7 +162,7 @@ defmodule Zexray.NIF.Shader do
       @spec set_shader_value_v(
               shader :: map | reference,
               loc_index :: integer,
-              value :: [float] | [integer] | [map] | [reference],
+              value :: [float] | [integer] | [map | reference],
               uniform_type :: integer
             ) :: :ok
       def set_shader_value_v(
