@@ -52,9 +52,9 @@ defmodule Zexray.Shape do
     |> Zexray.Type.Rectangle.from_nif()
   end
 
-  ##########################
-  #  Basic shapes drawing  #
-  ##########################
+  ###################
+  #  Basic drawing  #
+  ###################
 
   @doc """
   Draw a pixel using geometry [Can be slow, use with care]
@@ -1132,14 +1132,14 @@ defmodule Zexray.Shape do
     )
   end
 
-  #####################
-  #  Splines drawing  #
-  #####################
+  ####################
+  #  Spline drawing  #
+  ####################
 
   @doc """
   Draw spline: Linear, minimum 2 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_linear(
           points :: [Zexray.Type.Vector2.t_all()],
           thick :: float,
@@ -1163,7 +1163,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline: B-Spline, minimum 4 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_basis(
           points :: [Zexray.Type.Vector2.t_all()],
           thick :: float,
@@ -1187,7 +1187,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline: Catmull-Rom, minimum 4 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_catmull_rom(
           points :: [Zexray.Type.Vector2.t_all()],
           thick :: float,
@@ -1211,7 +1211,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_bezier_quadratic(
           points :: [Zexray.Type.Vector2.t_all()],
           thick :: float,
@@ -1235,7 +1235,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_bezier_cubic(
           points :: [Zexray.Type.Vector2.t_all()],
           thick :: float,
@@ -1259,7 +1259,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline segment: Linear, 2 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_segment_linear(
           p1 :: Zexray.Type.Vector2.t_all(),
           p2 :: Zexray.Type.Vector2.t_all(),
@@ -1287,7 +1287,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline segment: B-Spline, 4 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_segment_basis(
           p1 :: Zexray.Type.Vector2.t_all(),
           p2 :: Zexray.Type.Vector2.t_all(),
@@ -1323,7 +1323,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline segment: Catmull-Rom, 4 points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_segment_catmull_rom(
           p1 :: Zexray.Type.Vector2.t_all(),
           p2 :: Zexray.Type.Vector2.t_all(),
@@ -1359,7 +1359,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline segment: Quadratic Bezier, 2 points, 1 control point
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_segment_bezier_quadratic(
           p1 :: Zexray.Type.Vector2.t_all(),
           c2 :: Zexray.Type.Vector2.t_all(),
@@ -1391,7 +1391,7 @@ defmodule Zexray.Shape do
   @doc """
   Draw spline segment: Cubic Bezier, 2 points, 2 control points
   """
-  @doc group: :splines_drawing
+  @doc group: :spline_drawing
   @spec draw_spline_segment_bezier_cubic(
           p1 :: Zexray.Type.Vector2.t_all(),
           c2 :: Zexray.Type.Vector2.t_all(),
@@ -1601,14 +1601,14 @@ defmodule Zexray.Shape do
     |> Zexray.Type.Vector2.from_nif()
   end
 
-  ######################################
-  #  Basic shapes collision detection  #
-  ######################################
+  #########################
+  #  Collision detection  #
+  #########################
 
   @doc """
   Check collision between two rectangles
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_recs?(
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all()
@@ -1628,7 +1628,7 @@ defmodule Zexray.Shape do
   @doc """
   Check collision between two circles
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_circles?(
           center1 :: Zexray.Type.Vector2.t_all(),
           radius1 :: float,
@@ -1656,7 +1656,7 @@ defmodule Zexray.Shape do
   @doc """
   Check collision between circle and rectangle
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_circle_rec?(
           center :: Zexray.Type.Vector2.t_all(),
           radius :: float,
@@ -1680,7 +1680,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if circle collides with a line created betweeen two points [p1] and [p2]
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_circle_line?(
           center :: Zexray.Type.Vector2.t_all(),
           radius :: float,
@@ -1708,7 +1708,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if point is inside rectangle
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_point_rec?(
           point :: Zexray.Type.Vector2.t_all(),
           rec :: Zexray.Type.Rectangle.t_all()
@@ -1728,7 +1728,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if point is inside circle
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_point_circle?(
           point :: Zexray.Type.Vector2.t_all(),
           center :: Zexray.Type.Vector2.t_all(),
@@ -1752,7 +1752,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if point is inside a triangle
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_point_triangle?(
           point :: Zexray.Type.Vector2.t_all(),
           p1 :: Zexray.Type.Vector2.t_all(),
@@ -1780,7 +1780,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_point_line?(
           point :: Zexray.Type.Vector2.t_all(),
           p1 :: Zexray.Type.Vector2.t_all(),
@@ -1808,7 +1808,7 @@ defmodule Zexray.Shape do
   @doc """
   Check if point is within a polygon described by array of vertices
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_point_poly?(
           point :: Zexray.Type.Vector2.t_all(),
           points :: [Zexray.Type.Vector2.t_all()]
@@ -1828,7 +1828,7 @@ defmodule Zexray.Shape do
   @doc """
   Check the collision between two lines defined by two points each, returns collision point by reference
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_lines?(
           start_pos1 :: Zexray.Type.Vector2.t_all(),
           end_pos1 :: Zexray.Type.Vector2.t_all(),
@@ -1859,7 +1859,7 @@ defmodule Zexray.Shape do
   @doc """
   Check the collision between two lines defined by two points each, returns collision point by reference
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_lines_ex?(
           start_pos1 :: Zexray.Type.Vector2.t_all(),
           end_pos1 :: Zexray.Type.Vector2.t_all(),
@@ -1897,7 +1897,7 @@ defmodule Zexray.Shape do
   @doc """
   Get collision rectangle for two rectangles collision
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec collision_recs_ex?(
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all(),
@@ -1943,7 +1943,7 @@ defmodule Zexray.Shape do
   @doc """
   Get collision rectangle for two rectangles collision
   """
-  @doc group: :basic_collision_detection
+  @doc group: :collision_detection
   @spec get_collision_rec(
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all(),
