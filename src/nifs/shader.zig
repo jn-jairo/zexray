@@ -322,7 +322,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
         else => {
-            return core.raise_exception(e.allocator, env, error.ArgumentError, @errorReturnTrace(), "Invalid argument 'uniform_type'.");
+            return error.invalid_argument_uniform_type;
         },
     }
 
@@ -475,7 +475,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
         else => {
-            return core.raise_exception(e.allocator, env, error.ArgumentError, @errorReturnTrace(), "Invalid argument 'uniform_type'.");
+            return error.invalid_argument_uniform_type;
         },
     }
 
