@@ -18,6 +18,7 @@ defmodule Zexray.EnumFixture do
     NPatchLayout,
     PixelFormat,
     ShaderAttributeDataType,
+    ShaderAttributeLocationIndex,
     ShaderLocationIndex,
     ShaderUniformDataType,
     TextureFilter,
@@ -223,6 +224,19 @@ defmodule Zexray.EnumFixture do
   def shader_attribute_data_type_fixture(attrs \\ %{}) do
     {name, value} =
       ShaderAttributeDataType.values_by_name()
+      |> Enum.to_list()
+      |> List.first()
+
+    %{
+      name: name,
+      value: value
+    }
+    |> Map.merge(attrs)
+  end
+
+  def shader_attribute_location_index_fixture(attrs \\ %{}) do
+    {name, value} =
+      ShaderAttributeLocationIndex.values_by_name()
       |> Enum.to_list()
       |> List.first()
 
