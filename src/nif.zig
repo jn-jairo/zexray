@@ -49,6 +49,7 @@ const nif_random = @import("./nifs/random.zig");
 const nif_screen_space = @import("./nifs/screen_space.zig");
 const nif_shader = @import("./nifs/shader.zig");
 const nif_shape = @import("./nifs/shape.zig");
+const nif_shape_3d = @import("./nifs/shape_3d.zig");
 const nif_text = @import("./nifs/text.zig");
 const nif_texture = @import("./nifs/texture.zig");
 const nif_timing = @import("./nifs/timing.zig");
@@ -81,6 +82,7 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_screen_space.exported_nifs ++
     nif_shader.exported_nifs ++
     nif_shape.exported_nifs ++
+    nif_shape_3d.exported_nifs ++
     nif_text.exported_nifs ++
     nif_texture.exported_nifs ++
     nif_timing.exported_nifs ++
