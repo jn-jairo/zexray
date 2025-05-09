@@ -115,8 +115,8 @@ fn nif_get_gesture_drag_vector(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     // Function
 
     const gesture_drag_vector = rl.GetGestureDragVector();
-    defer if (!return_resource) core.Vector2.free(gesture_drag_vector);
-    errdefer if (return_resource) core.Vector2.free(gesture_drag_vector);
+    defer if (!return_resource) core.Vector2.unload(gesture_drag_vector);
+    errdefer if (return_resource) core.Vector2.unload(gesture_drag_vector);
 
     // Return
 
@@ -156,8 +156,8 @@ fn nif_get_gesture_pinch_vector(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     // Function
 
     const gesture_pinch_vector = rl.GetGesturePinchVector();
-    defer if (!return_resource) core.Vector2.free(gesture_pinch_vector);
-    errdefer if (return_resource) core.Vector2.free(gesture_pinch_vector);
+    defer if (!return_resource) core.Vector2.unload(gesture_pinch_vector);
+    errdefer if (return_resource) core.Vector2.unload(gesture_pinch_vector);
 
     // Return
 

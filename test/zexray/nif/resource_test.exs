@@ -230,6 +230,12 @@ defmodule Zexray.NIF.ResourceTest do
       value = apply(TypeFixture, fixture, [type])
       resource = apply(NIF, to_resource, [value])
 
+      value_update =
+        case type do
+          :empty -> apply(TypeFixture, fixture, [:base])
+          _ -> apply(TypeFixture, fixture, [:empty])
+        end
+
       assert is_reference(resource)
       assert similar?(value, apply(NIF, from_resource, [resource]))
 
@@ -237,9 +243,17 @@ defmodule Zexray.NIF.ResourceTest do
       assert similar?(value, Resource.content!(resource_new!))
       assert similar?(value, apply(Resource.content_type!(resource_new!), :new, [resource_new!]))
 
+      assert_raise ArgumentError, fn -> Resource.update!(resource_new!, nil) end
+      assert :ok = Resource.update!(resource_new!, value_update)
+      assert similar?(value_update, Resource.content!(resource_new!))
+
       resource_new = Resource.new(value)
       assert similar?(value, Resource.content(resource_new))
       assert similar?(value, apply(Resource.content_type(resource_new), :new, [resource_new]))
+
+      assert :invalid_resourceable = Resource.update(resource_new, nil)
+      assert :ok = Resource.update(resource_new, value_update)
+      assert similar?(value_update, Resource.content(resource_new!))
 
       content_type = Resource.content_type!(resource_new!)
 
@@ -327,6 +341,9 @@ defmodule Zexray.NIF.ResourceTest do
 
       assert_raise ArgumentError, fn -> Resource.free_async!(resource) end
       assert ^resource = Resource.free_async(resource)
+
+      assert_raise ArgumentError, fn -> Resource.update!(resource, nil) end
+      assert :invalid_resource = Resource.update(resource, nil)
     end
   end
 

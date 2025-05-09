@@ -153,8 +153,8 @@ fn nif_load_vr_stereo_config(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Function
 
     const vr_stereo_config = rl.LoadVrStereoConfig(device);
-    defer if (!return_resource) core.VrStereoConfig.free(vr_stereo_config);
-    errdefer if (return_resource) core.VrStereoConfig.free(vr_stereo_config);
+    defer if (!return_resource) core.VrStereoConfig.unload(vr_stereo_config);
+    errdefer if (return_resource) core.VrStereoConfig.unload(vr_stereo_config);
 
     // Return
 

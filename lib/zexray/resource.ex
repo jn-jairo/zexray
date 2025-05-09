@@ -447,6 +447,46 @@ defmodule Zexray.Resource do
   end
 
   @doc """
+  Update the resource.
+  """
+  @spec update!(resource :: any, value :: any) :: :ok
+  def update!(resource, value) do
+    cond do
+      resource?(resource) ->
+        cond do
+          resourceable?(value) ->
+            apply(resource.__struct__, :update, [resource, value])
+
+          true ->
+            raise_invalid_resourceable(value)
+        end
+
+      true ->
+        raise_invalid_resource(resource)
+    end
+  end
+
+  @doc """
+  Update the resource if it is a resource.
+  """
+  @spec update(resource :: any, value :: any) :: :ok | :invalid_resource | :invalid_resourceable
+  def update(resource, value) do
+    cond do
+      resource?(resource) ->
+        cond do
+          resourceable?(value) ->
+            apply(resource.__struct__, :update, [resource, value])
+
+          true ->
+            :invalid_resourceable
+        end
+
+      true ->
+        :invalid_resource
+    end
+  end
+
+  @doc """
   Run function with resource and free it after.
   """
   @spec with_resource(

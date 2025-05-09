@@ -67,8 +67,8 @@ fn nif_load_shader(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
     // Function
 
     const shader = rl.LoadShader(vs_file_name, fs_file_name);
-    defer if (!return_resource) core.Shader.free(shader);
-    errdefer if (return_resource) core.Shader.free(shader);
+    defer if (!return_resource) core.Shader.unload(shader);
+    errdefer if (return_resource) core.Shader.unload(shader);
 
     // Return
 
@@ -105,8 +105,8 @@ fn nif_load_shader_from_memory(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     // Function
 
     const shader = rl.LoadShaderFromMemory(vs_code, fs_code);
-    defer if (!return_resource) core.Shader.free(shader);
-    errdefer if (return_resource) core.Shader.free(shader);
+    defer if (!return_resource) core.Shader.unload(shader);
+    errdefer if (return_resource) core.Shader.unload(shader);
 
     // Return
 

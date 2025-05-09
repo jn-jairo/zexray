@@ -9,226 +9,271 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "vector2_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector2_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector2_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector2_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector2_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector2_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector2_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_vector2_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // IVector2
     .{ .name = "ivector2_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector2_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector2_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector2_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector2_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector2_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector2_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_ivector2_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // UIVector2
     .{ .name = "uivector2_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector2_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector2_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector2_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector2_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector2_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector2_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_uivector2_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Vector3
     .{ .name = "vector3_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector3_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector3_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector3_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector3_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector3_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector3_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_vector3_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // IVector3
     .{ .name = "ivector3_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector3_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector3_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector3_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector3_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector3_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector3_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_ivector3_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // UIVector3
     .{ .name = "uivector3_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector3_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector3_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector3_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector3_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector3_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector3_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_uivector3_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Vector4
     .{ .name = "vector4_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector4_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector4_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector4_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vector4_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vector4_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vector4_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_vector4_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // IVector4
     .{ .name = "ivector4_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector4_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector4_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector4_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ivector4_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ivector4_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ivector4_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_ivector4_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // UIVector4
     .{ .name = "uivector4_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector4_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector4_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector4_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "uivector4_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_uivector4_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "uivector4_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_uivector4_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Quaternion
     .{ .name = "quaternion_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_quaternion_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "quaternion_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_quaternion_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "quaternion_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_quaternion_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "quaternion_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_quaternion_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Matrix
     .{ .name = "matrix_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_matrix_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "matrix_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_matrix_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "matrix_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_matrix_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "matrix_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_matrix_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Color
     .{ .name = "color_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_color_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "color_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_color_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "color_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_color_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "color_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_color_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Rectangle
     .{ .name = "rectangle_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_rectangle_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "rectangle_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_rectangle_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "rectangle_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_rectangle_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "rectangle_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_rectangle_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Image
     .{ .name = "image_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_image_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "image_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_image_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "image_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_image_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "image_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_image_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Texture
     .{ .name = "texture_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_texture_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Texture2D
     .{ .name = "texture_2d_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_2d_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_2d_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_2d_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_2d_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_2d_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_2d_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_texture_2d_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // TextureCubemap
     .{ .name = "texture_cubemap_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_cubemap_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_cubemap_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_cubemap_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "texture_cubemap_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_texture_cubemap_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "texture_cubemap_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_texture_cubemap_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RenderTexture
     .{ .name = "render_texture_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "render_texture_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "render_texture_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_render_texture_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RenderTexture2D
     .{ .name = "render_texture_2d_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_2d_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "render_texture_2d_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_2d_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "render_texture_2d_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_render_texture_2d_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "render_texture_2d_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_render_texture_2d_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // NPatchInfo
     .{ .name = "n_patch_info_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_n_patch_info_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "n_patch_info_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_n_patch_info_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "n_patch_info_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_n_patch_info_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "n_patch_info_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_n_patch_info_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // GlyphInfo
     .{ .name = "glyph_info_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_glyph_info_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "glyph_info_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_glyph_info_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "glyph_info_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_glyph_info_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "glyph_info_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_glyph_info_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Font
     .{ .name = "font_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_font_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "font_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_font_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "font_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_font_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "font_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_font_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera3D
     .{ .name = "camera_3d_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_3d_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_3d_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_3d_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_3d_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_3d_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_3d_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_camera_3d_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera
     .{ .name = "camera_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_camera_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Camera2D
     .{ .name = "camera_2d_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_2d_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_2d_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_2d_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "camera_2d_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_camera_2d_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "camera_2d_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_camera_2d_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Mesh
     .{ .name = "mesh_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_mesh_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "mesh_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_mesh_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "mesh_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_mesh_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "mesh_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_mesh_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Shader
     .{ .name = "shader_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_shader_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "shader_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_shader_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "shader_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_shader_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "shader_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_shader_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // MaterialMap
     .{ .name = "material_map_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_map_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "material_map_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_map_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "material_map_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_map_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_map_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_material_map_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Material
     .{ .name = "material_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "material_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "material_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_material_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "material_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_material_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Transform
     .{ .name = "transform_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_transform_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "transform_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_transform_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "transform_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_transform_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "transform_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_transform_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // BoneInfo
     .{ .name = "bone_info_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bone_info_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "bone_info_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bone_info_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "bone_info_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bone_info_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bone_info_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_bone_info_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Model
     .{ .name = "model_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "model_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "model_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_model_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // ModelAnimation
     .{ .name = "model_animation_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_animation_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "model_animation_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_animation_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "model_animation_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_model_animation_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "model_animation_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_model_animation_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Ray
     .{ .name = "ray_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ray_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ray_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_ray_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // RayCollision
     .{ .name = "ray_collision_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_collision_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ray_collision_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_collision_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "ray_collision_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_ray_collision_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "ray_collision_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_ray_collision_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // BoundingBox
     .{ .name = "bounding_box_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bounding_box_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "bounding_box_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bounding_box_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "bounding_box_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_bounding_box_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "bounding_box_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_bounding_box_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Wave
     .{ .name = "wave_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_wave_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "wave_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_wave_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "wave_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_wave_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "wave_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_wave_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AudioStream
     .{ .name = "audio_stream_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_audio_stream_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "audio_stream_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_audio_stream_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "audio_stream_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_audio_stream_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "audio_stream_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_audio_stream_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Sound
     .{ .name = "sound_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "sound_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "sound_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_sound_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Music
     .{ .name = "music_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_music_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "music_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_music_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "music_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_music_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "music_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_music_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // VrDeviceInfo
     .{ .name = "vr_device_info_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_device_info_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_device_info_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_device_info_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_device_info_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_device_info_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_device_info_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_vr_device_info_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // VrStereoConfig
     .{ .name = "vr_stereo_config_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_stereo_config_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_stereo_config_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_stereo_config_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "vr_stereo_config_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_vr_stereo_config_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "vr_stereo_config_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_vr_stereo_config_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // FilePathList
     .{ .name = "file_path_list_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_file_path_list_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "file_path_list_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_file_path_list_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "file_path_list_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_file_path_list_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "file_path_list_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_file_path_list_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AutomationEvent
     .{ .name = "automation_event_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "automation_event_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "automation_event_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_automation_event_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // AutomationEventList
     .{ .name = "automation_event_list_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_list_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "automation_event_list_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_list_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "automation_event_list_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_automation_event_list_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "automation_event_list_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_automation_event_list_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ///////////////
@@ -238,9 +283,11 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 fn nif_vector2_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Vector2.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Vector2).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Vector2.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -272,6 +319,22 @@ fn nif_vector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+fn nif_vector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Vector2).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Vector2.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  IVector2  //
 ////////////////
@@ -279,9 +342,11 @@ fn nif_vector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 fn nif_ivector2_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.IVector2.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.IVector2).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.IVector2.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -313,6 +378,22 @@ fn nif_ivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     return core.Atom.make(env, "ok");
 }
 
+fn nif_ivector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.IVector2).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.IVector2.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  UIVector2  //
 /////////////////
@@ -320,9 +401,11 @@ fn nif_ivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 fn nif_uivector2_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.UIVector2.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.UIVector2).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.UIVector2.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -354,6 +437,22 @@ fn nif_uivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_uivector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.UIVector2).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.UIVector2.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////
 //  Vector3  //
 ///////////////
@@ -361,9 +460,11 @@ fn nif_uivector2_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_vector3_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Vector3.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Vector3).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Vector3.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -395,6 +496,22 @@ fn nif_vector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+fn nif_vector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Vector3).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Vector3.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  IVector3  //
 ////////////////
@@ -402,9 +519,11 @@ fn nif_vector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 fn nif_ivector3_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.IVector3.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.IVector3).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.IVector3.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -436,6 +555,22 @@ fn nif_ivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     return core.Atom.make(env, "ok");
 }
 
+fn nif_ivector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.IVector3).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.IVector3.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  UIVector3  //
 /////////////////
@@ -443,9 +578,11 @@ fn nif_ivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 fn nif_uivector3_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.UIVector3.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.UIVector3).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.UIVector3.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -477,6 +614,22 @@ fn nif_uivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_uivector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.UIVector3).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.UIVector3.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////
 //  Vector4  //
 ///////////////
@@ -484,9 +637,11 @@ fn nif_uivector3_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_vector4_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Vector4.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Vector4).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Vector4.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -518,6 +673,22 @@ fn nif_vector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+fn nif_vector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Vector4).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Vector4.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  IVector4  //
 ////////////////
@@ -525,9 +696,11 @@ fn nif_vector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 fn nif_ivector4_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.IVector4.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.IVector4).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.IVector4.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -559,6 +732,22 @@ fn nif_ivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     return core.Atom.make(env, "ok");
 }
 
+fn nif_ivector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.IVector4).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.IVector4.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  UIVector4  //
 /////////////////
@@ -566,9 +755,11 @@ fn nif_ivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 fn nif_uivector4_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.UIVector4.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.UIVector4).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.UIVector4.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -600,6 +791,22 @@ fn nif_uivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_uivector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.UIVector4).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.UIVector4.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////////
 //  Quaternion  //
 //////////////////
@@ -607,9 +814,11 @@ fn nif_uivector4_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_quaternion_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Quaternion.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Quaternion).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Quaternion.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -641,6 +850,22 @@ fn nif_quaternion_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     return core.Atom.make(env, "ok");
 }
 
+fn nif_quaternion_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Quaternion).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Quaternion.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////
 //  Matrix  //
 //////////////
@@ -648,9 +873,11 @@ fn nif_quaternion_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 fn nif_matrix_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Matrix.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Matrix).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Matrix.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -682,6 +909,22 @@ fn nif_matrix_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     return core.Atom.make(env, "ok");
 }
 
+fn nif_matrix_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Matrix).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Matrix.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////
 //  Color  //
 /////////////
@@ -689,9 +932,11 @@ fn nif_matrix_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 fn nif_color_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Color.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Color).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Color.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -723,6 +968,22 @@ fn nif_color_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
+fn nif_color_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Color).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Color.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  Rectangle  //
 /////////////////
@@ -730,9 +991,11 @@ fn nif_color_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_rectangle_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Rectangle.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Rectangle).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Rectangle.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -764,6 +1027,22 @@ fn nif_rectangle_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_rectangle_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Rectangle).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Rectangle.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////
 //  Image  //
 /////////////
@@ -771,9 +1050,11 @@ fn nif_rectangle_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_image_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Image.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Image).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Image.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -805,6 +1086,22 @@ fn nif_image_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
+fn nif_image_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Image).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Image.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////
 //  Texture  //
 ///////////////
@@ -812,9 +1109,11 @@ fn nif_image_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_texture_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Texture.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Texture).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Texture.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -846,6 +1145,22 @@ fn nif_texture_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.Atom.make(env, "ok");
 }
 
+fn nif_texture_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Texture).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Texture.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  Texture2D  //
 /////////////////
@@ -853,9 +1168,11 @@ fn nif_texture_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 fn nif_texture_2d_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Texture2D.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Texture2D).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Texture2D.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -887,6 +1204,22 @@ fn nif_texture_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     return core.Atom.make(env, "ok");
 }
 
+fn nif_texture_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Texture2D).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Texture2D.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////////////
 //  TextureCubemap  //
 //////////////////////
@@ -894,9 +1227,11 @@ fn nif_texture_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 fn nif_texture_cubemap_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.TextureCubemap.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.TextureCubemap).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.TextureCubemap.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -928,6 +1263,22 @@ fn nif_texture_cubemap_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     return core.Atom.make(env, "ok");
 }
 
+fn nif_texture_cubemap_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.TextureCubemap).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.TextureCubemap.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////////
 //  RenderTexture  //
 /////////////////////
@@ -935,9 +1286,11 @@ fn nif_texture_cubemap_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
 fn nif_render_texture_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.RenderTexture.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.RenderTexture).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.RenderTexture.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -969,6 +1322,22 @@ fn nif_render_texture_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     return core.Atom.make(env, "ok");
 }
 
+fn nif_render_texture_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.RenderTexture).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.RenderTexture.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////////
 //  RenderTexture2D  //
 ///////////////////////
@@ -976,9 +1345,11 @@ fn nif_render_texture_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 fn nif_render_texture_2d_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.RenderTexture2D.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.RenderTexture2D).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.RenderTexture2D.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1010,6 +1381,22 @@ fn nif_render_texture_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     return core.Atom.make(env, "ok");
 }
 
+fn nif_render_texture_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.RenderTexture2D).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.RenderTexture2D.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////////
 //  NPatchInfo  //
 //////////////////
@@ -1017,9 +1404,11 @@ fn nif_render_texture_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
 fn nif_n_patch_info_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.NPatchInfo.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.NPatchInfo).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.NPatchInfo.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1051,6 +1440,22 @@ fn nif_n_patch_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     return core.Atom.make(env, "ok");
 }
 
+fn nif_n_patch_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.NPatchInfo).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.NPatchInfo.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  GlyphInfo  //
 /////////////////
@@ -1058,9 +1463,11 @@ fn nif_n_patch_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 fn nif_glyph_info_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.GlyphInfo.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.GlyphInfo).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.GlyphInfo.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1092,6 +1499,22 @@ fn nif_glyph_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     return core.Atom.make(env, "ok");
 }
 
+fn nif_glyph_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.GlyphInfo).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.GlyphInfo.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////
 //  Font  //
 ////////////
@@ -1099,9 +1522,11 @@ fn nif_glyph_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 fn nif_font_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Font.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Font).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Font.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1133,6 +1558,22 @@ fn nif_font_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     return core.Atom.make(env, "ok");
 }
 
+fn nif_font_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Font).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Font.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  Camera3D  //
 ////////////////
@@ -1140,9 +1581,11 @@ fn nif_font_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 fn nif_camera_3d_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Camera3D.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Camera3D).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Camera3D.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1174,6 +1617,22 @@ fn nif_camera_3d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_camera_3d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Camera3D).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Camera3D.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////
 //  Camera  //
 //////////////
@@ -1181,9 +1640,11 @@ fn nif_camera_3d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_camera_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Camera.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Camera).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Camera.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1215,6 +1676,22 @@ fn nif_camera_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     return core.Atom.make(env, "ok");
 }
 
+fn nif_camera_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Camera).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Camera.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  Camera2D  //
 ////////////////
@@ -1222,9 +1699,11 @@ fn nif_camera_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 fn nif_camera_2d_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Camera2D.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Camera2D).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Camera2D.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1256,6 +1735,22 @@ fn nif_camera_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_camera_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Camera2D).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Camera2D.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////
 //  Mesh  //
 ////////////
@@ -1263,9 +1758,11 @@ fn nif_camera_2d_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_mesh_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Mesh.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Mesh).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Mesh.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1297,6 +1794,22 @@ fn nif_mesh_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     return core.Atom.make(env, "ok");
 }
 
+fn nif_mesh_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Mesh).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Mesh.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////
 //  Shader  //
 //////////////
@@ -1304,9 +1817,11 @@ fn nif_mesh_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 fn nif_shader_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Shader.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Shader).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Shader.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1338,6 +1853,22 @@ fn nif_shader_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     return core.Atom.make(env, "ok");
 }
 
+fn nif_shader_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Shader).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Shader.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////
 //  MaterialMap  //
 ///////////////////
@@ -1345,9 +1876,11 @@ fn nif_shader_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 fn nif_material_map_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.MaterialMap.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.MaterialMap).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.MaterialMap.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1379,6 +1912,22 @@ fn nif_material_map_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     return core.Atom.make(env, "ok");
 }
 
+fn nif_material_map_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.MaterialMap).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.MaterialMap.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  Material  //
 ////////////////
@@ -1386,9 +1935,11 @@ fn nif_material_map_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 fn nif_material_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Material.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Material).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Material.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1420,6 +1971,22 @@ fn nif_material_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     return core.Atom.make(env, "ok");
 }
 
+fn nif_material_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Material).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Material.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////////
 //  Transform  //
 /////////////////
@@ -1427,9 +1994,11 @@ fn nif_material_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 fn nif_transform_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Transform.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Transform).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Transform.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1461,6 +2030,22 @@ fn nif_transform_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_transform_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Transform).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Transform.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////
 //  BoneInfo  //
 ////////////////
@@ -1468,9 +2053,11 @@ fn nif_transform_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_bone_info_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.BoneInfo.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.BoneInfo).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.BoneInfo.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1502,6 +2089,22 @@ fn nif_bone_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     return core.Atom.make(env, "ok");
 }
 
+fn nif_bone_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.BoneInfo).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.BoneInfo.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////
 //  Model  //
 /////////////
@@ -1509,9 +2112,11 @@ fn nif_bone_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 fn nif_model_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Model.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Model).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Model.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1543,6 +2148,22 @@ fn nif_model_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
+fn nif_model_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Model).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Model.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////////////
 //  ModelAnimation  //
 //////////////////////
@@ -1550,9 +2171,11 @@ fn nif_model_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_model_animation_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.ModelAnimation.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.ModelAnimation).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.ModelAnimation.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1584,6 +2207,22 @@ fn nif_model_animation_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     return core.Atom.make(env, "ok");
 }
 
+fn nif_model_animation_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.ModelAnimation).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.ModelAnimation.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////
 //  Ray  //
 ///////////
@@ -1591,9 +2230,11 @@ fn nif_model_animation_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
 fn nif_ray_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Ray.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Ray).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Ray.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1625,6 +2266,22 @@ fn nif_ray_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     return core.Atom.make(env, "ok");
 }
 
+fn nif_ray_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Ray).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Ray.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////////
 //  RayCollision  //
 ////////////////////
@@ -1632,9 +2289,11 @@ fn nif_ray_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 fn nif_ray_collision_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.RayCollision.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.RayCollision).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.RayCollision.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1666,6 +2325,22 @@ fn nif_ray_collision_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
     return core.Atom.make(env, "ok");
 }
 
+fn nif_ray_collision_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.RayCollision).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.RayCollision.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////
 //  BoundingBox  //
 ///////////////////
@@ -1673,9 +2348,11 @@ fn nif_ray_collision_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
 fn nif_bounding_box_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.BoundingBox.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.BoundingBox).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.BoundingBox.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1707,6 +2384,22 @@ fn nif_bounding_box_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     return core.Atom.make(env, "ok");
 }
 
+fn nif_bounding_box_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.BoundingBox).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.BoundingBox.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////
 //  Wave  //
 ////////////
@@ -1714,9 +2407,11 @@ fn nif_bounding_box_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 fn nif_wave_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Wave.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Wave).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Wave.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1748,6 +2443,22 @@ fn nif_wave_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     return core.Atom.make(env, "ok");
 }
 
+fn nif_wave_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Wave).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Wave.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////
 //  AudioStream  //
 ///////////////////
@@ -1755,9 +2466,11 @@ fn nif_wave_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 fn nif_audio_stream_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.AudioStream.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.AudioStream).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.AudioStream.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1789,6 +2502,22 @@ fn nif_audio_stream_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     return core.Atom.make(env, "ok");
 }
 
+fn nif_audio_stream_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.AudioStream).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.AudioStream.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////
 //  Sound  //
 /////////////
@@ -1796,9 +2525,11 @@ fn nif_audio_stream_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 fn nif_sound_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Sound.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Sound).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Sound.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1830,6 +2561,22 @@ fn nif_sound_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
+fn nif_sound_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Sound).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Sound.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 /////////////
 //  Music  //
 /////////////
@@ -1837,9 +2584,11 @@ fn nif_sound_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_music_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.Music.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.Music).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.Music.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1871,6 +2620,22 @@ fn nif_music_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     return core.Atom.make(env, "ok");
 }
 
+fn nif_music_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.Music).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.Music.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////////
 //  VrDeviceInfo  //
 ////////////////////
@@ -1878,9 +2643,11 @@ fn nif_music_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 fn nif_vr_device_info_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.VrDeviceInfo.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.VrDeviceInfo).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.VrDeviceInfo.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1912,6 +2679,22 @@ fn nif_vr_device_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     return core.Atom.make(env, "ok");
 }
 
+fn nif_vr_device_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.VrDeviceInfo).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.VrDeviceInfo.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 //////////////////////
 //  VrStereoConfig  //
 //////////////////////
@@ -1919,9 +2702,11 @@ fn nif_vr_device_info_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 fn nif_vr_stereo_config_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.VrStereoConfig.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.VrStereoConfig).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.VrStereoConfig.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1953,6 +2738,22 @@ fn nif_vr_stereo_config_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
     return core.Atom.make(env, "ok");
 }
 
+fn nif_vr_stereo_config_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.VrStereoConfig).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.VrStereoConfig.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ////////////////////
 //  FilePathList  //
 ////////////////////
@@ -1960,9 +2761,11 @@ fn nif_vr_stereo_config_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
 fn nif_file_path_list_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.FilePathList.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.FilePathList).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.FilePathList.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -1994,6 +2797,22 @@ fn nif_file_path_list_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     return core.Atom.make(env, "ok");
 }
 
+fn nif_file_path_list_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.FilePathList).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.FilePathList.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////////
 //  AutomationEvent  //
 ///////////////////////
@@ -2001,9 +2820,11 @@ fn nif_file_path_list_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 fn nif_automation_event_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.AutomationEvent.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.AutomationEvent).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.AutomationEvent.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -2035,6 +2856,22 @@ fn nif_automation_event_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
     return core.Atom.make(env, "ok");
 }
 
+fn nif_automation_event_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.AutomationEvent).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.AutomationEvent.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
 ///////////////////////////
 //  AutomationEventList  //
 ///////////////////////////
@@ -2042,9 +2879,11 @@ fn nif_automation_event_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
 fn nif_automation_event_list_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 1);
 
-    const value = core.AutomationEventList.get(env, argv[0]) catch {
+    const arg_value = core.Argument(core.AutomationEventList).get(env, argv[0]) catch {
         return error.invalid_argument_value;
     };
+    errdefer arg_value.free();
+    const value = arg_value.data;
 
     const resource = core.AutomationEventList.Resource.create(value) catch {
         return error.invalid_argument_value;
@@ -2072,6 +2911,22 @@ fn nif_automation_event_list_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv
     };
 
     core.AutomationEventList.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+fn nif_automation_event_list_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.AutomationEventList).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.AutomationEventList.Resource.update(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
 
     return core.Atom.make(env, "ok");
 }

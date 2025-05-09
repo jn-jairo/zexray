@@ -140,8 +140,8 @@ fn nif_get_shapes_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     const texture = rl.GetShapesTexture();
-    defer if (!return_resource) core.Texture2D.free(texture);
-    errdefer if (return_resource) core.Texture2D.free(texture);
+    defer if (!return_resource) core.Texture2D.unload(texture);
+    errdefer if (return_resource) core.Texture2D.unload(texture);
 
     // Return
 
@@ -164,8 +164,8 @@ fn nif_get_shapes_texture_rectangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     // Function
 
     const texture_rectangle = rl.GetShapesTextureRectangle();
-    defer if (!return_resource) core.Rectangle.free(texture_rectangle);
-    errdefer if (return_resource) core.Rectangle.free(texture_rectangle);
+    defer if (!return_resource) core.Rectangle.unload(texture_rectangle);
+    errdefer if (return_resource) core.Rectangle.unload(texture_rectangle);
 
     // Return
 
@@ -2092,8 +2092,8 @@ fn nif_get_spline_point_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     // Function
 
     const point = rl.GetSplinePointLinear(start_pos, end_pos, @floatCast(t));
-    defer if (!return_resource) core.Vector2.free(point);
-    errdefer if (return_resource) core.Vector2.free(point);
+    defer if (!return_resource) core.Vector2.unload(point);
+    errdefer if (return_resource) core.Vector2.unload(point);
 
     // Return
 
@@ -2146,8 +2146,8 @@ fn nif_get_spline_point_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const point = rl.GetSplinePointBasis(p1, p2, p3, p4, @floatCast(t));
-    defer if (!return_resource) core.Vector2.free(point);
-    errdefer if (return_resource) core.Vector2.free(point);
+    defer if (!return_resource) core.Vector2.unload(point);
+    errdefer if (return_resource) core.Vector2.unload(point);
 
     // Return
 
@@ -2200,8 +2200,8 @@ fn nif_get_spline_point_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     // Function
 
     const point = rl.GetSplinePointCatmullRom(p1, p2, p3, p4, @floatCast(t));
-    defer if (!return_resource) core.Vector2.free(point);
-    errdefer if (return_resource) core.Vector2.free(point);
+    defer if (!return_resource) core.Vector2.unload(point);
+    errdefer if (return_resource) core.Vector2.unload(point);
 
     // Return
 
@@ -2248,8 +2248,8 @@ fn nif_get_spline_point_bezier_quad(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     // Function
 
     const point = rl.GetSplinePointBezierQuad(p1, c2, p3, @floatCast(t));
-    defer if (!return_resource) core.Vector2.free(point);
-    errdefer if (return_resource) core.Vector2.free(point);
+    defer if (!return_resource) core.Vector2.unload(point);
+    errdefer if (return_resource) core.Vector2.unload(point);
 
     // Return
 
@@ -2302,8 +2302,8 @@ fn nif_get_spline_point_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     // Function
 
     const point = rl.GetSplinePointBezierCubic(p1, c2, c3, p4, @floatCast(t));
-    defer if (!return_resource) core.Vector2.free(point);
-    errdefer if (return_resource) core.Vector2.free(point);
+    defer if (!return_resource) core.Vector2.unload(point);
+    errdefer if (return_resource) core.Vector2.unload(point);
 
     // Return
 
@@ -2676,8 +2676,8 @@ fn nif_check_collision_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     var collision_point = rl.Vector2{};
     const collision = rl.CheckCollisionLines(start_pos1, end_pos1, start_pos2, end_pos2, &collision_point);
-    defer if (!return_resource) core.Vector2.free(collision_point);
-    errdefer if (return_resource) core.Vector2.free(collision_point);
+    defer if (!return_resource) core.Vector2.unload(collision_point);
+    errdefer if (return_resource) core.Vector2.unload(collision_point);
 
     // Return
 
@@ -2718,8 +2718,8 @@ fn nif_get_collision_rec(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Function
 
     const collision_rec = rl.GetCollisionRec(rec1, rec2);
-    defer if (!return_resource) core.Rectangle.free(collision_rec);
-    errdefer if (return_resource) core.Rectangle.free(collision_rec);
+    defer if (!return_resource) core.Rectangle.unload(collision_rec);
+    errdefer if (return_resource) core.Rectangle.unload(collision_rec);
 
     // Return
 

@@ -166,8 +166,8 @@ fn nif_get_mouse_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     const position = rl.GetMousePosition();
-    defer if (!return_resource) core.Vector2.free(position);
-    errdefer if (return_resource) core.Vector2.free(position);
+    defer if (!return_resource) core.Vector2.unload(position);
+    errdefer if (return_resource) core.Vector2.unload(position);
 
     // Return
 
@@ -190,8 +190,8 @@ fn nif_get_mouse_delta(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     // Function
 
     const delta = rl.GetMouseDelta();
-    defer if (!return_resource) core.Vector2.free(delta);
-    errdefer if (return_resource) core.Vector2.free(delta);
+    defer if (!return_resource) core.Vector2.unload(delta);
+    errdefer if (return_resource) core.Vector2.unload(delta);
 
     // Return
 
@@ -309,8 +309,8 @@ fn nif_get_mouse_wheel_move_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const delta = rl.GetMouseWheelMoveV();
-    defer if (!return_resource) core.Vector2.free(delta);
-    errdefer if (return_resource) core.Vector2.free(delta);
+    defer if (!return_resource) core.Vector2.unload(delta);
+    errdefer if (return_resource) core.Vector2.unload(delta);
 
     // Return
 

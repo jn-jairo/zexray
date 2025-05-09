@@ -985,8 +985,8 @@ fn nif_load_model(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     // Function
 
     const model = rl.LoadModel(file_name);
-    defer if (!return_resource) core.Model.free(model);
-    errdefer if (return_resource) core.Model.free(model);
+    defer if (!return_resource) core.Model.unload(model);
+    errdefer if (return_resource) core.Model.unload(model);
 
     // Return
 
@@ -1017,8 +1017,8 @@ fn nif_load_model_from_mesh(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     const model = rl.LoadModelFromMesh(mesh);
-    defer if (!return_resource) core.Model.free(model);
-    errdefer if (return_resource) core.Model.free(model);
+    defer if (!return_resource) core.Model.unload(model);
+    errdefer if (return_resource) core.Model.unload(model);
 
     // Return
 
@@ -1073,8 +1073,8 @@ fn nif_get_model_bounding_box(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const bounding_box = rl.GetModelBoundingBox(model);
-    defer if (!return_resource) core.BoundingBox.free(bounding_box);
-    errdefer if (return_resource) core.BoundingBox.free(bounding_box);
+    defer if (!return_resource) core.BoundingBox.unload(bounding_box);
+    errdefer if (return_resource) core.BoundingBox.unload(bounding_box);
 
     // Return
 
@@ -1879,8 +1879,8 @@ fn nif_get_mesh_bounding_box(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Function
 
     const bounding_box = rl.GetMeshBoundingBox(mesh);
-    defer if (!return_resource) core.BoundingBox.free(bounding_box);
-    errdefer if (return_resource) core.BoundingBox.free(bounding_box);
+    defer if (!return_resource) core.BoundingBox.unload(bounding_box);
+    errdefer if (return_resource) core.BoundingBox.unload(bounding_box);
 
     // Return
 
@@ -1978,8 +1978,8 @@ fn nif_gen_mesh_poly(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     const mesh = rl.GenMeshPoly(sides, @floatCast(radius));
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2020,8 +2020,8 @@ fn nif_gen_mesh_plane(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     // Function
 
     const mesh = rl.GenMeshPlane(@floatCast(width), @floatCast(length), res_x, res_z);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2058,8 +2058,8 @@ fn nif_gen_mesh_cube(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     const mesh = rl.GenMeshCube(@floatCast(width), @floatCast(height), @floatCast(length));
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2096,8 +2096,8 @@ fn nif_gen_mesh_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     // Function
 
     const mesh = rl.GenMeshSphere(@floatCast(radius), rings, slices);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2134,8 +2134,8 @@ fn nif_gen_mesh_hemi_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     const mesh = rl.GenMeshHemiSphere(@floatCast(radius), rings, slices);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2172,8 +2172,8 @@ fn nif_gen_mesh_cylinder(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Function
 
     const mesh = rl.GenMeshCylinder(@floatCast(radius), @floatCast(height), slices);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2210,8 +2210,8 @@ fn nif_gen_mesh_cone(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     const mesh = rl.GenMeshCone(@floatCast(radius), @floatCast(height), slices);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2252,8 +2252,8 @@ fn nif_gen_mesh_torus(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     // Function
 
     const mesh = rl.GenMeshTorus(@floatCast(radius), @floatCast(size), rad_seg, sides);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2294,8 +2294,8 @@ fn nif_gen_mesh_knot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     const mesh = rl.GenMeshKnot(@floatCast(radius), @floatCast(size), rad_seg, sides);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2332,8 +2332,8 @@ fn nif_gen_mesh_heightmap(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     const mesh = rl.GenMeshHeightmap(heightmap, size);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2370,8 +2370,8 @@ fn nif_gen_mesh_cubicmap(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Function
 
     const mesh = rl.GenMeshCubicmap(cubicmap, cube_size);
-    defer if (!return_resource) core.Mesh.free(mesh);
-    errdefer if (return_resource) core.Mesh.free(mesh);
+    defer if (!return_resource) core.Mesh.unload(mesh);
+    errdefer if (return_resource) core.Mesh.unload(mesh);
 
     // Return
 
@@ -2416,14 +2416,14 @@ fn nif_load_materials(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
         if (!return_resource) {
             for (0..materials_size) |i| {
-                core.Material.free(materials[i]);
+                core.Material.unload(materials[i]);
             }
         }
     }
     errdefer {
         if (return_resource) {
             for (0..materials_size) |i| {
-                core.Material.free(materials[i]);
+                core.Material.unload(materials[i]);
             }
         }
     }
@@ -2456,8 +2456,8 @@ fn nif_load_material_default(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Function
 
     const material = rl.LoadMaterialDefault();
-    defer if (!return_resource) core.Material.free(material);
-    errdefer if (return_resource) core.Material.free(material);
+    defer if (!return_resource) core.Material.unload(material);
+    errdefer if (return_resource) core.Material.unload(material);
 
     // Return
 
@@ -2606,14 +2606,14 @@ fn nif_load_model_animations(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
         if (!return_resource) {
             for (0..model_animations_size) |i| {
-                core.ModelAnimation.free(model_animations[i]);
+                core.ModelAnimation.unload(model_animations[i]);
             }
         }
     }
     errdefer {
         if (return_resource) {
             for (0..model_animations_size) |i| {
-                core.ModelAnimation.free(model_animations[i]);
+                core.ModelAnimation.unload(model_animations[i]);
             }
         }
     }
@@ -2882,8 +2882,8 @@ fn nif_get_ray_collision_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     // Function
 
     const ray_collision = rl.GetRayCollisionSphere(ray, center, @floatCast(radius));
-    defer if (!return_resource) core.RayCollision.free(ray_collision);
-    errdefer if (return_resource) core.RayCollision.free(ray_collision);
+    defer if (!return_resource) core.RayCollision.unload(ray_collision);
+    errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 
     // Return
 
@@ -2920,8 +2920,8 @@ fn nif_get_ray_collision_box(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Function
 
     const ray_collision = rl.GetRayCollisionBox(ray, box);
-    defer if (!return_resource) core.RayCollision.free(ray_collision);
-    errdefer if (return_resource) core.RayCollision.free(ray_collision);
+    defer if (!return_resource) core.RayCollision.unload(ray_collision);
+    errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 
     // Return
 
@@ -2964,8 +2964,8 @@ fn nif_get_ray_collision_mesh(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const ray_collision = rl.GetRayCollisionMesh(ray, mesh, transform);
-    defer if (!return_resource) core.RayCollision.free(ray_collision);
-    errdefer if (return_resource) core.RayCollision.free(ray_collision);
+    defer if (!return_resource) core.RayCollision.unload(ray_collision);
+    errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 
     // Return
 
@@ -3014,8 +3014,8 @@ fn nif_get_ray_collision_triangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     // Function
 
     const ray_collision = rl.GetRayCollisionTriangle(ray, p1, p2, p3);
-    defer if (!return_resource) core.RayCollision.free(ray_collision);
-    errdefer if (return_resource) core.RayCollision.free(ray_collision);
+    defer if (!return_resource) core.RayCollision.unload(ray_collision);
+    errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 
     // Return
 
@@ -3070,8 +3070,8 @@ fn nif_get_ray_collision_quad(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const ray_collision = rl.GetRayCollisionQuad(ray, p1, p2, p3, p4);
-    defer if (!return_resource) core.RayCollision.free(ray_collision);
-    errdefer if (return_resource) core.RayCollision.free(ray_collision);
+    defer if (!return_resource) core.RayCollision.unload(ray_collision);
+    errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 
     // Return
 

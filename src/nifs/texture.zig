@@ -61,8 +61,8 @@ fn nif_load_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     // Function
 
     const texture = rl.LoadTexture(file_name);
-    defer if (!return_resource) core.Texture2D.free(texture);
-    errdefer if (return_resource) core.Texture2D.free(texture);
+    defer if (!return_resource) core.Texture2D.unload(texture);
+    errdefer if (return_resource) core.Texture2D.unload(texture);
 
     // Return
 
@@ -93,8 +93,8 @@ fn nif_load_texture_from_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     // Function
 
     const texture = rl.LoadTextureFromImage(image);
-    defer if (!return_resource) core.Texture2D.free(texture);
-    errdefer if (return_resource) core.Texture2D.free(texture);
+    defer if (!return_resource) core.Texture2D.unload(texture);
+    errdefer if (return_resource) core.Texture2D.unload(texture);
 
     // Return
 
@@ -129,8 +129,8 @@ fn nif_load_texture_cubemap(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     const texture = rl.LoadTextureCubemap(image, layout);
-    defer if (!return_resource) core.TextureCubemap.free(texture);
-    errdefer if (return_resource) core.TextureCubemap.free(texture);
+    defer if (!return_resource) core.TextureCubemap.unload(texture);
+    errdefer if (return_resource) core.TextureCubemap.unload(texture);
 
     // Return
 
@@ -163,8 +163,8 @@ fn nif_load_render_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     // Function
 
     const texture = rl.LoadRenderTexture(width, height);
-    defer if (!return_resource) core.RenderTexture2D.free(texture);
-    errdefer if (return_resource) core.RenderTexture2D.free(texture);
+    defer if (!return_resource) core.RenderTexture2D.unload(texture);
+    errdefer if (return_resource) core.RenderTexture2D.unload(texture);
 
     // Return
 

@@ -100,8 +100,8 @@ fn nif_get_monitor_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     const position = rl.GetMonitorPosition(monitor);
-    defer if (!return_resource) core.Vector2.free(position);
-    errdefer if (return_resource) core.Vector2.free(position);
+    defer if (!return_resource) core.Vector2.unload(position);
+    errdefer if (return_resource) core.Vector2.unload(position);
 
     // Return
 

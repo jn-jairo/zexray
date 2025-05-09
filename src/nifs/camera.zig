@@ -145,8 +145,8 @@ fn nif_get_camera_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     const camera_forward = rl.GetCameraForward(@ptrCast(camera));
-    defer if (!return_resource) core.Vector3.free(camera_forward);
-    errdefer if (return_resource) core.Vector3.free(camera_forward);
+    defer if (!return_resource) core.Vector3.unload(camera_forward);
+    errdefer if (return_resource) core.Vector3.unload(camera_forward);
 
     // Return
 
@@ -178,8 +178,8 @@ fn nif_get_camera_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     const camera_up = rl.GetCameraUp(@ptrCast(camera));
-    defer if (!return_resource) core.Vector3.free(camera_up);
-    errdefer if (return_resource) core.Vector3.free(camera_up);
+    defer if (!return_resource) core.Vector3.unload(camera_up);
+    errdefer if (return_resource) core.Vector3.unload(camera_up);
 
     // Return
 
@@ -210,8 +210,8 @@ fn nif_get_camera_right(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     // Function
 
     const camera_right = rl.GetCameraRight(@ptrCast(camera));
-    defer if (!return_resource) core.Vector3.free(camera_right);
-    errdefer if (return_resource) core.Vector3.free(camera_right);
+    defer if (!return_resource) core.Vector3.unload(camera_right);
+    errdefer if (return_resource) core.Vector3.unload(camera_right);
 
     // Return
 
@@ -520,8 +520,8 @@ fn nif_get_camera_view_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     // Function
 
     const camera_view_matrix = rl.GetCameraViewMatrix(@ptrCast(camera));
-    defer if (!return_resource) core.Matrix.free(camera_view_matrix);
-    errdefer if (return_resource) core.Matrix.free(camera_view_matrix);
+    defer if (!return_resource) core.Matrix.unload(camera_view_matrix);
+    errdefer if (return_resource) core.Matrix.unload(camera_view_matrix);
 
     // Return
 
@@ -556,8 +556,8 @@ fn nif_get_camera_projection_matrix(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     // Function
 
     const camera_projection_matrix = rl.GetCameraProjectionMatrix(@ptrCast(camera), @floatCast(aspect));
-    defer if (!return_resource) core.Matrix.free(camera_projection_matrix);
-    errdefer if (return_resource) core.Matrix.free(camera_projection_matrix);
+    defer if (!return_resource) core.Matrix.unload(camera_projection_matrix);
+    errdefer if (return_resource) core.Matrix.unload(camera_projection_matrix);
 
     // Return
 

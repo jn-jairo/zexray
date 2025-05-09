@@ -715,8 +715,8 @@ fn nif_get_window_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     // Function
 
     const position = rl.GetWindowPosition();
-    defer if (!return_resource) core.Vector2.free(position);
-    errdefer if (return_resource) core.Vector2.free(position);
+    defer if (!return_resource) core.Vector2.unload(position);
+    errdefer if (return_resource) core.Vector2.unload(position);
 
     // Return
 
@@ -739,8 +739,8 @@ fn nif_get_window_scale_dpi(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     const scale_dpi = rl.GetWindowScaleDPI();
-    defer if (!return_resource) core.Vector2.free(scale_dpi);
-    errdefer if (return_resource) core.Vector2.free(scale_dpi);
+    defer if (!return_resource) core.Vector2.unload(scale_dpi);
+    errdefer if (return_resource) core.Vector2.unload(scale_dpi);
 
     // Return
 
@@ -805,8 +805,8 @@ fn nif_get_clipboard_image(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     // Function
 
     const clipboard_image = rl.GetClipboardImage();
-    defer if (!return_resource) core.Image.free(clipboard_image);
-    errdefer if (return_resource) core.Image.free(clipboard_image);
+    defer if (!return_resource) core.Image.unload(clipboard_image);
+    errdefer if (return_resource) core.Image.unload(clipboard_image);
 
     // Return
 
@@ -860,8 +860,8 @@ fn nif_screenshot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     // Function
 
     const image = rl.Screenshot();
-    defer if (!return_resource) core.Image.free(image);
-    errdefer if (return_resource) core.Image.free(image);
+    defer if (!return_resource) core.Image.unload(image);
+    errdefer if (return_resource) core.Image.unload(image);
 
     // Return
 

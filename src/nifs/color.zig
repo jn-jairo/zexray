@@ -99,8 +99,8 @@ fn nif_fade(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.Er
     // Function
 
     const new_color = rl.Fade(color, @floatCast(alpha));
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -155,8 +155,8 @@ fn nif_color_normalize(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     // Function
 
     const normalized = rl.ColorNormalize(color);
-    defer if (!return_resource) core.Vector4.free(normalized);
-    errdefer if (return_resource) core.Vector4.free(normalized);
+    defer if (!return_resource) core.Vector4.unload(normalized);
+    errdefer if (return_resource) core.Vector4.unload(normalized);
 
     // Return
 
@@ -187,8 +187,8 @@ fn nif_color_from_normalized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     // Function
 
     const color = rl.ColorFromNormalized(normalized);
-    defer if (!return_resource) core.Color.free(color);
-    errdefer if (return_resource) core.Color.free(color);
+    defer if (!return_resource) core.Color.unload(color);
+    errdefer if (return_resource) core.Color.unload(color);
 
     // Return
 
@@ -219,8 +219,8 @@ fn nif_color_to_hsv(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     // Function
 
     const hsv = rl.ColorToHSV(color);
-    defer if (!return_resource) core.Vector3.free(hsv);
-    errdefer if (return_resource) core.Vector3.free(hsv);
+    defer if (!return_resource) core.Vector3.unload(hsv);
+    errdefer if (return_resource) core.Vector3.unload(hsv);
 
     // Return
 
@@ -257,8 +257,8 @@ fn nif_color_from_hsv(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     // Function
 
     const color = rl.ColorFromHSV(@floatCast(hue), @floatCast(saturation), @floatCast(value));
-    defer if (!return_resource) core.Color.free(color);
-    errdefer if (return_resource) core.Color.free(color);
+    defer if (!return_resource) core.Color.unload(color);
+    errdefer if (return_resource) core.Color.unload(color);
 
     // Return
 
@@ -295,8 +295,8 @@ fn nif_color_tint(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     // Function
 
     const new_color = rl.ColorTint(color, tint);
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -331,8 +331,8 @@ fn nif_color_brightness(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     // Function
 
     const new_color = rl.ColorBrightness(color, @floatCast(factor));
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -367,8 +367,8 @@ fn nif_color_contrast(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     // Function
 
     const new_color = rl.ColorContrast(color, @floatCast(contrast));
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -403,8 +403,8 @@ fn nif_color_alpha(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
     // Function
 
     const new_color = rl.ColorAlpha(color, @floatCast(alpha));
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -447,8 +447,8 @@ fn nif_color_alpha_blend(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Function
 
     const new_color = rl.ColorAlphaBlend(dst, src, tint);
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -489,8 +489,8 @@ fn nif_color_lerp(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     // Function
 
     const new_color = rl.ColorLerp(color1, color2, @floatCast(factor));
-    defer if (!return_resource) core.Color.free(new_color);
-    errdefer if (return_resource) core.Color.free(new_color);
+    defer if (!return_resource) core.Color.unload(new_color);
+    errdefer if (return_resource) core.Color.unload(new_color);
 
     // Return
 
@@ -519,8 +519,8 @@ fn nif_get_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
     // Function
 
     const color = rl.GetColor(hex_value);
-    defer if (!return_resource) core.Color.free(color);
-    errdefer if (return_resource) core.Color.free(color);
+    defer if (!return_resource) core.Color.unload(color);
+    errdefer if (return_resource) core.Color.unload(color);
 
     // Return
 
@@ -561,8 +561,8 @@ fn nif_get_pixel_color(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     // Function
 
     const color = rl.GetPixelColor(@ptrCast(data), format);
-    defer if (!return_resource) core.Color.free(color);
-    errdefer if (return_resource) core.Color.free(color);
+    defer if (!return_resource) core.Color.unload(color);
+    errdefer if (return_resource) core.Color.unload(color);
 
     // Return
 

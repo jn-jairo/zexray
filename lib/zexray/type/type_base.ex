@@ -15,6 +15,7 @@ defmodule Zexray.Type.TypeBase do
     from_resource = String.to_atom("#{prefix}_from_resource")
     to_resource = String.to_atom("#{prefix}_to_resource")
     free_resource = String.to_atom("#{prefix}_free_resource")
+    update_resource = String.to_atom("#{prefix}_update_resource")
 
     quote do
       defmodule Resource do
@@ -57,6 +58,46 @@ defmodule Zexray.Type.TypeBase do
         def free(%__MODULE__{} = resource) do
           if function_exported?(NIF, unquote(free_resource), 1) do
             apply(NIF, unquote(free_resource), [resource.reference])
+          else
+            :ok
+          end
+        end
+
+        @doc """
+        Update the resource.
+        """
+        def update(resource, value)
+
+        @spec update(
+                resource :: t(),
+                value :: unquote(base_module).t()
+              ) :: :ok
+        def update(
+              %__MODULE__{} = resource,
+              value
+            )
+            when is_struct(value, unquote(base_module)) do
+          if function_exported?(NIF, unquote(update_resource), 2) do
+            apply(NIF, unquote(update_resource), [
+              resource.reference,
+              unquote(base_module).to_nif(value)
+            ])
+          else
+            :ok
+          end
+        end
+
+        @spec update(
+                resource :: t(),
+                value :: map
+              ) :: :ok
+        def update(
+              %__MODULE__{} = resource,
+              %{} = value
+            )
+            when is_struct(value, unquote(base_module)) do
+          if function_exported?(NIF, unquote(update_resource), 2) do
+            apply(NIF, unquote(update_resource), [resource.reference, map_from_struct(value)])
           else
             :ok
           end

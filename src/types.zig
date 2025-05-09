@@ -1080,7 +1080,7 @@ pub fn ResourceBase(comptime T: type) type {
 
         pub fn free(resource: **T.data_type) void {
             defer rl.TRACELOGD("RESOURCE: Freed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
-            T.free(resource.*.*);
+            T.unload(resource.*.*);
         }
     };
 }
@@ -1357,6 +1357,10 @@ pub const Vector2 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Vector2) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Vector2) void {
         _ = value;
     }
@@ -1417,6 +1421,10 @@ pub const IVector2 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.IVector2) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.IVector2) void {
         _ = value;
     }
@@ -1475,6 +1483,10 @@ pub const UIVector2 = struct {
         value.y = @intCast(try UInt.get(env, term_y_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.UIVector2) void {
+        _ = value;
     }
 
     pub fn free(value: rl.UIVector2) void {
@@ -1550,6 +1562,10 @@ pub const Vector3 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Vector3) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Vector3) void {
         _ = value;
     }
@@ -1623,6 +1639,10 @@ pub const IVector3 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.IVector3) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.IVector3) void {
         _ = value;
     }
@@ -1694,6 +1714,10 @@ pub const UIVector3 = struct {
         value.z = @intCast(try UInt.get(env, term_z_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.UIVector3) void {
+        _ = value;
     }
 
     pub fn free(value: rl.UIVector3) void {
@@ -1782,6 +1806,10 @@ pub const Vector4 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Vector4) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Vector4) void {
         _ = value;
     }
@@ -1866,6 +1894,10 @@ pub const IVector4 = struct {
         value.w = @intCast(try Int.get(env, term_w_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.IVector4) void {
+        _ = value;
     }
 
     pub fn free(value: rl.IVector4) void {
@@ -1954,6 +1986,10 @@ pub const UIVector4 = struct {
         return value;
     }
 
+    pub fn unload(value: rl.UIVector4) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.UIVector4) void {
         _ = value;
     }
@@ -2038,6 +2074,10 @@ pub const Quaternion = struct {
         value.w = @floatCast(try Double.get(env, term_w_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.Quaternion) void {
+        _ = value;
     }
 
     pub fn free(value: rl.Quaternion) void {
@@ -2282,6 +2322,10 @@ pub const Matrix = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Matrix) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Matrix) void {
         _ = value;
     }
@@ -2368,6 +2412,10 @@ pub const Color = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Color) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Color) void {
         _ = value;
     }
@@ -2452,6 +2500,10 @@ pub const Rectangle = struct {
         value.height = @floatCast(try Double.get(env, term_height_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.Rectangle) void {
+        _ = value;
     }
 
     pub fn free(value: rl.Rectangle) void {
@@ -2567,6 +2619,10 @@ pub const Image = struct {
         value.data = data.data;
 
         return value;
+    }
+
+    pub fn unload(value: rl.Image) void {
+        free(value);
     }
 
     pub fn free(value: rl.Image) void {
@@ -2693,8 +2749,12 @@ pub const Texture = struct {
         return value;
     }
 
-    pub fn free(value: rl.Texture) void {
+    pub fn unload(value: rl.Texture) void {
         rl.UnloadTexture(value);
+    }
+
+    pub fn free(value: rl.Texture) void {
+        _ = value;
     }
 };
 
@@ -2792,8 +2852,12 @@ pub const Texture2D = struct {
         return value;
     }
 
-    pub fn free(value: rl.Texture2D) void {
+    pub fn unload(value: rl.Texture2D) void {
         rl.UnloadTexture(value);
+    }
+
+    pub fn free(value: rl.Texture2D) void {
+        _ = value;
     }
 };
 
@@ -2891,8 +2955,12 @@ pub const TextureCubemap = struct {
         return value;
     }
 
-    pub fn free(value: rl.TextureCubemap) void {
+    pub fn unload(value: rl.TextureCubemap) void {
         rl.UnloadTexture(value);
+    }
+
+    pub fn free(value: rl.TextureCubemap) void {
+        _ = value;
     }
 };
 
@@ -2968,8 +3036,12 @@ pub const RenderTexture = struct {
         return value;
     }
 
-    pub fn free(value: rl.RenderTexture) void {
+    pub fn unload(value: rl.RenderTexture) void {
         rl.UnloadRenderTexture(value);
+    }
+
+    pub fn free(value: rl.RenderTexture) void {
+        _ = value;
     }
 };
 
@@ -3045,8 +3117,12 @@ pub const RenderTexture2D = struct {
         return value;
     }
 
-    pub fn free(value: rl.RenderTexture2D) void {
+    pub fn unload(value: rl.RenderTexture2D) void {
         rl.UnloadRenderTexture(value);
+    }
+
+    pub fn free(value: rl.RenderTexture2D) void {
+        _ = value;
     }
 };
 
@@ -3159,6 +3235,10 @@ pub const NPatchInfo = struct {
         return value;
     }
 
+    pub fn unload(value: rl.NPatchInfo) void {
+        free(value);
+    }
+
     pub fn free(value: rl.NPatchInfo) void {
         Rectangle.free(value.source);
     }
@@ -3258,6 +3338,10 @@ pub const GlyphInfo = struct {
         value.image = image.data;
 
         return value;
+    }
+
+    pub fn unload(value: rl.GlyphInfo) void {
+        free(value);
     }
 
     pub fn free(value: rl.GlyphInfo) void {
@@ -3386,8 +3470,19 @@ pub const Font = struct {
         return value;
     }
 
-    pub fn free(value: rl.Font) void {
+    pub fn unload(value: rl.Font) void {
         rl.UnloadFont(value);
+    }
+
+    pub fn free(value: rl.Font) void {
+        if (value.glyphs != null) {
+            for (0..@intCast(value.glyphCount)) |i| {
+                GlyphInfo.free(value.glyphs[i]);
+            }
+        }
+        rl.MemFree(value.glyphs);
+        Texture.free(value.texture);
+        rl.MemFree(value.recs);
     }
 };
 
@@ -3489,6 +3584,10 @@ pub const Camera3D = struct {
         value.projection = @intCast(try Int.get(env, term_projection_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.Camera3D) void {
+        _ = value;
     }
 
     pub fn free(value: rl.Camera3D) void {
@@ -3596,6 +3695,10 @@ pub const Camera = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Camera) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Camera) void {
         _ = value;
     }
@@ -3684,6 +3787,10 @@ pub const Camera2D = struct {
         value.zoom = @floatCast(try Double.get(env, term_zoom_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.Camera2D) void {
+        _ = value;
     }
 
     pub fn free(value: rl.Camera2D) void {
@@ -4027,30 +4134,46 @@ pub const Mesh = struct {
         return value;
     }
 
-    pub fn free(value: rl.Mesh) void {
-        rl.UnloadMesh(pre_free(value));
-    }
-
-    pub fn pre_free(value: rl.Mesh) rl.Mesh {
-        var v = value;
+    pub fn unload(value: rl.Mesh) void {
+        var should_unload: bool = true;
 
         // vbo_id = 0 is used on tests so we remove it before calling UnloadMesh
-        if (v.vboId != null) {
+        if (value.vboId != null) {
             var test_vbo_id: u8 = 0;
             for (0..Self.MAX_VERTEX_BUFFERS) |i| {
-                if (v.vboId[i] == 0) {
+                if (value.vboId[i] == 0) {
                     test_vbo_id += 1;
                 }
             }
 
             if (test_vbo_id == Self.MAX_VERTEX_BUFFERS) {
-                const vbo_id_lengths = [_]usize{@intCast(Self.MAX_VERTEX_BUFFERS)};
-                Array.free_c(UInt, c_uint, Self.allocator, v.vboId, &vbo_id_lengths, null);
-                v.vboId = null;
+                should_unload = false;
             }
         }
 
-        return v;
+        if (should_unload) {
+            rl.UnloadMesh(value);
+        } else {
+            free(value);
+        }
+    }
+
+    pub fn free(value: rl.Mesh) void {
+        rl.MemFree(value.vboId);
+
+        rl.MemFree(value.vertices);
+        rl.MemFree(value.texcoords);
+        rl.MemFree(value.normals);
+        rl.MemFree(value.colors);
+        rl.MemFree(value.tangents);
+        rl.MemFree(value.texcoords2);
+        rl.MemFree(value.indices);
+
+        rl.MemFree(value.animVertices);
+        rl.MemFree(value.animNormals);
+        rl.MemFree(value.boneWeights);
+        rl.MemFree(value.boneIds);
+        rl.MemFree(value.boneMatrices);
     }
 };
 
@@ -4115,8 +4238,13 @@ pub const Shader = struct {
         return value;
     }
 
-    pub fn free(value: rl.Shader) void {
+    pub fn unload(value: rl.Shader) void {
         rl.UnloadShader(value);
+    }
+
+    pub fn free(value: rl.Shader) void {
+        // NOTE: If shader loading failed, it should be 0
+        rl.MemFree(value.locs);
     }
 };
 
@@ -4192,8 +4320,12 @@ pub const MaterialMap = struct {
         return value;
     }
 
+    pub fn unload(value: rl.MaterialMap) void {
+        Texture2D.unload(value.texture);
+    }
+
     pub fn free(value: rl.MaterialMap) void {
-        rl.UnloadTexture(value.texture);
+        Texture2D.free(value.texture);
     }
 };
 
@@ -4278,8 +4410,22 @@ pub const Material = struct {
         return value;
     }
 
-    pub fn free(value: rl.Material) void {
+    pub fn unload(value: rl.Material) void {
         rl.UnloadMaterial(value);
+    }
+
+    pub fn free(value: rl.Material) void {
+        // Unload material shader
+        Shader.free(value.shader);
+
+        // Unload loaded texture maps
+        if (value.maps != null) {
+            for (0..@intCast(Self.MAX_MAPS)) |i| {
+                MaterialMap.free(value.maps[i]);
+            }
+        }
+
+        rl.MemFree(value.maps);
     }
 };
 
@@ -4357,6 +4503,10 @@ pub const Transform = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Transform) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.Transform) void {
         _ = value;
     }
@@ -4417,6 +4567,10 @@ pub const BoneInfo = struct {
         value.parent = @intCast(try Int.get(env, term_parent_value));
 
         return value;
+    }
+
+    pub fn unload(value: rl.BoneInfo) void {
+        _ = value;
     }
 
     pub fn free(value: rl.BoneInfo) void {
@@ -4610,18 +4764,62 @@ pub const Model = struct {
         return value;
     }
 
-    pub fn free(value: rl.Model) void {
-        rl.UnloadModel(pre_free(value));
-    }
-
-    pub fn pre_free(value: rl.Model) rl.Model {
-        var v = value;
-
-        for (0..@intCast(value.meshCount)) |i| {
-            v.meshes[i] = Mesh.pre_free(v.meshes[i]);
+    pub fn unload(value: rl.Model) void {
+        // Unload meshes
+        if (value.meshes != null) {
+            for (0..@intCast(value.meshCount)) |i| {
+                Mesh.unload(value.meshes[i]);
+            }
         }
 
-        return value;
+        // Unload materials maps
+        // NOTE: As the user could be sharing shaders and textures between models,
+        // we don't unload the material but just free its maps,
+        // the user is responsible for freeing models shaders and textures
+        if (value.materials != null) {
+            for (0..@intCast(value.materialCount)) |i| {
+                rl.MemFree(value.materials[i].maps);
+            }
+        }
+
+        // Unload arrays
+        rl.MemFree(value.meshes);
+        rl.MemFree(value.materials);
+        rl.MemFree(value.meshMaterial);
+
+        // Unload animation data
+        rl.MemFree(value.bones);
+        rl.MemFree(value.bindPose);
+
+        rl.TRACELOG(rl.LOG_INFO, "MODEL: Unloaded model (and meshes) from RAM and VRAM", .{});
+    }
+
+    pub fn free(value: rl.Model) void {
+        // Unload meshes
+        if (value.meshes != null) {
+            for (0..@intCast(value.meshCount)) |i| {
+                Mesh.free(value.meshes[i]);
+            }
+        }
+
+        // Unload materials maps
+        // NOTE: As the user could be sharing shaders and textures between models,
+        // we don't unload the material but just free its maps,
+        // the user is responsible for freeing models shaders and textures
+        if (value.materials != null) {
+            for (0..@intCast(value.materialCount)) |i| {
+                rl.MemFree(value.materials[i].maps);
+            }
+        }
+
+        // Unload arrays
+        rl.MemFree(value.meshes);
+        rl.MemFree(value.materials);
+        rl.MemFree(value.meshMaterial);
+
+        // Unload animation data
+        rl.MemFree(value.bones);
+        rl.MemFree(value.bindPose);
     }
 };
 
@@ -4737,6 +4935,10 @@ pub const ModelAnimation = struct {
         return value;
     }
 
+    pub fn unload(value: rl.ModelAnimation) void {
+        free(value);
+    }
+
     pub fn free(value: rl.ModelAnimation) void {
         rl.UnloadModelAnimation(value);
     }
@@ -4799,6 +5001,10 @@ pub const Ray = struct {
         value.direction = direction.data;
 
         return value;
+    }
+
+    pub fn unload(value: rl.Ray) void {
+        _ = value;
     }
 
     pub fn free(value: rl.Ray) void {
@@ -4891,6 +5097,10 @@ pub const RayCollision = struct {
         return value;
     }
 
+    pub fn unload(value: rl.RayCollision) void {
+        _ = value;
+    }
+
     pub fn free(value: rl.RayCollision) void {
         _ = value;
     }
@@ -4953,6 +5163,10 @@ pub const BoundingBox = struct {
         value.max = max.data;
 
         return value;
+    }
+
+    pub fn unload(value: rl.BoundingBox) void {
+        _ = value;
     }
 
     pub fn free(value: rl.BoundingBox) void {
@@ -5068,6 +5282,10 @@ pub const Wave = struct {
         return value;
     }
 
+    pub fn unload(value: rl.Wave) void {
+        free(value);
+    }
+
     pub fn free(value: rl.Wave) void {
         rl.UnloadWave(value);
     }
@@ -5110,6 +5328,10 @@ pub const AudioBuffer = struct {
         return null;
     }
 
+    pub fn unload(value: ?*rl.rAudioBuffer) void {
+        _ = value;
+    }
+
     pub fn free(value: ?*rl.rAudioBuffer) void {
         _ = value;
     }
@@ -5145,6 +5367,10 @@ pub const AudioProcessor = struct {
         }
 
         return null;
+    }
+
+    pub fn unload(value: ?*rl.rAudioProcessor) void {
+        _ = value;
     }
 
     pub fn free(value: ?*rl.rAudioProcessor) void {
@@ -5248,8 +5474,13 @@ pub const AudioStream = struct {
         return value;
     }
 
-    pub fn free(value: rl.AudioStream) void {
+    pub fn unload(value: rl.AudioStream) void {
         rl.UnloadAudioStream(value);
+    }
+
+    pub fn free(value: rl.AudioStream) void {
+        AudioBuffer.free(value.buffer);
+        AudioProcessor.free(value.processor);
     }
 };
 
@@ -5310,8 +5541,12 @@ pub const Sound = struct {
         return value;
     }
 
-    pub fn free(value: rl.Sound) void {
+    pub fn unload(value: rl.Sound) void {
         rl.UnloadSound(value);
+    }
+
+    pub fn free(value: rl.Sound) void {
+        AudioStream.free(value.stream);
     }
 };
 
@@ -5345,6 +5580,10 @@ pub const MusicContextData = struct {
         }
 
         return null;
+    }
+
+    pub fn unload(value: ?data_type) void {
+        _ = value;
     }
 
     pub fn free(value: ?data_type) void {
@@ -5449,8 +5688,13 @@ pub const Music = struct {
         return value;
     }
 
-    pub fn free(value: rl.Music) void {
+    pub fn unload(value: rl.Music) void {
         rl.UnloadMusicStream(value);
+    }
+
+    pub fn free(value: rl.Music) void {
+        AudioStream.free(value.stream);
+        MusicContextData.free(value.ctxData);
     }
 };
 
@@ -5604,6 +5848,10 @@ pub const VrDeviceInfo = struct {
         errdefer Array.free_copy(Double, f32, Self.allocator, &value.chromaAbCorrection, null);
 
         return value;
+    }
+
+    pub fn unload(value: rl.VrDeviceInfo) void {
+        _ = value;
     }
 
     pub fn free(value: rl.VrDeviceInfo) void {
@@ -5770,6 +6018,10 @@ pub const VrStereoConfig = struct {
         return value;
     }
 
+    pub fn unload(value: rl.VrStereoConfig) void {
+        free(value);
+    }
+
     pub fn free(value: rl.VrStereoConfig) void {
         rl.UnloadVrStereoConfig(value);
     }
@@ -5853,6 +6105,10 @@ pub const FilePathList = struct {
         return value;
     }
 
+    pub fn unload(value: rl.FilePathList) void {
+        free(value);
+    }
+
     pub fn free(value: rl.FilePathList) void {
         rl.UnloadDirectoryFiles(value);
     }
@@ -5927,6 +6183,10 @@ pub const AutomationEvent = struct {
         errdefer Array.free_copy(Int, c_int, Self.allocator, &value.params, null);
 
         return value;
+    }
+
+    pub fn unload(value: rl.AutomationEvent) void {
+        _ = value;
     }
 
     pub fn free(value: rl.AutomationEvent) void {
@@ -6010,6 +6270,10 @@ pub const AutomationEventList = struct {
         value.events = events.data;
 
         return value;
+    }
+
+    pub fn unload(value: rl.AutomationEventList) void {
+        free(value);
     }
 
     pub fn free(value: rl.AutomationEventList) void {
