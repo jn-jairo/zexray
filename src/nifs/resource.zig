@@ -328,7 +328,7 @@ fn nif_vector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Vector2.Resource.update(env, argv[0], value) catch {
+    core.Vector2.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -387,7 +387,7 @@ fn nif_ivector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.IVector2.Resource.update(env, argv[0], value) catch {
+    core.IVector2.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -446,7 +446,7 @@ fn nif_uivector2_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.UIVector2.Resource.update(env, argv[0], value) catch {
+    core.UIVector2.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -505,7 +505,7 @@ fn nif_vector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Vector3.Resource.update(env, argv[0], value) catch {
+    core.Vector3.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -564,7 +564,7 @@ fn nif_ivector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.IVector3.Resource.update(env, argv[0], value) catch {
+    core.IVector3.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -623,7 +623,7 @@ fn nif_uivector3_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.UIVector3.Resource.update(env, argv[0], value) catch {
+    core.UIVector3.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -682,7 +682,7 @@ fn nif_vector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Vector4.Resource.update(env, argv[0], value) catch {
+    core.Vector4.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -741,7 +741,7 @@ fn nif_ivector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.IVector4.Resource.update(env, argv[0], value) catch {
+    core.IVector4.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -800,7 +800,7 @@ fn nif_uivector4_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.UIVector4.Resource.update(env, argv[0], value) catch {
+    core.UIVector4.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -859,7 +859,7 @@ fn nif_quaternion_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Quaternion.Resource.update(env, argv[0], value) catch {
+    core.Quaternion.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -918,7 +918,7 @@ fn nif_matrix_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Matrix.Resource.update(env, argv[0], value) catch {
+    core.Matrix.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -977,7 +977,7 @@ fn nif_color_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Color.Resource.update(env, argv[0], value) catch {
+    core.Color.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1036,7 +1036,7 @@ fn nif_rectangle_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Rectangle.Resource.update(env, argv[0], value) catch {
+    core.Rectangle.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1095,7 +1095,7 @@ fn nif_image_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Image.Resource.update(env, argv[0], value) catch {
+    core.Image.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1154,7 +1154,7 @@ fn nif_texture_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Texture.Resource.update(env, argv[0], value) catch {
+    core.Texture.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1213,7 +1213,7 @@ fn nif_texture_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Texture2D.Resource.update(env, argv[0], value) catch {
+    core.Texture2D.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1272,7 +1272,7 @@ fn nif_texture_cubemap_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.TextureCubemap.Resource.update(env, argv[0], value) catch {
+    core.TextureCubemap.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1331,7 +1331,7 @@ fn nif_render_texture_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.RenderTexture.Resource.update(env, argv[0], value) catch {
+    core.RenderTexture.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1390,7 +1390,7 @@ fn nif_render_texture_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: 
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.RenderTexture2D.Resource.update(env, argv[0], value) catch {
+    core.RenderTexture2D.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1449,7 +1449,7 @@ fn nif_n_patch_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.NPatchInfo.Resource.update(env, argv[0], value) catch {
+    core.NPatchInfo.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1508,7 +1508,7 @@ fn nif_glyph_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.GlyphInfo.Resource.update(env, argv[0], value) catch {
+    core.GlyphInfo.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1567,7 +1567,7 @@ fn nif_font_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Font.Resource.update(env, argv[0], value) catch {
+    core.Font.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1626,7 +1626,7 @@ fn nif_camera_3d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Camera3D.Resource.update(env, argv[0], value) catch {
+    core.Camera3D.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1685,7 +1685,7 @@ fn nif_camera_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Camera.Resource.update(env, argv[0], value) catch {
+    core.Camera.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1744,7 +1744,7 @@ fn nif_camera_2d_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Camera2D.Resource.update(env, argv[0], value) catch {
+    core.Camera2D.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1803,7 +1803,7 @@ fn nif_mesh_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Mesh.Resource.update(env, argv[0], value) catch {
+    core.Mesh.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1862,7 +1862,7 @@ fn nif_shader_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Shader.Resource.update(env, argv[0], value) catch {
+    core.Shader.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1921,7 +1921,7 @@ fn nif_material_map_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.MaterialMap.Resource.update(env, argv[0], value) catch {
+    core.MaterialMap.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -1980,7 +1980,7 @@ fn nif_material_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Material.Resource.update(env, argv[0], value) catch {
+    core.Material.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2039,7 +2039,7 @@ fn nif_transform_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Transform.Resource.update(env, argv[0], value) catch {
+    core.Transform.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2098,7 +2098,7 @@ fn nif_bone_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.BoneInfo.Resource.update(env, argv[0], value) catch {
+    core.BoneInfo.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2157,7 +2157,7 @@ fn nif_model_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Model.Resource.update(env, argv[0], value) catch {
+    core.Model.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2216,7 +2216,7 @@ fn nif_model_animation_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.ModelAnimation.Resource.update(env, argv[0], value) catch {
+    core.ModelAnimation.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2275,7 +2275,7 @@ fn nif_ray_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Ray.Resource.update(env, argv[0], value) catch {
+    core.Ray.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2334,7 +2334,7 @@ fn nif_ray_collision_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.RayCollision.Resource.update(env, argv[0], value) catch {
+    core.RayCollision.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2393,7 +2393,7 @@ fn nif_bounding_box_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.BoundingBox.Resource.update(env, argv[0], value) catch {
+    core.BoundingBox.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2452,7 +2452,7 @@ fn nif_wave_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Wave.Resource.update(env, argv[0], value) catch {
+    core.Wave.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2511,7 +2511,7 @@ fn nif_audio_stream_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.AudioStream.Resource.update(env, argv[0], value) catch {
+    core.AudioStream.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2570,7 +2570,7 @@ fn nif_sound_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Sound.Resource.update(env, argv[0], value) catch {
+    core.Sound.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2629,7 +2629,7 @@ fn nif_music_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.Music.Resource.update(env, argv[0], value) catch {
+    core.Music.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2688,7 +2688,7 @@ fn nif_vr_device_info_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.VrDeviceInfo.Resource.update(env, argv[0], value) catch {
+    core.VrDeviceInfo.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2747,7 +2747,7 @@ fn nif_vr_stereo_config_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.VrStereoConfig.Resource.update(env, argv[0], value) catch {
+    core.VrStereoConfig.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2806,7 +2806,7 @@ fn nif_file_path_list_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.FilePathList.Resource.update(env, argv[0], value) catch {
+    core.FilePathList.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2865,7 +2865,7 @@ fn nif_automation_event_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.AutomationEvent.Resource.update(env, argv[0], value) catch {
+    core.AutomationEvent.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
@@ -2924,7 +2924,7 @@ fn nif_automation_event_list_update_resource(env: ?*e.ErlNifEnv, argc: c_int, ar
     errdefer arg_value.free();
     const value = arg_value.data;
 
-    core.AutomationEventList.Resource.update(env, argv[0], value) catch {
+    core.AutomationEventList.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 

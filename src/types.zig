@@ -1068,6 +1068,13 @@ pub fn ResourceBase(comptime T: type) type {
             resource.*.* = value;
         }
 
+        pub fn replace(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type) !void {
+            const resource = try get(env, term);
+            defer rl.TRACELOGD("RESOURCE: Replaced %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            T.free(resource.*.*);
+            resource.*.* = value;
+        }
+
         pub fn destroy(resource: **T.data_type) void {
             defer rl.TRACELOGD("RESOURCE: Destroyed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
             const allocator = resources.ResourceType.allocator;
