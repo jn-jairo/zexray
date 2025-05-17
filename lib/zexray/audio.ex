@@ -406,8 +406,9 @@ defmodule Zexray.Audio do
   @doc group: :management
   def update(audio, data \\ nil, return \\ :value)
 
-  def update(audio, return, data) when is_nif_return(return) do
-    update(audio, data, return)
+  def update(audio, return, _)
+      when is_music(audio) and is_nif_return(return) do
+    update(audio, nil, return)
   end
 
   @spec update(
