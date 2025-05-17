@@ -168,3 +168,8 @@ pub fn GenImageTextEx(width: c_int, height: c_int, text: [*c]const u8, textLengt
 
     return image;
 }
+
+/// Get sound time length (in seconds)
+pub fn GetSoundTimeLength(sound: raylib.Sound) f32 {
+    return @as(f32, @floatFromInt(sound.frameCount)) / @as(f32, @floatFromInt(sound.stream.sampleRate));
+}

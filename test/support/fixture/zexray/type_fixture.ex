@@ -1442,7 +1442,7 @@ defmodule Zexray.TypeFixture do
           sample_size: sample_size,
           channels: channels,
           data:
-            Enum.map(1..Zexray.Audio.wave_data_size(frame_count, channels, sample_size), fn n ->
+            Enum.map(1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size), fn n ->
               rem(n, 0x100)
             end)
             |> :binary.list_to_bin()
