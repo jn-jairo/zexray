@@ -19,7 +19,7 @@ defmodule Zexray.Window do
           height :: integer,
           title :: binary,
           func :: (-> any)
-        ) :: :ok
+        ) :: any
   def with_window(
         width,
         height,
@@ -62,9 +62,7 @@ defmodule Zexray.Window do
         title
       )
 
-    if ret == :ok do
-      Zexray.Gamepad.set_default_mappings()
-    end
+    Zexray.Gamepad.set_default_mappings()
 
     ret
   end
