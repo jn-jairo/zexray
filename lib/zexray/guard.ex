@@ -33,6 +33,7 @@ defmodule Zexray.Guard do
     RenderTexture2D,
     Shader,
     Sound,
+    SoundAlias,
     Texture,
     Texture2D,
     TextureCubemap,
@@ -293,6 +294,9 @@ defmodule Zexray.Guard do
   defguard is_sound(value) when is_struct(value, Sound) or is_struct(value, Sound.Resource)
 
   @doc group: :type
+  defguard is_sound_alias(value) when is_struct(value, SoundAlias) or is_struct(value, SoundAlias.Resource)
+
+  @doc group: :type
   defguard is_texture(value) when is_struct(value, Texture) or is_struct(value, Texture.Resource)
 
   @doc group: :type
@@ -525,7 +529,15 @@ defmodule Zexray.Guard do
   defguard is_like_sound(value)
            when is_sound(value) or
                   is_structable(value) or
-                  (is_tuple(value) and tuple_size(value) == 2)
+                  (is_tuple(value) and tuple_size(value) == 2) or
+                  is_sound_alias(value)
+
+  @doc group: :type
+  defguard is_like_sound_alias(value)
+           when is_sound_alias(value) or
+                  is_structable(value) or
+                  (is_tuple(value) and tuple_size(value) == 2) or
+                  is_sound(value)
 
   @doc group: :type
   defguard is_like_texture(value)

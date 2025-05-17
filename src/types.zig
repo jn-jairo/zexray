@@ -5557,6 +5557,72 @@ pub const Sound = struct {
     }
 };
 
+//////////////////
+//  SoundAlias  //
+//////////////////
+
+pub const SoundAlias = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.Sound;
+    pub const resource_name = "sound_alias";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.Sound) e.ErlNifTerm {
+        var term = e.enif_make_new_map(env);
+
+        // stream
+
+        const term_stream_key = Atom.make(env, "stream");
+        const term_stream_value = AudioStream.make(env, value.stream);
+        assert(e.enif_make_map_put(env, term, term_stream_key, term_stream_value, &term) != 0);
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+        assert(e.enif_make_map_put(env, term, term_frame_count_key, term_frame_count_value, &term) != 0);
+
+        return term;
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.Sound {
+        if (e.enif_is_ref(env, term) != 0) {
+            return (try Self.Resource.get(env, term)).*.*;
+        }
+
+        var value = rl.Sound{};
+
+        // stream
+
+        const term_stream_key = Atom.make(env, "stream");
+        var term_stream_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_stream_key, &term_stream_value) == 0) return error.ArgumentError;
+        const stream = try Argument(AudioStream).get(env, term_stream_value);
+        errdefer stream.free();
+        value.stream = stream.data;
+
+        // frame_count
+
+        const term_frame_count_key = Atom.make(env, "frame_count");
+        var term_frame_count_value: e.ErlNifTerm = undefined;
+        if (e.enif_get_map_value(env, term, term_frame_count_key, &term_frame_count_value) == 0) return error.ArgumentError;
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        return value;
+    }
+
+    pub fn unload(value: rl.Sound) void {
+        rl.UnloadSoundAlias(value);
+    }
+
+    pub fn free(value: rl.Sound) void {
+        AudioStream.free(value.stream);
+    }
+};
+
 ////////////////////////
 //  MusicContextData  //
 ////////////////////////

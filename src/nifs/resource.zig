@@ -239,6 +239,12 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "sound_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "sound_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_sound_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
+    // SoundAlias
+    .{ .name = "sound_alias_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_alias_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_alias_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_alias_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_alias_free_resource", .arity = 1, .fptr = core.nif_wrapper(nif_sound_alias_free_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "sound_alias_update_resource", .arity = 2, .fptr = core.nif_wrapper(nif_sound_alias_update_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
     // Music
     .{ .name = "music_to_resource", .arity = 1, .fptr = core.nif_wrapper(nif_music_to_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "music_from_resource", .arity = 1, .fptr = core.nif_wrapper(nif_music_from_resource), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -2571,6 +2577,65 @@ fn nif_sound_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     const value = arg_value.data;
 
     core.Sound.Resource.replace(env, argv[0], value) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.Atom.make(env, "ok");
+}
+
+//////////////////
+//  SoundAlias  //
+//////////////////
+
+fn nif_sound_alias_to_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 1);
+
+    const arg_value = core.Argument(core.SoundAlias).get(env, argv[0]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    const resource = core.SoundAlias.Resource.create(value) catch {
+        return error.invalid_argument_value;
+    };
+    defer core.SoundAlias.Resource.release(resource);
+
+    return core.SoundAlias.Resource.make(env, resource);
+}
+
+fn nif_sound_alias_from_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.SoundAlias.Resource.get(env, argv[0]) catch {
+        return error.invalid_argument_resource;
+    };
+
+    return core.SoundAlias.make(env, resource.*.*);
+}
+
+fn nif_sound_alias_free_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 1);
+
+    const resource = core.SoundAlias.Resource.get(env, argv[0]) catch {
+        return error.invalid_argument_resource;
+    };
+
+    core.SoundAlias.Resource.free(resource);
+
+    return core.Atom.make(env, "ok");
+}
+
+fn nif_sound_alias_update_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    const arg_value = core.Argument(core.SoundAlias).get(env, argv[1]) catch {
+        return error.invalid_argument_value;
+    };
+    errdefer arg_value.free();
+    const value = arg_value.data;
+
+    core.SoundAlias.Resource.replace(env, argv[0], value) catch {
         return error.invalid_argument_resource;
     };
 
