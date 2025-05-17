@@ -13,7 +13,7 @@ defmodule Zexray.TraceLog do
           log_level :: Zexray.Enum.TraceLogLevel.t_all(),
           text :: binary
         ) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def trace_log(
           log_level,
           text
@@ -37,7 +37,7 @@ defmodule Zexray.TraceLog do
   Show `:trace` log message
   """
   @spec trace(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def trace(text)
         when is_binary(text) do
       trace_log(:trace, text)
@@ -52,8 +52,8 @@ defmodule Zexray.TraceLog do
   Show `:debug` log message
   """
   @spec debug(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) and
-       Application.compile_env(:zexray, :trace_log_debug) do
+  if Application.compile_env(:zexray, :trace_log, true) and
+       Application.compile_env(:zexray, :trace_log_debug, false) do
     def debug(text)
         when is_binary(text) do
       trace_log(:debug, text)
@@ -68,7 +68,7 @@ defmodule Zexray.TraceLog do
   Show `:info` log message
   """
   @spec info(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def info(text)
         when is_binary(text) do
       trace_log(:info, text)
@@ -83,7 +83,7 @@ defmodule Zexray.TraceLog do
   Show `:warning` log message
   """
   @spec warning(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def warning(text)
         when is_binary(text) do
       trace_log(:warning, text)
@@ -98,7 +98,7 @@ defmodule Zexray.TraceLog do
   Show `:error` log message
   """
   @spec error(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def error(text)
         when is_binary(text) do
       trace_log(:error, text)
@@ -113,7 +113,7 @@ defmodule Zexray.TraceLog do
   Show `:fatal` log message
   """
   @spec fatal(text :: binary) :: :ok
-  if Application.compile_env(:zexray, :trace_log) do
+  if Application.compile_env(:zexray, :trace_log, true) do
     def fatal(text)
         when is_binary(text) do
       trace_log(:fatal, text)
