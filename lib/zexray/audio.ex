@@ -92,7 +92,8 @@ defmodule Zexray.Audio do
 
   @spec play(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def play(sound, return) when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def play(sound, return)
+      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
     play_sound(sound, return)
   end
 
@@ -116,7 +117,8 @@ defmodule Zexray.Audio do
 
   @spec stop(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def stop(sound, return) when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def stop(sound, return)
+      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
     stop_sound(sound, return)
   end
 
@@ -140,7 +142,8 @@ defmodule Zexray.Audio do
 
   @spec pause(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def pause(sound, return) when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def pause(sound, return)
+      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
     pause_sound(sound, return)
   end
 
@@ -164,7 +167,8 @@ defmodule Zexray.Audio do
 
   @spec resume(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def resume(sound, return) when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def resume(sound, return)
+      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
     resume_sound(sound, return)
   end
 
@@ -187,7 +191,7 @@ defmodule Zexray.Audio do
   def playing?(audio)
 
   @spec playing?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def playing?(sound) when (is_sound(sound) or is_sound_alias(sound)) do
+  def playing?(sound) when is_sound(sound) or is_sound_alias(sound) do
     sound_playing?(sound)
   end
 
@@ -208,7 +212,7 @@ defmodule Zexray.Audio do
   def valid?(audio)
 
   @spec valid?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def valid?(sound) when (is_sound(sound) or is_sound_alias(sound)) do
+  def valid?(sound) when is_sound(sound) or is_sound_alias(sound) do
     sound_valid?(sound)
   end
 
@@ -229,7 +233,7 @@ defmodule Zexray.Audio do
   def processed?(audio)
 
   @spec processed?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def processed?(sound) when (is_sound(sound) or is_sound_alias(sound)) do
+  def processed?(sound) when is_sound(sound) or is_sound_alias(sound) do
     sound_processed?(sound)
   end
 
@@ -255,7 +259,8 @@ defmodule Zexray.Audio do
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   def set_volume(sound, volume, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_float(volume) and is_nif_return(return) do
+      when (is_sound(sound) or is_sound_alias(sound)) and is_float(volume) and
+             is_nif_return(return) do
     set_sound_volume(sound, volume, return)
   end
 
@@ -291,7 +296,8 @@ defmodule Zexray.Audio do
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   def set_pitch(sound, pitch, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_float(pitch) and is_nif_return(return) do
+      when (is_sound(sound) or is_sound_alias(sound)) and is_float(pitch) and
+             is_nif_return(return) do
     set_sound_pitch(sound, pitch, return)
   end
 
@@ -374,7 +380,7 @@ defmodule Zexray.Audio do
   def get_time_length(audio)
 
   @spec get_time_length(sound :: Zexray.Type.Sound.t_all()) :: float
-  def get_time_length(sound) when (is_sound(sound) or is_sound_alias(sound)) do
+  def get_time_length(sound) when is_sound(sound) or is_sound_alias(sound) do
     get_sound_time_length(sound)
   end
 

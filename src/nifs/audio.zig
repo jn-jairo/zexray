@@ -491,7 +491,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateSound(sound.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound.stream.channels)));
         },
@@ -501,7 +501,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateSound(sound.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound.stream.channels)));
         },
@@ -511,7 +511,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateSound(sound.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound.stream.channels)));
         },
@@ -521,7 +521,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateSound(sound.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound.stream.channels * sound.stream.sampleSize)));
         },
@@ -1651,7 +1651,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateAudioStream(stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, stream.channels)));
         },
@@ -1661,7 +1661,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateAudioStream(stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, stream.channels)));
         },
@@ -1671,7 +1671,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateAudioStream(stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, stream.channels)));
         },
@@ -1681,7 +1681,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
             };
             defer arg_data.free();
             const data = arg_data.data;
-            const data_size : c_uint = @intCast(arg_data.length);
+            const data_size: c_uint = @intCast(arg_data.length);
 
             rl.UpdateAudioStream(stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, stream.channels * stream.sampleSize)));
         },

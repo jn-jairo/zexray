@@ -207,49 +207,61 @@ defmodule Zexray.Guard do
   ##########
 
   @doc group: :type
-  defguard is_audio_stream(value) when is_struct(value, AudioStream) or is_struct(value, AudioStream.Resource)
+  defguard is_audio_stream(value)
+           when is_struct(value, AudioStream) or is_struct(value, AudioStream.Resource)
 
   @doc group: :type
-  defguard is_automation_event(value) when is_struct(value, AutomationEvent) or is_struct(value, AutomationEvent.Resource)
+  defguard is_automation_event(value)
+           when is_struct(value, AutomationEvent) or is_struct(value, AutomationEvent.Resource)
 
   @doc group: :type
-  defguard is_automation_event_list(value) when is_struct(value, AutomationEventList) or is_struct(value, AutomationEventList.Resource)
+  defguard is_automation_event_list(value)
+           when is_struct(value, AutomationEventList) or
+                  is_struct(value, AutomationEventList.Resource)
 
   @doc group: :type
-  defguard is_bone_info(value) when is_struct(value, BoneInfo) or is_struct(value, BoneInfo.Resource)
+  defguard is_bone_info(value)
+           when is_struct(value, BoneInfo) or is_struct(value, BoneInfo.Resource)
 
   @doc group: :type
-  defguard is_bounding_box(value) when is_struct(value, BoundingBox) or is_struct(value, BoundingBox.Resource)
+  defguard is_bounding_box(value)
+           when is_struct(value, BoundingBox) or is_struct(value, BoundingBox.Resource)
 
   @doc group: :type
   defguard is_camera(value) when is_struct(value, Camera) or is_struct(value, Camera.Resource)
 
   @doc group: :type
-  defguard is_camera_2d(value) when is_struct(value, Camera2D) or is_struct(value, Camera2D.Resource)
+  defguard is_camera_2d(value)
+           when is_struct(value, Camera2D) or is_struct(value, Camera2D.Resource)
 
   @doc group: :type
-  defguard is_camera_3d(value) when is_struct(value, Camera3D) or is_struct(value, Camera3D.Resource)
+  defguard is_camera_3d(value)
+           when is_struct(value, Camera3D) or is_struct(value, Camera3D.Resource)
 
   @doc group: :type
   defguard is_color(value) when is_struct(value, Color) or is_struct(value, Color.Resource)
 
   @doc group: :type
-  defguard is_file_path_list(value) when is_struct(value, FilePathList) or is_struct(value, FilePathList.Resource)
+  defguard is_file_path_list(value)
+           when is_struct(value, FilePathList) or is_struct(value, FilePathList.Resource)
 
   @doc group: :type
   defguard is_font(value) when is_struct(value, Font) or is_struct(value, Font.Resource)
 
   @doc group: :type
-  defguard is_glyph_info(value) when is_struct(value, GlyphInfo) or is_struct(value, GlyphInfo.Resource)
+  defguard is_glyph_info(value)
+           when is_struct(value, GlyphInfo) or is_struct(value, GlyphInfo.Resource)
 
   @doc group: :type
   defguard is_image(value) when is_struct(value, Image) or is_struct(value, Image.Resource)
 
   @doc group: :type
-  defguard is_material(value) when is_struct(value, Material) or is_struct(value, Material.Resource)
+  defguard is_material(value)
+           when is_struct(value, Material) or is_struct(value, Material.Resource)
 
   @doc group: :type
-  defguard is_material_map(value) when is_struct(value, MaterialMap) or is_struct(value, MaterialMap.Resource)
+  defguard is_material_map(value)
+           when is_struct(value, MaterialMap) or is_struct(value, MaterialMap.Resource)
 
   @doc group: :type
   defguard is_matrix(value) when is_struct(value, Matrix) or is_struct(value, Matrix.Resource)
@@ -261,31 +273,38 @@ defmodule Zexray.Guard do
   defguard is_model(value) when is_struct(value, Model) or is_struct(value, Model.Resource)
 
   @doc group: :type
-  defguard is_model_animation(value) when is_struct(value, ModelAnimation) or is_struct(value, ModelAnimation.Resource)
+  defguard is_model_animation(value)
+           when is_struct(value, ModelAnimation) or is_struct(value, ModelAnimation.Resource)
 
   @doc group: :type
   defguard is_music(value) when is_struct(value, Music) or is_struct(value, Music.Resource)
 
   @doc group: :type
-  defguard is_n_patch_info(value) when is_struct(value, NPatchInfo) or is_struct(value, NPatchInfo.Resource)
+  defguard is_n_patch_info(value)
+           when is_struct(value, NPatchInfo) or is_struct(value, NPatchInfo.Resource)
 
   @doc group: :type
-  defguard is_quaternion(value) when is_struct(value, Quaternion) or is_struct(value, Quaternion.Resource)
+  defguard is_quaternion(value)
+           when is_struct(value, Quaternion) or is_struct(value, Quaternion.Resource)
 
   @doc group: :type
   defguard is_ray(value) when is_struct(value, Ray) or is_struct(value, Ray.Resource)
 
   @doc group: :type
-  defguard is_ray_collision(value) when is_struct(value, RayCollision) or is_struct(value, RayCollision.Resource)
+  defguard is_ray_collision(value)
+           when is_struct(value, RayCollision) or is_struct(value, RayCollision.Resource)
 
   @doc group: :type
-  defguard is_rectangle(value) when is_struct(value, Rectangle) or is_struct(value, Rectangle.Resource)
+  defguard is_rectangle(value)
+           when is_struct(value, Rectangle) or is_struct(value, Rectangle.Resource)
 
   @doc group: :type
-  defguard is_render_texture(value) when is_struct(value, RenderTexture) or is_struct(value, RenderTexture.Resource)
+  defguard is_render_texture(value)
+           when is_struct(value, RenderTexture) or is_struct(value, RenderTexture.Resource)
 
   @doc group: :type
-  defguard is_render_texture_2d(value) when is_struct(value, RenderTexture2D) or is_struct(value, RenderTexture2D.Resource)
+  defguard is_render_texture_2d(value)
+           when is_struct(value, RenderTexture2D) or is_struct(value, RenderTexture2D.Resource)
 
   @doc group: :type
   defguard is_shader(value) when is_struct(value, Shader) or is_struct(value, Shader.Resource)
@@ -294,52 +313,64 @@ defmodule Zexray.Guard do
   defguard is_sound(value) when is_struct(value, Sound) or is_struct(value, Sound.Resource)
 
   @doc group: :type
-  defguard is_sound_alias(value) when is_struct(value, SoundAlias) or is_struct(value, SoundAlias.Resource)
+  defguard is_sound_alias(value)
+           when is_struct(value, SoundAlias) or is_struct(value, SoundAlias.Resource)
 
   @doc group: :type
   defguard is_texture(value) when is_struct(value, Texture) or is_struct(value, Texture.Resource)
 
   @doc group: :type
-  defguard is_texture_2d(value) when is_struct(value, Texture2D) or is_struct(value, Texture2D.Resource)
+  defguard is_texture_2d(value)
+           when is_struct(value, Texture2D) or is_struct(value, Texture2D.Resource)
 
   @doc group: :type
-  defguard is_texture_cubemap(value) when is_struct(value, TextureCubemap) or is_struct(value, TextureCubemap.Resource)
+  defguard is_texture_cubemap(value)
+           when is_struct(value, TextureCubemap) or is_struct(value, TextureCubemap.Resource)
 
   @doc group: :type
-  defguard is_transform(value) when is_struct(value, Transform) or is_struct(value, Transform.Resource)
+  defguard is_transform(value)
+           when is_struct(value, Transform) or is_struct(value, Transform.Resource)
 
   @doc group: :type
   defguard is_vector2(value) when is_struct(value, Vector2) or is_struct(value, Vector2.Resource)
 
   @doc group: :type
-  defguard is_ivector2(value) when is_struct(value, IVector2) or is_struct(value, IVector2.Resource)
+  defguard is_ivector2(value)
+           when is_struct(value, IVector2) or is_struct(value, IVector2.Resource)
 
   @doc group: :type
-  defguard is_uivector2(value) when is_struct(value, UIVector2) or is_struct(value, UIVector2.Resource)
+  defguard is_uivector2(value)
+           when is_struct(value, UIVector2) or is_struct(value, UIVector2.Resource)
 
   @doc group: :type
   defguard is_vector3(value) when is_struct(value, Vector3) or is_struct(value, Vector3.Resource)
 
   @doc group: :type
-  defguard is_ivector3(value) when is_struct(value, IVector3) or is_struct(value, IVector3.Resource)
+  defguard is_ivector3(value)
+           when is_struct(value, IVector3) or is_struct(value, IVector3.Resource)
 
   @doc group: :type
-  defguard is_uivector3(value) when is_struct(value, UIVector3) or is_struct(value, UIVector3.Resource)
+  defguard is_uivector3(value)
+           when is_struct(value, UIVector3) or is_struct(value, UIVector3.Resource)
 
   @doc group: :type
   defguard is_vector4(value) when is_struct(value, Vector4) or is_struct(value, Vector4.Resource)
 
   @doc group: :type
-  defguard is_ivector4(value) when is_struct(value, IVector4) or is_struct(value, IVector4.Resource)
+  defguard is_ivector4(value)
+           when is_struct(value, IVector4) or is_struct(value, IVector4.Resource)
 
   @doc group: :type
-  defguard is_uivector4(value) when is_struct(value, UIVector4) or is_struct(value, UIVector4.Resource)
+  defguard is_uivector4(value)
+           when is_struct(value, UIVector4) or is_struct(value, UIVector4.Resource)
 
   @doc group: :type
-  defguard is_vr_device_info(value) when is_struct(value, VrDeviceInfo) or is_struct(value, VrDeviceInfo.Resource)
+  defguard is_vr_device_info(value)
+           when is_struct(value, VrDeviceInfo) or is_struct(value, VrDeviceInfo.Resource)
 
   @doc group: :type
-  defguard is_vr_stereo_config(value) when is_struct(value, VrStereoConfig) or is_struct(value, VrStereoConfig.Resource)
+  defguard is_vr_stereo_config(value)
+           when is_struct(value, VrStereoConfig) or is_struct(value, VrStereoConfig.Resource)
 
   @doc group: :type
   defguard is_wave(value) when is_struct(value, Wave) or is_struct(value, Wave.Resource)
