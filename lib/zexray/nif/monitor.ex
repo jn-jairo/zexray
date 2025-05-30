@@ -70,7 +70,7 @@ defmodule Zexray.NIF.Monitor do
       @spec get_monitor_position(
               monitor :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_monitor_position(
             _monitor,
             _return \\ :value

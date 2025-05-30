@@ -3,7 +3,6 @@ defmodule Zexray.Image do
   Image
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   @doc """
@@ -12,26 +11,17 @@ defmodule Zexray.Image do
   @spec data_size(
           width :: integer,
           height :: integer,
-          format :: Zexray.Enum.PixelFormat.t_all(),
+          format :: Zexray.Enum.PixelFormat.t(),
           mipmaps :: integer
         ) :: non_neg_integer
-  def data_size(
-        width,
-        height,
-        format,
-        mipmaps \\ 1
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_like_pixel_format(format) and
-             is_integer(mipmaps) do
-    NIF.image_get_data_size(
-      width,
-      height,
-      Zexray.Enum.PixelFormat.value(format),
-      mipmaps
-    )
-  end
+  defdelegate data_size(
+                width,
+                height,
+                format,
+                mipmaps \\ 1
+              ),
+              to: NIF,
+              as: :image_get_data_size
 
   ###################
   #  Image loading  #
@@ -45,18 +35,12 @@ defmodule Zexray.Image do
           file_name :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def load(
-        file_name,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_nif_return(return) do
-    NIF.load_image(
-      file_name,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate load(
+                file_name,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image
 
   @doc """
   Load image from RAW file data
@@ -66,34 +50,20 @@ defmodule Zexray.Image do
           file_name :: binary,
           width :: integer,
           height :: integer,
-          format :: Zexray.Enum.PixelFormat.t_all(),
+          format :: Zexray.Enum.PixelFormat.t(),
           header_size :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def load_raw(
-        file_name,
-        width,
-        height,
-        format,
-        header_size,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_pixel_format(format) and
-             is_integer(header_size) and
-             is_nif_return(return) do
-    NIF.load_image_raw(
-      file_name,
-      width,
-      height,
-      Zexray.Enum.PixelFormat.value(format),
-      header_size,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate load_raw(
+                file_name,
+                width,
+                height,
+                format,
+                header_size,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_raw
 
   @doc """
   Load image sequence from file (frames appended to image.data)
@@ -103,20 +73,12 @@ defmodule Zexray.Image do
           file_name :: binary,
           return :: :value | :resource
         ) :: {image :: Zexray.Type.Image.t_nif(), frames :: integer}
-  def load_anim(
-        file_name,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_nif_return(return) do
-    {image, frames} =
-      NIF.load_image_anim(
-        file_name,
-        return
-      )
-
-    {image |> Zexray.Type.Image.from_nif(), frames}
-  end
+  defdelegate load_anim(
+                file_name,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_anim
 
   @doc """
   Load image sequence from memory buffer
@@ -127,23 +89,13 @@ defmodule Zexray.Image do
           file_data :: binary,
           return :: :value | :resource
         ) :: {image :: Zexray.Type.Image.t_nif(), frames :: integer}
-  def load_anim_from_memory(
-        file_type,
-        file_data,
-        return \\ :value
-      )
-      when is_binary(file_type) and
-             is_binary(file_data) and
-             is_nif_return(return) do
-    {image, frames} =
-      NIF.load_image_anim_from_memory(
-        file_type,
-        file_data,
-        return
-      )
-
-    {image |> Zexray.Type.Image.from_nif(), frames}
-  end
+  defdelegate load_anim_from_memory(
+                file_type,
+                file_data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_anim_from_memory
 
   @doc """
   Load image from memory buffer, fileType refers to extension: i.e. '.png'
@@ -154,21 +106,13 @@ defmodule Zexray.Image do
           file_data :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def load_from_memory(
-        file_type,
-        file_data,
-        return \\ :value
-      )
-      when is_binary(file_type) and
-             is_binary(file_data) and
-             is_nif_return(return) do
-    NIF.load_image_from_memory(
-      file_type,
-      file_data,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate load_from_memory(
+                file_type,
+                file_data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_from_memory
 
   @doc """
   Load image from GPU texture data
@@ -178,39 +122,26 @@ defmodule Zexray.Image do
           texture :: Zexray.Type.Texture2D.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def load_from_texture(
-        texture,
-        return \\ :value
-      )
-      when is_like_texture_2d(texture) and
-             is_nif_return(return) do
-    NIF.load_image_from_texture(
-      texture |> Zexray.Type.Texture2D.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate load_from_texture(
+                texture,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_from_texture
 
   @doc """
   Load image from screen buffer and (screenshot)
   """
   @doc group: :loading
   @spec load_from_screen(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  def load_from_screen(return \\ :value)
-      when is_nif_return(return) do
-    NIF.load_image_from_screen(return)
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate load_from_screen(return \\ :value), to: NIF, as: :load_image_from_screen
 
   @doc """
   Check if an image is valid (data and parameters)
   """
   @doc group: :loading
   @spec valid?(image :: Zexray.Type.Image.t_all()) :: boolean
-  def valid?(image)
-      when is_like_image(image) do
-    NIF.is_image_valid(image |> Zexray.Type.Image.to_nif())
-  end
+  defdelegate valid?(image), to: NIF, as: :is_image_valid
 
   @doc """
   Export image data to file, returns true on success
@@ -220,17 +151,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           file_name :: binary
         ) :: boolean
-  def export(
-        image,
-        file_name
-      )
-      when is_like_image(image) and
-             is_binary(file_name) do
-    NIF.export_image(
-      image |> Zexray.Type.Image.to_nif(),
-      file_name
-    )
-  end
+  defdelegate export(
+                image,
+                file_name
+              ),
+              to: NIF,
+              as: :export_image
 
   @doc """
   Export image to memory buffer
@@ -240,17 +166,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           file_type :: binary
         ) :: binary
-  def export_to_memory(
-        image,
-        file_type
-      )
-      when is_like_image(image) and
-             is_binary(file_type) do
-    NIF.export_image_to_memory(
-      image |> Zexray.Type.Image.to_nif(),
-      file_type
-    )
-  end
+  defdelegate export_to_memory(
+                image,
+                file_type
+              ),
+              to: NIF,
+              as: :export_image_to_memory
 
   ######################
   #  Image generation  #
@@ -266,24 +187,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_color(
-        width,
-        height,
-        color,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.gen_image_color(
-      width,
-      height,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_color(
+                width,
+                height,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_color
 
   @doc """
   Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
@@ -297,30 +208,16 @@ defmodule Zexray.Image do
           color_end :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_gradient_linear(
-        width,
-        height,
-        direction,
-        color_start,
-        color_end,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_integer(direction) and
-             is_like_color(color_start) and
-             is_like_color(color_end) and
-             is_nif_return(return) do
-    NIF.gen_image_gradient_linear(
-      width,
-      height,
-      direction,
-      color_start |> Zexray.Type.Color.to_nif(),
-      color_end |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_gradient_linear(
+                width,
+                height,
+                direction,
+                color_start,
+                color_end,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_gradient_linear
 
   @doc """
   Generate image: radial gradient
@@ -334,30 +231,16 @@ defmodule Zexray.Image do
           color_outer :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_gradient_radial(
-        width,
-        height,
-        density,
-        color_inner,
-        color_outer,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_float(density) and
-             is_like_color(color_inner) and
-             is_like_color(color_outer) and
-             is_nif_return(return) do
-    NIF.gen_image_gradient_radial(
-      width,
-      height,
-      density,
-      color_inner |> Zexray.Type.Color.to_nif(),
-      color_outer |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_gradient_radial(
+                width,
+                height,
+                density,
+                color_inner,
+                color_outer,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_gradient_radial
 
   @doc """
   Generate image: square gradient
@@ -371,30 +254,16 @@ defmodule Zexray.Image do
           color_outer :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_gradient_square(
-        width,
-        height,
-        density,
-        color_inner,
-        color_outer,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_float(density) and
-             is_like_color(color_inner) and
-             is_like_color(color_outer) and
-             is_nif_return(return) do
-    NIF.gen_image_gradient_square(
-      width,
-      height,
-      density,
-      color_inner |> Zexray.Type.Color.to_nif(),
-      color_outer |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_gradient_square(
+                width,
+                height,
+                density,
+                color_inner,
+                color_outer,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_gradient_square
 
   @doc """
   Generate image: checked
@@ -409,33 +278,17 @@ defmodule Zexray.Image do
           color_2 :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_checked(
-        width,
-        height,
-        checks_x,
-        checks_y,
-        color_1,
-        color_2,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_integer(checks_x) and
-             is_integer(checks_y) and
-             is_like_color(color_1) and
-             is_like_color(color_2) and
-             is_nif_return(return) do
-    NIF.gen_image_checked(
-      width,
-      height,
-      checks_x,
-      checks_y,
-      color_1 |> Zexray.Type.Color.to_nif(),
-      color_2 |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_checked(
+                width,
+                height,
+                checks_x,
+                checks_y,
+                color_1,
+                color_2,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_checked
 
   @doc """
   Generate image: white noise
@@ -447,24 +300,14 @@ defmodule Zexray.Image do
           factor :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_white_noise(
-        width,
-        height,
-        factor,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_float(factor) and
-             is_nif_return(return) do
-    NIF.gen_image_white_noise(
-      width,
-      height,
-      factor,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_white_noise(
+                width,
+                height,
+                factor,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_white_noise
 
   @doc """
   Generate image: perlin noise
@@ -478,30 +321,16 @@ defmodule Zexray.Image do
           scale :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_perlin_noise(
-        width,
-        height,
-        offset_x,
-        offset_y,
-        scale,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_integer(offset_x) and
-             is_integer(offset_y) and
-             is_float(scale) and
-             is_nif_return(return) do
-    NIF.gen_image_perlin_noise(
-      width,
-      height,
-      offset_x,
-      offset_y,
-      scale,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_perlin_noise(
+                width,
+                height,
+                offset_x,
+                offset_y,
+                scale,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_perlin_noise
 
   @doc """
   Generate image: cellular algorithm, bigger tileSize means bigger cells
@@ -513,24 +342,14 @@ defmodule Zexray.Image do
           tile_size :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_cellular(
-        width,
-        height,
-        tile_size,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_integer(tile_size) and
-             is_nif_return(return) do
-    NIF.gen_image_cellular(
-      width,
-      height,
-      tile_size,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_cellular(
+                width,
+                height,
+                tile_size,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_cellular
 
   @doc """
   Generate image: grayscale image from text data
@@ -542,24 +361,14 @@ defmodule Zexray.Image do
           text :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def gen_text(
-        width,
-        height,
-        text,
-        return \\ :value
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_binary(text) and
-             is_nif_return(return) do
-    NIF.gen_image_text(
-      width,
-      height,
-      text,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate gen_text(
+                width,
+                height,
+                text,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :gen_image_text
 
   ########################
   #  Image manipulation  #
@@ -573,18 +382,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def copy(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_copy(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate copy(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_copy
 
   @doc """
   Create an image from another image piece
@@ -595,21 +398,13 @@ defmodule Zexray.Image do
           rec :: Zexray.Type.Rectangle.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def from_image(
-        image,
-        rec,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_rectangle(rec) and
-             is_nif_return(return) do
-    NIF.image_from_image(
-      image |> Zexray.Type.Image.to_nif(),
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate from_image(
+                image,
+                rec,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_from_image
 
   @doc """
   Create an image from a selected channel of another image (GRAYSCALE)
@@ -620,21 +415,13 @@ defmodule Zexray.Image do
           selected_channel :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def from_channel(
-        image,
-        selected_channel,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(selected_channel) and
-             is_nif_return(return) do
-    NIF.image_from_channel(
-      image |> Zexray.Type.Image.to_nif(),
-      selected_channel,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate from_channel(
+                image,
+                selected_channel,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_from_channel
 
   @doc """
   Create an image from text (default font)
@@ -646,24 +433,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def text(
-        text,
-        font_size,
-        color,
-        return \\ :value
-      )
-      when is_binary(text) and
-             is_integer(font_size) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_text(
-      text,
-      font_size,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate text(
+                text,
+                font_size,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_text
 
   @doc """
   Create an image from text (custom sprite font)
@@ -677,30 +454,16 @@ defmodule Zexray.Image do
           tint :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def text_ex(
-        font,
-        text,
-        font_size,
-        spacing,
-        tint,
-        return \\ :value
-      )
-      when is_like_font(font) and
-             is_binary(text) and
-             is_float(font_size) and
-             is_float(spacing) and
-             is_like_color(tint) and
-             is_nif_return(return) do
-    NIF.image_text_ex(
-      font |> Zexray.Type.Font.to_nif(),
-      text,
-      font_size,
-      spacing,
-      tint |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate text_ex(
+                font,
+                text,
+                font_size,
+                spacing,
+                tint,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_text_ex
 
   @doc """
   Convert image data to desired format
@@ -708,24 +471,16 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec format(
           image :: Zexray.Type.Image.t_all(),
-          new_format :: Zexray.Enum.PixelFormat.t_all(),
+          new_format :: Zexray.Enum.PixelFormat.t(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def format(
-        image,
-        new_format,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_pixel_format(new_format) and
-             is_nif_return(return) do
-    NIF.image_format(
-      image |> Zexray.Type.Image.to_nif(),
-      Zexray.Enum.PixelFormat.value(new_format),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate format(
+                image,
+                new_format,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_format
 
   @doc """
   Convert image to POT (power-of-two)
@@ -736,21 +491,13 @@ defmodule Zexray.Image do
           fill :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def to_pot(
-        image,
-        fill,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_color(fill) and
-             is_nif_return(return) do
-    NIF.image_to_pot(
-      image |> Zexray.Type.Image.to_nif(),
-      fill |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate to_pot(
+                image,
+                fill,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_to_pot
 
   @doc """
   Crop an image to a defined rectangle
@@ -761,21 +508,13 @@ defmodule Zexray.Image do
           crop :: Zexray.Type.Rectangle.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def crop(
-        image,
-        crop,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_rectangle(crop) and
-             is_nif_return(return) do
-    NIF.image_crop(
-      image |> Zexray.Type.Image.to_nif(),
-      crop |> Zexray.Type.Rectangle.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate crop(
+                image,
+                crop,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_crop
 
   @doc """
   Crop image depending on alpha value
@@ -786,21 +525,13 @@ defmodule Zexray.Image do
           threshold :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def alpha_crop(
-        image,
-        threshold,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_float(threshold) and
-             is_nif_return(return) do
-    NIF.image_alpha_crop(
-      image |> Zexray.Type.Image.to_nif(),
-      threshold,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate alpha_crop(
+                image,
+                threshold,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_alpha_crop
 
   @doc """
   Clear alpha channel to desired color
@@ -812,24 +543,14 @@ defmodule Zexray.Image do
           threshold :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def alpha_clear(
-        image,
-        color,
-        threshold,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_color(color) and
-             is_float(threshold) and
-             is_nif_return(return) do
-    NIF.image_alpha_clear(
-      image |> Zexray.Type.Image.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      threshold,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate alpha_clear(
+                image,
+                color,
+                threshold,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_alpha_clear
 
   @doc """
   Apply alpha mask to image
@@ -840,21 +561,13 @@ defmodule Zexray.Image do
           alpha_mask :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def alpha_mask(
-        image,
-        alpha_mask,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_image(alpha_mask) and
-             is_nif_return(return) do
-    NIF.image_alpha_mask(
-      image |> Zexray.Type.Image.to_nif(),
-      alpha_mask |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate alpha_mask(
+                image,
+                alpha_mask,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_alpha_mask
 
   @doc """
   Premultiply alpha channel
@@ -864,18 +577,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def alpha_premultiply(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_alpha_premultiply(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate alpha_premultiply(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_alpha_premultiply
 
   @doc """
   Apply Gaussian blur using a box blur approximation
@@ -886,21 +593,13 @@ defmodule Zexray.Image do
           blur_size :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def blur_gaussian(
-        image,
-        blur_size,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(blur_size) and
-             is_nif_return(return) do
-    NIF.image_blur_gaussian(
-      image |> Zexray.Type.Image.to_nif(),
-      blur_size,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate blur_gaussian(
+                image,
+                blur_size,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_blur_gaussian
 
   @doc """
   Apply custom square convolution kernel to image
@@ -911,21 +610,13 @@ defmodule Zexray.Image do
           kernel :: [float],
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def kernel_convolution(
-        image,
-        kernel,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_list(kernel) and (kernel == [] or is_float(hd(kernel))) and
-             is_nif_return(return) do
-    NIF.image_kernel_convolution(
-      image |> Zexray.Type.Image.to_nif(),
-      kernel,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate kernel_convolution(
+                image,
+                kernel,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_kernel_convolution
 
   @doc """
   Resize image (Bicubic scaling algorithm)
@@ -937,24 +628,14 @@ defmodule Zexray.Image do
           new_height :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def resize(
-        image,
-        new_width,
-        new_height,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(new_width) and
-             is_integer(new_height) and
-             is_nif_return(return) do
-    NIF.image_resize(
-      image |> Zexray.Type.Image.to_nif(),
-      new_width,
-      new_height,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate resize(
+                image,
+                new_width,
+                new_height,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_resize
 
   @doc """
   Resize image (Nearest-Neighbor scaling algorithm)
@@ -966,24 +647,14 @@ defmodule Zexray.Image do
           new_height :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def resize_nn(
-        image,
-        new_width,
-        new_height,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(new_width) and
-             is_integer(new_height) and
-             is_nif_return(return) do
-    NIF.image_resize_nn(
-      image |> Zexray.Type.Image.to_nif(),
-      new_width,
-      new_height,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate resize_nn(
+                image,
+                new_width,
+                new_height,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_resize_nn
 
   @doc """
   Resize canvas and fill with color
@@ -998,33 +669,17 @@ defmodule Zexray.Image do
           fill :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def resize_canvas(
-        image,
-        new_width,
-        new_height,
-        offset_x,
-        offset_y,
-        fill,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(new_width) and
-             is_integer(new_height) and
-             is_integer(offset_x) and
-             is_integer(offset_y) and
-             is_like_color(fill) and
-             is_nif_return(return) do
-    NIF.image_resize_canvas(
-      image |> Zexray.Type.Image.to_nif(),
-      new_width,
-      new_height,
-      offset_x,
-      offset_y,
-      fill |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate resize_canvas(
+                image,
+                new_width,
+                new_height,
+                offset_x,
+                offset_y,
+                fill,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_resize_canvas
 
   @doc """
   Compute all mipmap levels for a provided image
@@ -1034,18 +689,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def mipmaps(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_mipmaps(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate mipmaps(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_mipmaps
 
   @doc """
   Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
@@ -1059,30 +708,16 @@ defmodule Zexray.Image do
           a_bpp :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def dither(
-        image,
-        r_bpp,
-        g_bpp,
-        b_bpp,
-        a_bpp,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(r_bpp) and
-             is_integer(g_bpp) and
-             is_integer(b_bpp) and
-             is_integer(a_bpp) and
-             is_nif_return(return) do
-    NIF.image_dither(
-      image |> Zexray.Type.Image.to_nif(),
-      r_bpp,
-      g_bpp,
-      b_bpp,
-      a_bpp,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate dither(
+                image,
+                r_bpp,
+                g_bpp,
+                b_bpp,
+                a_bpp,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_dither
 
   @doc """
   Flip image vertically
@@ -1092,18 +727,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def flip_vertical(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_flip_vertical(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate flip_vertical(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_flip_vertical
 
   @doc """
   Flip image horizontally
@@ -1113,18 +742,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def flip_horizontal(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_flip_horizontal(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate flip_horizontal(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_flip_horizontal
 
   @doc """
   Rotate image by input angle in degrees (-359 to 359)
@@ -1135,21 +758,13 @@ defmodule Zexray.Image do
           degrees :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def rotate(
-        image,
-        degrees,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(degrees) and
-             is_nif_return(return) do
-    NIF.image_rotate(
-      image |> Zexray.Type.Image.to_nif(),
-      degrees,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate rotate(
+                image,
+                degrees,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_rotate
 
   @doc """
   Rotate image clockwise 90deg
@@ -1159,18 +774,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def rotate_cw(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_rotate_cw(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate rotate_cw(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_rotate_cw
 
   @doc """
   Rotate image counter-clockwise 90deg
@@ -1180,18 +789,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def rotate_ccw(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_rotate_ccw(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate rotate_ccw(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_rotate_ccw
 
   @doc """
   Modify image color: tint
@@ -1202,21 +805,13 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_tint(
-        image,
-        color,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_color_tint(
-      image |> Zexray.Type.Image.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_tint(
+                image,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_tint
 
   @doc """
   Modify image color: invert
@@ -1226,18 +821,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_invert(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_color_invert(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_invert(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_invert
 
   @doc """
   Modify image color: grayscale
@@ -1247,18 +836,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_grayscale(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.image_color_grayscale(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_grayscale(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_grayscale
 
   @doc """
   Modify image color: contrast (-100 to 100)
@@ -1269,21 +852,13 @@ defmodule Zexray.Image do
           contrast :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_contrast(
-        image,
-        contrast,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_float(contrast) and
-             is_nif_return(return) do
-    NIF.image_color_contrast(
-      image |> Zexray.Type.Image.to_nif(),
-      contrast,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_contrast(
+                image,
+                contrast,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_contrast
 
   @doc """
   Modify image color: brightness (-255 to 255)
@@ -1294,21 +869,13 @@ defmodule Zexray.Image do
           brightness :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_brightness(
-        image,
-        brightness,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(brightness) and
-             is_nif_return(return) do
-    NIF.image_color_brightness(
-      image |> Zexray.Type.Image.to_nif(),
-      brightness,
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_brightness(
+                image,
+                brightness,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_brightness
 
   @doc """
   Modify image color: replace color
@@ -1320,24 +887,14 @@ defmodule Zexray.Image do
           replace :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def color_replace(
-        image,
-        color,
-        replace,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_like_color(color) and
-             is_like_color(replace) and
-             is_nif_return(return) do
-    NIF.image_color_replace(
-      image |> Zexray.Type.Image.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      replace |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate color_replace(
+                image,
+                color,
+                replace,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_color_replace
 
   @doc """
   Load color data from image as a Color array (RGBA - 32bit)
@@ -1347,18 +904,12 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           return :: :value | :resource
         ) :: [Zexray.Type.Color.t_nif()]
-  def load_colors(
-        image,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_nif_return(return) do
-    NIF.load_image_colors(
-      image |> Zexray.Type.Image.to_nif(),
-      return
-    )
-    |> Zexray.Type.Color.from_nif()
-  end
+  defdelegate load_colors(
+                image,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_colors
 
   @doc """
   Load colors palette from image as a Color array (RGBA - 32bit)
@@ -1369,21 +920,13 @@ defmodule Zexray.Image do
           max_palette_size :: integer,
           return :: :value | :resource
         ) :: [Zexray.Type.Color.t_nif()]
-  def load_palette(
-        image,
-        max_palette_size,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(max_palette_size) and
-             is_nif_return(return) do
-    NIF.load_image_palette(
-      image |> Zexray.Type.Image.to_nif(),
-      max_palette_size,
-      return
-    )
-    |> Zexray.Type.Color.from_nif()
-  end
+  defdelegate load_palette(
+                image,
+                max_palette_size,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_image_palette
 
   @doc """
   Get image alpha border rectangle
@@ -1394,21 +937,13 @@ defmodule Zexray.Image do
           threshold :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
-  def get_alpha_border(
-        image,
-        threshold,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_float(threshold) and
-             is_nif_return(return) do
-    NIF.get_image_alpha_border(
-      image |> Zexray.Type.Image.to_nif(),
-      threshold,
-      return
-    )
-    |> Zexray.Type.Rectangle.from_nif()
-  end
+  defdelegate get_alpha_border(
+                image,
+                threshold,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_image_alpha_border
 
   @doc """
   Get image pixel color at (x, y) position
@@ -1420,24 +955,14 @@ defmodule Zexray.Image do
           y :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
-  def get_color(
-        image,
-        x,
-        y,
-        return \\ :value
-      )
-      when is_like_image(image) and
-             is_integer(x) and
-             is_integer(y) and
-             is_nif_return(return) do
-    NIF.get_image_color(
-      image |> Zexray.Type.Image.to_nif(),
-      x,
-      y,
-      return
-    )
-    |> Zexray.Type.Rectangle.from_nif()
-  end
+  defdelegate get_color(
+                image,
+                x,
+                y,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_image_color
 
   ###################
   #  Image drawing  #
@@ -1452,21 +977,13 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def clear_background(
-        dst,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_clear_background(
-      dst |> Zexray.Type.Image.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate clear_background(
+                dst,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_clear_background
 
   @doc """
   Draw pixel within an image
@@ -1479,27 +996,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_pixel(
-        dst,
-        pos_x,
-        pos_y,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_pixel(
-      dst |> Zexray.Type.Image.to_nif(),
-      pos_x,
-      pos_y,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_pixel(
+                dst,
+                pos_x,
+                pos_y,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_pixel
 
   @doc """
   Draw pixel within an image (Vector version)
@@ -1511,24 +1016,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_pixel_v(
-        dst,
-        position,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(position) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_pixel_v(
-      dst |> Zexray.Type.Image.to_nif(),
-      position |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_pixel_v(
+                dst,
+                position,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_pixel_v
 
   @doc """
   Draw line within an image
@@ -1543,33 +1038,17 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_line(
-        dst,
-        start_pos_x,
-        start_pos_y,
-        end_pos_x,
-        end_pos_y,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_integer(start_pos_x) and
-             is_integer(start_pos_y) and
-             is_integer(end_pos_x) and
-             is_integer(end_pos_y) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_line(
-      dst |> Zexray.Type.Image.to_nif(),
-      start_pos_x,
-      start_pos_y,
-      end_pos_x,
-      end_pos_y,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_line(
+                dst,
+                start_pos_x,
+                start_pos_y,
+                end_pos_x,
+                end_pos_y,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_line
 
   @doc """
   Draw line within an image (Vector version)
@@ -1582,27 +1061,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_line_v(
-        dst,
-        start_pos,
-        end_pos,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_line_v(
-      dst |> Zexray.Type.Image.to_nif(),
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_line_v(
+                dst,
+                start_pos,
+                end_pos,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_line_v
 
   @doc """
   Draw a line defining thickness within an image
@@ -1616,30 +1083,16 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_line_ex(
-        dst,
-        start_pos,
-        end_pos,
-        thick,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_integer(thick) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_line_ex(
-      dst |> Zexray.Type.Image.to_nif(),
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_line_ex(
+                dst,
+                start_pos,
+                end_pos,
+                thick,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_line_ex
 
   @doc """
   Draw a filled circle within an image
@@ -1653,30 +1106,16 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_circle(
-        dst,
-        center_x,
-        center_y,
-        radius,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_integer(center_x) and
-             is_integer(center_y) and
-             is_integer(radius) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_circle(
-      dst |> Zexray.Type.Image.to_nif(),
-      center_x,
-      center_y,
-      radius,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_circle(
+                dst,
+                center_x,
+                center_y,
+                radius,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_circle
 
   @doc """
   Draw a filled circle within an image (Vector version)
@@ -1689,27 +1128,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_circle_v(
-        dst,
-        center,
-        radius,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(center) and
-             is_integer(radius) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_circle_v(
-      dst |> Zexray.Type.Image.to_nif(),
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_circle_v(
+                dst,
+                center,
+                radius,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_circle_v
 
   @doc """
   Draw circle outline within an image
@@ -1723,30 +1150,16 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_circle_lines(
-        dst,
-        center_x,
-        center_y,
-        radius,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_integer(center_x) and
-             is_integer(center_y) and
-             is_integer(radius) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_circle_lines(
-      dst |> Zexray.Type.Image.to_nif(),
-      center_x,
-      center_y,
-      radius,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_circle_lines(
+                dst,
+                center_x,
+                center_y,
+                radius,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_circle_lines
 
   @doc """
   Draw circle outline within an image (Vector version)
@@ -1759,27 +1172,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_circle_lines_v(
-        dst,
-        center,
-        radius,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(center) and
-             is_integer(radius) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_circle_lines_v(
-      dst |> Zexray.Type.Image.to_nif(),
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_circle_lines_v(
+                dst,
+                center,
+                radius,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_circle_lines_v
 
   @doc """
   Draw rectangle within an image
@@ -1794,33 +1195,17 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_rectangle(
-        dst,
-        pos_x,
-        pos_y,
-        width,
-        height,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_rectangle(
-      dst |> Zexray.Type.Image.to_nif(),
-      pos_x,
-      pos_y,
-      width,
-      height,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_rectangle(
+                dst,
+                pos_x,
+                pos_y,
+                width,
+                height,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_rectangle
 
   @doc """
   Draw rectangle within an image (Vector version)
@@ -1833,27 +1218,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_rectangle_v(
-        dst,
-        position,
-        size,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(position) and
-             is_like_vector2(size) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_rectangle_v(
-      dst |> Zexray.Type.Image.to_nif(),
-      position |> Zexray.Type.Vector2.to_nif(),
-      size |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_rectangle_v(
+                dst,
+                position,
+                size,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_rectangle_v
 
   @doc """
   Draw rectangle within an image
@@ -1865,24 +1238,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_rectangle_rec(
-        dst,
-        rec,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_rectangle(rec) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_rectangle_rec(
-      dst |> Zexray.Type.Image.to_nif(),
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_rectangle_rec(
+                dst,
+                rec,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_rectangle_rec
 
   @doc """
   Draw rectangle lines within an image
@@ -1895,27 +1258,15 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_rectangle_lines(
-        dst,
-        rec,
-        thick,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_rectangle(rec) and
-             is_integer(thick) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_rectangle_lines(
-      dst |> Zexray.Type.Image.to_nif(),
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_rectangle_lines(
+                dst,
+                rec,
+                thick,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_rectangle_lines
 
   @doc """
   Draw triangle within an image
@@ -1929,30 +1280,16 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_triangle(
-        dst,
-        v1,
-        v2,
-        v3,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(v1) and
-             is_like_vector2(v2) and
-             is_like_vector2(v3) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_triangle(
-      dst |> Zexray.Type.Image.to_nif(),
-      v1 |> Zexray.Type.Vector2.to_nif(),
-      v2 |> Zexray.Type.Vector2.to_nif(),
-      v3 |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_triangle(
+                dst,
+                v1,
+                v2,
+                v3,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_triangle
 
   @doc """
   Draw triangle with interpolated colors within an image
@@ -1968,36 +1305,18 @@ defmodule Zexray.Image do
           c3 :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_triangle_ex(
-        dst,
-        v1,
-        v2,
-        v3,
-        c1,
-        c2,
-        c3,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(v1) and
-             is_like_vector2(v2) and
-             is_like_vector2(v3) and
-             is_like_color(c1) and
-             is_like_color(c2) and
-             is_like_color(c3) and
-             is_nif_return(return) do
-    NIF.image_draw_triangle_ex(
-      dst |> Zexray.Type.Image.to_nif(),
-      v1 |> Zexray.Type.Vector2.to_nif(),
-      v2 |> Zexray.Type.Vector2.to_nif(),
-      v3 |> Zexray.Type.Vector2.to_nif(),
-      c1 |> Zexray.Type.Color.to_nif(),
-      c2 |> Zexray.Type.Color.to_nif(),
-      c3 |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_triangle_ex(
+                dst,
+                v1,
+                v2,
+                v3,
+                c1,
+                c2,
+                c3,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_triangle_ex
 
   @doc """
   Draw triangle outline within an image
@@ -2011,30 +1330,16 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_triangle_lines(
-        dst,
-        v1,
-        v2,
-        v3,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_vector2(v1) and
-             is_like_vector2(v2) and
-             is_like_vector2(v3) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_triangle_lines(
-      dst |> Zexray.Type.Image.to_nif(),
-      v1 |> Zexray.Type.Vector2.to_nif(),
-      v2 |> Zexray.Type.Vector2.to_nif(),
-      v3 |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_triangle_lines(
+                dst,
+                v1,
+                v2,
+                v3,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_triangle_lines
 
   @doc """
   Draw a triangle fan defined by points within an image (first vertex is the center)
@@ -2046,24 +1351,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_triangle_fan(
-        dst,
-        points,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_triangle_fan(
-      dst |> Zexray.Type.Image.to_nif(),
-      points |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_triangle_fan(
+                dst,
+                points,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_triangle_fan
 
   @doc """
   Draw a triangle strip defined by points within an image
@@ -2075,24 +1370,14 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_triangle_strip(
-        dst,
-        points,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_triangle_strip(
-      dst |> Zexray.Type.Image.to_nif(),
-      points |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_triangle_strip(
+                dst,
+                points,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_triangle_strip
 
   @doc """
   Draw a source image within a destination image (tint applied to source)
@@ -2106,30 +1391,16 @@ defmodule Zexray.Image do
           tint :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw(
-        dst,
-        src,
-        src_rec,
-        dst_rec,
-        tint,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_image(src) and
-             is_like_rectangle(src_rec) and
-             is_like_rectangle(dst_rec) and
-             is_like_color(tint) and
-             is_nif_return(return) do
-    NIF.image_draw(
-      dst |> Zexray.Type.Image.to_nif(),
-      src |> Zexray.Type.Image.to_nif(),
-      src_rec |> Zexray.Type.Rectangle.to_nif(),
-      dst_rec |> Zexray.Type.Rectangle.to_nif(),
-      tint |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw(
+                dst,
+                src,
+                src_rec,
+                dst_rec,
+                tint,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw
 
   @doc """
   Draw text (using default font) within an image (destination)
@@ -2144,33 +1415,17 @@ defmodule Zexray.Image do
           color :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_text(
-        dst,
-        text,
-        pos_x,
-        pos_y,
-        font_size,
-        color,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_binary(text) and
-             is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(font_size) and
-             is_like_color(color) and
-             is_nif_return(return) do
-    NIF.image_draw_text(
-      dst |> Zexray.Type.Image.to_nif(),
-      text,
-      pos_x,
-      pos_y,
-      font_size,
-      color |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_text(
+                dst,
+                text,
+                pos_x,
+                pos_y,
+                font_size,
+                color,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_text
 
   @doc """
   Draw text (custom sprite font) within an image (destination)
@@ -2186,34 +1441,16 @@ defmodule Zexray.Image do
           tint :: Zexray.Type.Color.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Image.t_nif()
-  def draw_text_ex(
-        dst,
-        font,
-        text,
-        position,
-        font_size,
-        spacing,
-        tint,
-        return \\ :value
-      )
-      when is_like_image(dst) and
-             is_like_font(font) and
-             is_binary(text) and
-             is_like_vector2(position) and
-             is_float(font_size) and
-             is_float(spacing) and
-             is_like_color(tint) and
-             is_nif_return(return) do
-    NIF.image_draw_text_ex(
-      dst |> Zexray.Type.Image.to_nif(),
-      font |> Zexray.Type.Font.to_nif(),
-      text,
-      position |> Zexray.Type.Vector2.to_nif(),
-      font_size,
-      spacing,
-      tint |> Zexray.Type.Color.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate draw_text_ex(
+                dst,
+                font,
+                text,
+                position,
+                font_size,
+                spacing,
+                tint,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :image_draw_text_ex
 end

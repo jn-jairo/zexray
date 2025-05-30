@@ -3,7 +3,6 @@ defmodule Zexray.Vr do
   VR
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   ##################
@@ -14,17 +13,17 @@ defmodule Zexray.Vr do
   Get vr device info max lens distortion values for VrDeviceInfo.lensDistortionValues
   """
   @spec vr_device_info_max_lens_distortion_values() :: non_neg_integer
-  def vr_device_info_max_lens_distortion_values() do
-    NIF.vr_device_info_get_max_lens_distortion_values()
-  end
+  defdelegate vr_device_info_max_lens_distortion_values(),
+    to: NIF,
+    as: :vr_device_info_get_max_lens_distortion_values
 
   @doc """
   Get vr device info max chroma ab correction for VrDeviceInfo.chromaAbCorrection
   """
   @spec vr_device_info_max_chroma_ab_correction() :: non_neg_integer
-  def vr_device_info_max_chroma_ab_correction() do
-    NIF.vr_device_info_get_max_chroma_ab_correction()
-  end
+  defdelegate vr_device_info_max_chroma_ab_correction(),
+    to: NIF,
+    as: :vr_device_info_get_max_chroma_ab_correction
 
   ####################
   #  VrStereoConfig  #
@@ -34,65 +33,59 @@ defmodule Zexray.Vr do
   Get vr stereo config max projection for VrStereoConfig.projection
   """
   @spec vr_stereo_config_max_projection() :: non_neg_integer
-  def vr_stereo_config_max_projection() do
-    NIF.vr_stereo_config_get_max_projection()
-  end
+  defdelegate vr_stereo_config_max_projection(), to: NIF, as: :vr_stereo_config_get_max_projection
 
   @doc """
   Get vr stereo config max view offset for VrStereoConfig.viewOffset
   """
   @spec vr_stereo_config_max_view_offset() :: non_neg_integer
-  def vr_stereo_config_max_view_offset() do
-    NIF.vr_stereo_config_get_max_view_offset()
-  end
+  defdelegate vr_stereo_config_max_view_offset(),
+    to: NIF,
+    as: :vr_stereo_config_get_max_view_offset
 
   @doc """
   Get vr stereo config max left lens center for VrStereoConfig.leftLensCenter
   """
   @spec vr_stereo_config_max_left_lens_center() :: non_neg_integer
-  def vr_stereo_config_max_left_lens_center() do
-    NIF.vr_stereo_config_get_max_left_lens_center()
-  end
+  defdelegate vr_stereo_config_max_left_lens_center(),
+    to: NIF,
+    as: :vr_stereo_config_get_max_left_lens_center
 
   @doc """
   Get vr stereo config max right lens center for VrStereoConfig.rightLensCenter
   """
   @spec vr_stereo_config_max_right_lens_center() :: non_neg_integer
-  def vr_stereo_config_max_right_lens_center() do
-    NIF.vr_stereo_config_get_max_right_lens_center()
-  end
+  defdelegate vr_stereo_config_max_right_lens_center(),
+    to: NIF,
+    as: :vr_stereo_config_get_max_right_lens_center
 
   @doc """
   Get vr stereo config max left screen center for VrStereoConfig.leftScreenCenter
   """
   @spec vr_stereo_config_max_left_screen_center() :: non_neg_integer
-  def vr_stereo_config_max_left_screen_center() do
-    NIF.vr_stereo_config_get_max_left_screen_center()
-  end
+  defdelegate vr_stereo_config_max_left_screen_center(),
+    to: NIF,
+    as: :vr_stereo_config_get_max_left_screen_center
 
   @doc """
   Get vr stereo config max right screen center for VrStereoConfig.rightScreenCenter
   """
   @spec vr_stereo_config_max_right_screen_center() :: non_neg_integer
-  def vr_stereo_config_max_right_screen_center() do
-    NIF.vr_stereo_config_get_max_right_screen_center()
-  end
+  defdelegate vr_stereo_config_max_right_screen_center(),
+    to: NIF,
+    as: :vr_stereo_config_get_max_right_screen_center
 
   @doc """
   Get vr stereo config max scale for VrStereoConfig.scale
   """
   @spec vr_stereo_config_max_scale() :: non_neg_integer
-  def vr_stereo_config_max_scale() do
-    NIF.vr_stereo_config_get_max_scale()
-  end
+  defdelegate vr_stereo_config_max_scale(), to: NIF, as: :vr_stereo_config_get_max_scale
 
   @doc """
   Get vr stereo config max scale in for VrStereoConfig.scaleIn
   """
   @spec vr_stereo_config_max_scale_in() :: non_neg_integer
-  def vr_stereo_config_max_scale_in() do
-    NIF.vr_stereo_config_get_max_scale_in()
-  end
+  defdelegate vr_stereo_config_max_scale_in(), to: NIF, as: :vr_stereo_config_get_max_scale_in
 
   @doc """
   Load VR stereo config for VR simulator device parameters
@@ -100,18 +93,11 @@ defmodule Zexray.Vr do
   @spec load_vr_stereo_config(
           device :: Zexray.Type.VrDeviceInfo.t_all(),
           return :: :value | :resource
-        ) ::
-          Zexray.Type.VrStereoConfig.t_nif()
-  def load_vr_stereo_config(
-        device,
-        return \\ :value
-      )
-      when is_like_vr_device_info(device) and
-             is_nif_return(return) do
-    NIF.load_vr_stereo_config(
-      device |> Zexray.Type.VrDeviceInfo.to_nif(),
-      return
-    )
-    |> Zexray.Type.Image.from_nif()
-  end
+        ) :: Zexray.Type.VrStereoConfig.t_nif()
+  defdelegate load_vr_stereo_config(
+                device,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_vr_stereo_config
 end

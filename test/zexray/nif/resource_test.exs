@@ -240,12 +240,13 @@ defmodule Zexray.NIF.ResourceTest do
           _ -> apply(TypeFixture, fixture, [:empty])
         end
 
-      assert is_reference(resource)
+      assert is_tuple(resource)
+      assert tuple_size(resource) == 2
+      assert is_reference(elem(resource, 1))
       assert similar?(value, apply(NIF, from_resource, [resource]))
 
       resource_new! = Resource.new!(value)
       assert similar?(value, Resource.content!(resource_new!))
-      assert similar?(value, apply(Resource.content_type!(resource_new!), :new, [resource_new!]))
 
       assert_raise ArgumentError, fn -> Resource.update!(resource_new!, nil) end
       assert :ok = Resource.update!(resource_new!, value_update)
@@ -253,46 +254,42 @@ defmodule Zexray.NIF.ResourceTest do
 
       resource_new = Resource.new(value)
       assert similar?(value, Resource.content(resource_new))
-      assert similar?(value, apply(Resource.content_type(resource_new), :new, [resource_new]))
 
       assert :invalid_resourceable = Resource.update(resource_new, nil)
       assert :ok = Resource.update(resource_new, value_update)
       assert similar?(value_update, Resource.content(resource_new!))
 
-      content_type = Resource.content_type!(resource_new!)
-
       value_list = [value, value]
-      content_type_list = [content_type, content_type]
 
       resource_list_new! = Resource.new!(value_list)
       assert similar?(value_list, Resource.content!(resource_list_new!))
-      assert similar?(content_type_list, Resource.content_type!(resource_list_new!))
 
       resource_list_new = Resource.new(value_list)
       assert similar?(value_list, Resource.content(resource_list_new))
-      assert similar?(content_type_list, Resource.content_type(resource_list_new))
+
+      value_tuple = {value, value}
+
+      resource_tuple_new! = Resource.new!(value_tuple)
+      assert similar?(value_tuple, Resource.content!(resource_tuple_new!))
+
+      resource_tuple_new = Resource.new(value_tuple)
+      assert similar?(value_tuple, Resource.content(resource_tuple_new))
 
       value_map = %{foo: value, bar: value}
-      content_type_map = %{foo: content_type, bar: content_type}
 
       resource_map_new! = Resource.new!(value_map)
       assert similar?(value_map, Resource.content!(resource_map_new!))
-      assert similar?(content_type_map, Resource.content_type!(resource_map_new!))
 
       resource_map_new = Resource.new(value_map)
       assert similar?(value_map, Resource.content(resource_map_new))
-      assert similar?(content_type_map, Resource.content_type(resource_map_new))
 
       value_struct = %DummyStruct{foo: value, bar: value}
-      content_type_struct = %DummyStruct{foo: content_type, bar: content_type}
 
       resource_struct_new! = Resource.new!(value_struct)
       assert similar?(value_struct, Resource.content!(resource_struct_new!))
-      assert similar?(content_type_struct, Resource.content_type!(resource_struct_new!))
 
       resource_struct_new = Resource.new(value_struct)
       assert similar?(value_struct, Resource.content(resource_struct_new))
-      assert similar?(content_type_struct, Resource.content_type(resource_struct_new))
 
       Task.start(fn ->
         wait_time(1.0)
@@ -304,6 +301,9 @@ defmodule Zexray.NIF.ResourceTest do
 
       Resource.free_async!(resource_list_new!)
       Resource.free_async(resource_list_new)
+
+      Resource.free_async!(resource_tuple_new!)
+      Resource.free_async(resource_tuple_new)
 
       Resource.free_async!(resource_map_new!)
       Resource.free_async(resource_map_new)
@@ -336,9 +336,6 @@ defmodule Zexray.NIF.ResourceTest do
 
       assert_raise ArgumentError, fn -> Resource.content!(resource) end
       assert ^resource = Resource.content(resource)
-
-      assert_raise ArgumentError, fn -> Resource.content_type!(resource) end
-      assert ^resource = Resource.content_type(resource)
 
       assert_raise ArgumentError, fn -> Resource.free!(resource) end
       assert ^resource = Resource.free(resource)

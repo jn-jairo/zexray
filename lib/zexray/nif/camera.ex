@@ -49,10 +49,10 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec update_camera(
-              camera :: map | reference,
+              camera :: tuple,
               mode :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def update_camera(
             _camera,
             _mode,
@@ -70,12 +70,12 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec update_camera_pro(
-              camera :: map | reference,
-              movement :: map | reference,
-              rotation :: map | reference,
+              camera :: tuple,
+              movement :: tuple,
+              rotation :: tuple,
               zoom :: float,
               return :: :value | :resource
-            ) :: :ok
+            ) :: tuple
       def update_camera_pro(
             _camera,
             _movement,
@@ -95,9 +95,9 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec get_camera_forward(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_forward(
             _camera,
             _return \\ :value
@@ -115,9 +115,9 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec get_camera_up(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_up(
             _camera,
             _return \\ :value
@@ -134,9 +134,9 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec get_camera_right(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_right(
             _camera,
             _return \\ :value
@@ -153,11 +153,11 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_move_forward(
-              camera :: map | reference,
+              camera :: tuple,
               distance :: float,
               move_in_world_plane :: boolean,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_move_forward(
             _camera,
             _distance,
@@ -176,10 +176,10 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_move_up(
-              camera :: map | reference,
+              camera :: tuple,
               distance :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_move_up(
             _camera,
             _distance,
@@ -197,11 +197,11 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_move_right(
-              camera :: map | reference,
+              camera :: tuple,
               distance :: float,
               move_in_world_plane :: boolean,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_move_right(
             _camera,
             _distance,
@@ -220,10 +220,10 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_move_to_target(
-              camera :: map | reference,
+              camera :: tuple,
               delta :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_move_to_target(
             _camera,
             _delta,
@@ -244,11 +244,11 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_yaw(
-              camera :: map | reference,
+              camera :: tuple,
               angle :: float,
               rotate_around_target :: boolean,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_yaw(
             _camera,
             _angle,
@@ -271,13 +271,13 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_pitch(
-              camera :: map | reference,
+              camera :: tuple,
               angle :: float,
               lock_view :: boolean,
               rotate_around_target :: boolean,
               rotate_up :: boolean,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_pitch(
             _camera,
             _angle,
@@ -300,10 +300,10 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec camera_roll(
-              camera :: map | reference,
+              camera :: tuple,
               angle :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def camera_roll(
             _camera,
             _angle,
@@ -321,9 +321,9 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec get_camera_view_matrix(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_view_matrix(
             _camera,
             _return \\ :value
@@ -340,10 +340,10 @@ defmodule Zexray.NIF.Camera do
       """
       @doc group: :camera
       @spec get_camera_projection_matrix(
-              camera :: map | reference,
+              camera :: tuple,
               aspect :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_projection_matrix(
             _camera,
             _aspect,

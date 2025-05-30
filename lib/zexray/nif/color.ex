@@ -51,8 +51,8 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_is_equal(
-              col1 :: map | reference,
-              col2 :: map | reference
+              col1 :: tuple,
+              col2 :: tuple
             ) :: boolean
       def color_is_equal(
             _col1,
@@ -70,10 +70,10 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec fade(
-              color :: map | reference,
+              color :: tuple,
               alpha :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def fade(
             _color,
             _alpha,
@@ -90,7 +90,7 @@ defmodule Zexray.NIF.Color do
       ```
       """
       @doc group: :color
-      @spec color_to_int(color :: map | reference) :: non_neg_integer
+      @spec color_to_int(color :: tuple) :: non_neg_integer
       def color_to_int(_color), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -103,9 +103,9 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_normalize(
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_normalize(
             _color,
             _return \\ :value
@@ -122,9 +122,9 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_from_normalized(
-              normalized :: map | reference,
+              normalized :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_from_normalized(
             _normalized,
             _return \\ :value
@@ -141,9 +141,9 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_to_hsv(
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_to_hsv(
             _color,
             _return \\ :value
@@ -164,7 +164,7 @@ defmodule Zexray.NIF.Color do
               saturation :: float,
               value :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_from_hsv(
             _hue,
             _saturation,
@@ -183,10 +183,10 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_tint(
-              color :: map | reference,
-              tint :: map | reference,
+              color :: tuple,
+              tint :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_tint(
             _color,
             _tint,
@@ -204,10 +204,10 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_brightness(
-              color :: map | reference,
+              color :: tuple,
               factor :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_brightness(
             _color,
             _factor,
@@ -225,10 +225,10 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_contrast(
-              color :: map | reference,
+              color :: tuple,
               contrast :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_contrast(
             _color,
             _contrast,
@@ -246,10 +246,10 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_alpha(
-              color :: map | reference,
+              color :: tuple,
               alpha :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_alpha(
             _color,
             _alpha,
@@ -267,11 +267,11 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_alpha_blend(
-              dst :: map | reference,
-              src :: map | reference,
-              tint :: map | reference,
+              dst :: tuple,
+              src :: tuple,
+              tint :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_alpha_blend(
             _dst,
             _src,
@@ -290,11 +290,11 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_lerp(
-              color1 :: map | reference,
-              color2 :: map | reference,
+              color1 :: tuple,
+              color2 :: tuple,
               factor :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def color_lerp(
             _color1,
             _color2,
@@ -315,7 +315,7 @@ defmodule Zexray.NIF.Color do
       @spec get_color(
               hex_value :: non_neg_integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_color(
             _hex_value,
             _return \\ :value
@@ -335,7 +335,7 @@ defmodule Zexray.NIF.Color do
               data :: binary,
               format :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_pixel_color(
             _data,
             _format,
@@ -353,7 +353,7 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec set_pixel_color(
-              color :: map | reference,
+              color :: tuple,
               format :: integer
             ) :: binary
       def set_pixel_color(

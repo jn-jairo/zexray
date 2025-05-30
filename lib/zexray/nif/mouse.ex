@@ -109,7 +109,7 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_position(return :: :value | :resource) :: map | reference
+      @spec get_mouse_position(return :: :value | :resource) :: tuple
       def get_mouse_position(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -121,7 +121,7 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_delta(return :: :value | :resource) :: map | reference
+      @spec get_mouse_delta(return :: :value | :resource) :: tuple
       def get_mouse_delta(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -202,7 +202,7 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_wheel_move_v(return :: :value | :resource) :: map | reference
+      @spec get_mouse_wheel_move_v(return :: :value | :resource) :: tuple
       def get_mouse_wheel_move_v(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """

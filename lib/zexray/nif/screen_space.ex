@@ -37,10 +37,10 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_screen_to_world_ray(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_screen_to_world_ray(
             _position,
             _camera,
@@ -58,12 +58,12 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_screen_to_world_ray_ex(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               width :: integer,
               height :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_screen_to_world_ray_ex(
             _position,
             _camera,
@@ -83,10 +83,10 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_world_to_screen(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_world_to_screen(
             _position,
             _camera,
@@ -104,12 +104,12 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_world_to_screen_ex(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               width :: integer,
               height :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_world_to_screen_ex(
             _position,
             _camera,
@@ -129,10 +129,10 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_world_to_screen_2d(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_world_to_screen_2d(
             _position,
             _camera,
@@ -150,10 +150,10 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_screen_to_world_2d(
-              position :: map | reference,
-              camera :: map | reference,
+              position :: tuple,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_screen_to_world_2d(
             _position,
             _camera,
@@ -171,9 +171,9 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_camera_matrix(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_matrix(
             _camera,
             _return \\ :value
@@ -190,9 +190,9 @@ defmodule Zexray.NIF.ScreenSpace do
       """
       @doc group: :screen_space
       @spec get_camera_matrix_2d(
-              camera :: map | reference,
+              camera :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_camera_matrix_2d(
             _camera,
             _return \\ :value

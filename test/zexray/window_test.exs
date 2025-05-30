@@ -2,6 +2,9 @@ defmodule Zexray.WindowTest do
   use Zexray.WindowCase
   doctest Zexray.Window
 
+  use Zexray.Enum
+  use Zexray.Type
+
   @moduletag :nif
   @moduletag :window
 
@@ -11,7 +14,6 @@ defmodule Zexray.WindowTest do
   alias Zexray.Window
 
   import Zexray.Guard
-  import Zexray.TypeFixture
   import Zexray.Util, only: [similar?: 2, wait_fn: 1]
 
   test "initialization" do
@@ -60,13 +62,13 @@ defmodule Zexray.WindowTest do
   end
 
   test "state" do
-    assert not Window.state?(:window_resizable)
+    assert not Window.state?(enum_config_flag(:window_resizable))
 
-    Window.set_state(:window_resizable)
-    assert Window.state?(:window_resizable)
+    Window.set_state(enum_config_flag(:window_resizable))
+    assert Window.state?(enum_config_flag(:window_resizable))
 
-    Window.clear_state(:window_resizable)
-    assert not Window.state?(:window_resizable)
+    Window.clear_state(enum_config_flag(:window_resizable))
+    assert not Window.state?(enum_config_flag(:window_resizable))
   end
 
   test "toggle fullscreen" do
@@ -80,17 +82,17 @@ defmodule Zexray.WindowTest do
   end
 
   test "toggle borderless" do
-    assert not Window.state?(:borderless_windowed_mode)
+    assert not Window.state?(enum_config_flag(:borderless_windowed_mode))
 
     Window.toggle_borderless()
-    assert Window.state?(:borderless_windowed_mode)
+    assert Window.state?(enum_config_flag(:borderless_windowed_mode))
 
     Window.toggle_borderless()
-    assert not Window.state?(:borderless_windowed_mode)
+    assert not Window.state?(enum_config_flag(:borderless_windowed_mode))
   end
 
   test "maximize" do
-    Window.set_state(:window_resizable)
+    Window.set_state(enum_config_flag(:window_resizable))
     assert not Window.maximized?()
 
     Window.maximize()
@@ -98,7 +100,7 @@ defmodule Zexray.WindowTest do
   end
 
   test "minimize" do
-    Window.set_state(:window_always_run)
+    Window.set_state(enum_config_flag(:window_always_run))
     assert not Window.minimized?()
 
     Window.minimize()
@@ -112,8 +114,8 @@ defmodule Zexray.WindowTest do
   end
 
   test "restore" do
-    Window.set_state(:window_resizable)
-    Window.set_state(:window_always_run)
+    Window.set_state(enum_config_flag(:window_resizable))
+    Window.set_state(enum_config_flag(:window_always_run))
     assert not Window.maximized?()
 
     Window.maximize()
@@ -125,13 +127,13 @@ defmodule Zexray.WindowTest do
 
   test "set icon" do
     assert :ok =
-             Image.gen_color(64, 64, :yellow)
+             Image.gen_color(64, 64, enum_color(:yellow))
              |> Window.set_icon()
   end
 
   test "set icons" do
     assert :ok =
-             [:yellow, :blue]
+             [enum_color(:yellow), enum_color(:blue)]
              |> Enum.map(fn color ->
                Image.gen_color(64, 64, color)
              end)
@@ -143,11 +145,11 @@ defmodule Zexray.WindowTest do
   end
 
   test "position" do
-    position = vector2_fixture(:empty, %{x: 3.0, y: 4.0})
+    position = type_vector2(x: 3.0, y: 4.0)
 
     Window.set_position(
-      position.x |> trunc(),
-      position.y |> trunc()
+      type_vector2(position, :x) |> trunc(),
+      type_vector2(position, :y) |> trunc()
     )
 
     wait_fn(fn -> similar?(position, Window.get_position()) end)
@@ -160,7 +162,7 @@ defmodule Zexray.WindowTest do
   end
 
   test "size" do
-    Window.set_state(:window_resizable)
+    Window.set_state(enum_config_flag(:window_resizable))
 
     width = 500
     height = 300
@@ -178,8 +180,8 @@ defmodule Zexray.WindowTest do
 
     scale_dpi = Window.get_scale_dpi()
 
-    render_width = trunc(scale_dpi.x * 800)
-    render_height = trunc(scale_dpi.y * 600)
+    render_width = trunc(type_vector2(scale_dpi, :x) * 800)
+    render_height = trunc(type_vector2(scale_dpi, :y) * 600)
 
     assert ^render_width = Window.get_render_width()
     assert ^render_height = Window.get_render_height()

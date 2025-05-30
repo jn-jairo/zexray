@@ -134,9 +134,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_line_3d(
-              start_pos :: map | reference,
-              end_pos :: map | reference,
-              color :: map | reference
+              start_pos :: tuple,
+              end_pos :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_line_3d(
             _start_pos,
@@ -155,8 +155,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_point_3d(
-              position :: map | reference,
-              color :: map | reference
+              position :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_point_3d(
             _position,
@@ -174,11 +174,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_circle_3d(
-              center :: map | reference,
+              center :: tuple,
               radius :: float,
-              rotation_axis :: map | reference,
+              rotation_axis :: tuple,
               rotation_angle :: float,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_circle_3d(
             _center,
@@ -199,10 +199,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_triangle_3d(
-              v1 :: map | reference,
-              v2 :: map | reference,
-              v3 :: map | reference,
-              color :: map | reference
+              v1 :: tuple,
+              v2 :: tuple,
+              v3 :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_triangle_3d(
             _v1,
@@ -222,8 +222,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_triangle_strip_3d(
-              points :: [map | reference],
-              color :: map | reference
+              points :: [tuple],
+              color :: tuple
             ) :: :ok
       def draw_triangle_strip_3d(
             _points,
@@ -241,11 +241,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube(
-              position :: map | reference,
+              position :: tuple,
               width :: float,
               height :: float,
               length :: float,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cube(
             _position,
@@ -266,9 +266,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube_v(
-              position :: map | reference,
-              size :: map | reference,
-              color :: map | reference
+              position :: tuple,
+              size :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_cube_v(
             _position,
@@ -287,11 +287,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube_wires(
-              position :: map | reference,
+              position :: tuple,
               width :: float,
               height :: float,
               length :: float,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cube_wires(
             _position,
@@ -312,9 +312,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube_wires_v(
-              position :: map | reference,
-              size :: map | reference,
-              color :: map | reference
+              position :: tuple,
+              size :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_cube_wires_v(
             _position,
@@ -333,9 +333,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere(
-              center_pos :: map | reference,
+              center_pos :: tuple,
               radius :: float,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_sphere(
             _center_pos,
@@ -354,11 +354,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere_ex(
-              center_pos :: map | reference,
+              center_pos :: tuple,
               radius :: float,
               rings :: integer,
               slices :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_sphere_ex(
             _center_pos,
@@ -379,11 +379,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere_wires(
-              center_pos :: map | reference,
+              center_pos :: tuple,
               radius :: float,
               rings :: integer,
               slices :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_sphere_wires(
             _center_pos,
@@ -404,12 +404,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder(
-              position :: map | reference,
+              position :: tuple,
               radius_top :: float,
               radius_bottom :: float,
               height :: float,
               slices :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cylinder(
             _position,
@@ -431,12 +431,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder_ex(
-              start_pos :: map | reference,
-              end_pos :: map | reference,
+              start_pos :: tuple,
+              end_pos :: tuple,
               start_radius :: float,
               end_radius :: float,
               sides :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cylinder_ex(
             _start_pos,
@@ -458,12 +458,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder_wires(
-              position :: map | reference,
+              position :: tuple,
               radius_top :: float,
               radius_bottom :: float,
               height :: float,
               slices :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cylinder_wires(
             _position,
@@ -485,12 +485,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder_wires_ex(
-              start_pos :: map | reference,
-              end_pos :: map | reference,
+              start_pos :: tuple,
+              end_pos :: tuple,
               start_radius :: float,
               end_radius :: float,
               sides :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_cylinder_wires_ex(
             _start_pos,
@@ -512,12 +512,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_capsule(
-              start_pos :: map | reference,
-              end_pos :: map | reference,
+              start_pos :: tuple,
+              end_pos :: tuple,
               radius :: float,
               slices :: integer,
               rings :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_capsule(
             _start_pos,
@@ -539,12 +539,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_capsule_wires(
-              start_pos :: map | reference,
-              end_pos :: map | reference,
+              start_pos :: tuple,
+              end_pos :: tuple,
               radius :: float,
               slices :: integer,
               rings :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_capsule_wires(
             _start_pos,
@@ -566,9 +566,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_plane(
-              center_pos :: map | reference,
-              size :: map | reference,
-              color :: map | reference
+              center_pos :: tuple,
+              size :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_plane(
             _center_pos,
@@ -587,8 +587,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :basic_3d_shapes_drawing
       @spec draw_ray(
-              ray :: map | reference,
-              color :: map | reference
+              ray :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_ray(
             _ray,
@@ -631,7 +631,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec load_model(
               file_name :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_model(
             _file_name,
             _return \\ :value
@@ -648,9 +648,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_management
       @spec load_model_from_mesh(
-              mesh :: map | reference,
+              mesh :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_model_from_mesh(
             _mesh,
             _return \\ :value
@@ -666,7 +666,7 @@ defmodule Zexray.NIF.Shape3D do
       ```
       """
       @doc group: :model_management
-      @spec is_model_valid(model :: map | reference) :: boolean
+      @spec is_model_valid(model :: tuple) :: boolean
       def is_model_valid(_model), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -679,9 +679,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_management
       @spec get_model_bounding_box(
-              model :: map | reference,
+              model :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_model_bounding_box(
             _model,
             _return \\ :value
@@ -702,10 +702,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model(
-              model :: map | reference,
-              position :: map | reference,
+              model :: tuple,
+              position :: tuple,
               scale :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_model(
             _model,
@@ -725,12 +725,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model_ex(
-              model :: map | reference,
-              position :: map | reference,
-              rotation_axis :: map | reference,
+              model :: tuple,
+              position :: tuple,
+              rotation_axis :: tuple,
               rotation_angle :: float,
-              scale :: map | reference,
-              tint :: map | reference
+              scale :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_model_ex(
             _model,
@@ -752,10 +752,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model_wires(
-              model :: map | reference,
-              position :: map | reference,
+              model :: tuple,
+              position :: tuple,
               scale :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_model_wires(
             _model,
@@ -775,12 +775,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model_wires_ex(
-              model :: map | reference,
-              position :: map | reference,
-              rotation_axis :: map | reference,
+              model :: tuple,
+              position :: tuple,
+              rotation_axis :: tuple,
               rotation_angle :: float,
-              scale :: map | reference,
-              tint :: map | reference
+              scale :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_model_wires_ex(
             _model,
@@ -802,10 +802,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model_points(
-              model :: map | reference,
-              position :: map | reference,
+              model :: tuple,
+              position :: tuple,
               scale :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_model_points(
             _model,
@@ -825,12 +825,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_model_points_ex(
-              model :: map | reference,
-              position :: map | reference,
-              rotation_axis :: map | reference,
+              model :: tuple,
+              position :: tuple,
+              rotation_axis :: tuple,
               rotation_angle :: float,
-              scale :: map | reference,
-              tint :: map | reference
+              scale :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_model_points_ex(
             _model,
@@ -852,8 +852,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_bounding_box(
-              box :: map | reference,
-              color :: map | reference
+              box :: tuple,
+              color :: tuple
             ) :: :ok
       def draw_bounding_box(
             _box,
@@ -871,11 +871,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_billboard(
-              camera :: map | reference,
-              texture :: map | reference,
-              position :: map | reference,
+              camera :: tuple,
+              texture :: tuple,
+              position :: tuple,
               scale :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_billboard(
             _camera,
@@ -896,12 +896,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_billboard_rec(
-              camera :: map | reference,
-              texture :: map | reference,
-              source :: map | reference,
-              position :: map | reference,
-              size :: map | reference,
-              tint :: map | reference
+              camera :: tuple,
+              texture :: tuple,
+              source :: tuple,
+              position :: tuple,
+              size :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_billboard_rec(
             _camera,
@@ -923,15 +923,15 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_drawing
       @spec draw_billboard_pro(
-              camera :: map | reference,
-              texture :: map | reference,
-              source :: map | reference,
-              position :: map | reference,
-              up :: map | reference,
-              size :: map | reference,
-              origin :: map | reference,
+              camera :: tuple,
+              texture :: tuple,
+              source :: tuple,
+              position :: tuple,
+              up :: tuple,
+              size :: tuple,
+              origin :: tuple,
               rotation :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_billboard_pro(
             _camera,
@@ -960,10 +960,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec upload_mesh(
-              mesh :: map | reference,
+              mesh :: tuple,
               dynamic :: boolean,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def upload_mesh(
             _mesh,
             _dynamic,
@@ -981,9 +981,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec update_mesh_buffer(
-              mesh :: map | reference,
+              mesh :: tuple,
               index :: integer,
-              data :: nil | [float] | [byte] | [non_neg_integer] | [map | reference],
+              data :: nil | [float] | [byte] | [non_neg_integer] | [tuple],
               offset :: integer
             ) :: :ok
       def update_mesh_buffer(
@@ -1004,9 +1004,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec draw_mesh(
-              mesh :: map | reference,
-              material :: map | reference,
-              transform :: map | reference
+              mesh :: tuple,
+              material :: tuple,
+              transform :: tuple
             ) :: :ok
       def draw_mesh(
             _mesh,
@@ -1025,9 +1025,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec draw_mesh_instanced(
-              mesh :: map | reference,
-              material :: map | reference,
-              transforms :: [map | reference]
+              mesh :: tuple,
+              material :: tuple,
+              transforms :: [tuple]
             ) :: :ok
       def draw_mesh_instanced(
             _mesh,
@@ -1046,9 +1046,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec get_mesh_bounding_box(
-              mesh :: map | reference,
+              mesh :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_mesh_bounding_box(
             _mesh,
             _return \\ :value
@@ -1065,9 +1065,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec gen_mesh_tangents(
-              mesh :: map | reference,
+              mesh :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_tangents(
             _mesh,
             _return \\ :value
@@ -1084,7 +1084,7 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_management
       @spec export_mesh(
-              mesh :: map | reference,
+              mesh :: tuple,
               file_name :: binary
             ) :: boolean
       def export_mesh(
@@ -1110,7 +1110,7 @@ defmodule Zexray.NIF.Shape3D do
               sides :: integer,
               radius :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_poly(
             _sides,
             _radius,
@@ -1133,7 +1133,7 @@ defmodule Zexray.NIF.Shape3D do
               res_x :: integer,
               res_z :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_plane(
             _width,
             _length,
@@ -1157,7 +1157,7 @@ defmodule Zexray.NIF.Shape3D do
               height :: float,
               length :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_cube(
             _width,
             _height,
@@ -1180,7 +1180,7 @@ defmodule Zexray.NIF.Shape3D do
               rings :: integer,
               slices :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_sphere(
             _radius,
             _rings,
@@ -1203,7 +1203,7 @@ defmodule Zexray.NIF.Shape3D do
               rings :: integer,
               slices :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_hemi_sphere(
             _radius,
             _rings,
@@ -1226,7 +1226,7 @@ defmodule Zexray.NIF.Shape3D do
               height :: float,
               slices :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_cylinder(
             _radius,
             _height,
@@ -1249,7 +1249,7 @@ defmodule Zexray.NIF.Shape3D do
               height :: float,
               slices :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_cone(
             _radius,
             _height,
@@ -1273,7 +1273,7 @@ defmodule Zexray.NIF.Shape3D do
               rad_seg :: integer,
               sides :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_torus(
             _radius,
             _size,
@@ -1298,7 +1298,7 @@ defmodule Zexray.NIF.Shape3D do
               rad_seg :: integer,
               sides :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_knot(
             _radius,
             _size,
@@ -1318,10 +1318,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_heightmap(
-              heightmap :: map | reference,
-              size :: map | reference,
+              heightmap :: tuple,
+              size :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_heightmap(
             _heightmap,
             _size,
@@ -1339,10 +1339,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_cubicmap(
-              cubicmap :: map | reference,
-              cube_size :: map | reference,
+              cubicmap :: tuple,
+              cube_size :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_mesh_cubicmap(
             _cubicmap,
             _cube_size,
@@ -1366,7 +1366,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec load_materials(
               file_name :: binary,
               return :: :value | :resource
-            ) :: [map | reference]
+            ) :: [tuple]
       def load_materials(
             _file_name,
             _return \\ :value
@@ -1382,7 +1382,7 @@ defmodule Zexray.NIF.Shape3D do
       ```
       """
       @doc group: :material_management
-      @spec load_material_default(return :: :value | :resource) :: map | reference
+      @spec load_material_default(return :: :value | :resource) :: tuple
       def load_material_default(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -1394,7 +1394,7 @@ defmodule Zexray.NIF.Shape3D do
       ```
       """
       @doc group: :material_management
-      @spec is_material_valid(material :: map | reference) :: boolean
+      @spec is_material_valid(material :: tuple) :: boolean
       def is_material_valid(_material), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -1407,11 +1407,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :material_management
       @spec set_material_texture(
-              material :: map | reference,
+              material :: tuple,
               map_type :: integer,
-              texture :: map | reference,
+              texture :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def set_material_texture(
             _material,
             _map_type,
@@ -1430,11 +1430,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :material_management
       @spec set_model_mesh_material(
-              model :: map | reference,
+              model :: tuple,
               mesh_id :: integer,
               material_id :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def set_model_mesh_material(
             _model,
             _mesh_id,
@@ -1459,7 +1459,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec load_model_animations(
               file_name :: binary,
               return :: :value | :resource
-            ) :: [map | reference]
+            ) :: [tuple]
       def load_model_animations(
             _file_name,
             _return \\ :value
@@ -1476,11 +1476,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_animation
       @spec update_model_animation(
-              model :: map | reference,
-              anim :: map | reference,
+              model :: tuple,
+              anim :: tuple,
               frame :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def update_model_animation(
             _model,
             _anim,
@@ -1499,11 +1499,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_animation
       @spec update_model_animation_bones(
-              model :: map | reference,
-              anim :: map | reference,
+              model :: tuple,
+              anim :: tuple,
               frame :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def update_model_animation_bones(
             _model,
             _anim,
@@ -1522,8 +1522,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :model_animation
       @spec is_model_animation_valid(
-              model :: map | reference,
-              anim :: map | reference
+              model :: tuple,
+              anim :: tuple
             ) :: boolean
       def is_model_animation_valid(
             _model,
@@ -1545,9 +1545,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec check_collision_spheres(
-              center1 :: map | reference,
+              center1 :: tuple,
               radius1 :: float,
-              center2 :: map | reference,
+              center2 :: tuple,
               radius2 :: float
             ) :: boolean
       def check_collision_spheres(
@@ -1568,8 +1568,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec check_collision_boxes(
-              box1 :: map | reference,
-              box2 :: map | reference
+              box1 :: tuple,
+              box2 :: tuple
             ) :: boolean
       def check_collision_boxes(
             _box1,
@@ -1587,8 +1587,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec check_collision_box_sphere(
-              box :: map | reference,
-              center :: map | reference,
+              box :: tuple,
+              center :: tuple,
               radius :: float
             ) :: boolean
       def check_collision_box_sphere(
@@ -1608,11 +1608,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec get_ray_collision_sphere(
-              ray :: map | reference,
-              center :: map | reference,
+              ray :: tuple,
+              center :: tuple,
               radius :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_ray_collision_sphere(
             _ray,
             _center,
@@ -1631,10 +1631,10 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec get_ray_collision_box(
-              ray :: map | reference,
-              box :: map | reference,
+              ray :: tuple,
+              box :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_ray_collision_box(
             _ray,
             _box,
@@ -1652,11 +1652,11 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec get_ray_collision_mesh(
-              ray :: map | reference,
-              mesh :: map | reference,
-              transform :: map | reference,
+              ray :: tuple,
+              mesh :: tuple,
+              transform :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_ray_collision_mesh(
             _ray,
             _mesh,
@@ -1675,12 +1675,12 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec get_ray_collision_triangle(
-              ray :: map | reference,
-              p1 :: map | reference,
-              p2 :: map | reference,
-              p3 :: map | reference,
+              ray :: tuple,
+              p1 :: tuple,
+              p2 :: tuple,
+              p3 :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_ray_collision_triangle(
             _ray,
             _p1,
@@ -1700,13 +1700,13 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :collision_detection
       @spec get_ray_collision_quad(
-              ray :: map | reference,
-              p1 :: map | reference,
-              p2 :: map | reference,
-              p3 :: map | reference,
-              p4 :: map | reference,
+              ray :: tuple,
+              p1 :: tuple,
+              p2 :: tuple,
+              p3 :: tuple,
+              p4 :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_ray_collision_quad(
             _ray,
             _p1,

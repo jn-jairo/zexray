@@ -21,7 +21,7 @@ defmodule Zexray.WindowCase do
 
   defp window_init(title) do
     Window.init(800, 600, title)
-    Window.clear_state(:all)
+    Window.clear_state(Zexray.Enum.ConfigFlag.value_flag(:all))
 
     wait_fn(fn -> Window.ready?() end)
 
@@ -70,7 +70,7 @@ defmodule Zexray.WindowAllCase do
 
   defp window_init() do
     Window.init(800, 600, "Zexray Test")
-    Window.clear_state(:all)
+    Window.clear_state(Zexray.Enum.ConfigFlag.value_flag(:all))
 
     wait_fn(fn -> Window.ready?() end)
 

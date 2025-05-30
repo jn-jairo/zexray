@@ -3,7 +3,6 @@ defmodule Zexray.Drawing do
   Drawing
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   #############
@@ -14,18 +13,14 @@ defmodule Zexray.Drawing do
   Set background color (framebuffer clear color)
   """
   @spec clear_background(color :: Zexray.Type.Color.t_all()) :: :ok
-  def clear_background(color)
-      when is_like_color(color) do
-    NIF.clear_background(color |> Zexray.Type.Color.to_nif())
-  end
+  defdelegate clear_background(color), to: NIF, as: :clear_background
 
   @doc """
   Run function with canvas (framebuffer) to drawing and
   end canvas drawing and swap buffers (double buffering after
   """
   @spec with_drawing(func :: (-> any)) :: any
-  def with_drawing(func)
-      when is_function(func) do
+  def with_drawing(func) when is_function(func) do
     try do
       begin_drawing()
       func.()
@@ -38,17 +33,13 @@ defmodule Zexray.Drawing do
   Setup canvas (framebuffer) to start drawing
   """
   @spec begin_drawing() :: :ok
-  def begin_drawing() do
-    NIF.begin_drawing()
-  end
+  defdelegate begin_drawing(), to: NIF, as: :begin_drawing
 
   @doc """
   End canvas drawing and swap buffers (double buffering)
   """
   @spec end_drawing() :: :ok
-  def end_drawing() do
-    NIF.end_drawing()
-  end
+  defdelegate end_drawing(), to: NIF, as: :end_drawing
 
   @doc """
   Run function with 2D mode with custom camera (2D)
@@ -57,12 +48,7 @@ defmodule Zexray.Drawing do
           camera :: Zexray.Type.Camera2D.t_all(),
           func :: (-> any)
         ) :: any
-  def with_mode_2d(
-        camera,
-        func
-      )
-      when is_like_camera_2d(camera) and
-             is_function(func) do
+  def with_mode_2d(camera, func) when is_function(func) do
     try do
       begin_mode_2d(camera)
       func.()
@@ -75,18 +61,13 @@ defmodule Zexray.Drawing do
   Begin 2D mode with custom camera (2D)
   """
   @spec begin_mode_2d(camera :: Zexray.Type.Camera2D.t_all()) :: :ok
-  def begin_mode_2d(camera)
-      when is_like_camera_2d(camera) do
-    NIF.begin_mode_2d(camera |> Zexray.Type.Camera2D.to_nif())
-  end
+  defdelegate begin_mode_2d(camera), to: NIF, as: :begin_mode_2d
 
   @doc """
   Ends 2D mode with custom camera
   """
   @spec end_mode_2d() :: :ok
-  def end_mode_2d() do
-    NIF.end_mode_2d()
-  end
+  defdelegate end_mode_2d(), to: NIF, as: :end_mode_2d
 
   @doc """
   Run function with 3D mode with custom camera (3D)
@@ -95,12 +76,7 @@ defmodule Zexray.Drawing do
           camera :: Zexray.Type.Camera3D.t_all(),
           func :: (-> any)
         ) :: any
-  def with_mode_3d(
-        camera,
-        func
-      )
-      when is_like_camera_3d(camera) and
-             is_function(func) do
+  def with_mode_3d(camera, func) when is_function(func) do
     try do
       begin_mode_3d(camera)
       func.()
@@ -113,18 +89,13 @@ defmodule Zexray.Drawing do
   Begin 3D mode with custom camera (3D)
   """
   @spec begin_mode_3d(camera :: Zexray.Type.Camera3D.t_all()) :: :ok
-  def begin_mode_3d(camera)
-      when is_like_camera_3d(camera) do
-    NIF.begin_mode_3d(camera |> Zexray.Type.Camera3D.to_nif())
-  end
+  defdelegate begin_mode_3d(camera), to: NIF, as: :begin_mode_3d
 
   @doc """
   Ends 3D mode and returns to default 2D orthographic mode
   """
   @spec end_mode_3d() :: :ok
-  def end_mode_3d() do
-    NIF.end_mode_3d()
-  end
+  defdelegate end_mode_3d(), to: NIF, as: :end_mode_3d
 
   @doc """
   Run function drawing to render texture
@@ -133,12 +104,7 @@ defmodule Zexray.Drawing do
           target :: Zexray.Type.RenderTexture2D.t_all(),
           func :: (-> any)
         ) :: any
-  def with_texture_mode(
-        target,
-        func
-      )
-      when is_like_render_texture_2d(target) and
-             is_function(func) do
+  def with_texture_mode(target, func) when is_function(func) do
     try do
       begin_texture_mode(target)
       func.()
@@ -151,18 +117,13 @@ defmodule Zexray.Drawing do
   Begin drawing to render texture
   """
   @spec begin_texture_mode(target :: Zexray.Type.RenderTexture2D.t_all()) :: :ok
-  def begin_texture_mode(target)
-      when is_like_render_texture_2d(target) do
-    NIF.begin_texture_mode(target |> Zexray.Type.RenderTexture2D.to_nif())
-  end
+  defdelegate begin_texture_mode(target), to: NIF, as: :begin_texture_mode
 
   @doc """
   Ends drawing to render texture
   """
   @spec end_texture_mode() :: :ok
-  def end_texture_mode() do
-    NIF.end_texture_mode()
-  end
+  defdelegate end_texture_mode(), to: NIF, as: :end_texture_mode
 
   @doc """
   Run function with custom shader drawing
@@ -171,12 +132,7 @@ defmodule Zexray.Drawing do
           shader :: Zexray.Type.Shader.t_all(),
           func :: (-> any)
         ) :: any
-  def with_shader_mode(
-        shader,
-        func
-      )
-      when is_like_shader(shader) and
-             is_function(func) do
+  def with_shader_mode(shader, func) when is_function(func) do
     try do
       begin_shader_mode(shader)
       func.()
@@ -189,32 +145,22 @@ defmodule Zexray.Drawing do
   Begin custom shader drawing
   """
   @spec begin_shader_mode(shader :: Zexray.Type.Shader.t_all()) :: :ok
-  def begin_shader_mode(shader)
-      when is_like_shader(shader) do
-    NIF.begin_shader_mode(shader |> Zexray.Type.Shader.to_nif())
-  end
+  defdelegate begin_shader_mode(shader), to: NIF, as: :begin_shader_mode
 
   @doc """
   End custom shader drawing (use default shader)
   """
   @spec end_shader_mode() :: :ok
-  def end_shader_mode() do
-    NIF.end_shader_mode()
-  end
+  defdelegate end_shader_mode(), to: NIF, as: :end_shader_mode
 
   @doc """
   Run function with blending mode (alpha, additive, multiplied, subtract, custom)
   """
   @spec with_blend_mode(
-          mode :: Zexray.Enum.BlendMode.t_all(),
+          mode :: Zexray.Enum.BlendMode.t(),
           func :: (-> any)
         ) :: any
-  def with_blend_mode(
-        mode,
-        func
-      )
-      when is_like_blend_mode(mode) and
-             is_function(func) do
+  def with_blend_mode(mode, func) when is_function(func) do
     try do
       begin_blend_mode(mode)
       func.()
@@ -226,19 +172,14 @@ defmodule Zexray.Drawing do
   @doc """
   Begin blending mode (alpha, additive, multiplied, subtract, custom)
   """
-  @spec begin_blend_mode(mode :: Zexray.Enum.BlendMode.t_all()) :: :ok
-  def begin_blend_mode(mode)
-      when is_like_blend_mode(mode) do
-    NIF.begin_blend_mode(Zexray.Enum.BlendMode.value(mode))
-  end
+  @spec begin_blend_mode(mode :: Zexray.Enum.BlendMode.t()) :: :ok
+  defdelegate begin_blend_mode(mode), to: NIF, as: :begin_blend_mode
 
   @doc """
   End blending mode (reset to default: alpha blending)
   """
   @spec end_blend_mode() :: :ok
-  def end_blend_mode() do
-    NIF.end_blend_mode()
-  end
+  defdelegate end_blend_mode(), to: NIF, as: :end_blend_mode
 
   @doc """
   Run function with scissor mode (define screen area for following drawing)
@@ -250,18 +191,7 @@ defmodule Zexray.Drawing do
           height :: integer,
           func :: (-> any)
         ) :: any
-  def with_scissor_mode(
-        x,
-        y,
-        width,
-        height,
-        func
-      )
-      when is_integer(x) and
-             is_integer(y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_function(func) do
+  def with_scissor_mode(x, y, width, height, func) when is_function(func) do
     try do
       begin_scissor_mode(x, y, width, height)
       func.()
@@ -279,26 +209,20 @@ defmodule Zexray.Drawing do
           width :: integer,
           height :: integer
         ) :: :ok
-  def begin_scissor_mode(
-        x,
-        y,
-        width,
-        height
-      )
-      when is_integer(x) and
-             is_integer(y) and
-             is_integer(width) and
-             is_integer(height) do
-    NIF.begin_scissor_mode(x, y, width, height)
-  end
+  defdelegate begin_scissor_mode(
+                x,
+                y,
+                width,
+                height
+              ),
+              to: NIF,
+              as: :begin_scissor_mode
 
   @doc """
   End scissor mode
   """
   @spec end_scissor_mode() :: :ok
-  def end_scissor_mode() do
-    NIF.end_scissor_mode()
-  end
+  defdelegate end_scissor_mode(), to: NIF, as: :end_scissor_mode
 
   @doc """
   Run function with stereo rendering (requires VR simulator)
@@ -307,12 +231,7 @@ defmodule Zexray.Drawing do
           config :: Zexray.Type.VrStereoConfig.t_all(),
           func :: (-> any)
         ) :: any
-  def with_vr_stereo_mode(
-        config,
-        func
-      )
-      when is_like_vr_stereo_config(config) and
-             is_function(func) do
+  def with_vr_stereo_mode(config, func) when is_function(func) do
     try do
       begin_vr_stereo_mode(config)
       func.()
@@ -325,16 +244,11 @@ defmodule Zexray.Drawing do
   Begin stereo rendering (requires VR simulator)
   """
   @spec begin_vr_stereo_mode(config :: Zexray.Type.VrStereoConfig.t_all()) :: :ok
-  def begin_vr_stereo_mode(config)
-      when is_like_vr_stereo_config(config) do
-    NIF.begin_vr_stereo_mode(config |> Zexray.Type.VrStereoConfig.to_nif())
-  end
+  defdelegate begin_vr_stereo_mode(config), to: NIF, as: :begin_vr_stereo_mode
 
   @doc """
   End stereo rendering (requires VR simulator)
   """
   @spec end_vr_stereo_mode() :: :ok
-  def end_vr_stereo_mode() do
-    NIF.end_vr_stereo_mode()
-  end
+  defdelegate end_vr_stereo_mode(), to: NIF, as: :end_vr_stereo_mode
 end

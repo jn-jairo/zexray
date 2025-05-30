@@ -31,7 +31,7 @@ defmodule Zexray.NIF.Font do
       ```
       """
       @doc group: :font_loading
-      @spec get_font_default(return :: :value | :resource) :: map | reference
+      @spec get_font_default(return :: :value | :resource) :: tuple
       def get_font_default(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -46,7 +46,7 @@ defmodule Zexray.NIF.Font do
       @spec load_font(
               file_name :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_font(
             _file_name,
             _return \\ :value
@@ -68,7 +68,7 @@ defmodule Zexray.NIF.Font do
               codepoints :: [integer],
               font_type :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_font_ex(
             _file_name,
             _font_size,
@@ -88,11 +88,11 @@ defmodule Zexray.NIF.Font do
       """
       @doc group: :font_loading
       @spec load_font_from_image(
-              image :: map | reference,
-              key :: map | reference,
+              image :: tuple,
+              key :: tuple,
               first_char :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_font_from_image(
             _image,
             _key,
@@ -117,7 +117,7 @@ defmodule Zexray.NIF.Font do
               codepoints :: [integer],
               font_type :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_font_from_memory(
             _file_type,
             _file_data,
@@ -137,7 +137,7 @@ defmodule Zexray.NIF.Font do
       ```
       """
       @doc group: :font_loading
-      @spec is_font_valid(font :: map | reference) :: boolean
+      @spec is_font_valid(font :: tuple) :: boolean
       def is_font_valid(_font), do: :erlang.nif_error(:undef)
     end
   end

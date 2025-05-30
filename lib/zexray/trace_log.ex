@@ -3,32 +3,26 @@ defmodule Zexray.TraceLog do
   Trace Log
   """
 
-  import Zexray.Guard
+  use Zexray.Enum
+
   alias Zexray.NIF
 
   @doc """
   Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
   """
   @spec trace_log(
-          log_level :: Zexray.Enum.TraceLogLevel.t_all(),
+          log_level :: Zexray.Enum.TraceLogLevel.t(),
           text :: binary
         ) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def trace_log(
-          log_level,
-          text
-        )
-        when is_like_trace_log_level(log_level) and
-               is_binary(text) do
-      NIF.trace_log(
-        Zexray.Enum.TraceLogLevel.value(log_level),
-        text
-      )
-    end
+    defdelegate trace_log(
+                  log_level,
+                  text
+                ),
+                to: NIF,
+                as: :trace_log
   else
-    def trace_log(log_level, text)
-        when is_like_trace_log_level(log_level) and is_binary(text),
-        do: :ok
+    def trace_log(_log_level, _text), do: :ok
   end
 
   @doc """
@@ -38,12 +32,11 @@ defmodule Zexray.TraceLog do
   """
   @spec trace(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def trace(text)
-        when is_binary(text) do
-      trace_log(:trace, text)
+    def trace(text) do
+      trace_log(enum_trace_log_level(:trace), text)
     end
   else
-    def trace(text) when is_binary(text), do: :ok
+    def trace(_text), do: :ok
   end
 
   @doc """
@@ -54,12 +47,11 @@ defmodule Zexray.TraceLog do
   @spec debug(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) and
        Application.compile_env(:zexray, :trace_log_debug, false) do
-    def debug(text)
-        when is_binary(text) do
-      trace_log(:debug, text)
+    def debug(text) do
+      trace_log(enum_trace_log_level(:debug), text)
     end
   else
-    def debug(text) when is_binary(text), do: :ok
+    def debug(_text), do: :ok
   end
 
   @doc """
@@ -69,12 +61,11 @@ defmodule Zexray.TraceLog do
   """
   @spec info(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def info(text)
-        when is_binary(text) do
-      trace_log(:info, text)
+    def info(text) do
+      trace_log(enum_trace_log_level(:info), text)
     end
   else
-    def info(text) when is_binary(text), do: :ok
+    def info(_text), do: :ok
   end
 
   @doc """
@@ -84,12 +75,11 @@ defmodule Zexray.TraceLog do
   """
   @spec warning(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def warning(text)
-        when is_binary(text) do
-      trace_log(:warning, text)
+    def warning(text) do
+      trace_log(enum_trace_log_level(:warning), text)
     end
   else
-    def warning(text) when is_binary(text), do: :ok
+    def warning(_text), do: :ok
   end
 
   @doc """
@@ -99,12 +89,11 @@ defmodule Zexray.TraceLog do
   """
   @spec error(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def error(text)
-        when is_binary(text) do
-      trace_log(:error, text)
+    def error(text) do
+      trace_log(enum_trace_log_level(:error), text)
     end
   else
-    def error(text) when is_binary(text), do: :ok
+    def error(_text), do: :ok
   end
 
   @doc """
@@ -114,20 +103,16 @@ defmodule Zexray.TraceLog do
   """
   @spec fatal(text :: binary) :: :ok
   if Application.compile_env(:zexray, :trace_log, true) do
-    def fatal(text)
-        when is_binary(text) do
-      trace_log(:fatal, text)
+    def fatal(text) do
+      trace_log(enum_trace_log_level(:fatal), text)
     end
   else
-    def fatal(text) when is_binary(text), do: :ok
+    def fatal(_text), do: :ok
   end
 
   @doc """
   Set the current threshold (minimum) log level
   """
-  @spec set_level(log_level :: Zexray.Enum.TraceLogLevel.t_all()) :: :ok
-  def set_level(log_level)
-      when is_like_trace_log_level(log_level) do
-    NIF.set_trace_log_level(Zexray.Enum.TraceLogLevel.value(log_level))
-  end
+  @spec set_level(log_level :: Zexray.Enum.TraceLogLevel.t()) :: :ok
+  defdelegate set_level(log_level), to: NIF, as: :set_trace_log_level
 end

@@ -15,8 +15,7 @@ defmodule Zexray.Audio do
   """
   @doc group: :device_management
   @spec with_audio(func :: (-> any)) :: any
-  def with_audio(func)
-      when is_function(func) do
+  def with_audio(func) when is_function(func) do
     try do
       init()
       func.()
@@ -30,46 +29,35 @@ defmodule Zexray.Audio do
   """
   @doc group: :device_management
   @spec init() :: :ok
-  def init() do
-    NIF.init_audio_device()
-  end
+  defdelegate init(), to: NIF, as: :init_audio_device
 
   @doc """
   Close the audio device and context
   """
   @doc group: :device_management
   @spec close() :: :ok
-  def close() do
-    NIF.close_audio_device()
-  end
+  defdelegate close(), to: NIF, as: :close_audio_device
 
   @doc """
   Check if audio device has been initialized successfully
   """
   @doc group: :device_management
   @spec ready?() :: boolean
-  def ready?() do
-    NIF.is_audio_device_ready()
-  end
+  defdelegate ready?(), to: NIF, as: :is_audio_device_ready
 
   @doc """
   Set master volume (listener)
   """
   @doc group: :device_management
   @spec set_master_volume(volume :: float) :: :ok
-  def set_master_volume(volume)
-      when is_float(volume) do
-    NIF.set_master_volume(volume)
-  end
+  defdelegate set_master_volume(volume), to: NIF, as: :set_master_volume
 
   @doc """
   Get master volume (listener)
   """
   @doc group: :device_management
   @spec get_master_volume() :: float
-  def get_master_volume() do
-    NIF.get_master_volume()
-  end
+  defdelegate get_master_volume(), to: NIF, as: :get_master_volume
 
   ################
   #  Management  #
@@ -80,9 +68,7 @@ defmodule Zexray.Audio do
   """
   @doc group: :management
   @spec set_buffer_size(size :: integer) :: :ok
-  def set_buffer_size(size) when is_integer(size) do
-    set_stream_buffer_size(size)
-  end
+  defdelegate set_buffer_size(size), to: __MODULE__, as: :set_stream_buffer_size
 
   @doc """
   Play audio
@@ -92,20 +78,19 @@ defmodule Zexray.Audio do
 
   @spec play(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def play(sound, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def play(sound, return) when is_sound(sound) or is_sound_alias(sound) do
     play_sound(sound, return)
   end
 
   @spec play(music :: Zexray.Type.Music.t_all(), return :: :value | :resource) ::
           Zexray.Type.Music.t_nif()
-  def play(music, return) when is_music(music) and is_nif_return(return) do
+  def play(music, return) when is_music(music) do
     play_music(music, return)
   end
 
   @spec play(stream :: Zexray.Type.AudioStream.t_all(), return :: :value | :resource) ::
           Zexray.Type.AudioStream.t_nif()
-  def play(stream, return) when is_audio_stream(stream) and is_nif_return(return) do
+  def play(stream, return) when is_audio_stream(stream) do
     play_stream(stream, return)
   end
 
@@ -117,20 +102,19 @@ defmodule Zexray.Audio do
 
   @spec stop(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def stop(sound, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def stop(sound, return) when is_sound(sound) or is_sound_alias(sound) do
     stop_sound(sound, return)
   end
 
   @spec stop(music :: Zexray.Type.Music.t_all(), return :: :value | :resource) ::
           Zexray.Type.Music.t_nif()
-  def stop(music, return) when is_music(music) and is_nif_return(return) do
+  def stop(music, return) when is_music(music) do
     stop_music(music, return)
   end
 
   @spec stop(stream :: Zexray.Type.AudioStream.t_all(), return :: :value | :resource) ::
           Zexray.Type.AudioStream.t_nif()
-  def stop(stream, return) when is_audio_stream(stream) and is_nif_return(return) do
+  def stop(stream, return) when is_audio_stream(stream) do
     stop_stream(stream, return)
   end
 
@@ -142,20 +126,19 @@ defmodule Zexray.Audio do
 
   @spec pause(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def pause(sound, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def pause(sound, return) when is_sound(sound) or is_sound_alias(sound) do
     pause_sound(sound, return)
   end
 
   @spec pause(music :: Zexray.Type.Music.t_all(), return :: :value | :resource) ::
           Zexray.Type.Music.t_nif()
-  def pause(music, return) when is_music(music) and is_nif_return(return) do
+  def pause(music, return) when is_music(music) do
     pause_music(music, return)
   end
 
   @spec pause(stream :: Zexray.Type.AudioStream.t_all(), return :: :value | :resource) ::
           Zexray.Type.AudioStream.t_nif()
-  def pause(stream, return) when is_audio_stream(stream) and is_nif_return(return) do
+  def pause(stream, return) when is_audio_stream(stream) do
     pause_stream(stream, return)
   end
 
@@ -167,20 +150,19 @@ defmodule Zexray.Audio do
 
   @spec resume(sound :: Zexray.Type.Sound.t_all(), return :: :value | :resource) ::
           Zexray.Type.Sound.t_nif()
-  def resume(sound, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_nif_return(return) do
+  def resume(sound, return) when is_sound(sound) or is_sound_alias(sound) do
     resume_sound(sound, return)
   end
 
   @spec resume(music :: Zexray.Type.Music.t_all(), return :: :value | :resource) ::
           Zexray.Type.Music.t_nif()
-  def resume(music, return) when is_music(music) and is_nif_return(return) do
+  def resume(music, return) when is_music(music) do
     resume_music(music, return)
   end
 
   @spec resume(stream :: Zexray.Type.AudioStream.t_all(), return :: :value | :resource) ::
           Zexray.Type.AudioStream.t_nif()
-  def resume(stream, return) when is_audio_stream(stream) and is_nif_return(return) do
+  def resume(stream, return) when is_audio_stream(stream) do
     resume_stream(stream, return)
   end
 
@@ -258,9 +240,7 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_volume(sound, volume, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_float(volume) and
-             is_nif_return(return) do
+  def set_volume(sound, volume, return) when is_sound(sound) or is_sound_alias(sound) do
     set_sound_volume(sound, volume, return)
   end
 
@@ -269,8 +249,7 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_volume(music, volume, return)
-      when is_music(music) and is_float(volume) and is_nif_return(return) do
+  def set_volume(music, volume, return) when is_music(music) do
     set_music_volume(music, volume, return)
   end
 
@@ -279,8 +258,7 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_volume(stream, volume, return)
-      when is_audio_stream(stream) and is_float(volume) and is_nif_return(return) do
+  def set_volume(stream, volume, return) when is_audio_stream(stream) do
     set_stream_volume(stream, volume, return)
   end
 
@@ -295,9 +273,7 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_pitch(sound, pitch, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_float(pitch) and
-             is_nif_return(return) do
+  def set_pitch(sound, pitch, return) when is_sound(sound) or is_sound_alias(sound) do
     set_sound_pitch(sound, pitch, return)
   end
 
@@ -306,8 +282,7 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_pitch(music, pitch, return)
-      when is_music(music) and is_float(pitch) and is_nif_return(return) do
+  def set_pitch(music, pitch, return) when is_music(music) do
     set_music_pitch(music, pitch, return)
   end
 
@@ -316,8 +291,7 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_pitch(stream, pitch, return)
-      when is_audio_stream(stream) and is_float(pitch) and is_nif_return(return) do
+  def set_pitch(stream, pitch, return) when is_audio_stream(stream) do
     set_stream_pitch(stream, pitch, return)
   end
 
@@ -332,8 +306,7 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_pan(sound, pan, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and is_float(pan) and is_nif_return(return) do
+  def set_pan(sound, pan, return) when is_sound(sound) or is_sound_alias(sound) do
     set_sound_pan(sound, pan, return)
   end
 
@@ -342,8 +315,7 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_pan(music, pan, return)
-      when is_music(music) and is_float(pan) and is_nif_return(return) do
+  def set_pan(music, pan, return) when is_music(music) do
     set_music_pan(music, pan, return)
   end
 
@@ -352,8 +324,7 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_pan(stream, pan, return)
-      when is_audio_stream(stream) and is_float(pan) and is_nif_return(return) do
+  def set_pan(stream, pan, return) when is_audio_stream(stream) do
     set_stream_pan(stream, pan, return)
   end
 
@@ -368,8 +339,7 @@ defmodule Zexray.Audio do
           looping :: boolean,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_looping(music, looping, return)
-      when is_music(music) and is_boolean(looping) and is_nif_return(return) do
+  def set_looping(music, looping, return) when is_music(music) do
     set_music_looping(music, looping, return)
   end
 
@@ -406,8 +376,7 @@ defmodule Zexray.Audio do
   @doc group: :management
   def update(audio, data \\ nil, return \\ :value)
 
-  def update(audio, return, _)
-      when is_music(audio) and is_nif_return(return) do
+  def update(audio, return, _) when is_music(audio) and is_nif_return(return) do
     update(audio, nil, return)
   end
 
@@ -420,14 +389,7 @@ defmodule Zexray.Audio do
             | [float],
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def update(sound, data, return)
-      when (is_sound(sound) or is_sound_alias(sound)) and
-             (is_binary(data) or
-                (is_list(data) and
-                   (data == [] or
-                      is_float(hd(data)) or
-                      is_integer(hd(data))))) and
-             is_nif_return(return) do
+  def update(sound, data, return) when is_sound(sound) or is_sound_alias(sound) do
     update_sound(sound, data, return)
   end
 
@@ -436,13 +398,7 @@ defmodule Zexray.Audio do
           data :: nil,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def update(
-        music,
-        nil,
-        return
-      )
-      when is_music(music) and
-             is_nif_return(return) do
+  def update(music, nil, return) when is_music(music) do
     update_music(music, return)
   end
 
@@ -455,14 +411,7 @@ defmodule Zexray.Audio do
             | [float],
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def update(stream, data, return)
-      when is_audio_stream(stream) and
-             (is_binary(data) or
-                (is_list(data) and
-                   (data == [] or
-                      is_float(hd(data)) or
-                      is_integer(hd(data))))) and
-             is_nif_return(return) do
+  def update(stream, data, return) when is_audio_stream(stream) do
     update_stream(stream, data, return)
   end
 
@@ -478,18 +427,12 @@ defmodule Zexray.Audio do
           file_name :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def load_wave(
-        file_name,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_nif_return(return) do
-    NIF.load_wave(
-      file_name,
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate load_wave(
+                file_name,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_wave
 
   @doc """
   Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
@@ -500,31 +443,20 @@ defmodule Zexray.Audio do
           file_data :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def load_wave_from_memory(
-        file_type,
-        file_data,
-        return \\ :value
-      )
-      when is_binary(file_type) and
-             is_binary(file_data) and
-             is_nif_return(return) do
-    NIF.load_wave_from_memory(
-      file_type,
-      file_data,
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate load_wave_from_memory(
+                file_type,
+                file_data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_wave_from_memory
 
   @doc """
   Checks if wave data is valid (data loaded and parameters)
   """
   @doc group: :sound
   @spec wave_valid?(wave :: Zexray.Type.Wave.t_all()) :: boolean
-  def wave_valid?(wave)
-      when is_like_wave(wave) do
-    NIF.is_wave_valid(wave |> Zexray.Type.Wave.to_nif())
-  end
+  defdelegate wave_valid?(wave), to: NIF, as: :is_wave_valid
 
   @doc """
   Load sound from file
@@ -534,18 +466,12 @@ defmodule Zexray.Audio do
           file_name :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def load_sound(
-        file_name,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_nif_return(return) do
-    NIF.load_sound(
-      file_name,
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate load_sound(
+                file_name,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_sound
 
   @doc """
   Load sound from wave data
@@ -555,18 +481,12 @@ defmodule Zexray.Audio do
           wave :: Zexray.Type.Wave.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def load_sound_from_wave(
-        wave,
-        return \\ :value
-      )
-      when is_like_wave(wave) and
-             is_nif_return(return) do
-    NIF.load_sound_from_wave(
-      wave |> Zexray.Type.Wave.to_nif(),
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate load_sound_from_wave(
+                wave,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_sound_from_wave
 
   @doc """
   Create a new sound that shares the same sample data as the source sound, does not own the sound data
@@ -576,28 +496,19 @@ defmodule Zexray.Audio do
           source :: Zexray.Type.Sound.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.SoundAlias.t_nif()
-  def load_sound_alias(
-        source,
-        return \\ :value
-      )
-      when is_like_sound(source) and
-             is_nif_return(return) do
-    NIF.load_sound_alias(
-      source |> Zexray.Type.Sound.to_nif(),
-      return
-    )
-    |> Zexray.Type.SoundAlias.from_nif()
-  end
+  defdelegate load_sound_alias(
+                source,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_sound_alias
 
   @doc """
   Checks if a sound is valid (data loaded and buffers initialized)
   """
   @doc group: :sound
   @spec sound_valid?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def sound_valid?(sound)
-      when is_like_sound(sound) do
-    NIF.is_sound_valid(sound |> Zexray.Type.Sound.to_nif())
-  end
+  defdelegate sound_valid?(sound), to: NIF, as: :is_sound_valid
 
   @doc """
   Update sound buffer with new data
@@ -612,35 +523,20 @@ defmodule Zexray.Audio do
             | [float],
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def update_sound(
-        sound,
-        data,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             (is_binary(data) or
-                (is_list(data) and
-                   (data == [] or
-                      is_float(hd(data)) or
-                      is_integer(hd(data))))) and
-             is_nif_return(return) do
-    NIF.update_sound(
-      sound |> Zexray.Type.Sound.to_nif(),
-      data,
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate update_sound(
+                sound,
+                data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :update_sound
 
   @doc """
   Check if any audio stream buffers requires refill
   """
   @doc group: :sound
   @spec sound_processed?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def sound_processed?(sound)
-      when is_like_sound(sound) do
-    NIF.is_sound_processed(sound |> Zexray.Type.Sound.to_nif())
-  end
+  defdelegate sound_processed?(sound), to: NIF, as: :is_sound_processed
 
   @doc """
   Export wave data to file, returns true on success
@@ -650,17 +546,12 @@ defmodule Zexray.Audio do
           wave :: Zexray.Type.Wave.t_all(),
           file_name :: binary
         ) :: boolean
-  def export_wave(
-        wave,
-        file_name
-      )
-      when is_like_wave(wave) and
-             is_binary(file_name) do
-    NIF.export_wave(
-      wave |> Zexray.Type.Wave.to_nif(),
-      file_name
-    )
-  end
+  defdelegate export_wave(
+                wave,
+                file_name
+              ),
+              to: NIF,
+              as: :export_wave
 
   @doc """
   Play a sound
@@ -670,18 +561,12 @@ defmodule Zexray.Audio do
           sound :: Zexray.Type.Sound.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def play_sound(
-        sound,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_nif_return(return) do
-    NIF.play_sound(
-      sound |> Zexray.Type.Sound.to_nif(),
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate play_sound(
+                sound,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :play_sound
 
   @doc """
   Stop playing a sound
@@ -691,18 +576,12 @@ defmodule Zexray.Audio do
           sound :: Zexray.Type.Sound.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def stop_sound(
-        sound,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_nif_return(return) do
-    NIF.stop_sound(
-      sound |> Zexray.Type.Sound.to_nif(),
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate stop_sound(
+                sound,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :stop_sound
 
   @doc """
   Pause a sound
@@ -712,18 +591,12 @@ defmodule Zexray.Audio do
           sound :: Zexray.Type.Sound.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def pause_sound(
-        sound,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_nif_return(return) do
-    NIF.pause_sound(
-      sound |> Zexray.Type.Sound.to_nif(),
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate pause_sound(
+                sound,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :pause_sound
 
   @doc """
   Resume a paused sound
@@ -733,28 +606,19 @@ defmodule Zexray.Audio do
           sound :: Zexray.Type.Sound.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def resume_sound(
-        sound,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_nif_return(return) do
-    NIF.resume_sound(
-      sound |> Zexray.Type.Sound.to_nif(),
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate resume_sound(
+                sound,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :resume_sound
 
   @doc """
   Check if a sound is currently playing
   """
   @doc group: :sound
   @spec sound_playing?(sound :: Zexray.Type.Sound.t_all()) :: boolean
-  def sound_playing?(sound)
-      when is_like_sound(sound) do
-    NIF.is_sound_playing(sound |> Zexray.Type.Sound.to_nif())
-  end
+  defdelegate sound_playing?(sound), to: NIF, as: :is_sound_playing
 
   @doc """
   Set volume for a sound (1.0 is max level)
@@ -765,21 +629,13 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_sound_volume(
-        sound,
-        volume,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_float(volume) and
-             is_nif_return(return) do
-    NIF.set_sound_volume(
-      sound |> Zexray.Type.Sound.to_nif(),
-      volume,
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate set_sound_volume(
+                sound,
+                volume,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_sound_volume
 
   @doc """
   Set pitch for a sound (1.0 is base level)
@@ -790,21 +646,13 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_sound_pitch(
-        sound,
-        pitch,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_float(pitch) and
-             is_nif_return(return) do
-    NIF.set_sound_pitch(
-      sound |> Zexray.Type.Sound.to_nif(),
-      pitch,
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate set_sound_pitch(
+                sound,
+                pitch,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_sound_pitch
 
   @doc """
   Set pan for a sound (0.5 is center)
@@ -815,31 +663,20 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
-  def set_sound_pan(
-        sound,
-        pan,
-        return \\ :value
-      )
-      when is_like_sound(sound) and
-             is_float(pan) and
-             is_nif_return(return) do
-    NIF.set_sound_pan(
-      sound |> Zexray.Type.Sound.to_nif(),
-      pan,
-      return
-    )
-    |> Zexray.Type.Sound.from_nif()
-  end
+  defdelegate set_sound_pan(
+                sound,
+                pan,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_sound_pan
 
   @doc """
   Get sound time length (in seconds)
   """
   @doc group: :sound
   @spec get_sound_time_length(sound :: Zexray.Type.Sound.t_all()) :: float
-  def get_sound_time_length(sound)
-      when is_like_sound(sound) do
-    NIF.get_sound_time_length(sound |> Zexray.Type.Sound.to_nif())
-  end
+  defdelegate get_sound_time_length(sound), to: NIF, as: :get_sound_time_length
 
   @doc """
   Copy a wave to a new wave
@@ -849,18 +686,12 @@ defmodule Zexray.Audio do
           wave :: Zexray.Type.Wave.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def wave_copy(
-        wave,
-        return \\ :value
-      )
-      when is_like_wave(wave) and
-             is_nif_return(return) do
-    NIF.wave_copy(
-      wave |> Zexray.Type.Wave.to_nif(),
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate wave_copy(
+                wave,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :wave_copy
 
   @doc """
   Crop a wave to defined frames range
@@ -872,24 +703,14 @@ defmodule Zexray.Audio do
           final_frame :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def wave_crop(
-        wave,
-        init_frame,
-        final_frame,
-        return \\ :value
-      )
-      when is_like_wave(wave) and
-             is_integer(init_frame) and
-             is_integer(final_frame) and
-             is_nif_return(return) do
-    NIF.wave_crop(
-      wave |> Zexray.Type.Wave.to_nif(),
-      init_frame,
-      final_frame,
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate wave_crop(
+                wave,
+                init_frame,
+                final_frame,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :wave_crop
 
   @doc """
   Convert wave data to desired format
@@ -902,37 +723,22 @@ defmodule Zexray.Audio do
           channels :: integer,
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def wave_format(
-        wave,
-        sample_rate,
-        sample_size,
-        channels,
-        return \\ :value
-      )
-      when is_like_wave(wave) and
-             is_integer(sample_rate) and
-             is_integer(sample_size) and
-             is_integer(channels) and
-             is_nif_return(return) do
-    NIF.wave_format(
-      wave |> Zexray.Type.Wave.to_nif(),
-      sample_rate,
-      sample_size,
-      channels,
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate wave_format(
+                wave,
+                sample_rate,
+                sample_size,
+                channels,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :wave_format
 
   @doc """
   Load samples data from wave as a 32bit float data array
   """
   @doc group: :sound
   @spec load_wave_samples(wave :: Zexray.Type.Wave.t_all()) :: [float]
-  def load_wave_samples(wave)
-      when is_like_wave(wave) do
-    NIF.load_wave_samples(wave |> Zexray.Type.Wave.to_nif())
-  end
+  defdelegate load_wave_samples(wave), to: NIF, as: :load_wave_samples
 
   @doc """
   Load samples data from wave
@@ -940,10 +746,7 @@ defmodule Zexray.Audio do
   @doc group: :sound
   @spec load_wave_samples_raw(wave :: Zexray.Type.Wave.t_all()) ::
           binary | [byte] | [integer] | [float]
-  def load_wave_samples_raw(wave)
-      when is_like_wave(wave) do
-    NIF.load_wave_samples_raw(wave |> Zexray.Type.Wave.to_nif())
-  end
+  defdelegate load_wave_samples_raw(wave), to: NIF, as: :load_wave_samples_raw
 
   @doc """
   Get wave data size in bytes
@@ -954,20 +757,13 @@ defmodule Zexray.Audio do
           channels :: non_neg_integer,
           sample_size :: non_neg_integer
         ) :: non_neg_integer
-  def get_wave_data_size(
-        frame_count,
-        channels,
-        sample_size
-      )
-      when is_integer(frame_count) and
-             is_integer(channels) and
-             is_integer(sample_size) do
-    NIF.get_wave_data_size(
-      frame_count,
-      channels,
-      sample_size
-    )
-  end
+  defdelegate get_wave_data_size(
+                frame_count,
+                channels,
+                sample_size
+              ),
+              to: NIF,
+              as: :get_wave_data_size
 
   ###########
   #  Music  #
@@ -981,18 +777,12 @@ defmodule Zexray.Audio do
           file_name :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def load_music(
-        file_name,
-        return \\ :value
-      )
-      when is_binary(file_name) and
-             is_nif_return(return) do
-    NIF.load_music_stream(
-      file_name,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate load_music(
+                file_name,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_music_stream
 
   @doc """
   Load music stream from data
@@ -1003,31 +793,20 @@ defmodule Zexray.Audio do
           file_data :: binary,
           return :: :value | :resource
         ) :: Zexray.Type.Wave.t_nif()
-  def load_music_from_memory(
-        file_type,
-        file_data,
-        return \\ :value
-      )
-      when is_binary(file_type) and
-             is_binary(file_data) and
-             is_nif_return(return) do
-    NIF.load_music_stream_from_memory(
-      file_type,
-      file_data,
-      return
-    )
-    |> Zexray.Type.Wave.from_nif()
-  end
+  defdelegate load_music_from_memory(
+                file_type,
+                file_data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_music_stream_from_memory
 
   @doc """
   Checks if a music stream is valid (context and buffers initialized)
   """
   @doc group: :music
   @spec music_valid?(music :: Zexray.Type.Music.t_all()) :: boolean
-  def music_valid?(music)
-      when is_like_music(music) do
-    NIF.is_music_valid(music |> Zexray.Type.Music.to_nif())
-  end
+  defdelegate music_valid?(music), to: NIF, as: :is_music_valid
 
   @doc """
   Start music playing
@@ -1037,28 +816,19 @@ defmodule Zexray.Audio do
           music :: Zexray.Type.Music.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def play_music(
-        music,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_nif_return(return) do
-    NIF.play_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate play_music(
+                music,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :play_music_stream
 
   @doc """
   Check if music is playing
   """
   @doc group: :music
   @spec music_playing?(music :: Zexray.Type.Music.t_all()) :: boolean
-  def music_playing?(music)
-      when is_like_music(music) do
-    NIF.is_music_stream_playing(music |> Zexray.Type.Music.to_nif())
-  end
+  defdelegate music_playing?(music), to: NIF, as: :is_music_stream_playing
 
   @doc """
   Updates buffers for music streaming
@@ -1068,28 +838,19 @@ defmodule Zexray.Audio do
           music :: Zexray.Type.Music.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def update_music(
-        music,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_nif_return(return) do
-    NIF.update_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate update_music(
+                music,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :update_music_stream
 
   @doc """
   Check if any audio stream buffers requires refill
   """
   @doc group: :music
   @spec music_processed?(music :: Zexray.Type.Music.t_all()) :: boolean
-  def music_processed?(music)
-      when is_like_music(music) do
-    NIF.is_music_stream_processed(music |> Zexray.Type.Music.to_nif())
-  end
+  defdelegate music_processed?(music), to: NIF, as: :is_music_stream_processed
 
   @doc """
   Stop music playing
@@ -1099,18 +860,12 @@ defmodule Zexray.Audio do
           music :: Zexray.Type.Music.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def stop_music(
-        music,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_nif_return(return) do
-    NIF.stop_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate stop_music(
+                music,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :stop_music_stream
 
   @doc """
   Pause music playing
@@ -1120,18 +875,12 @@ defmodule Zexray.Audio do
           music :: Zexray.Type.Music.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def pause_music(
-        music,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_nif_return(return) do
-    NIF.pause_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate pause_music(
+                music,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :pause_music_stream
 
   @doc """
   Resume playing paused music
@@ -1141,18 +890,12 @@ defmodule Zexray.Audio do
           music :: Zexray.Type.Music.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def resume_music(
-        music,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_nif_return(return) do
-    NIF.resume_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate resume_music(
+                music,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :resume_music_stream
 
   @doc """
   Seek music to a position (in seconds)
@@ -1163,21 +906,13 @@ defmodule Zexray.Audio do
           position :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def seek_music(
-        music,
-        position,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_float(position) and
-             is_nif_return(return) do
-    NIF.seek_music_stream(
-      music |> Zexray.Type.Music.to_nif(),
-      position,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate seek_music(
+                music,
+                position,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :seek_music_stream
 
   @doc """
   Set volume for music (1.0 is max level)
@@ -1188,21 +923,13 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_music_volume(
-        music,
-        volume,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_float(volume) and
-             is_nif_return(return) do
-    NIF.set_music_volume(
-      music |> Zexray.Type.Music.to_nif(),
-      volume,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate set_music_volume(
+                music,
+                volume,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_music_volume
 
   @doc """
   Set pitch for a music (1.0 is base level)
@@ -1213,21 +940,13 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_music_pitch(
-        music,
-        pitch,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_float(pitch) and
-             is_nif_return(return) do
-    NIF.set_music_pitch(
-      music |> Zexray.Type.Music.to_nif(),
-      pitch,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate set_music_pitch(
+                music,
+                pitch,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_music_pitch
 
   @doc """
   Set pan for a music (0.5 is center)
@@ -1238,21 +957,13 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_music_pan(
-        music,
-        pan,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_float(pan) and
-             is_nif_return(return) do
-    NIF.set_music_pan(
-      music |> Zexray.Type.Music.to_nif(),
-      pan,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate set_music_pan(
+                music,
+                pan,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_music_pan
 
   @doc """
   Set looping for a music
@@ -1263,41 +974,27 @@ defmodule Zexray.Audio do
           looping :: boolean,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def set_music_looping(
-        music,
-        looping,
-        return \\ :value
-      )
-      when is_like_music(music) and
-             is_boolean(looping) and
-             is_nif_return(return) do
-    NIF.set_music_looping(
-      music |> Zexray.Type.Music.to_nif(),
-      looping,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate set_music_looping(
+                music,
+                looping,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_music_looping
 
   @doc """
   Get music time length (in seconds)
   """
   @doc group: :music
   @spec get_music_time_length(music :: Zexray.Type.Music.t_all()) :: float
-  def get_music_time_length(music)
-      when is_like_music(music) do
-    NIF.get_music_time_length(music |> Zexray.Type.Music.to_nif())
-  end
+  defdelegate get_music_time_length(music), to: NIF, as: :get_music_time_length
 
   @doc """
   Get current music time played (in seconds)
   """
   @doc group: :music
   @spec get_music_time_played(music :: Zexray.Type.Music.t_all()) :: float
-  def get_music_time_played(music)
-      when is_like_music(music) do
-    NIF.get_music_time_played(music |> Zexray.Type.Music.to_nif())
-  end
+  defdelegate get_music_time_played(music), to: NIF, as: :get_music_time_played
 
   ############
   #  Stream  #
@@ -1313,34 +1010,21 @@ defmodule Zexray.Audio do
           channels :: non_neg_integer,
           return :: :value | :resource
         ) :: Zexray.Type.Music.t_nif()
-  def load_stream(
-        sample_rate,
-        sample_size,
-        channels,
-        return \\ :value
-      )
-      when is_non_neg_integer(sample_rate) and
-             is_non_neg_integer(sample_size) and
-             is_non_neg_integer(channels) and
-             is_nif_return(return) do
-    NIF.load_audio_stream(
-      sample_rate,
-      sample_size,
-      channels,
-      return
-    )
-    |> Zexray.Type.Music.from_nif()
-  end
+  defdelegate load_stream(
+                sample_rate,
+                sample_size,
+                channels,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :load_audio_stream
 
   @doc """
   Checks if an audio stream is valid (buffers initialized)
   """
   @doc group: :stream
   @spec stream_valid?(stream :: Zexray.Type.AudioStream.t_all()) :: boolean
-  def stream_valid?(stream)
-      when is_like_audio_stream(stream) do
-    NIF.is_audio_stream_valid(stream |> Zexray.Type.AudioStream.to_nif())
-  end
+  defdelegate stream_valid?(stream), to: NIF, as: :is_audio_stream_valid
 
   @doc """
   Update audio stream buffers with data
@@ -1355,35 +1039,20 @@ defmodule Zexray.Audio do
             | [float],
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def update_stream(
-        stream,
-        data,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             (is_binary(data) or
-                (is_list(data) and
-                   (data == [] or
-                      is_float(hd(data)) or
-                      is_integer(hd(data))))) and
-             is_nif_return(return) do
-    NIF.update_audio_stream(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      data,
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate update_stream(
+                stream,
+                data,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :update_audio_stream
 
   @doc """
   Check if any audio stream buffers requires refill
   """
   @doc group: :stream
   @spec stream_processed?(stream :: Zexray.Type.AudioStream.t_all()) :: boolean
-  def stream_processed?(stream)
-      when is_like_audio_stream(stream) do
-    NIF.is_audio_stream_processed(stream |> Zexray.Type.AudioStream.to_nif())
-  end
+  defdelegate stream_processed?(stream), to: NIF, as: :is_audio_stream_processed
 
   @doc """
   Play audio stream
@@ -1393,18 +1062,12 @@ defmodule Zexray.Audio do
           stream :: Zexray.Type.AudioStream.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def play_stream(
-        stream,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_nif_return(return) do
-    NIF.play_audio_stream(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate play_stream(
+                stream,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :play_audio_stream
 
   @doc """
   Pause audio stream
@@ -1414,18 +1077,12 @@ defmodule Zexray.Audio do
           stream :: Zexray.Type.AudioStream.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def pause_stream(
-        stream,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_nif_return(return) do
-    NIF.pause_audio_stream(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate pause_stream(
+                stream,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :pause_audio_stream
 
   @doc """
   Resume audio stream
@@ -1435,28 +1092,19 @@ defmodule Zexray.Audio do
           stream :: Zexray.Type.AudioStream.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def resume_stream(
-        stream,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_nif_return(return) do
-    NIF.resume_audio_stream(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate resume_stream(
+                stream,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :resume_audio_stream
 
   @doc """
   Check if audio stream is playing
   """
   @doc group: :stream
   @spec stream_playing?(stream :: Zexray.Type.AudioStream.t_all()) :: boolean
-  def stream_playing?(stream)
-      when is_like_audio_stream(stream) do
-    NIF.is_audio_stream_playing(stream |> Zexray.Type.AudioStream.to_nif())
-  end
+  defdelegate stream_playing?(stream), to: NIF, as: :is_audio_stream_playing
 
   @doc """
   Stop audio stream
@@ -1466,18 +1114,12 @@ defmodule Zexray.Audio do
           stream :: Zexray.Type.AudioStream.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def stop_stream(
-        stream,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_nif_return(return) do
-    NIF.stop_audio_stream(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate stop_stream(
+                stream,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :stop_audio_stream
 
   @doc """
   Set volume for audio stream (1.0 is max level)
@@ -1488,21 +1130,13 @@ defmodule Zexray.Audio do
           volume :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_stream_volume(
-        stream,
-        volume,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_float(volume) and
-             is_nif_return(return) do
-    NIF.set_audio_stream_volume(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      volume,
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate set_stream_volume(
+                stream,
+                volume,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_audio_stream_volume
 
   @doc """
   Set pitch for audio stream (1.0 is base level)
@@ -1513,21 +1147,13 @@ defmodule Zexray.Audio do
           pitch :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_stream_pitch(
-        stream,
-        pitch,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_float(pitch) and
-             is_nif_return(return) do
-    NIF.set_audio_stream_pitch(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      pitch,
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate set_stream_pitch(
+                stream,
+                pitch,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_audio_stream_pitch
 
   @doc """
   Set pan for audio stream (0.5 is centered)
@@ -1538,29 +1164,18 @@ defmodule Zexray.Audio do
           pan :: float,
           return :: :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
-  def set_stream_pan(
-        stream,
-        pan,
-        return \\ :value
-      )
-      when is_like_audio_stream(stream) and
-             is_float(pan) and
-             is_nif_return(return) do
-    NIF.set_audio_stream_pan(
-      stream |> Zexray.Type.AudioStream.to_nif(),
-      pan,
-      return
-    )
-    |> Zexray.Type.AudioStream.from_nif()
-  end
+  defdelegate set_stream_pan(
+                stream,
+                pan,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :set_audio_stream_pan
 
   @doc """
   Default size for new audio streams
   """
   @doc group: :stream
   @spec set_stream_buffer_size(size :: integer) :: :ok
-  def set_stream_buffer_size(size)
-      when is_integer(size) do
-    NIF.set_audio_stream_buffer_size_default(size)
-  end
+  defdelegate set_stream_buffer_size(size), to: NIF, as: :set_audio_stream_buffer_size_default
 end

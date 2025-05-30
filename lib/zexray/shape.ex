@@ -3,7 +3,8 @@ defmodule Zexray.Shape do
   Shape
   """
 
-  import Zexray.Guard
+  use Zexray.Type
+
   alias Zexray.NIF
 
   ##########################
@@ -18,39 +19,26 @@ defmodule Zexray.Shape do
           texture :: Zexray.Type.Texture2D.t_all(),
           source :: Zexray.Type.Rectangle.t_all()
         ) :: :ok
-  def set_texture(
-        texture,
-        source
-      )
-      when is_like_texture_2d(texture) and
-             is_like_rectangle(source) do
-    NIF.set_shapes_texture(
-      texture |> Zexray.Type.Texture2D.to_nif(),
-      source |> Zexray.Type.Rectangle.to_nif()
-    )
-  end
+  defdelegate set_texture(
+                texture,
+                source
+              ),
+              to: NIF,
+              as: :set_shapes_texture
 
   @doc """
   Get texture that is used for shapes drawing
   """
   @doc group: :configuration
   @spec get_texture(return :: :value | :resource) :: Zexray.Type.Texture2D.t_nif()
-  def get_texture(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_shapes_texture(return)
-    |> Zexray.Type.Texture2D.from_nif()
-  end
+  defdelegate get_texture(return \\ :value), to: NIF, as: :get_shapes_texture
 
   @doc """
   Get texture source rectangle that is used for shapes drawing
   """
   @doc group: :configuration
   @spec get_texture_rectangle(return :: :value | :resource) :: Zexray.Type.Rectangle.t_nif()
-  def get_texture_rectangle(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_shapes_texture_rectangle(return)
-    |> Zexray.Type.Rectangle.from_nif()
-  end
+  defdelegate get_texture_rectangle(return \\ :value), to: NIF, as: :get_shapes_texture_rectangle
 
   ###################
   #  Basic drawing  #
@@ -65,20 +53,13 @@ defmodule Zexray.Shape do
           pos_y :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_pixel(
-        pos_x,
-        pos_y,
-        color
-      )
-      when is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_like_color(color) do
-    NIF.draw_pixel(
-      pos_x,
-      pos_y,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_pixel(
+                pos_x,
+                pos_y,
+                color
+              ),
+              to: NIF,
+              as: :draw_pixel
 
   @doc """
   Draw a pixel using geometry (Vector version) [Can be slow, use with care]
@@ -88,17 +69,12 @@ defmodule Zexray.Shape do
           position :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_pixel_v(
-        position,
-        color
-      )
-      when is_like_vector2(position) and
-             is_like_color(color) do
-    NIF.draw_pixel_v(
-      position |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_pixel_v(
+                position,
+                color
+              ),
+              to: NIF,
+              as: :draw_pixel_v
 
   @doc """
   Draw a line
@@ -111,26 +87,15 @@ defmodule Zexray.Shape do
           end_pos_y :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_line(
-        start_pos_x,
-        start_pos_y,
-        end_pos_x,
-        end_pos_y,
-        color
-      )
-      when is_integer(start_pos_x) and
-             is_integer(start_pos_y) and
-             is_integer(end_pos_x) and
-             is_integer(end_pos_y) and
-             is_like_color(color) do
-    NIF.draw_line(
-      start_pos_x,
-      start_pos_y,
-      end_pos_x,
-      end_pos_y,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_line(
+                start_pos_x,
+                start_pos_y,
+                end_pos_x,
+                end_pos_y,
+                color
+              ),
+              to: NIF,
+              as: :draw_line
 
   @doc """
   Draw a line (using gl lines)
@@ -141,20 +106,13 @@ defmodule Zexray.Shape do
           end_pos :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_line_v(
-        start_pos,
-        end_pos,
-        color
-      )
-      when is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_like_color(color) do
-    NIF.draw_line_v(
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_line_v(
+                start_pos,
+                end_pos,
+                color
+              ),
+              to: NIF,
+              as: :draw_line_v
 
   @doc """
   Draw a line (using triangles/quads)
@@ -166,23 +124,14 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_line_ex(
-        start_pos,
-        end_pos,
-        thick,
-        color
-      )
-      when is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_line_ex(
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_line_ex(
+                start_pos,
+                end_pos,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_line_ex
 
   @doc """
   Draw lines sequence (using gl lines)
@@ -192,17 +141,12 @@ defmodule Zexray.Shape do
           points :: [Zexray.Type.Vector2.t_all()],
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_line_strip(
-        points,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_like_color(color) do
-    NIF.draw_line_strip(
-      points |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_line_strip(
+                points,
+                color
+              ),
+              to: NIF,
+              as: :draw_line_strip
 
   @doc """
   Draw line segment cubic-bezier in-out interpolation
@@ -214,23 +158,14 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_line_bezier(
-        start_pos,
-        end_pos,
-        thick,
-        color
-      )
-      when is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_line_bezier(
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_line_bezier(
+                start_pos,
+                end_pos,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_line_bezier
 
   @doc """
   Draw a color-filled circle
@@ -242,23 +177,14 @@ defmodule Zexray.Shape do
           radius :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle(
-        center_x,
-        center_y,
-        radius,
-        color
-      )
-      when is_integer(center_x) and
-             is_integer(center_y) and
-             is_float(radius) and
-             is_like_color(color) do
-    NIF.draw_circle(
-      center_x,
-      center_y,
-      radius,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle(
+                center_x,
+                center_y,
+                radius,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle
 
   @doc """
   Draw a piece of a circle
@@ -272,29 +198,16 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_sector(
-        center,
-        radius,
-        start_angle,
-        end_angle,
-        segments,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_float(start_angle) and
-             is_float(end_angle) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_circle_sector(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      start_angle,
-      end_angle,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_sector(
+                center,
+                radius,
+                start_angle,
+                end_angle,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle_sector
 
   @doc """
   Draw circle sector outline
@@ -308,29 +221,16 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_sector_lines(
-        center,
-        radius,
-        start_angle,
-        end_angle,
-        segments,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_float(start_angle) and
-             is_float(end_angle) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_circle_sector_lines(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      start_angle,
-      end_angle,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_sector_lines(
+                center,
+                radius,
+                start_angle,
+                end_angle,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle_sector_lines
 
   @doc """
   Draw a gradient-filled circle
@@ -343,26 +243,15 @@ defmodule Zexray.Shape do
           inner :: Zexray.Type.Color.t_all(),
           outer :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_gradient(
-        center_x,
-        center_y,
-        radius,
-        inner,
-        outer
-      )
-      when is_integer(center_x) and
-             is_integer(center_y) and
-             is_float(radius) and
-             is_like_color(inner) and
-             is_like_color(outer) do
-    NIF.draw_circle_gradient(
-      center_x,
-      center_y,
-      radius,
-      inner |> Zexray.Type.Color.to_nif(),
-      outer |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_gradient(
+                center_x,
+                center_y,
+                radius,
+                inner,
+                outer
+              ),
+              to: NIF,
+              as: :draw_circle_gradient
 
   @doc """
   Draw a color-filled circle (Vector version)
@@ -373,20 +262,13 @@ defmodule Zexray.Shape do
           radius :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_v(
-        center,
-        radius,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_like_color(color) do
-    NIF.draw_circle_v(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_v(
+                center,
+                radius,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle_v
 
   @doc """
   Draw circle outline
@@ -398,23 +280,14 @@ defmodule Zexray.Shape do
           radius :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_lines(
-        center_x,
-        center_y,
-        radius,
-        color
-      )
-      when is_integer(center_x) and
-             is_integer(center_y) and
-             is_float(radius) and
-             is_like_color(color) do
-    NIF.draw_circle_lines(
-      center_x,
-      center_y,
-      radius,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_lines(
+                center_x,
+                center_y,
+                radius,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle_lines
 
   @doc """
   Draw circle outline (Vector version)
@@ -425,20 +298,13 @@ defmodule Zexray.Shape do
           radius :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_circle_lines_v(
-        center,
-        radius,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_like_color(color) do
-    NIF.draw_circle_lines_v(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_circle_lines_v(
+                center,
+                radius,
+                color
+              ),
+              to: NIF,
+              as: :draw_circle_lines_v
 
   @doc """
   Draw ellipse
@@ -451,26 +317,15 @@ defmodule Zexray.Shape do
           radius_v :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_ellipse(
-        center_x,
-        center_y,
-        radius_h,
-        radius_v,
-        color
-      )
-      when is_integer(center_x) and
-             is_integer(center_y) and
-             is_float(radius_h) and
-             is_float(radius_v) and
-             is_like_color(color) do
-    NIF.draw_ellipse(
-      center_x,
-      center_y,
-      radius_h,
-      radius_v,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_ellipse(
+                center_x,
+                center_y,
+                radius_h,
+                radius_v,
+                color
+              ),
+              to: NIF,
+              as: :draw_ellipse
 
   @doc """
   Draw ellipse outline
@@ -483,26 +338,15 @@ defmodule Zexray.Shape do
           radius_v :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_ellipse_lines(
-        center_x,
-        center_y,
-        radius_h,
-        radius_v,
-        color
-      )
-      when is_integer(center_x) and
-             is_integer(center_y) and
-             is_float(radius_h) and
-             is_float(radius_v) and
-             is_like_color(color) do
-    NIF.draw_ellipse_lines(
-      center_x,
-      center_y,
-      radius_h,
-      radius_v,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_ellipse_lines(
+                center_x,
+                center_y,
+                radius_h,
+                radius_v,
+                color
+              ),
+              to: NIF,
+              as: :draw_ellipse_lines
 
   @doc """
   Draw ring
@@ -517,32 +361,17 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_ring(
-        center,
-        inner_radius,
-        outer_radius,
-        start_angle,
-        end_angle,
-        segments,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(inner_radius) and
-             is_float(outer_radius) and
-             is_float(start_angle) and
-             is_float(end_angle) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_ring(
-      center |> Zexray.Type.Vector2.to_nif(),
-      inner_radius,
-      outer_radius,
-      start_angle,
-      end_angle,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_ring(
+                center,
+                inner_radius,
+                outer_radius,
+                start_angle,
+                end_angle,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_ring
 
   @doc """
   Draw ring outline
@@ -557,32 +386,17 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_ring_lines(
-        center,
-        inner_radius,
-        outer_radius,
-        start_angle,
-        end_angle,
-        segments,
-        color
-      )
-      when is_like_vector2(center) and
-             is_float(inner_radius) and
-             is_float(outer_radius) and
-             is_float(start_angle) and
-             is_float(end_angle) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_ring_lines(
-      center |> Zexray.Type.Vector2.to_nif(),
-      inner_radius,
-      outer_radius,
-      start_angle,
-      end_angle,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_ring_lines(
+                center,
+                inner_radius,
+                outer_radius,
+                start_angle,
+                end_angle,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_ring_lines
 
   @doc """
   Draw a color-filled rectangle
@@ -595,26 +409,15 @@ defmodule Zexray.Shape do
           height :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle(
-        pos_x,
-        pos_y,
-        width,
-        height,
-        color
-      )
-      when is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_color(color) do
-    NIF.draw_rectangle(
-      pos_x,
-      pos_y,
-      width,
-      height,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle(
+                pos_x,
+                pos_y,
+                width,
+                height,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle
 
   @doc """
   Draw a color-filled rectangle (Vector version)
@@ -625,20 +428,13 @@ defmodule Zexray.Shape do
           size :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_v(
-        position,
-        size,
-        color
-      )
-      when is_like_vector2(position) and
-             is_like_vector2(size) and
-             is_like_color(color) do
-    NIF.draw_rectangle_v(
-      position |> Zexray.Type.Vector2.to_nif(),
-      size |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_v(
+                position,
+                size,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_v
 
   @doc """
   Draw a color-filled rectangle
@@ -648,17 +444,12 @@ defmodule Zexray.Shape do
           rec :: Zexray.Type.Rectangle.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_rec(
-        rec,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_like_color(color) do
-    NIF.draw_rectangle_rec(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_rec(
+                rec,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_rec
 
   @doc """
   Draw a color-filled rectangle with pro parameters
@@ -670,23 +461,14 @@ defmodule Zexray.Shape do
           rotation :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_pro(
-        rec,
-        origin,
-        rotation,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_like_vector2(origin) and
-             is_float(rotation) and
-             is_like_color(color) do
-    NIF.draw_rectangle_pro(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      origin |> Zexray.Type.Vector2.to_nif(),
-      rotation,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_pro(
+                rec,
+                origin,
+                rotation,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_pro
 
   @doc """
   Draw a vertical-gradient-filled rectangle
@@ -700,29 +482,16 @@ defmodule Zexray.Shape do
           top :: Zexray.Type.Color.t_all(),
           bottom :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_gradient_v(
-        pos_x,
-        pos_y,
-        width,
-        height,
-        top,
-        bottom
-      )
-      when is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_color(top) and
-             is_like_color(bottom) do
-    NIF.draw_rectangle_gradient_v(
-      pos_x,
-      pos_y,
-      width,
-      height,
-      top |> Zexray.Type.Color.to_nif(),
-      bottom |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_gradient_v(
+                pos_x,
+                pos_y,
+                width,
+                height,
+                top,
+                bottom
+              ),
+              to: NIF,
+              as: :draw_rectangle_gradient_v
 
   @doc """
   Draw a horizontal-gradient-filled rectangle
@@ -736,29 +505,16 @@ defmodule Zexray.Shape do
           left :: Zexray.Type.Color.t_all(),
           right :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_gradient_h(
-        pos_x,
-        pos_y,
-        width,
-        height,
-        left,
-        right
-      )
-      when is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_color(left) and
-             is_like_color(right) do
-    NIF.draw_rectangle_gradient_h(
-      pos_x,
-      pos_y,
-      width,
-      height,
-      left |> Zexray.Type.Color.to_nif(),
-      right |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_gradient_h(
+                pos_x,
+                pos_y,
+                width,
+                height,
+                left,
+                right
+              ),
+              to: NIF,
+              as: :draw_rectangle_gradient_h
 
   @doc """
   Draw a gradient-filled rectangle with custom vertex colors
@@ -771,26 +527,15 @@ defmodule Zexray.Shape do
           top_right :: Zexray.Type.Color.t_all(),
           bottom_right :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_gradient_ex(
-        rec,
-        top_left,
-        bottom_left,
-        top_right,
-        bottom_right
-      )
-      when is_like_rectangle(rec) and
-             is_like_color(top_left) and
-             is_like_color(bottom_left) and
-             is_like_color(top_right) and
-             is_like_color(bottom_right) do
-    NIF.draw_rectangle_gradient_ex(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      top_left |> Zexray.Type.Color.to_nif(),
-      bottom_left |> Zexray.Type.Color.to_nif(),
-      top_right |> Zexray.Type.Color.to_nif(),
-      bottom_right |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_gradient_ex(
+                rec,
+                top_left,
+                bottom_left,
+                top_right,
+                bottom_right
+              ),
+              to: NIF,
+              as: :draw_rectangle_gradient_ex
 
   @doc """
   Draw rectangle outline
@@ -803,26 +548,15 @@ defmodule Zexray.Shape do
           height :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_lines(
-        pos_x,
-        pos_y,
-        width,
-        height,
-        color
-      )
-      when is_integer(pos_x) and
-             is_integer(pos_y) and
-             is_integer(width) and
-             is_integer(height) and
-             is_like_color(color) do
-    NIF.draw_rectangle_lines(
-      pos_x,
-      pos_y,
-      width,
-      height,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_lines(
+                pos_x,
+                pos_y,
+                width,
+                height,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_lines
 
   @doc """
   Draw rectangle outline with extended parameters
@@ -833,20 +567,13 @@ defmodule Zexray.Shape do
           line_thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_lines_ex(
-        rec,
-        line_thick,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_float(line_thick) and
-             is_like_color(color) do
-    NIF.draw_rectangle_lines_ex(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      line_thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_lines_ex(
+                rec,
+                line_thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_lines_ex
 
   @doc """
   Draw rectangle with rounded edges
@@ -858,23 +585,14 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_rounded(
-        rec,
-        roundness,
-        segments,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_float(roundness) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_rectangle_rounded(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      roundness,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_rounded(
+                rec,
+                roundness,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_rounded
 
   @doc """
   Draw rectangle lines with rounded edges
@@ -886,23 +604,14 @@ defmodule Zexray.Shape do
           segments :: integer,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_rounded_lines(
-        rec,
-        roundness,
-        segments,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_float(roundness) and
-             is_integer(segments) and
-             is_like_color(color) do
-    NIF.draw_rectangle_rounded_lines(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      roundness,
-      segments,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_rounded_lines(
+                rec,
+                roundness,
+                segments,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_rounded_lines
 
   @doc """
   Draw rectangle with rounded edges outline
@@ -915,26 +624,15 @@ defmodule Zexray.Shape do
           line_thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_rectangle_rounded_lines_ex(
-        rec,
-        roundness,
-        segments,
-        line_thick,
-        color
-      )
-      when is_like_rectangle(rec) and
-             is_float(roundness) and
-             is_integer(segments) and
-             is_float(line_thick) and
-             is_like_color(color) do
-    NIF.draw_rectangle_rounded_lines_ex(
-      rec |> Zexray.Type.Rectangle.to_nif(),
-      roundness,
-      segments,
-      line_thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_rectangle_rounded_lines_ex(
+                rec,
+                roundness,
+                segments,
+                line_thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_rectangle_rounded_lines_ex
 
   @doc """
   Draw a color-filled triangle (vertex in counter-clockwise order!)
@@ -946,23 +644,14 @@ defmodule Zexray.Shape do
           v3 :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_triangle(
-        v1,
-        v2,
-        v3,
-        color
-      )
-      when is_like_vector2(v1) and
-             is_like_vector2(v2) and
-             is_like_vector2(v3) and
-             is_like_color(color) do
-    NIF.draw_triangle(
-      v1 |> Zexray.Type.Vector2.to_nif(),
-      v2 |> Zexray.Type.Vector2.to_nif(),
-      v3 |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_triangle(
+                v1,
+                v2,
+                v3,
+                color
+              ),
+              to: NIF,
+              as: :draw_triangle
 
   @doc """
   Draw triangle outline (vertex in counter-clockwise order!)
@@ -974,23 +663,14 @@ defmodule Zexray.Shape do
           v3 :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_triangle_lines(
-        v1,
-        v2,
-        v3,
-        color
-      )
-      when is_like_vector2(v1) and
-             is_like_vector2(v2) and
-             is_like_vector2(v3) and
-             is_like_color(color) do
-    NIF.draw_triangle_lines(
-      v1 |> Zexray.Type.Vector2.to_nif(),
-      v2 |> Zexray.Type.Vector2.to_nif(),
-      v3 |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_triangle_lines(
+                v1,
+                v2,
+                v3,
+                color
+              ),
+              to: NIF,
+              as: :draw_triangle_lines
 
   @doc """
   Draw a triangle fan defined by points (first vertex is the center)
@@ -1000,17 +680,12 @@ defmodule Zexray.Shape do
           points :: [Zexray.Type.Vector2.t_all()],
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_triangle_fan(
-        points,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_like_color(color) do
-    NIF.draw_triangle_fan(
-      points |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_triangle_fan(
+                points,
+                color
+              ),
+              to: NIF,
+              as: :draw_triangle_fan
 
   @doc """
   Draw a triangle strip defined by points
@@ -1020,17 +695,12 @@ defmodule Zexray.Shape do
           points :: [Zexray.Type.Vector2.t_all()],
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_triangle_strip(
-        points,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_like_color(color) do
-    NIF.draw_triangle_strip(
-      points |> Zexray.Type.Vector2.to_nif(),
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_triangle_strip(
+                points,
+                color
+              ),
+              to: NIF,
+              as: :draw_triangle_strip
 
   @doc """
   Draw a regular polygon (Vector version)
@@ -1043,26 +713,15 @@ defmodule Zexray.Shape do
           rotation :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_poly(
-        center,
-        sides,
-        radius,
-        rotation,
-        color
-      )
-      when is_like_vector2(center) and
-             is_integer(sides) and
-             is_float(radius) and
-             is_float(rotation) and
-             is_like_color(color) do
-    NIF.draw_poly(
-      center |> Zexray.Type.Vector2.to_nif(),
-      sides,
-      radius,
-      rotation,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_poly(
+                center,
+                sides,
+                radius,
+                rotation,
+                color
+              ),
+              to: NIF,
+              as: :draw_poly
 
   @doc """
   Draw a polygon outline of n sides
@@ -1075,26 +734,15 @@ defmodule Zexray.Shape do
           rotation :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_poly_lines(
-        center,
-        sides,
-        radius,
-        rotation,
-        color
-      )
-      when is_like_vector2(center) and
-             is_integer(sides) and
-             is_float(radius) and
-             is_float(rotation) and
-             is_like_color(color) do
-    NIF.draw_poly_lines(
-      center |> Zexray.Type.Vector2.to_nif(),
-      sides,
-      radius,
-      rotation,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_poly_lines(
+                center,
+                sides,
+                radius,
+                rotation,
+                color
+              ),
+              to: NIF,
+              as: :draw_poly_lines
 
   @doc """
   Draw a polygon outline of n sides with extended parameters
@@ -1108,29 +756,16 @@ defmodule Zexray.Shape do
           line_thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_poly_lines_ex(
-        center,
-        sides,
-        radius,
-        rotation,
-        line_thick,
-        color
-      )
-      when is_like_vector2(center) and
-             is_integer(sides) and
-             is_float(radius) and
-             is_float(rotation) and
-             is_float(line_thick) and
-             is_like_color(color) do
-    NIF.draw_poly_lines_ex(
-      center |> Zexray.Type.Vector2.to_nif(),
-      sides,
-      radius,
-      rotation,
-      line_thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_poly_lines_ex(
+                center,
+                sides,
+                radius,
+                rotation,
+                line_thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_poly_lines_ex
 
   ####################
   #  Spline drawing  #
@@ -1145,20 +780,13 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_linear(
-        points,
-        thick,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_linear(
-      points |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_linear(
+                points,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_linear
 
   @doc """
   Draw spline: B-Spline, minimum 4 points
@@ -1169,20 +797,13 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_basis(
-        points,
-        thick,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_basis(
-      points |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_basis(
+                points,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_basis
 
   @doc """
   Draw spline: Catmull-Rom, minimum 4 points
@@ -1193,20 +814,13 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_catmull_rom(
-        points,
-        thick,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_catmull_rom(
-      points |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_catmull_rom(
+                points,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_catmull_rom
 
   @doc """
   Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
@@ -1217,20 +831,13 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_bezier_quadratic(
-        points,
-        thick,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_bezier_quadratic(
-      points |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_bezier_quadratic(
+                points,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_bezier_quadratic
 
   @doc """
   Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
@@ -1241,20 +848,13 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_bezier_cubic(
-        points,
-        thick,
-        color
-      )
-      when is_list(points) and (points == [] or is_like_vector2(hd(points))) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_bezier_cubic(
-      points |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_bezier_cubic(
+                points,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_bezier_cubic
 
   @doc """
   Draw spline segment: Linear, 2 points
@@ -1266,23 +866,14 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_segment_linear(
-        p1,
-        p2,
-        thick,
-        color
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_segment_linear(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_segment_linear(
+                p1,
+                p2,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_segment_linear
 
   @doc """
   Draw spline segment: B-Spline, 4 points
@@ -1296,29 +887,16 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_segment_basis(
-        p1,
-        p2,
-        p3,
-        p4,
-        thick,
-        color
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_like_vector2(p3) and
-             is_like_vector2(p4) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_segment_basis(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_segment_basis(
+                p1,
+                p2,
+                p3,
+                p4,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_segment_basis
 
   @doc """
   Draw spline segment: Catmull-Rom, 4 points
@@ -1332,29 +910,16 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_segment_catmull_rom(
-        p1,
-        p2,
-        p3,
-        p4,
-        thick,
-        color
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_like_vector2(p3) and
-             is_like_vector2(p4) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_segment_catmull_rom(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_segment_catmull_rom(
+                p1,
+                p2,
+                p3,
+                p4,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_segment_catmull_rom
 
   @doc """
   Draw spline segment: Quadratic Bezier, 2 points, 1 control point
@@ -1367,26 +932,15 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_segment_bezier_quadratic(
-        p1,
-        c2,
-        p3,
-        thick,
-        color
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(c2) and
-             is_like_vector2(p3) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_segment_bezier_quadratic(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      c2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_segment_bezier_quadratic(
+                p1,
+                c2,
+                p3,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_segment_bezier_quadratic
 
   @doc """
   Draw spline segment: Cubic Bezier, 2 points, 2 control points
@@ -1400,29 +954,16 @@ defmodule Zexray.Shape do
           thick :: float,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
-  def draw_spline_segment_bezier_cubic(
-        p1,
-        c2,
-        c3,
-        p4,
-        thick,
-        color
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(c2) and
-             is_like_vector2(c3) and
-             is_like_vector2(p4) and
-             is_float(thick) and
-             is_like_color(color) do
-    NIF.draw_spline_segment_bezier_cubic(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      c2 |> Zexray.Type.Vector2.to_nif(),
-      c3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      thick,
-      color |> Zexray.Type.Color.to_nif()
-    )
-  end
+  defdelegate draw_spline_segment_bezier_cubic(
+                p1,
+                c2,
+                c3,
+                p4,
+                thick,
+                color
+              ),
+              to: NIF,
+              as: :draw_spline_segment_bezier_cubic
 
   #####################################
   #  Spline segment point evaluation  #
@@ -1438,24 +979,14 @@ defmodule Zexray.Shape do
           t :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
-  def get_spline_point_linear(
-        start_pos,
-        end_pos,
-        t,
-        return \\ :value
-      )
-      when is_like_vector2(start_pos) and
-             is_like_vector2(end_pos) and
-             is_float(t) and
-             is_nif_return(return) do
-    NIF.get_spline_point_linear(
-      start_pos |> Zexray.Type.Vector2.to_nif(),
-      end_pos |> Zexray.Type.Vector2.to_nif(),
-      t,
-      return
-    )
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_spline_point_linear(
+                start_pos,
+                end_pos,
+                t,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_spline_point_linear
 
   @doc """
   Get (evaluate) spline point: B-Spline
@@ -1469,30 +1000,16 @@ defmodule Zexray.Shape do
           t :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
-  def get_spline_point_basis(
-        p1,
-        p2,
-        p3,
-        p4,
-        t,
-        return \\ :value
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_like_vector2(p3) and
-             is_like_vector2(p4) and
-             is_float(t) and
-             is_nif_return(return) do
-    NIF.get_spline_point_basis(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      t,
-      return
-    )
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_spline_point_basis(
+                p1,
+                p2,
+                p3,
+                p4,
+                t,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_spline_point_basis
 
   @doc """
   Get (evaluate) spline point: Catmull-Rom
@@ -1506,30 +1023,16 @@ defmodule Zexray.Shape do
           t :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
-  def get_spline_point_catmull_rom(
-        p1,
-        p2,
-        p3,
-        p4,
-        t,
-        return \\ :value
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_like_vector2(p3) and
-             is_like_vector2(p4) and
-             is_float(t) and
-             is_nif_return(return) do
-    NIF.get_spline_point_catmull_rom(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      t,
-      return
-    )
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_spline_point_catmull_rom(
+                p1,
+                p2,
+                p3,
+                p4,
+                t,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_spline_point_catmull_rom
 
   @doc """
   Get (evaluate) spline point: Quadratic Bezier
@@ -1542,27 +1045,15 @@ defmodule Zexray.Shape do
           t :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
-  def get_spline_point_bezier_quad(
-        p1,
-        c2,
-        p3,
-        t,
-        return \\ :value
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(c2) and
-             is_like_vector2(p3) and
-             is_float(t) and
-             is_nif_return(return) do
-    NIF.get_spline_point_bezier_quad(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      c2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif(),
-      t,
-      return
-    )
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_spline_point_bezier_quad(
+                p1,
+                c2,
+                p3,
+                t,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_spline_point_bezier_quad
 
   @doc """
   Get (evaluate) spline point: Cubic Bezier
@@ -1576,30 +1067,16 @@ defmodule Zexray.Shape do
           t :: float,
           return :: :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
-  def get_spline_point_bezier_cubic(
-        p1,
-        c2,
-        c3,
-        p4,
-        t,
-        return \\ :value
-      )
-      when is_like_vector2(p1) and
-             is_like_vector2(c2) and
-             is_like_vector2(c3) and
-             is_like_vector2(p4) and
-             is_float(t) and
-             is_nif_return(return) do
-    NIF.get_spline_point_bezier_cubic(
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      c2 |> Zexray.Type.Vector2.to_nif(),
-      c3 |> Zexray.Type.Vector2.to_nif(),
-      p4 |> Zexray.Type.Vector2.to_nif(),
-      t,
-      return
-    )
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_spline_point_bezier_cubic(
+                p1,
+                c2,
+                c3,
+                p4,
+                t,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_spline_point_bezier_cubic
 
   #########################
   #  Collision detection  #
@@ -1613,17 +1090,12 @@ defmodule Zexray.Shape do
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all()
         ) :: boolean
-  def collision_recs?(
-        rec1,
-        rec2
-      )
-      when is_like_rectangle(rec1) and
-             is_like_rectangle(rec2) do
-    NIF.check_collision_recs(
-      rec1 |> Zexray.Type.Rectangle.to_nif(),
-      rec2 |> Zexray.Type.Rectangle.to_nif()
-    )
-  end
+  defdelegate collision_recs?(
+                rec1,
+                rec2
+              ),
+              to: NIF,
+              as: :check_collision_recs
 
   @doc """
   Check collision between two circles
@@ -1635,23 +1107,14 @@ defmodule Zexray.Shape do
           center2 :: Zexray.Type.Vector2.t_all(),
           radius2 :: float
         ) :: boolean
-  def collision_circles?(
-        center1,
-        radius1,
-        center2,
-        radius2
-      )
-      when is_like_vector2(center1) and
-             is_float(radius1) and
-             is_like_vector2(center2) and
-             is_float(radius2) do
-    NIF.check_collision_circles(
-      center1 |> Zexray.Type.Vector2.to_nif(),
-      radius1,
-      center2 |> Zexray.Type.Vector2.to_nif(),
-      radius2
-    )
-  end
+  defdelegate collision_circles?(
+                center1,
+                radius1,
+                center2,
+                radius2
+              ),
+              to: NIF,
+              as: :check_collision_circles
 
   @doc """
   Check collision between circle and rectangle
@@ -1662,20 +1125,13 @@ defmodule Zexray.Shape do
           radius :: float,
           rec :: Zexray.Type.Rectangle.t_all()
         ) :: boolean
-  def collision_circle_rec?(
-        center,
-        radius,
-        rec
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_like_rectangle(rec) do
-    NIF.check_collision_circle_rec(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      rec |> Zexray.Type.Rectangle.to_nif()
-    )
-  end
+  defdelegate collision_circle_rec?(
+                center,
+                radius,
+                rec
+              ),
+              to: NIF,
+              as: :check_collision_circle_rec
 
   @doc """
   Check if circle collides with a line created betweeen two points [p1] and [p2]
@@ -1687,23 +1143,14 @@ defmodule Zexray.Shape do
           p1 :: Zexray.Type.Vector2.t_all(),
           p2 :: Zexray.Type.Vector2.t_all()
         ) :: boolean
-  def collision_circle_line?(
-        center,
-        radius,
-        p1,
-        p2
-      )
-      when is_like_vector2(center) and
-             is_float(radius) and
-             is_like_vector2(p1) and
-             is_like_vector2(p2) do
-    NIF.check_collision_circle_line(
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius,
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif()
-    )
-  end
+  defdelegate collision_circle_line?(
+                center,
+                radius,
+                p1,
+                p2
+              ),
+              to: NIF,
+              as: :check_collision_circle_line
 
   @doc """
   Check if point is inside rectangle
@@ -1713,17 +1160,12 @@ defmodule Zexray.Shape do
           point :: Zexray.Type.Vector2.t_all(),
           rec :: Zexray.Type.Rectangle.t_all()
         ) :: boolean
-  def collision_point_rec?(
-        point,
-        rec
-      )
-      when is_like_vector2(point) and
-             is_like_rectangle(rec) do
-    NIF.check_collision_point_rec(
-      point |> Zexray.Type.Vector2.to_nif(),
-      rec |> Zexray.Type.Rectangle.to_nif()
-    )
-  end
+  defdelegate collision_point_rec?(
+                point,
+                rec
+              ),
+              to: NIF,
+              as: :check_collision_point_rec
 
   @doc """
   Check if point is inside circle
@@ -1734,20 +1176,13 @@ defmodule Zexray.Shape do
           center :: Zexray.Type.Vector2.t_all(),
           radius :: float
         ) :: boolean
-  def collision_point_circle?(
-        point,
-        center,
-        radius
-      )
-      when is_like_vector2(point) and
-             is_like_vector2(center) and
-             is_float(radius) do
-    NIF.check_collision_point_circle(
-      point |> Zexray.Type.Vector2.to_nif(),
-      center |> Zexray.Type.Vector2.to_nif(),
-      radius
-    )
-  end
+  defdelegate collision_point_circle?(
+                point,
+                center,
+                radius
+              ),
+              to: NIF,
+              as: :check_collision_point_circle
 
   @doc """
   Check if point is inside a triangle
@@ -1759,23 +1194,14 @@ defmodule Zexray.Shape do
           p2 :: Zexray.Type.Vector2.t_all(),
           p3 :: Zexray.Type.Vector2.t_all()
         ) :: boolean
-  def collision_point_triangle?(
-        point,
-        p1,
-        p2,
-        p3
-      )
-      when is_like_vector2(point) and
-             is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_like_vector2(p3) do
-    NIF.check_collision_point_triangle(
-      point |> Zexray.Type.Vector2.to_nif(),
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      p3 |> Zexray.Type.Vector2.to_nif()
-    )
-  end
+  defdelegate collision_point_triangle?(
+                point,
+                p1,
+                p2,
+                p3
+              ),
+              to: NIF,
+              as: :check_collision_point_triangle
 
   @doc """
   Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
@@ -1787,23 +1213,14 @@ defmodule Zexray.Shape do
           p2 :: Zexray.Type.Vector2.t_all(),
           threshold :: integer
         ) :: boolean
-  def collision_point_line?(
-        point,
-        p1,
-        p2,
-        threshold
-      )
-      when is_like_vector2(point) and
-             is_like_vector2(p1) and
-             is_like_vector2(p2) and
-             is_integer(threshold) do
-    NIF.check_collision_point_line(
-      point |> Zexray.Type.Vector2.to_nif(),
-      p1 |> Zexray.Type.Vector2.to_nif(),
-      p2 |> Zexray.Type.Vector2.to_nif(),
-      threshold
-    )
-  end
+  defdelegate collision_point_line?(
+                point,
+                p1,
+                p2,
+                threshold
+              ),
+              to: NIF,
+              as: :check_collision_point_line
 
   @doc """
   Check if point is within a polygon described by array of vertices
@@ -1813,17 +1230,12 @@ defmodule Zexray.Shape do
           point :: Zexray.Type.Vector2.t_all(),
           points :: [Zexray.Type.Vector2.t_all()]
         ) :: boolean
-  def collision_point_poly?(
-        point,
-        points
-      )
-      when is_like_vector2(point) and
-             is_list(points) and (points == [] or is_like_vector2(hd(points))) do
-    NIF.check_collision_point_poly(
-      point |> Zexray.Type.Vector2.to_nif(),
-      points |> Zexray.Type.Vector2.to_nif()
-    )
-  end
+  defdelegate collision_point_poly?(
+                point,
+                points
+              ),
+              to: NIF,
+              as: :check_collision_point_poly
 
   @doc """
   Check the collision between two lines defined by two points each, returns collision point by reference
@@ -1840,17 +1252,13 @@ defmodule Zexray.Shape do
         end_pos1,
         start_pos2,
         end_pos2
-      )
-      when is_like_vector2(start_pos1) and
-             is_like_vector2(end_pos1) and
-             is_like_vector2(start_pos2) and
-             is_like_vector2(end_pos2) do
+      ) do
     {collision, _} =
       NIF.check_collision_lines(
-        start_pos1 |> Zexray.Type.Vector2.to_nif(),
-        end_pos1 |> Zexray.Type.Vector2.to_nif(),
-        start_pos2 |> Zexray.Type.Vector2.to_nif(),
-        end_pos2 |> Zexray.Type.Vector2.to_nif()
+        start_pos1,
+        end_pos1,
+        start_pos2,
+        end_pos2
       )
 
     collision
@@ -1867,32 +1275,15 @@ defmodule Zexray.Shape do
           end_pos2 :: Zexray.Type.Vector2.t_all(),
           return :: :value | :resource
         ) :: {collision :: boolean, collision_point :: Zexray.Type.Vector2.t_nif()}
-  def collision_lines_ex?(
-        start_pos1,
-        end_pos1,
-        start_pos2,
-        end_pos2,
-        return \\ :value
-      )
-      when is_like_vector2(start_pos1) and
-             is_like_vector2(end_pos1) and
-             is_like_vector2(start_pos2) and
-             is_like_vector2(end_pos2) and
-             is_nif_return(return) do
-    {collision, collision_point} =
-      NIF.check_collision_lines(
-        start_pos1 |> Zexray.Type.Vector2.to_nif(),
-        end_pos1 |> Zexray.Type.Vector2.to_nif(),
-        start_pos2 |> Zexray.Type.Vector2.to_nif(),
-        end_pos2 |> Zexray.Type.Vector2.to_nif(),
-        return
-      )
-
-    {
-      collision,
-      collision_point |> Zexray.Type.Vector2.from_nif()
-    }
-  end
+  defdelegate collision_lines_ex?(
+                start_pos1,
+                end_pos1,
+                start_pos2,
+                end_pos2,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :check_collision_lines
 
   @doc """
   Get collision rectangle for two rectangles collision
@@ -1907,30 +1298,23 @@ defmodule Zexray.Shape do
         rec1,
         rec2,
         return \\ :value
-      )
-      when is_like_rectangle(rec1) and
-             is_like_rectangle(rec2) and
-             is_nif_return(return) do
+      ) do
     collision_rec =
       NIF.get_collision_rec(
-        rec1 |> Zexray.Type.Rectangle.to_nif(),
-        rec2 |> Zexray.Type.Rectangle.to_nif(),
+        rec1,
+        rec2,
         return
       )
-      |> Zexray.Type.Rectangle.from_nif()
 
     collision =
       case return do
         :value ->
-          not (collision_rec.x == 0 and
-                 collision_rec.y == 0 and
-                 collision_rec.width == 0 and
-                 collision_rec.height == 0)
+          not (collision_rec == type_rectangle(x: 0.0, y: 0.0, width: 0.0, height: 0.0))
 
         _ ->
           NIF.check_collision_recs(
-            rec1 |> Zexray.Type.Rectangle.to_nif(),
-            rec2 |> Zexray.Type.Rectangle.to_nif()
+            rec1,
+            rec2
           )
       end
 
@@ -1949,19 +1333,11 @@ defmodule Zexray.Shape do
           rec2 :: Zexray.Type.Rectangle.t_all(),
           return :: :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
-  def get_collision_rec(
-        rec1,
-        rec2,
-        return \\ :value
-      )
-      when is_like_rectangle(rec1) and
-             is_like_rectangle(rec2) and
-             is_nif_return(return) do
-    NIF.get_collision_rec(
-      rec1 |> Zexray.Type.Rectangle.to_nif(),
-      rec2 |> Zexray.Type.Rectangle.to_nif(),
-      return
-    )
-    |> Zexray.Type.Rectangle.from_nif()
-  end
+  defdelegate get_collision_rec(
+                rec1,
+                rec2,
+                return \\ :value
+              ),
+              to: NIF,
+              as: :get_collision_rec
 end

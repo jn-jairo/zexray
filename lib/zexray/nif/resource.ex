@@ -285,21 +285,21 @@ defmodule Zexray.NIF.Resource do
       #############
 
       @doc group: :resource
-      @spec vector2_to_resource(value :: map) :: reference
+      @spec vector2_to_resource(value :: tuple) :: tuple
       def vector2_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector2_from_resource(resource :: reference) :: map
+      @spec vector2_from_resource(resource :: tuple) :: tuple
       def vector2_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector2_free_resource(resource :: reference) :: :ok
+      @spec vector2_free_resource(resource :: tuple) :: :ok
       def vector2_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec vector2_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def vector2_update_resource(
             _resource,
@@ -312,21 +312,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec ivector2_to_resource(value :: map) :: reference
+      @spec ivector2_to_resource(value :: tuple) :: tuple
       def ivector2_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector2_from_resource(resource :: reference) :: map
+      @spec ivector2_from_resource(resource :: tuple) :: tuple
       def ivector2_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector2_free_resource(resource :: reference) :: :ok
+      @spec ivector2_free_resource(resource :: tuple) :: :ok
       def ivector2_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec ivector2_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def ivector2_update_resource(
             _resource,
@@ -339,21 +339,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec uivector2_to_resource(value :: map) :: reference
+      @spec uivector2_to_resource(value :: tuple) :: tuple
       def uivector2_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector2_from_resource(resource :: reference) :: map
+      @spec uivector2_from_resource(resource :: tuple) :: tuple
       def uivector2_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector2_free_resource(resource :: reference) :: :ok
+      @spec uivector2_free_resource(resource :: tuple) :: :ok
       def uivector2_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec uivector2_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def uivector2_update_resource(
             _resource,
@@ -366,21 +366,21 @@ defmodule Zexray.NIF.Resource do
       #############
 
       @doc group: :resource
-      @spec vector3_to_resource(value :: map) :: reference
+      @spec vector3_to_resource(value :: tuple) :: tuple
       def vector3_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector3_from_resource(resource :: reference) :: map
+      @spec vector3_from_resource(resource :: tuple) :: tuple
       def vector3_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector3_free_resource(resource :: reference) :: :ok
+      @spec vector3_free_resource(resource :: tuple) :: :ok
       def vector3_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec vector3_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def vector3_update_resource(
             _resource,
@@ -393,21 +393,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec ivector3_to_resource(value :: map) :: reference
+      @spec ivector3_to_resource(value :: tuple) :: tuple
       def ivector3_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector3_from_resource(resource :: reference) :: map
+      @spec ivector3_from_resource(resource :: tuple) :: tuple
       def ivector3_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector3_free_resource(resource :: reference) :: :ok
+      @spec ivector3_free_resource(resource :: tuple) :: :ok
       def ivector3_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec ivector3_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def ivector3_update_resource(
             _resource,
@@ -420,21 +420,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec uivector3_to_resource(value :: map) :: reference
+      @spec uivector3_to_resource(value :: tuple) :: tuple
       def uivector3_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector3_from_resource(resource :: reference) :: map
+      @spec uivector3_from_resource(resource :: tuple) :: tuple
       def uivector3_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector3_free_resource(resource :: reference) :: :ok
+      @spec uivector3_free_resource(resource :: tuple) :: :ok
       def uivector3_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec uivector3_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def uivector3_update_resource(
             _resource,
@@ -447,21 +447,21 @@ defmodule Zexray.NIF.Resource do
       #############
 
       @doc group: :resource
-      @spec vector4_to_resource(value :: map) :: reference
+      @spec vector4_to_resource(value :: tuple) :: tuple
       def vector4_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector4_from_resource(resource :: reference) :: map
+      @spec vector4_from_resource(resource :: tuple) :: tuple
       def vector4_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vector4_free_resource(resource :: reference) :: :ok
+      @spec vector4_free_resource(resource :: tuple) :: :ok
       def vector4_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec vector4_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def vector4_update_resource(
             _resource,
@@ -474,21 +474,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec ivector4_to_resource(value :: map) :: reference
+      @spec ivector4_to_resource(value :: tuple) :: tuple
       def ivector4_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector4_from_resource(resource :: reference) :: map
+      @spec ivector4_from_resource(resource :: tuple) :: tuple
       def ivector4_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ivector4_free_resource(resource :: reference) :: :ok
+      @spec ivector4_free_resource(resource :: tuple) :: :ok
       def ivector4_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec ivector4_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def ivector4_update_resource(
             _resource,
@@ -501,21 +501,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec uivector4_to_resource(value :: map) :: reference
+      @spec uivector4_to_resource(value :: tuple) :: tuple
       def uivector4_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector4_from_resource(resource :: reference) :: map
+      @spec uivector4_from_resource(resource :: tuple) :: tuple
       def uivector4_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec uivector4_free_resource(resource :: reference) :: :ok
+      @spec uivector4_free_resource(resource :: tuple) :: :ok
       def uivector4_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec uivector4_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def uivector4_update_resource(
             _resource,
@@ -528,21 +528,21 @@ defmodule Zexray.NIF.Resource do
       ################
 
       @doc group: :resource
-      @spec quaternion_to_resource(value :: map) :: reference
+      @spec quaternion_to_resource(value :: tuple) :: tuple
       def quaternion_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec quaternion_from_resource(resource :: reference) :: map
+      @spec quaternion_from_resource(resource :: tuple) :: tuple
       def quaternion_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec quaternion_free_resource(resource :: reference) :: :ok
+      @spec quaternion_free_resource(resource :: tuple) :: :ok
       def quaternion_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec quaternion_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def quaternion_update_resource(
             _resource,
@@ -555,21 +555,21 @@ defmodule Zexray.NIF.Resource do
       ############
 
       @doc group: :resource
-      @spec matrix_to_resource(value :: map) :: reference
+      @spec matrix_to_resource(value :: tuple) :: tuple
       def matrix_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec matrix_from_resource(resource :: reference) :: map
+      @spec matrix_from_resource(resource :: tuple) :: tuple
       def matrix_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec matrix_free_resource(resource :: reference) :: :ok
+      @spec matrix_free_resource(resource :: tuple) :: :ok
       def matrix_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec matrix_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def matrix_update_resource(
             _resource,
@@ -582,21 +582,21 @@ defmodule Zexray.NIF.Resource do
       ###########
 
       @doc group: :resource
-      @spec color_to_resource(value :: map) :: reference
+      @spec color_to_resource(value :: tuple) :: tuple
       def color_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec color_from_resource(resource :: reference) :: map
+      @spec color_from_resource(resource :: tuple) :: tuple
       def color_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec color_free_resource(resource :: reference) :: :ok
+      @spec color_free_resource(resource :: tuple) :: :ok
       def color_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec color_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def color_update_resource(
             _resource,
@@ -609,21 +609,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec rectangle_to_resource(value :: map) :: reference
+      @spec rectangle_to_resource(value :: tuple) :: tuple
       def rectangle_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec rectangle_from_resource(resource :: reference) :: map
+      @spec rectangle_from_resource(resource :: tuple) :: tuple
       def rectangle_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec rectangle_free_resource(resource :: reference) :: :ok
+      @spec rectangle_free_resource(resource :: tuple) :: :ok
       def rectangle_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec rectangle_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def rectangle_update_resource(
             _resource,
@@ -636,21 +636,21 @@ defmodule Zexray.NIF.Resource do
       ###########
 
       @doc group: :resource
-      @spec image_to_resource(value :: map) :: reference
+      @spec image_to_resource(value :: tuple) :: tuple
       def image_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec image_from_resource(resource :: reference) :: map
+      @spec image_from_resource(resource :: tuple) :: tuple
       def image_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec image_free_resource(resource :: reference) :: :ok
+      @spec image_free_resource(resource :: tuple) :: :ok
       def image_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec image_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def image_update_resource(
             _resource,
@@ -663,21 +663,21 @@ defmodule Zexray.NIF.Resource do
       #############
 
       @doc group: :resource
-      @spec texture_to_resource(value :: map) :: reference
+      @spec texture_to_resource(value :: tuple) :: tuple
       def texture_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_from_resource(resource :: reference) :: map
+      @spec texture_from_resource(resource :: tuple) :: tuple
       def texture_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_free_resource(resource :: reference) :: :ok
+      @spec texture_free_resource(resource :: tuple) :: :ok
       def texture_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec texture_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def texture_update_resource(
             _resource,
@@ -690,21 +690,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec texture_2d_to_resource(value :: map) :: reference
+      @spec texture_2d_to_resource(value :: tuple) :: tuple
       def texture_2d_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_2d_from_resource(resource :: reference) :: map
+      @spec texture_2d_from_resource(resource :: tuple) :: tuple
       def texture_2d_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_2d_free_resource(resource :: reference) :: :ok
+      @spec texture_2d_free_resource(resource :: tuple) :: :ok
       def texture_2d_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec texture_2d_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def texture_2d_update_resource(
             _resource,
@@ -717,21 +717,21 @@ defmodule Zexray.NIF.Resource do
       ####################
 
       @doc group: :resource
-      @spec texture_cubemap_to_resource(value :: map) :: reference
+      @spec texture_cubemap_to_resource(value :: tuple) :: tuple
       def texture_cubemap_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_cubemap_from_resource(resource :: reference) :: map
+      @spec texture_cubemap_from_resource(resource :: tuple) :: tuple
       def texture_cubemap_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec texture_cubemap_free_resource(resource :: reference) :: :ok
+      @spec texture_cubemap_free_resource(resource :: tuple) :: :ok
       def texture_cubemap_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec texture_cubemap_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def texture_cubemap_update_resource(
             _resource,
@@ -744,21 +744,21 @@ defmodule Zexray.NIF.Resource do
       ###################
 
       @doc group: :resource
-      @spec render_texture_to_resource(value :: map) :: reference
+      @spec render_texture_to_resource(value :: tuple) :: tuple
       def render_texture_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec render_texture_from_resource(resource :: reference) :: map
+      @spec render_texture_from_resource(resource :: tuple) :: tuple
       def render_texture_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec render_texture_free_resource(resource :: reference) :: :ok
+      @spec render_texture_free_resource(resource :: tuple) :: :ok
       def render_texture_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec render_texture_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def render_texture_update_resource(
             _resource,
@@ -771,21 +771,21 @@ defmodule Zexray.NIF.Resource do
       #####################
 
       @doc group: :resource
-      @spec render_texture_2d_to_resource(value :: map) :: reference
+      @spec render_texture_2d_to_resource(value :: tuple) :: tuple
       def render_texture_2d_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec render_texture_2d_from_resource(resource :: reference) :: map
+      @spec render_texture_2d_from_resource(resource :: tuple) :: tuple
       def render_texture_2d_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec render_texture_2d_free_resource(resource :: reference) :: :ok
+      @spec render_texture_2d_free_resource(resource :: tuple) :: :ok
       def render_texture_2d_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec render_texture_2d_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def render_texture_2d_update_resource(
             _resource,
@@ -798,21 +798,21 @@ defmodule Zexray.NIF.Resource do
       ################
 
       @doc group: :resource
-      @spec n_patch_info_to_resource(value :: map) :: reference
+      @spec n_patch_info_to_resource(value :: tuple) :: tuple
       def n_patch_info_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec n_patch_info_from_resource(resource :: reference) :: map
+      @spec n_patch_info_from_resource(resource :: tuple) :: tuple
       def n_patch_info_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec n_patch_info_free_resource(resource :: reference) :: :ok
+      @spec n_patch_info_free_resource(resource :: tuple) :: :ok
       def n_patch_info_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec n_patch_info_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def n_patch_info_update_resource(
             _resource,
@@ -825,21 +825,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec glyph_info_to_resource(value :: map) :: reference
+      @spec glyph_info_to_resource(value :: tuple) :: tuple
       def glyph_info_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec glyph_info_from_resource(resource :: reference) :: map
+      @spec glyph_info_from_resource(resource :: tuple) :: tuple
       def glyph_info_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec glyph_info_free_resource(resource :: reference) :: :ok
+      @spec glyph_info_free_resource(resource :: tuple) :: :ok
       def glyph_info_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec glyph_info_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def glyph_info_update_resource(
             _resource,
@@ -852,21 +852,21 @@ defmodule Zexray.NIF.Resource do
       ##########
 
       @doc group: :resource
-      @spec font_to_resource(value :: map) :: reference
+      @spec font_to_resource(value :: tuple) :: tuple
       def font_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec font_from_resource(resource :: reference) :: map
+      @spec font_from_resource(resource :: tuple) :: tuple
       def font_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec font_free_resource(resource :: reference) :: :ok
+      @spec font_free_resource(resource :: tuple) :: :ok
       def font_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec font_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def font_update_resource(
             _resource,
@@ -879,21 +879,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec camera_3d_to_resource(value :: map) :: reference
+      @spec camera_3d_to_resource(value :: tuple) :: tuple
       def camera_3d_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_3d_from_resource(resource :: reference) :: map
+      @spec camera_3d_from_resource(resource :: tuple) :: tuple
       def camera_3d_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_3d_free_resource(resource :: reference) :: :ok
+      @spec camera_3d_free_resource(resource :: tuple) :: :ok
       def camera_3d_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec camera_3d_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def camera_3d_update_resource(
             _resource,
@@ -906,21 +906,21 @@ defmodule Zexray.NIF.Resource do
       ############
 
       @doc group: :resource
-      @spec camera_to_resource(value :: map) :: reference
+      @spec camera_to_resource(value :: tuple) :: tuple
       def camera_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_from_resource(resource :: reference) :: map
+      @spec camera_from_resource(resource :: tuple) :: tuple
       def camera_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_free_resource(resource :: reference) :: :ok
+      @spec camera_free_resource(resource :: tuple) :: :ok
       def camera_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec camera_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def camera_update_resource(
             _resource,
@@ -933,21 +933,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec camera_2d_to_resource(value :: map) :: reference
+      @spec camera_2d_to_resource(value :: tuple) :: tuple
       def camera_2d_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_2d_from_resource(resource :: reference) :: map
+      @spec camera_2d_from_resource(resource :: tuple) :: tuple
       def camera_2d_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec camera_2d_free_resource(resource :: reference) :: :ok
+      @spec camera_2d_free_resource(resource :: tuple) :: :ok
       def camera_2d_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec camera_2d_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def camera_2d_update_resource(
             _resource,
@@ -960,21 +960,21 @@ defmodule Zexray.NIF.Resource do
       ##########
 
       @doc group: :resource
-      @spec mesh_to_resource(value :: map) :: reference
+      @spec mesh_to_resource(value :: tuple) :: tuple
       def mesh_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec mesh_from_resource(resource :: reference) :: map
+      @spec mesh_from_resource(resource :: tuple) :: tuple
       def mesh_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec mesh_free_resource(resource :: reference) :: :ok
+      @spec mesh_free_resource(resource :: tuple) :: :ok
       def mesh_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec mesh_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def mesh_update_resource(
             _resource,
@@ -987,21 +987,21 @@ defmodule Zexray.NIF.Resource do
       ############
 
       @doc group: :resource
-      @spec shader_to_resource(value :: map) :: reference
+      @spec shader_to_resource(value :: tuple) :: tuple
       def shader_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec shader_from_resource(resource :: reference) :: map
+      @spec shader_from_resource(resource :: tuple) :: tuple
       def shader_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec shader_free_resource(resource :: reference) :: :ok
+      @spec shader_free_resource(resource :: tuple) :: :ok
       def shader_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec shader_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def shader_update_resource(
             _resource,
@@ -1014,21 +1014,21 @@ defmodule Zexray.NIF.Resource do
       #################
 
       @doc group: :resource
-      @spec material_map_to_resource(value :: map) :: reference
+      @spec material_map_to_resource(value :: tuple) :: tuple
       def material_map_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec material_map_from_resource(resource :: reference) :: map
+      @spec material_map_from_resource(resource :: tuple) :: tuple
       def material_map_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec material_map_free_resource(resource :: reference) :: :ok
+      @spec material_map_free_resource(resource :: tuple) :: :ok
       def material_map_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec material_map_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def material_map_update_resource(
             _resource,
@@ -1041,21 +1041,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec material_to_resource(value :: map) :: reference
+      @spec material_to_resource(value :: tuple) :: tuple
       def material_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec material_from_resource(resource :: reference) :: map
+      @spec material_from_resource(resource :: tuple) :: tuple
       def material_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec material_free_resource(resource :: reference) :: :ok
+      @spec material_free_resource(resource :: tuple) :: :ok
       def material_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec material_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def material_update_resource(
             _resource,
@@ -1068,21 +1068,21 @@ defmodule Zexray.NIF.Resource do
       ###############
 
       @doc group: :resource
-      @spec transform_to_resource(value :: map) :: reference
+      @spec transform_to_resource(value :: tuple) :: tuple
       def transform_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec transform_from_resource(resource :: reference) :: map
+      @spec transform_from_resource(resource :: tuple) :: tuple
       def transform_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec transform_free_resource(resource :: reference) :: :ok
+      @spec transform_free_resource(resource :: tuple) :: :ok
       def transform_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec transform_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def transform_update_resource(
             _resource,
@@ -1095,21 +1095,21 @@ defmodule Zexray.NIF.Resource do
       ##############
 
       @doc group: :resource
-      @spec bone_info_to_resource(value :: map) :: reference
+      @spec bone_info_to_resource(value :: tuple) :: tuple
       def bone_info_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec bone_info_from_resource(resource :: reference) :: map
+      @spec bone_info_from_resource(resource :: tuple) :: tuple
       def bone_info_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec bone_info_free_resource(resource :: reference) :: :ok
+      @spec bone_info_free_resource(resource :: tuple) :: :ok
       def bone_info_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec bone_info_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def bone_info_update_resource(
             _resource,
@@ -1122,21 +1122,21 @@ defmodule Zexray.NIF.Resource do
       ###########
 
       @doc group: :resource
-      @spec model_to_resource(value :: map) :: reference
+      @spec model_to_resource(value :: tuple) :: tuple
       def model_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec model_from_resource(resource :: reference) :: map
+      @spec model_from_resource(resource :: tuple) :: tuple
       def model_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec model_free_resource(resource :: reference) :: :ok
+      @spec model_free_resource(resource :: tuple) :: :ok
       def model_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec model_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def model_update_resource(
             _resource,
@@ -1149,21 +1149,21 @@ defmodule Zexray.NIF.Resource do
       ####################
 
       @doc group: :resource
-      @spec model_animation_to_resource(value :: map) :: reference
+      @spec model_animation_to_resource(value :: tuple) :: tuple
       def model_animation_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec model_animation_from_resource(resource :: reference) :: map
+      @spec model_animation_from_resource(resource :: tuple) :: tuple
       def model_animation_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec model_animation_free_resource(resource :: reference) :: :ok
+      @spec model_animation_free_resource(resource :: tuple) :: :ok
       def model_animation_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec model_animation_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def model_animation_update_resource(
             _resource,
@@ -1176,21 +1176,21 @@ defmodule Zexray.NIF.Resource do
       #########
 
       @doc group: :resource
-      @spec ray_to_resource(value :: map) :: reference
+      @spec ray_to_resource(value :: tuple) :: tuple
       def ray_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ray_from_resource(resource :: reference) :: map
+      @spec ray_from_resource(resource :: tuple) :: tuple
       def ray_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ray_free_resource(resource :: reference) :: :ok
+      @spec ray_free_resource(resource :: tuple) :: :ok
       def ray_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec ray_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def ray_update_resource(
             _resource,
@@ -1203,21 +1203,21 @@ defmodule Zexray.NIF.Resource do
       ##################
 
       @doc group: :resource
-      @spec ray_collision_to_resource(value :: map) :: reference
+      @spec ray_collision_to_resource(value :: tuple) :: tuple
       def ray_collision_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ray_collision_from_resource(resource :: reference) :: map
+      @spec ray_collision_from_resource(resource :: tuple) :: tuple
       def ray_collision_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec ray_collision_free_resource(resource :: reference) :: :ok
+      @spec ray_collision_free_resource(resource :: tuple) :: :ok
       def ray_collision_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec ray_collision_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def ray_collision_update_resource(
             _resource,
@@ -1230,21 +1230,21 @@ defmodule Zexray.NIF.Resource do
       #################
 
       @doc group: :resource
-      @spec bounding_box_to_resource(value :: map) :: reference
+      @spec bounding_box_to_resource(value :: tuple) :: tuple
       def bounding_box_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec bounding_box_from_resource(resource :: reference) :: map
+      @spec bounding_box_from_resource(resource :: tuple) :: tuple
       def bounding_box_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec bounding_box_free_resource(resource :: reference) :: :ok
+      @spec bounding_box_free_resource(resource :: tuple) :: :ok
       def bounding_box_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec bounding_box_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def bounding_box_update_resource(
             _resource,
@@ -1257,21 +1257,21 @@ defmodule Zexray.NIF.Resource do
       ##########
 
       @doc group: :resource
-      @spec wave_to_resource(value :: map) :: reference
+      @spec wave_to_resource(value :: tuple) :: tuple
       def wave_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec wave_from_resource(resource :: reference) :: map
+      @spec wave_from_resource(resource :: tuple) :: tuple
       def wave_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec wave_free_resource(resource :: reference) :: :ok
+      @spec wave_free_resource(resource :: tuple) :: :ok
       def wave_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec wave_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def wave_update_resource(
             _resource,
@@ -1284,21 +1284,21 @@ defmodule Zexray.NIF.Resource do
       #################
 
       @doc group: :resource
-      @spec audio_stream_to_resource(value :: map) :: reference
+      @spec audio_stream_to_resource(value :: tuple) :: tuple
       def audio_stream_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec audio_stream_from_resource(resource :: reference) :: map
+      @spec audio_stream_from_resource(resource :: tuple) :: tuple
       def audio_stream_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec audio_stream_free_resource(resource :: reference) :: :ok
+      @spec audio_stream_free_resource(resource :: tuple) :: :ok
       def audio_stream_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec audio_stream_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def audio_stream_update_resource(
             _resource,
@@ -1311,21 +1311,21 @@ defmodule Zexray.NIF.Resource do
       ###########
 
       @doc group: :resource
-      @spec sound_to_resource(value :: map) :: reference
+      @spec sound_to_resource(value :: tuple) :: tuple
       def sound_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec sound_from_resource(resource :: reference) :: map
+      @spec sound_from_resource(resource :: tuple) :: tuple
       def sound_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec sound_free_resource(resource :: reference) :: :ok
+      @spec sound_free_resource(resource :: tuple) :: :ok
       def sound_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec sound_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def sound_update_resource(
             _resource,
@@ -1338,21 +1338,21 @@ defmodule Zexray.NIF.Resource do
       ################
 
       @doc group: :resource
-      @spec sound_alias_to_resource(value :: map) :: reference
+      @spec sound_alias_to_resource(value :: tuple) :: tuple
       def sound_alias_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec sound_alias_from_resource(resource :: reference) :: map
+      @spec sound_alias_from_resource(resource :: tuple) :: tuple
       def sound_alias_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec sound_alias_free_resource(resource :: reference) :: :ok
+      @spec sound_alias_free_resource(resource :: tuple) :: :ok
       def sound_alias_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec sound_alias_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def sound_alias_update_resource(
             _resource,
@@ -1365,21 +1365,21 @@ defmodule Zexray.NIF.Resource do
       ###########
 
       @doc group: :resource
-      @spec music_to_resource(value :: map) :: reference
+      @spec music_to_resource(value :: tuple) :: tuple
       def music_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec music_from_resource(resource :: reference) :: map
+      @spec music_from_resource(resource :: tuple) :: tuple
       def music_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec music_free_resource(resource :: reference) :: :ok
+      @spec music_free_resource(resource :: tuple) :: :ok
       def music_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec music_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def music_update_resource(
             _resource,
@@ -1392,21 +1392,21 @@ defmodule Zexray.NIF.Resource do
       ##################
 
       @doc group: :resource
-      @spec vr_device_info_to_resource(value :: map) :: reference
+      @spec vr_device_info_to_resource(value :: tuple) :: tuple
       def vr_device_info_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vr_device_info_from_resource(resource :: reference) :: map
+      @spec vr_device_info_from_resource(resource :: tuple) :: tuple
       def vr_device_info_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vr_device_info_free_resource(resource :: reference) :: :ok
+      @spec vr_device_info_free_resource(resource :: tuple) :: :ok
       def vr_device_info_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec vr_device_info_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def vr_device_info_update_resource(
             _resource,
@@ -1419,21 +1419,21 @@ defmodule Zexray.NIF.Resource do
       ####################
 
       @doc group: :resource
-      @spec vr_stereo_config_to_resource(value :: map) :: reference
+      @spec vr_stereo_config_to_resource(value :: tuple) :: tuple
       def vr_stereo_config_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vr_stereo_config_from_resource(resource :: reference) :: map
+      @spec vr_stereo_config_from_resource(resource :: tuple) :: tuple
       def vr_stereo_config_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec vr_stereo_config_free_resource(resource :: reference) :: :ok
+      @spec vr_stereo_config_free_resource(resource :: tuple) :: :ok
       def vr_stereo_config_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec vr_stereo_config_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def vr_stereo_config_update_resource(
             _resource,
@@ -1446,21 +1446,21 @@ defmodule Zexray.NIF.Resource do
       ##################
 
       @doc group: :resource
-      @spec file_path_list_to_resource(value :: map) :: reference
+      @spec file_path_list_to_resource(value :: tuple) :: tuple
       def file_path_list_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec file_path_list_from_resource(resource :: reference) :: map
+      @spec file_path_list_from_resource(resource :: tuple) :: tuple
       def file_path_list_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec file_path_list_free_resource(resource :: reference) :: :ok
+      @spec file_path_list_free_resource(resource :: tuple) :: :ok
       def file_path_list_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec file_path_list_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def file_path_list_update_resource(
             _resource,
@@ -1473,21 +1473,21 @@ defmodule Zexray.NIF.Resource do
       #####################
 
       @doc group: :resource
-      @spec automation_event_to_resource(value :: map) :: reference
+      @spec automation_event_to_resource(value :: tuple) :: tuple
       def automation_event_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec automation_event_from_resource(resource :: reference) :: map
+      @spec automation_event_from_resource(resource :: tuple) :: tuple
       def automation_event_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec automation_event_free_resource(resource :: reference) :: :ok
+      @spec automation_event_free_resource(resource :: tuple) :: :ok
       def automation_event_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec automation_event_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def automation_event_update_resource(
             _resource,
@@ -1500,21 +1500,21 @@ defmodule Zexray.NIF.Resource do
       #########################
 
       @doc group: :resource
-      @spec automation_event_list_to_resource(value :: map) :: reference
+      @spec automation_event_list_to_resource(value :: tuple) :: tuple
       def automation_event_list_to_resource(_value), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec automation_event_list_from_resource(resource :: reference) :: map
+      @spec automation_event_list_from_resource(resource :: tuple) :: tuple
       def automation_event_list_from_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
-      @spec automation_event_list_free_resource(resource :: reference) :: :ok
+      @spec automation_event_list_free_resource(resource :: tuple) :: :ok
       def automation_event_list_free_resource(_resource), do: :erlang.nif_error(:undef)
 
       @doc group: :resource
       @spec automation_event_list_update_resource(
-              resource :: reference,
-              value :: map
+              resource :: tuple,
+              value :: tuple
             ) :: :ok
       def automation_event_list_update_resource(
             _resource,

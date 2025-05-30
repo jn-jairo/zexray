@@ -9,15 +9,11 @@ defmodule Zexray.Model do
   Get bone info max name for BoneInfo.name
   """
   @spec bone_info_max_name() :: non_neg_integer
-  def bone_info_max_name() do
-    NIF.bone_info_get_max_name()
-  end
+  defdelegate bone_info_max_name(), to: NIF, as: :bone_info_get_max_name
 
   @doc """
   Get model animation max name for ModelAnimation.name
   """
   @spec model_animation_max_name() :: non_neg_integer
-  def model_animation_max_name() do
-    NIF.model_animation_get_max_name()
-  end
+  defdelegate model_animation_max_name(), to: NIF, as: :model_animation_get_max_name
 end

@@ -5,14 +5,48 @@ defmodule Zexray.Resource do
 
   import Zexray.Util, only: [wait_time: 1]
 
+  alias Zexray.NIF
+  Code.ensure_compiled(Zexray.NIF)
+
+  defmacrop record_type_string(value) when is_tuple(value) and is_atom(elem(value, 0)) do
+    quote do
+      unquote(value)
+      |> elem(0)
+      |> Atom.to_string()
+    end
+  end
+
+  defmacrop record_type_suffix(value, suffix)
+            when is_tuple(value) and is_atom(elem(value, 0)) and is_binary(suffix) do
+    quote do
+      String.to_atom("#{record_type_string(unquote(value))}_#{unquote(suffix)}")
+    end
+  end
+
+  defmacrop resourceable_type_string(value) when is_tuple(value) and is_atom(elem(value, 0)) do
+    quote do
+      unquote(value)
+      |> elem(0)
+      |> Atom.to_string()
+      |> String.replace_suffix("_resource", "")
+    end
+  end
+
+  defmacrop resourceable_type_suffix(value, suffix)
+            when is_tuple(value) and is_atom(elem(value, 0)) and is_binary(suffix) do
+    quote do
+      String.to_atom("#{resourceable_type_string(unquote(value))}_#{unquote(suffix)}")
+    end
+  end
+
   @doc """
   Check if the value is a resource struct.
   """
   @spec resource?(value :: any) :: boolean
   def resource?(value)
 
-  def resource?(value) when is_struct(value) do
-    String.ends_with?(Atom.to_string(value.__struct__), ".Resource")
+  def resource?(value) when is_tuple(value) and is_atom(elem(value, 0)) do
+    String.ends_with?(record_type_string(value), "_resource")
   end
 
   def resource?(_value), do: false
@@ -23,12 +57,14 @@ defmodule Zexray.Resource do
   @spec resourceable?(value :: any) :: boolean
   def resourceable?(value)
 
-  def resourceable?(value) when is_struct(value) do
-    module = to_resource_module(value.__struct__)
+  def resourceable?(value) when is_tuple(value) and is_atom(elem(value, 0)) do
+    record_type =
+      record_type_string(value)
 
-    case Code.ensure_compiled(module) do
-      {:module, ^module} -> true
-      _ -> false
+    if String.ends_with?(record_type, "_resource") do
+      false
+    else
+      function_exported?(NIF, String.to_atom("#{record_type}_to_resource"), 1)
     end
   end
 
@@ -49,7 +85,7 @@ defmodule Zexray.Resource do
   def new!(value) do
     cond do
       resourceable?(value) ->
-        apply(to_resource_module(value.__struct__), :new, [value])
+        apply(NIF, record_type_suffix(value, "to_resource"), [value])
 
       is_struct(value) ->
         struct(
@@ -64,6 +100,12 @@ defmodule Zexray.Resource do
         Enum.into(value, %{}, fn {k, v} ->
           {k, new!(v)}
         end)
+
+      is_tuple(value) ->
+        value
+        |> Tuple.to_list()
+        |> new!()
+        |> List.to_tuple()
 
       true ->
         raise_invalid_resourceable(value)
@@ -85,7 +127,7 @@ defmodule Zexray.Resource do
   def new(value) do
     cond do
       resourceable?(value) ->
-        apply(to_resource_module(value.__struct__), :new, [value])
+        apply(NIF, record_type_suffix(value, "to_resource"), [value])
 
       is_struct(value) ->
         struct(
@@ -100,6 +142,12 @@ defmodule Zexray.Resource do
         Enum.into(value, %{}, fn {k, v} ->
           {k, new(v)}
         end)
+
+      is_tuple(value) ->
+        value
+        |> Tuple.to_list()
+        |> new()
+        |> List.to_tuple()
 
       true ->
         value
@@ -121,7 +169,7 @@ defmodule Zexray.Resource do
   def content!(resource) do
     cond do
       resource?(resource) ->
-        apply(resource.__struct__, :content, [resource])
+        apply(NIF, resourceable_type_suffix(resource, "from_resource"), [resource])
 
       is_struct(resource) ->
         struct(
@@ -136,6 +184,12 @@ defmodule Zexray.Resource do
         Enum.into(resource, %{}, fn {k, v} ->
           {k, content!(v)}
         end)
+
+      is_tuple(resource) ->
+        resource
+        |> Tuple.to_list()
+        |> content!()
+        |> List.to_tuple()
 
       true ->
         raise_invalid_resource(resource)
@@ -157,7 +211,7 @@ defmodule Zexray.Resource do
   def content(value) do
     cond do
       resource?(value) ->
-        apply(value.__struct__, :content, [value])
+        apply(NIF, resourceable_type_suffix(value, "from_resource"), [value])
 
       is_struct(value) ->
         struct(
@@ -173,77 +227,11 @@ defmodule Zexray.Resource do
           {k, content(v)}
         end)
 
-      true ->
+      is_tuple(value) ->
         value
-    end
-  end
-
-  @doc """
-  Get the content type of the resource.
-  """
-  def content_type!(resource)
-
-  @spec content_type!(resources :: list) :: list
-  def content_type!(resources) when is_list(resources) do
-    resources |> Enum.map(&content_type!/1)
-  end
-
-  @spec content_type!(resource :: map) :: map
-  @spec content_type!(resource :: any) :: module
-  def content_type!(resource) do
-    cond do
-      resource?(resource) ->
-        apply(resource.__struct__, :content_type, [])
-
-      is_struct(resource) ->
-        struct(
-          resource.__struct__,
-          Map.from_struct(resource)
-          |> Enum.into(%{}, fn {k, v} ->
-            {k, content_type!(v)}
-          end)
-        )
-
-      is_map(resource) ->
-        Enum.into(resource, %{}, fn {k, v} ->
-          {k, content_type!(v)}
-        end)
-
-      true ->
-        raise_invalid_resource(resource)
-    end
-  end
-
-  @doc """
-  Get the content type of the resource if it is a resource or return the value.
-  """
-  def content_type(value)
-
-  @spec content_type(values :: list) :: list
-  def content_type(values) when is_list(values) do
-    values |> Enum.map(&content_type/1)
-  end
-
-  @spec content_type(value :: map) :: map
-  @spec content_type(value :: any) :: module
-  def content_type(value) do
-    cond do
-      resource?(value) ->
-        apply(value.__struct__, :content_type, [])
-
-      is_struct(value) ->
-        struct(
-          value.__struct__,
-          Map.from_struct(value)
-          |> Enum.into(%{}, fn {k, v} ->
-            {k, content_type(v)}
-          end)
-        )
-
-      is_map(value) ->
-        Enum.into(value, %{}, fn {k, v} ->
-          {k, content_type(v)}
-        end)
+        |> Tuple.to_list()
+        |> content()
+        |> List.to_tuple()
 
       true ->
         value
@@ -265,7 +253,7 @@ defmodule Zexray.Resource do
   def free!(resource) do
     cond do
       resource?(resource) ->
-        apply(resource.__struct__, :free, [resource])
+        apply(NIF, resourceable_type_suffix(resource, "free_resource"), [resource])
 
       is_struct(resource) ->
         struct(
@@ -280,6 +268,12 @@ defmodule Zexray.Resource do
         Enum.into(resource, %{}, fn {k, v} ->
           {k, free!(v)}
         end)
+
+      is_tuple(resource) ->
+        resource
+        |> Tuple.to_list()
+        |> free!()
+        |> List.to_tuple()
 
       true ->
         raise_invalid_resource(resource)
@@ -301,7 +295,7 @@ defmodule Zexray.Resource do
   def free(value) do
     cond do
       resource?(value) ->
-        apply(value.__struct__, :free, [value])
+        apply(NIF, resourceable_type_suffix(value, "free_resource"), [value])
 
       is_struct(value) ->
         struct(
@@ -316,6 +310,12 @@ defmodule Zexray.Resource do
         Enum.into(value, %{}, fn {k, v} ->
           {k, free(v)}
         end)
+
+      is_tuple(value) ->
+        value
+        |> Tuple.to_list()
+        |> free()
+        |> List.to_tuple()
 
       true ->
         value
@@ -379,6 +379,12 @@ defmodule Zexray.Resource do
           {k, free_async!(v, seconds)}
         end)
 
+      is_tuple(resource) ->
+        resource
+        |> Tuple.to_list()
+        |> free_async!(seconds)
+        |> List.to_tuple()
+
       true ->
         raise_invalid_resource(resource)
     end
@@ -441,6 +447,12 @@ defmodule Zexray.Resource do
           {k, free_async(v, seconds)}
         end)
 
+      is_tuple(value) ->
+        value
+        |> Tuple.to_list()
+        |> free_async(seconds)
+        |> List.to_tuple()
+
       true ->
         value
     end
@@ -455,7 +467,7 @@ defmodule Zexray.Resource do
       resource?(resource) ->
         cond do
           resourceable?(value) ->
-            apply(resource.__struct__, :update, [resource, value])
+            apply(NIF, resourceable_type_suffix(resource, "update_resource"), [resource, value])
 
           true ->
             raise_invalid_resourceable(value)
@@ -475,7 +487,7 @@ defmodule Zexray.Resource do
       resource?(resource) ->
         cond do
           resourceable?(value) ->
-            apply(resource.__struct__, :update, [resource, value])
+            apply(NIF, resourceable_type_suffix(resource, "update_resource"), [resource, value])
 
           true ->
             :invalid_resourceable
@@ -490,14 +502,14 @@ defmodule Zexray.Resource do
   Run function with resource and free it after.
   """
   @spec with_resource(
-          resource :: (-> list | map) | list | map,
+          resource :: (-> list | map | tuple) | list | map | tuple,
           func :: (list | map -> any)
         ) :: any
   def with_resource(
         resource,
         func
       )
-      when (is_function(resource) or is_list(resource) or is_map(resource)) and
+      when (is_function(resource) or is_list(resource) or is_map(resource) or is_tuple(resource)) and
              is_function(func) do
     resource =
       if is_function(resource) do
@@ -517,7 +529,7 @@ defmodule Zexray.Resource do
   Run function with resource and free it after asynchronously.
   """
   @spec with_resource_async(
-          resource :: (-> list | map) | list | map,
+          resource :: (-> list | map | tuple) | list | map | tuple,
           func :: (list | map -> any),
           seconds :: number
         ) :: any
@@ -526,7 +538,7 @@ defmodule Zexray.Resource do
         func,
         seconds \\ 1.0
       )
-      when (is_function(resource) or is_list(resource) or is_map(resource)) and
+      when (is_function(resource) or is_list(resource) or is_map(resource) or is_tuple(resource)) and
              is_function(func) and
              is_number(seconds) do
     resource =
@@ -541,11 +553,6 @@ defmodule Zexray.Resource do
     after
       free_async(resource, seconds)
     end
-  end
-
-  @spec to_resource_module(module :: module) :: module
-  defp to_resource_module(module) when is_atom(module) do
-    String.to_atom("#{Atom.to_string(module)}.Resource")
   end
 
   @spec raise_invalid_resource(value :: any) :: no_return

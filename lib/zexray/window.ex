@@ -3,7 +3,6 @@ defmodule Zexray.Window do
   Window
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   ####################
@@ -20,16 +19,7 @@ defmodule Zexray.Window do
           title :: binary,
           func :: (-> any)
         ) :: any
-  def with_window(
-        width,
-        height,
-        title,
-        func
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_binary(title) and
-             is_function(func) do
+  def with_window(width, height, title, func) when is_function(func) do
     try do
       init(width, height, title)
       func.()
@@ -51,10 +41,7 @@ defmodule Zexray.Window do
         width,
         height,
         title
-      )
-      when is_integer(width) and
-             is_integer(height) and
-             is_binary(title) do
+      ) do
     ret =
       NIF.init_window(
         width,
@@ -72,9 +59,7 @@ defmodule Zexray.Window do
   """
   @doc group: :initialization
   @spec close() :: :ok
-  def close() do
-    NIF.close_window()
-  end
+  defdelegate close(), to: NIF, as: :close_window
 
   ###########
   #  State  #
@@ -85,134 +70,98 @@ defmodule Zexray.Window do
   """
   @doc group: :state
   @spec should_close?() :: boolean
-  def should_close?() do
-    NIF.window_should_close()
-  end
+  defdelegate should_close?(), to: NIF, as: :window_should_close
 
   @doc """
   Check if window has been initialized successfully
   """
   @doc group: :state
   @spec ready?() :: boolean
-  def ready?() do
-    NIF.is_window_ready()
-  end
+  defdelegate ready?(), to: NIF, as: :is_window_ready
 
   @doc """
   Check if window is currently fullscreen
   """
   @doc group: :state
   @spec fullscreen?() :: boolean
-  def fullscreen?() do
-    NIF.is_window_fullscreen()
-  end
+  defdelegate fullscreen?(), to: NIF, as: :is_window_fullscreen
 
   @doc """
   Check if window is currently hidden
   """
   @doc group: :state
   @spec hidden?() :: boolean
-  def hidden?() do
-    NIF.is_window_hidden()
-  end
+  defdelegate hidden?(), to: NIF, as: :is_window_hidden
 
   @doc """
   Check if window is currently minimized
   """
   @doc group: :state
   @spec minimized?() :: boolean
-  def minimized?() do
-    NIF.is_window_minimized()
-  end
+  defdelegate minimized?(), to: NIF, as: :is_window_minimized
 
   @doc """
   Check if window is currently maximized
   """
   @doc group: :state
   @spec maximized?() :: boolean
-  def maximized?() do
-    NIF.is_window_maximized()
-  end
+  defdelegate maximized?(), to: NIF, as: :is_window_maximized
 
   @doc """
   Check if window is currently focused
   """
   @doc group: :state
   @spec focused?() :: boolean
-  def focused?() do
-    NIF.is_window_focused()
-  end
+  defdelegate focused?(), to: NIF, as: :is_window_focused
 
   @doc """
   Check if window has been resized last frame
   """
   @doc group: :state
   @spec resized?() :: boolean
-  def resized?() do
-    NIF.is_window_resized()
-  end
+  defdelegate resized?(), to: NIF, as: :is_window_resized
 
   @doc """
   Check if one specific window flag is enabled
   """
   @doc group: :state
-  @spec state?(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: boolean
-  def state?(flag)
-      when is_like_config_flag(flag) or
-             (is_list(flag) and (flag == [] or is_like_config_flag(hd(flag)))) do
-    NIF.is_window_state(Zexray.Enum.ConfigFlag.value_flag(flag))
-  end
+  @spec state?(flag :: Zexray.Enum.ConfigFlag.t_free()) :: boolean
+  defdelegate state?(flag), to: NIF, as: :is_window_state
 
   @doc """
   Set window configuration state using flags
   """
   @doc group: :state
-  @spec set_state(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
-  def set_state(flag)
-      when is_like_config_flag(flag) or
-             (is_list(flag) and (flag == [] or is_like_config_flag(hd(flag)))) do
-    NIF.set_window_state(Zexray.Enum.ConfigFlag.value_flag(flag))
-  end
+  @spec set_state(flag :: Zexray.Enum.ConfigFlag.t_free()) :: :ok
+  defdelegate set_state(flag), to: NIF, as: :set_window_state
 
   @doc """
   Setup init configuration flags (view FLAGS)
   """
   @doc group: :state
-  @spec set_config_flags(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
-  def set_config_flags(flag)
-      when is_like_config_flag(flag) or
-             (is_list(flag) and (flag == [] or is_like_config_flag(hd(flag)))) do
-    NIF.set_config_flags(Zexray.Enum.ConfigFlag.value_flag(flag))
-  end
+  @spec set_config_flags(flag :: Zexray.Enum.ConfigFlag.t_free()) :: :ok
+  defdelegate set_config_flags(flag), to: NIF, as: :set_config_flags
 
   @doc """
   Clear window configuration state flags
   """
   @doc group: :state
-  @spec clear_state(flag :: Zexray.Enum.ConfigFlag.t_all_flag()) :: :ok
-  def clear_state(flag)
-      when is_like_config_flag(flag) or
-             (is_list(flag) and (flag == [] or is_like_config_flag(hd(flag)))) do
-    NIF.clear_window_state(Zexray.Enum.ConfigFlag.value_flag(flag))
-  end
+  @spec clear_state(flag :: Zexray.Enum.ConfigFlag.t_free()) :: :ok
+  defdelegate clear_state(flag), to: NIF, as: :clear_window_state
 
   @doc """
   Enable waiting for events on EndDrawing(), no automatic event polling
   """
   @doc group: :state
   @spec enable_event_waiting() :: :ok
-  def enable_event_waiting() do
-    NIF.enable_event_waiting()
-  end
+  defdelegate enable_event_waiting(), to: NIF, as: :enable_event_waiting
 
   @doc """
   Disable waiting for events on EndDrawing(), automatic events polling
   """
   @doc group: :state
   @spec disable_event_waiting() :: :ok
-  def disable_event_waiting() do
-    NIF.disable_event_waiting()
-  end
+  defdelegate disable_event_waiting(), to: NIF, as: :disable_event_waiting
 
   ############
   #  Action  #
@@ -223,75 +172,56 @@ defmodule Zexray.Window do
   """
   @doc group: :action
   @spec toggle_fullscreen() :: :ok
-  def toggle_fullscreen() do
-    NIF.toggle_fullscreen()
-  end
+  defdelegate toggle_fullscreen(), to: NIF, as: :toggle_fullscreen
 
   @doc """
   Toggle window state: borderless windowed, resizes window to match monitor resolution
   """
   @doc group: :action
   @spec toggle_borderless() :: :ok
-  def toggle_borderless() do
-    NIF.toggle_borderless_windowed()
-  end
+  defdelegate toggle_borderless(), to: NIF, as: :toggle_borderless_windowed
 
   @doc """
   Set window state: maximized, if resizable
   """
   @doc group: :action
   @spec maximize() :: :ok
-  def maximize() do
-    NIF.maximize_window()
-  end
+  defdelegate maximize(), to: NIF, as: :maximize_window
 
   @doc """
   Set window state: minimized, if resizable
   """
   @doc group: :action
   @spec minimize() :: :ok
-  def minimize() do
-    NIF.minimize_window()
-  end
+  defdelegate minimize(), to: NIF, as: :minimize_window
 
   @doc """
   Set window state: not minimized/maximized
   """
   @doc group: :action
   @spec restore() :: :ok
-  def restore() do
-    NIF.restore_window()
-  end
+  defdelegate restore(), to: NIF, as: :restore_window
 
   @doc """
   Set window focused
   """
   @doc group: :action
   @spec focus() :: :ok
-  def focus() do
-    NIF.set_window_focused()
-  end
+  defdelegate focus(), to: NIF, as: :set_window_focused
 
   @doc """
   Takes a screenshot of current screen
   """
   @doc group: :action
   @spec screenshot(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  def screenshot(return \\ :value)
-      when is_nif_return(return) do
-    NIF.screenshot(return)
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate screenshot(return \\ :value), to: NIF, as: :screenshot
 
   @doc """
   Takes a screenshot of current screen (filename extension defines format)
   """
   @doc group: :action
   @spec take_screenshot(file_name :: binary) :: boolean
-  def take_screenshot(file_name)
-      when is_binary(file_name) do
-    NIF.take_screenshot(file_name)
-  end
+  defdelegate take_screenshot(file_name), to: NIF, as: :take_screenshot
 
   ##############
   #  Property  #
@@ -302,30 +232,21 @@ defmodule Zexray.Window do
   """
   @doc group: :property
   @spec set_icon(image :: Zexray.Type.Image.t_all()) :: :ok
-  def set_icon(image)
-      when is_like_image(image) do
-    NIF.set_window_icon(image |> Zexray.Type.Image.to_nif())
-  end
+  defdelegate set_icon(image), to: NIF, as: :set_window_icon
 
   @doc """
   Set icon for window (multiple images, RGBA 32bit)
   """
   @doc group: :property
   @spec set_icons(images :: [Zexray.Type.Image.t_all()]) :: :ok
-  def set_icons(images)
-      when is_list(images) and (images == [] or is_like_image(hd(images))) do
-    NIF.set_window_icons(images |> Zexray.Type.Image.to_nif())
-  end
+  defdelegate set_icons(images), to: NIF, as: :set_window_icons
 
   @doc """
   Set title for window
   """
   @doc group: :property
   @spec set_title(title :: binary) :: :ok
-  def set_title(title)
-      when is_binary(title) do
-    NIF.set_window_title(title)
-  end
+  defdelegate set_title(title), to: NIF, as: :set_window_title
 
   @doc """
   Set window position on screen
@@ -335,17 +256,12 @@ defmodule Zexray.Window do
           x :: integer,
           y :: integer
         ) :: :ok
-  def set_position(
-        x,
-        y
-      )
-      when is_integer(x) and
-             is_integer(y) do
-    NIF.set_window_position(
-      x,
-      y
-    )
-  end
+  defdelegate set_position(
+                x,
+                y
+              ),
+              to: NIF,
+              as: :set_window_position
 
   @doc """
   Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
@@ -355,17 +271,12 @@ defmodule Zexray.Window do
           width :: integer,
           height :: integer
         ) :: :ok
-  def set_min_size(
-        width,
-        height
-      )
-      when is_integer(width) and
-             is_integer(height) do
-    NIF.set_window_min_size(
-      width,
-      height
-    )
-  end
+  defdelegate set_min_size(
+                width,
+                height
+              ),
+              to: NIF,
+              as: :set_window_min_size
 
   @doc """
   Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
@@ -375,17 +286,12 @@ defmodule Zexray.Window do
           width :: integer,
           height :: integer
         ) :: :ok
-  def set_max_size(
-        width,
-        height
-      )
-      when is_integer(width) and
-             is_integer(height) do
-    NIF.set_window_max_size(
-      width,
-      height
-    )
-  end
+  defdelegate set_max_size(
+                width,
+                height
+              ),
+              to: NIF,
+              as: :set_window_max_size
 
   @doc """
   Set window dimensions
@@ -395,85 +301,61 @@ defmodule Zexray.Window do
           width :: integer,
           height :: integer
         ) :: :ok
-  def set_size(
-        width,
-        height
-      )
-      when is_integer(width) and
-             is_integer(height) do
-    NIF.set_window_size(
-      width,
-      height
-    )
-  end
+  defdelegate set_size(
+                width,
+                height
+              ),
+              to: NIF,
+              as: :set_window_size
 
   @doc """
   Set window opacity [0.0f..1.0f]
   """
   @doc group: :property
   @spec set_opacity(opacity :: float) :: :ok
-  def set_opacity(opacity)
-      when is_float(opacity) do
-    NIF.set_window_opacity(opacity)
-  end
+  defdelegate set_opacity(opacity), to: NIF, as: :set_window_opacity
 
   @doc """
   Get current screen width
   """
   @doc group: :property
   @spec get_screen_width() :: integer
-  def get_screen_width() do
-    NIF.get_screen_width()
-  end
+  defdelegate get_screen_width(), to: NIF, as: :get_screen_width
 
   @doc """
   Get current screen height
   """
   @doc group: :property
   @spec get_screen_height() :: integer
-  def get_screen_height() do
-    NIF.get_screen_height()
-  end
+  defdelegate get_screen_height(), to: NIF, as: :get_screen_height
 
   @doc """
   Get current render width (it considers HiDPI)
   """
   @doc group: :property
   @spec get_render_width() :: integer
-  def get_render_width() do
-    NIF.get_render_width()
-  end
+  defdelegate get_render_width(), to: NIF, as: :get_render_width
 
   @doc """
   Get current render height (it considers HiDPI)
   """
   @doc group: :property
   @spec get_render_height() :: integer
-  def get_render_height() do
-    NIF.get_render_height()
-  end
+  defdelegate get_render_height(), to: NIF, as: :get_render_height
 
   @doc """
   Get window position XY on monitor
   """
   @doc group: :property
   @spec get_position(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  def get_position(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_window_position(return)
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_position(return \\ :value), to: NIF, as: :get_window_position
 
   @doc """
   Get window scale DPI factor
   """
   @doc group: :property
   @spec get_scale_dpi(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  def get_scale_dpi(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_window_scale_dpi(return)
-    |> Zexray.Type.Vector2.from_nif()
-  end
+  defdelegate get_scale_dpi(return \\ :value), to: NIF, as: :get_window_scale_dpi
 
   ###############
   #  Clipboard  #
@@ -484,28 +366,19 @@ defmodule Zexray.Window do
   """
   @doc group: :clipboard
   @spec set_clipboard_text(text :: binary) :: :ok
-  def set_clipboard_text(text)
-      when is_binary(text) do
-    NIF.set_clipboard_text(text)
-  end
+  defdelegate set_clipboard_text(text), to: NIF, as: :set_clipboard_text
 
   @doc """
   Get clipboard text content
   """
   @doc group: :clipboard
   @spec get_clipboard_text() :: binary
-  def get_clipboard_text() do
-    NIF.get_clipboard_text()
-  end
+  defdelegate get_clipboard_text(), to: NIF, as: :get_clipboard_text
 
   @doc """
   Get clipboard image content
   """
   @doc group: :clipboard
   @spec get_clipboard_image(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  def get_clipboard_image(return \\ :value)
-      when is_nif_return(return) do
-    NIF.get_clipboard_image(return)
-    |> Zexray.Type.Image.from_nif()
-  end
+  defdelegate get_clipboard_image(return \\ :value), to: NIF, as: :get_clipboard_image
 end

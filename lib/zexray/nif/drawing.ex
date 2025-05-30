@@ -37,7 +37,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec clear_background(color :: map | reference) :: :ok
+      @spec clear_background(color :: tuple) :: :ok
       def clear_background(_color), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -73,7 +73,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec begin_mode_2d(camera :: map | reference) :: :ok
+      @spec begin_mode_2d(camera :: tuple) :: :ok
       def begin_mode_2d(_camera), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -97,7 +97,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec begin_mode_3d(camera :: map | reference) :: :ok
+      @spec begin_mode_3d(camera :: tuple) :: :ok
       def begin_mode_3d(_camera), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -121,7 +121,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec begin_texture_mode(target :: map | reference) :: :ok
+      @spec begin_texture_mode(target :: tuple) :: :ok
       def begin_texture_mode(_target), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -145,7 +145,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec begin_shader_mode(shader :: map | reference) :: :ok
+      @spec begin_shader_mode(shader :: tuple) :: :ok
       def begin_shader_mode(_shader), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -228,7 +228,7 @@ defmodule Zexray.NIF.Drawing do
       ```
       """
       @doc group: :drawing
-      @spec begin_vr_stereo_mode(config :: map | reference) :: :ok
+      @spec begin_vr_stereo_mode(config :: tuple) :: :ok
       def begin_vr_stereo_mode(_config), do: :erlang.nif_error(:undef)
 
       @doc """

@@ -1,4 +1,6 @@
 defmodule Zexray.NIF do
+  Code.ensure_compiled(Zexray.Enum.TraceLogLevel)
+
   if Application.compile_env(:zexray, :internal_docs) do
     @moduledoc """
     Internal module, don't use it directly.

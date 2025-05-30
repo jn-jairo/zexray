@@ -48,7 +48,7 @@ defmodule Zexray.NIF.Shader do
               vs_file_name :: binary,
               fs_file_name :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_shader(
             _vs_file_name,
             _fs_file_name,
@@ -69,7 +69,7 @@ defmodule Zexray.NIF.Shader do
               vs_code :: binary,
               fs_code :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_shader_from_memory(
             _vs_code,
             _fs_code,
@@ -86,7 +86,7 @@ defmodule Zexray.NIF.Shader do
       ```
       """
       @doc group: :shader
-      @spec is_shader_valid(shader :: map | reference) :: boolean
+      @spec is_shader_valid(shader :: tuple) :: boolean
       def is_shader_valid(_shader), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -99,7 +99,7 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec get_shader_location(
-              shader :: map | reference,
+              shader :: tuple,
               uniform_name :: binary
             ) :: integer
       def get_shader_location(
@@ -118,7 +118,7 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec get_shader_location_attrib(
-              shader :: map | reference,
+              shader :: tuple,
               attrib_name :: binary
             ) :: integer
       def get_shader_location_attrib(
@@ -137,9 +137,9 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec set_shader_value(
-              shader :: map | reference,
+              shader :: tuple,
               loc_index :: integer,
-              value :: float | integer | map | reference,
+              value :: float | integer | tuple,
               uniform_type :: integer
             ) :: :ok
       def set_shader_value(
@@ -160,9 +160,9 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec set_shader_value_v(
-              shader :: map | reference,
+              shader :: tuple,
               loc_index :: integer,
-              value :: [float] | [integer] | [map | reference],
+              value :: [float] | [integer] | [tuple],
               uniform_type :: integer
             ) :: :ok
       def set_shader_value_v(
@@ -183,9 +183,9 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec set_shader_value_matrix(
-              shader :: map | reference,
+              shader :: tuple,
               loc_index :: integer,
-              mat :: map | reference
+              mat :: tuple
             ) :: :ok
       def set_shader_value_matrix(
             _shader,
@@ -204,9 +204,9 @@ defmodule Zexray.NIF.Shader do
       """
       @doc group: :shader
       @spec set_shader_value_texture(
-              shader :: map | reference,
+              shader :: tuple,
               loc_index :: integer,
-              texture :: map | reference
+              texture :: tuple
             ) :: :ok
       def set_shader_value_texture(
             _shader,

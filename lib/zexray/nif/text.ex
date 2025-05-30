@@ -61,7 +61,7 @@ defmodule Zexray.NIF.Text do
               pos_x :: integer,
               pos_y :: integer,
               font_size :: integer,
-              color :: map | reference
+              color :: tuple
             ) :: :ok
       def draw_text(
             _text,
@@ -82,12 +82,12 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_drawing
       @spec draw_text_ex(
-              font :: map | reference,
+              font :: tuple,
               text :: binary,
-              position :: map | reference,
+              position :: tuple,
               font_size :: float,
               spacing :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_text_ex(
             _font,
@@ -109,14 +109,14 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_drawing
       @spec draw_text_pro(
-              font :: map | reference,
+              font :: tuple,
               text :: binary,
-              position :: map | reference,
-              origin :: map | reference,
+              position :: tuple,
+              origin :: tuple,
               rotation :: float,
               font_size :: float,
               spacing :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_text_pro(
             _font,
@@ -140,11 +140,11 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_drawing
       @spec draw_text_codepoint(
-              font :: map | reference,
+              font :: tuple,
               codepoint :: integer,
-              position :: map | reference,
+              position :: tuple,
               font_size :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_text_codepoint(
             _font,
@@ -165,12 +165,12 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_drawing
       @spec draw_text_codepoints(
-              font :: map | reference,
+              font :: tuple,
               codepoints :: [integer],
-              position :: map | reference,
+              position :: tuple,
               font_size :: float,
               spacing :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_text_codepoints(
             _font,
@@ -227,12 +227,12 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_font_info
       @spec measure_text_ex(
-              font :: map | reference,
+              font :: tuple,
               text :: binary,
               font_size :: float,
               spacing :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def measure_text_ex(
             _font,
             _text,
@@ -252,7 +252,7 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_font_info
       @spec get_glyph_index(
-              font :: map | reference,
+              font :: tuple,
               codepoint :: integer
             ) :: integer
       def get_glyph_index(
@@ -271,10 +271,10 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_font_info
       @spec get_glyph_info(
-              font :: map | reference,
+              font :: tuple,
               codepoint :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_glyph_info(
             _font,
             _codepoint,
@@ -292,10 +292,10 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_font_info
       @spec get_glyph_atlas_rec(
-              font :: map | reference,
+              font :: tuple,
               codepoint :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_glyph_atlas_rec(
             _font,
             _codepoint,

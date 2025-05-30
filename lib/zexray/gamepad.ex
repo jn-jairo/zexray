@@ -3,7 +3,6 @@ defmodule Zexray.Gamepad do
   Gamepad
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   #############
@@ -14,132 +13,95 @@ defmodule Zexray.Gamepad do
   Check if a gamepad is available
   """
   @spec available?(gamepad :: integer) :: boolean
-  def available?(gamepad)
-      when is_integer(gamepad) do
-    NIF.is_gamepad_available(gamepad)
-  end
+  defdelegate available?(gamepad), to: NIF, as: :is_gamepad_available
 
   @doc """
   Get gamepad internal name id
   """
   @spec get_name(gamepad :: integer) :: binary
-  def get_name(gamepad)
-      when is_integer(gamepad) do
-    NIF.get_gamepad_name(gamepad)
-  end
+  defdelegate get_name(gamepad), to: NIF, as: :get_gamepad_name
 
   @doc """
   Check if a gamepad button has been pressed once
   """
   @spec pressed?(
           gamepad :: integer,
-          button :: Zexray.Enum.GamepadButton.t_all_free()
+          button :: Zexray.Enum.GamepadButton.t_free()
         ) :: boolean
-  def pressed?(
-        gamepad,
-        button
-      )
-      when is_integer(gamepad) and
-             is_like_gamepad_button(button) do
-    NIF.is_gamepad_button_pressed(
-      gamepad,
-      Zexray.Enum.GamepadButton.value_free(button)
-    )
-  end
+  defdelegate pressed?(
+                gamepad,
+                button
+              ),
+              to: NIF,
+              as: :is_gamepad_button_pressed
 
   @doc """
   Check if a gamepad button is being pressed
   """
   @spec down?(
           gamepad :: integer,
-          button :: Zexray.Enum.GamepadButton.t_all_free()
+          button :: Zexray.Enum.GamepadButton.t_free()
         ) :: boolean
-  def down?(
-        gamepad,
-        button
-      )
-      when is_integer(gamepad) and
-             is_like_gamepad_button(button) do
-    NIF.is_gamepad_button_down(
-      gamepad,
-      Zexray.Enum.GamepadButton.value_free(button)
-    )
-  end
+  defdelegate down?(
+                gamepad,
+                button
+              ),
+              to: NIF,
+              as: :is_gamepad_button_down
 
   @doc """
   Check if a gamepad button has been released once
   """
   @spec released?(
           gamepad :: integer,
-          button :: Zexray.Enum.GamepadButton.t_all_free()
+          button :: Zexray.Enum.GamepadButton.t_free()
         ) :: boolean
-  def released?(
-        gamepad,
-        button
-      )
-      when is_integer(gamepad) and
-             is_like_gamepad_button(button) do
-    NIF.is_gamepad_button_released(
-      gamepad,
-      Zexray.Enum.GamepadButton.value_free(button)
-    )
-  end
+  defdelegate released?(
+                gamepad,
+                button
+              ),
+              to: NIF,
+              as: :is_gamepad_button_released
 
   @doc """
   Check if a gamepad button is NOT being pressed
   """
   @spec up?(
           gamepad :: integer,
-          button :: Zexray.Enum.GamepadButton.t_all_free()
+          button :: Zexray.Enum.GamepadButton.t_free()
         ) :: boolean
-  def up?(
-        gamepad,
-        button
-      )
-      when is_integer(gamepad) and
-             is_like_gamepad_button(button) do
-    NIF.is_gamepad_button_up(
-      gamepad,
-      Zexray.Enum.GamepadButton.value_free(button)
-    )
-  end
+  defdelegate up?(
+                gamepad,
+                button
+              ),
+              to: NIF,
+              as: :is_gamepad_button_up
 
   @doc """
   Get the last gamepad button pressed
   """
-  @spec get_pressed() :: Zexray.Enum.GamepadButton.t_name_free()
-  def get_pressed() do
-    NIF.get_gamepad_button_pressed()
-    |> Zexray.Enum.GamepadButton.name_free()
-  end
+  @spec get_pressed() :: Zexray.Enum.GamepadButton.t_free()
+  defdelegate get_pressed(), to: NIF, as: :get_gamepad_button_pressed
 
   @doc """
   Get gamepad axis count for a gamepad
   """
   @spec get_axis_count(gamepad :: integer) :: integer
-  def get_axis_count(gamepad)
-      when is_integer(gamepad) do
-    NIF.get_gamepad_axis_count(gamepad)
-  end
+  defdelegate get_axis_count(gamepad), to: NIF, as: :get_gamepad_axis_count
 
   @doc """
   Get axis movement value for a gamepad axis
   """
   @spec get_axis_movement(
           gamepad :: integer,
-          axis :: Zexray.Enum.GamepadAxis.t_all_free()
+          axis :: Zexray.Enum.GamepadAxis.t_free()
         ) :: float
-  def get_axis_movement(
-        gamepad,
-        axis
-      )
-      when is_integer(gamepad) and
-             is_like_gamepad_axis(axis) do
-    NIF.get_gamepad_axis_movement(
-      gamepad,
-      Zexray.Enum.GamepadAxis.value_free(axis)
-    )
-  end
+  defdelegate get_axis_movement(
+                gamepad,
+                axis
+              ),
+              to: NIF,
+              as: :get_gamepad_axis_movement
 
   @doc """
   Set the default internal gamepad mappings
@@ -160,10 +122,7 @@ defmodule Zexray.Gamepad do
   Set internal gamepad mappings (SDL_GameControllerDB)
   """
   @spec set_mappings(mappings :: binary) :: boolean
-  def set_mappings(mappings)
-      when is_binary(mappings) do
-    NIF.set_gamepad_mappings(mappings)
-  end
+  defdelegate set_mappings(mappings), to: NIF, as: :set_gamepad_mappings
 
   @doc """
   Set gamepad vibration for both motors (duration in seconds)
@@ -174,21 +133,12 @@ defmodule Zexray.Gamepad do
           right_motor :: float,
           duration :: float
         ) :: :ok
-  def set_vibration(
-        gamepad,
-        left_motor,
-        right_motor,
-        duration
-      )
-      when is_integer(gamepad) and
-             is_float(left_motor) and
-             is_float(right_motor) and
-             is_float(duration) do
-    NIF.set_gamepad_vibration(
-      gamepad,
-      left_motor,
-      right_motor,
-      duration
-    )
-  end
+  defdelegate set_vibration(
+                gamepad,
+                left_motor,
+                right_motor,
+                duration
+              ),
+              to: NIF,
+              as: :set_gamepad_vibration
 end

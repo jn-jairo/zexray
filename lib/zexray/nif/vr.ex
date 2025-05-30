@@ -109,9 +109,9 @@ defmodule Zexray.NIF.Vr do
       """
       @doc group: :vr
       @spec load_vr_stereo_config(
-              device :: map | reference,
+              device :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_vr_stereo_config(
             _device,
             _return \\ :value

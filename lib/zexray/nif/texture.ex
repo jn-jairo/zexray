@@ -49,7 +49,7 @@ defmodule Zexray.NIF.Texture do
       @spec load_texture(
               file_name :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_texture(
             _file_name,
             _return \\ :value
@@ -66,9 +66,9 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_loading
       @spec load_texture_from_image(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_texture_from_image(
             _image,
             _return \\ :value
@@ -85,10 +85,10 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_loading
       @spec load_texture_cubemap(
-              image :: map | reference,
+              image :: tuple,
               layout :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_texture_cubemap(
             _image,
             _layout,
@@ -109,7 +109,7 @@ defmodule Zexray.NIF.Texture do
               width :: integer,
               height :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_render_texture(
             _width,
             _height,
@@ -126,7 +126,7 @@ defmodule Zexray.NIF.Texture do
       ```
       """
       @doc group: :texture_loading
-      @spec is_texture_valid(texture :: map | reference) :: boolean
+      @spec is_texture_valid(texture :: tuple) :: boolean
       def is_texture_valid(_texture), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -138,7 +138,7 @@ defmodule Zexray.NIF.Texture do
       ```
       """
       @doc group: :texture_loading
-      @spec is_render_texture_valid(target :: map | reference) :: boolean
+      @spec is_render_texture_valid(target :: tuple) :: boolean
       def is_render_texture_valid(_target), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -151,7 +151,7 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_loading
       @spec update_texture(
-              texture :: map | reference,
+              texture :: tuple,
               pixels :: binary
             ) :: :ok
       def update_texture(
@@ -170,8 +170,8 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_loading
       @spec update_texture_rec(
-              texture :: map | reference,
-              rec :: map | reference,
+              texture :: tuple,
+              rec :: tuple,
               pixels :: binary
             ) :: :ok
       def update_texture_rec(
@@ -195,9 +195,9 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_configuration
       @spec gen_texture_mipmaps(
-              texture :: map | reference,
+              texture :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_texture_mipmaps(
             _texture,
             _return \\ :value
@@ -214,7 +214,7 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_configuration
       @spec set_texture_filter(
-              texture :: map | reference,
+              texture :: tuple,
               filter :: integer
             ) :: :ok
       def set_texture_filter(
@@ -233,7 +233,7 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_configuration
       @spec set_texture_wrap(
-              texture :: map | reference,
+              texture :: tuple,
               wrap :: integer
             ) :: :ok
       def set_texture_wrap(
@@ -256,10 +256,10 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture(
-              texture :: map | reference,
+              texture :: tuple,
               pos_x :: integer,
               pos_y :: integer,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_texture(
             _texture,
@@ -279,9 +279,9 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture_v(
-              texture :: map | reference,
-              position :: map | reference,
-              tint :: map | reference
+              texture :: tuple,
+              position :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_texture_v(
             _texture,
@@ -300,11 +300,11 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture_ex(
-              texture :: map | reference,
-              position :: map | reference,
+              texture :: tuple,
+              position :: tuple,
               rotation :: float,
               scale :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_texture_ex(
             _texture,
@@ -325,10 +325,10 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture_rec(
-              texture :: map | reference,
-              source :: map | reference,
-              position :: map | reference,
-              tint :: map | reference
+              texture :: tuple,
+              source :: tuple,
+              position :: tuple,
+              tint :: tuple
             ) :: :ok
       def draw_texture_rec(
             _texture,
@@ -348,12 +348,12 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture_pro(
-              texture :: map | reference,
-              source :: map | reference,
-              dest :: map | reference,
-              origin :: map | reference,
+              texture :: tuple,
+              source :: tuple,
+              dest :: tuple,
+              origin :: tuple,
               rotation :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_texture_pro(
             _texture,
@@ -375,12 +375,12 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_drawing
       @spec draw_texture_n_patch(
-              texture :: map | reference,
-              n_patch_info :: map | reference,
-              dest :: map | reference,
-              origin :: map | reference,
+              texture :: tuple,
+              n_patch_info :: tuple,
+              dest :: tuple,
+              origin :: tuple,
               rotation :: float,
-              tint :: map | reference
+              tint :: tuple
             ) :: :ok
       def draw_texture_n_patch(
             _texture,

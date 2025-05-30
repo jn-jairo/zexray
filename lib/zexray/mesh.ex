@@ -9,7 +9,5 @@ defmodule Zexray.Mesh do
   Get mesh max vertex buffers for Mesh.vbo_id
   """
   @spec max_vertex_buffers() :: non_neg_integer
-  def max_vertex_buffers() do
-    NIF.mesh_get_max_vertex_buffers()
-  end
+  defdelegate max_vertex_buffers(), to: NIF, as: :mesh_get_max_vertex_buffers
 end

@@ -9,15 +9,13 @@ defmodule Zexray.AutomationEvent do
   Get automation event max params for AutomationEvent.params
   """
   @spec max_params() :: non_neg_integer
-  def max_params() do
-    NIF.automation_event_get_max_params()
-  end
+  defdelegate max_params(), to: NIF, as: :automation_event_get_max_params
 
   @doc """
   Get automation event list max automation events for AutomationEventList.events
   """
   @spec automation_event_list_max_automation_events() :: non_neg_integer
-  def automation_event_list_max_automation_events() do
-    NIF.automation_event_list_get_max_automation_events()
-  end
+  defdelegate automation_event_list_max_automation_events(),
+    to: NIF,
+    as: :automation_event_list_get_max_automation_events
 end

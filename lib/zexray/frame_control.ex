@@ -13,23 +13,17 @@ defmodule Zexray.FrameControl do
   Swap back buffer with front buffer (screen drawing)
   """
   @spec swap_screen_buffer() :: :ok
-  def swap_screen_buffer() do
-    NIF.swap_screen_buffer()
-  end
+  defdelegate swap_screen_buffer(), to: NIF, as: :swap_screen_buffer
 
   @doc """
   Register all input events
   """
   @spec poll_input_events() :: :ok
-  def poll_input_events() do
-    NIF.poll_input_events()
-  end
+  defdelegate poll_input_events(), to: NIF, as: :poll_input_events
 
   @doc """
   Wait for some time (halt program execution)
   """
   @spec wait_time(seconds :: float) :: :ok
-  def wait_time(seconds) do
-    NIF.wait_time(seconds)
-  end
+  defdelegate wait_time(seconds), to: NIF, as: :wait_time
 end

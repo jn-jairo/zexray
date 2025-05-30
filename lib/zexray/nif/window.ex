@@ -302,7 +302,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec set_window_icon(image :: map | reference) :: :ok
+      @spec set_window_icon(image :: tuple) :: :ok
       def set_window_icon(_image), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -314,7 +314,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec set_window_icons(images :: [map | reference]) :: :ok
+      @spec set_window_icons(images :: [tuple]) :: :ok
       def set_window_icons(_images), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -486,7 +486,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_window_position(return :: :value | :resource) :: map | reference
+      @spec get_window_position(return :: :value | :resource) :: tuple
       def get_window_position(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -498,7 +498,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_window_scale_dpi(return :: :value | :resource) :: map | reference
+      @spec get_window_scale_dpi(return :: :value | :resource) :: tuple
       def get_window_scale_dpi(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -534,7 +534,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_clipboard_image(return :: :value | :resource) :: map | reference
+      @spec get_clipboard_image(return :: :value | :resource) :: tuple
       def get_clipboard_image(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -565,7 +565,7 @@ defmodule Zexray.NIF.Window do
       Takes a screenshot of current screen
       """
       @doc group: :window
-      @spec screenshot(return :: :value | :resource) :: map | reference
+      @spec screenshot(return :: :value | :resource) :: tuple
       def screenshot(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """

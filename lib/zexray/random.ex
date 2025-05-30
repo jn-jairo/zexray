@@ -3,7 +3,6 @@ defmodule Zexray.Random do
   Random
   """
 
-  import Zexray.Guard
   alias Zexray.NIF
 
   ############
@@ -14,10 +13,7 @@ defmodule Zexray.Random do
   Set the seed for the random number generator
   """
   @spec set_seed(seed :: non_neg_integer) :: :ok
-  def set_seed(seed)
-      when is_non_neg_integer(seed) do
-    NIF.set_random_seed(seed)
-  end
+  defdelegate set_seed(seed), to: NIF, as: :set_random_seed
 
   @doc """
   Get a random value between min and max (both included)
@@ -26,14 +22,12 @@ defmodule Zexray.Random do
           min :: integer,
           max :: integer
         ) :: integer
-  def get_value(
-        min,
-        max
-      )
-      when is_integer(min) and
-             is_integer(max) do
-    NIF.get_random_value(min, max)
-  end
+  defdelegate get_value(
+                min,
+                max
+              ),
+              to: NIF,
+              as: :get_random_value
 
   @doc """
   Load random values sequence, no values repeated
@@ -43,14 +37,11 @@ defmodule Zexray.Random do
           min :: integer,
           max :: integer
         ) :: [integer]
-  def get_sequence(
-        count,
-        min,
-        max
-      )
-      when is_non_neg_integer(count) and
-             is_integer(min) and
-             is_integer(max) do
-    NIF.load_random_sequence(count, min, max)
-  end
+  defdelegate get_sequence(
+                count,
+                min,
+                max
+              ),
+              to: NIF,
+              as: :load_random_sequence
 end

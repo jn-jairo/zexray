@@ -205,7 +205,7 @@ defmodule Zexray.NIF.Image do
       @spec load_image(
               file_name :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_image(
             _file_name,
             _return \\ :value
@@ -228,7 +228,7 @@ defmodule Zexray.NIF.Image do
               format :: integer,
               header_size :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_image_raw(
             _file_name,
             _width,
@@ -251,7 +251,7 @@ defmodule Zexray.NIF.Image do
       @spec load_image_anim(
               file_name :: binary,
               return :: :value | :resource
-            ) :: {image :: map | reference, frames :: integer}
+            ) :: {image :: tuple, frames :: integer}
       def load_image_anim(
             _file_name,
             _return \\ :value
@@ -271,7 +271,7 @@ defmodule Zexray.NIF.Image do
               file_type :: binary,
               file_data :: binary,
               return :: :value | :resource
-            ) :: {image :: map | reference, frames :: integer}
+            ) :: {image :: tuple, frames :: integer}
       def load_image_anim_from_memory(
             _file_type,
             _file_data,
@@ -292,7 +292,7 @@ defmodule Zexray.NIF.Image do
               file_type :: binary,
               file_data :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_image_from_memory(
             _file_type,
             _file_data,
@@ -310,9 +310,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_loading
       @spec load_image_from_texture(
-              texture :: map | reference,
+              texture :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def load_image_from_texture(
             _texture,
             _return \\ :value
@@ -328,7 +328,7 @@ defmodule Zexray.NIF.Image do
       ```
       """
       @doc group: :image_loading
-      @spec load_image_from_screen(return :: :value | :resource) :: map | reference
+      @spec load_image_from_screen(return :: :value | :resource) :: tuple
       def load_image_from_screen(_return \\ :value), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -340,7 +340,7 @@ defmodule Zexray.NIF.Image do
       ```
       """
       @doc group: :image_loading
-      @spec is_image_valid(image :: map | reference) :: boolean
+      @spec is_image_valid(image :: tuple) :: boolean
       def is_image_valid(_image), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -353,7 +353,7 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_loading
       @spec export_image(
-              image :: map | reference,
+              image :: tuple,
               file_name :: binary
             ) :: boolean
       def export_image(
@@ -372,7 +372,7 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_loading
       @spec export_image_to_memory(
-              image :: map | reference,
+              image :: tuple,
               file_type :: binary
             ) :: binary
       def export_image_to_memory(
@@ -397,9 +397,9 @@ defmodule Zexray.NIF.Image do
       @spec gen_image_color(
               width :: integer,
               height :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_color(
             _width,
             _height,
@@ -421,10 +421,10 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               direction :: integer,
-              color_start :: map | reference,
-              color_end :: map | reference,
+              color_start :: tuple,
+              color_end :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_gradient_linear(
             _width,
             _height,
@@ -448,10 +448,10 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               density :: float,
-              color_inner :: map | reference,
-              color_outer :: map | reference,
+              color_inner :: tuple,
+              color_outer :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_gradient_radial(
             _width,
             _height,
@@ -475,10 +475,10 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               density :: float,
-              color_inner :: map | reference,
-              color_outer :: map | reference,
+              color_inner :: tuple,
+              color_outer :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_gradient_square(
             _width,
             _height,
@@ -503,10 +503,10 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               checks_x :: integer,
               checks_y :: integer,
-              color_1 :: map | reference,
-              color_2 :: map | reference,
+              color_1 :: tuple,
+              color_2 :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_checked(
             _width,
             _height,
@@ -532,7 +532,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               factor :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_white_noise(
             _width,
             _height,
@@ -557,7 +557,7 @@ defmodule Zexray.NIF.Image do
               offset_y :: integer,
               scale :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_perlin_noise(
             _width,
             _height,
@@ -582,7 +582,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               tile_size :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_cellular(
             _width,
             _height,
@@ -605,7 +605,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               text :: binary,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def gen_image_text(
             _width,
             _height,
@@ -628,9 +628,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_copy(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_copy(
             _image,
             _return \\ :value
@@ -647,10 +647,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_from_image(
-              image :: map | reference,
-              rec :: map | reference,
+              image :: tuple,
+              rec :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_from_image(
             _image,
             _rec,
@@ -668,10 +668,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_from_channel(
-              image :: map | reference,
+              image :: tuple,
               selected_channel :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_from_channel(
             _image,
             _selected_channel,
@@ -691,9 +691,9 @@ defmodule Zexray.NIF.Image do
       @spec image_text(
               text :: binary,
               font_size :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_text(
             _text,
             _font_size,
@@ -712,13 +712,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_text_ex(
-              font :: map | reference,
+              font :: tuple,
               text :: binary,
               font_size :: float,
               spacing :: float,
-              tint :: map | reference,
+              tint :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_text_ex(
             _font,
             _text,
@@ -739,10 +739,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_format(
-              image :: map | reference,
+              image :: tuple,
               new_format :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_format(
             _image,
             _new_format,
@@ -760,10 +760,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_to_pot(
-              image :: map | reference,
-              fill :: map | reference,
+              image :: tuple,
+              fill :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_to_pot(
             _image,
             _fill,
@@ -781,10 +781,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_crop(
-              image :: map | reference,
-              crop :: map | reference,
+              image :: tuple,
+              crop :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_crop(
             _image,
             _crop,
@@ -802,10 +802,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_alpha_crop(
-              image :: map | reference,
+              image :: tuple,
               threshold :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_alpha_crop(
             _image,
             _threshold,
@@ -823,11 +823,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_alpha_clear(
-              image :: map | reference,
-              color :: map | reference,
+              image :: tuple,
+              color :: tuple,
               threshold :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_alpha_clear(
             _image,
             _color,
@@ -846,10 +846,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_alpha_mask(
-              image :: map | reference,
-              alpha_mask :: map | reference,
+              image :: tuple,
+              alpha_mask :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_alpha_mask(
             _image,
             _alpha_mask,
@@ -867,9 +867,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_alpha_premultiply(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_alpha_premultiply(
             _image,
             _return \\ :value
@@ -886,10 +886,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_blur_gaussian(
-              image :: map | reference,
+              image :: tuple,
               blur_size :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_blur_gaussian(
             _image,
             _blur_size,
@@ -907,10 +907,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_kernel_convolution(
-              image :: map | reference,
+              image :: tuple,
               kernel :: [float],
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_kernel_convolution(
             _image,
             _kernel,
@@ -928,11 +928,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_resize(
-              image :: map | reference,
+              image :: tuple,
               new_width :: integer,
               new_height :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_resize(
             _image,
             _new_width,
@@ -951,11 +951,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_resize_nn(
-              image :: map | reference,
+              image :: tuple,
               new_width :: integer,
               new_height :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_resize_nn(
             _image,
             _new_width,
@@ -974,14 +974,14 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_resize_canvas(
-              image :: map | reference,
+              image :: tuple,
               new_width :: integer,
               new_height :: integer,
               offset_x :: integer,
               offset_y :: integer,
-              fill :: map | reference,
+              fill :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_resize_canvas(
             _image,
             _new_width,
@@ -1003,9 +1003,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_mipmaps(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_mipmaps(
             _image,
             _return \\ :value
@@ -1022,13 +1022,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_dither(
-              image :: map | reference,
+              image :: tuple,
               r_bpp :: integer,
               g_bpp :: integer,
               b_bpp :: integer,
               a_bpp :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_dither(
             _image,
             _r_bpp,
@@ -1049,9 +1049,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_flip_vertical(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_flip_vertical(
             _image,
             _return \\ :value
@@ -1068,9 +1068,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_flip_horizontal(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_flip_horizontal(
             _image,
             _return \\ :value
@@ -1087,10 +1087,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_rotate(
-              image :: map | reference,
+              image :: tuple,
               degrees :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_rotate(
             _image,
             _degrees,
@@ -1108,9 +1108,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_rotate_cw(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_rotate_cw(
             _image,
             _return \\ :value
@@ -1127,9 +1127,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_rotate_ccw(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_rotate_ccw(
             _image,
             _return \\ :value
@@ -1146,10 +1146,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_tint(
-              image :: map | reference,
-              color :: map | reference,
+              image :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_tint(
             _image,
             _color,
@@ -1167,9 +1167,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_invert(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_invert(
             _image,
             _return \\ :value
@@ -1186,9 +1186,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_grayscale(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_grayscale(
             _image,
             _return \\ :value
@@ -1205,10 +1205,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_contrast(
-              image :: map | reference,
+              image :: tuple,
               contrast :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_contrast(
             _image,
             _contrast,
@@ -1226,10 +1226,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_brightness(
-              image :: map | reference,
+              image :: tuple,
               brightness :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_brightness(
             _image,
             _brightness,
@@ -1247,11 +1247,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec image_color_replace(
-              image :: map | reference,
-              color :: map | reference,
-              replace :: map | reference,
+              image :: tuple,
+              color :: tuple,
+              replace :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_color_replace(
             _image,
             _color,
@@ -1270,9 +1270,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec load_image_colors(
-              image :: map | reference,
+              image :: tuple,
               return :: :value | :resource
-            ) :: [map | reference]
+            ) :: [tuple]
       def load_image_colors(
             _image,
             _return \\ :value
@@ -1289,10 +1289,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec load_image_palette(
-              image :: map | reference,
+              image :: tuple,
               max_palette_size :: integer,
               return :: :value | :resource
-            ) :: [map | reference]
+            ) :: [tuple]
       def load_image_palette(
             _image,
             _max_palette_size,
@@ -1310,10 +1310,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec get_image_alpha_border(
-              image :: map | reference,
+              image :: tuple,
               threshold :: float,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_image_alpha_border(
             _image,
             _threshold,
@@ -1331,11 +1331,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_manipulation
       @spec get_image_color(
-              image :: map | reference,
+              image :: tuple,
               x :: integer,
               y :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_image_color(
             _image,
             _x,
@@ -1358,10 +1358,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_clear_background(
-              dst :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_clear_background(
             _dst,
             _color,
@@ -1379,12 +1379,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_pixel(
-              dst :: map | reference,
+              dst :: tuple,
               pos_x :: integer,
               pos_y :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_pixel(
             _dst,
             _pos_x,
@@ -1404,11 +1404,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_pixel_v(
-              dst :: map | reference,
-              position :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              position :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_pixel_v(
             _dst,
             _position,
@@ -1427,14 +1427,14 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_line(
-              dst :: map | reference,
+              dst :: tuple,
               start_pos_x :: integer,
               start_pos_y :: integer,
               end_pos_x :: integer,
               end_pos_y :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_line(
             _dst,
             _start_pos_x,
@@ -1456,12 +1456,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_line_v(
-              dst :: map | reference,
-              start_pos :: map | reference,
-              end_pos :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              start_pos :: tuple,
+              end_pos :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_line_v(
             _dst,
             _start_pos,
@@ -1481,13 +1481,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_line_ex(
-              dst :: map | reference,
-              start_pos :: map | reference,
-              end_pos :: map | reference,
+              dst :: tuple,
+              start_pos :: tuple,
+              end_pos :: tuple,
               thick :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_line_ex(
             _dst,
             _start_pos,
@@ -1508,13 +1508,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_circle(
-              dst :: map | reference,
+              dst :: tuple,
               center_x :: integer,
               center_y :: integer,
               radius :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_circle(
             _dst,
             _center_x,
@@ -1535,12 +1535,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_circle_v(
-              dst :: map | reference,
-              center :: map | reference,
+              dst :: tuple,
+              center :: tuple,
               radius :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_circle_v(
             _dst,
             _center,
@@ -1560,13 +1560,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_circle_lines(
-              dst :: map | reference,
+              dst :: tuple,
               center_x :: integer,
               center_y :: integer,
               radius :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_circle_lines(
             _dst,
             _center_x,
@@ -1587,12 +1587,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_circle_lines_v(
-              dst :: map | reference,
-              center :: map | reference,
+              dst :: tuple,
+              center :: tuple,
               radius :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_circle_lines_v(
             _dst,
             _center,
@@ -1612,14 +1612,14 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_rectangle(
-              dst :: map | reference,
+              dst :: tuple,
               pos_x :: integer,
               pos_y :: integer,
               width :: integer,
               height :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_rectangle(
             _dst,
             _pos_x,
@@ -1641,12 +1641,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_rectangle_v(
-              dst :: map | reference,
-              position :: map | reference,
-              size :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              position :: tuple,
+              size :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_rectangle_v(
             _dst,
             _position,
@@ -1666,11 +1666,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_rectangle_rec(
-              dst :: map | reference,
-              rec :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              rec :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_rectangle_rec(
             _dst,
             _rec,
@@ -1689,12 +1689,12 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_rectangle_lines(
-              dst :: map | reference,
-              rec :: map | reference,
+              dst :: tuple,
+              rec :: tuple,
               thick :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_rectangle_lines(
             _dst,
             _rec,
@@ -1714,13 +1714,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_triangle(
-              dst :: map | reference,
-              v1 :: map | reference,
-              v2 :: map | reference,
-              v3 :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              v1 :: tuple,
+              v2 :: tuple,
+              v3 :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_triangle(
             _dst,
             _v1,
@@ -1741,15 +1741,15 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_triangle_ex(
-              dst :: map | reference,
-              v1 :: map | reference,
-              v2 :: map | reference,
-              v3 :: map | reference,
-              c1 :: map | reference,
-              c2 :: map | reference,
-              c3 :: map | reference,
+              dst :: tuple,
+              v1 :: tuple,
+              v2 :: tuple,
+              v3 :: tuple,
+              c1 :: tuple,
+              c2 :: tuple,
+              c3 :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_triangle_ex(
             _dst,
             _v1,
@@ -1772,13 +1772,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_triangle_lines(
-              dst :: map | reference,
-              v1 :: map | reference,
-              v2 :: map | reference,
-              v3 :: map | reference,
-              color :: map | reference,
+              dst :: tuple,
+              v1 :: tuple,
+              v2 :: tuple,
+              v3 :: tuple,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_triangle_lines(
             _dst,
             _v1,
@@ -1799,11 +1799,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_triangle_fan(
-              dst :: map | reference,
-              points :: [map | reference],
-              color :: map | reference,
+              dst :: tuple,
+              points :: [tuple],
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_triangle_fan(
             _dst,
             _points,
@@ -1822,11 +1822,11 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_triangle_strip(
-              dst :: map | reference,
-              points :: [map | reference],
-              color :: map | reference,
+              dst :: tuple,
+              points :: [tuple],
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_triangle_strip(
             _dst,
             _points,
@@ -1845,13 +1845,13 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw(
-              dst :: map | reference,
-              src :: map | reference,
-              src_rec :: map | reference,
-              dst_rec :: map | reference,
-              tint :: map | reference,
+              dst :: tuple,
+              src :: tuple,
+              src_rec :: tuple,
+              dst_rec :: tuple,
+              tint :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw(
             _dst,
             _src,
@@ -1872,14 +1872,14 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_text(
-              dst :: map | reference,
+              dst :: tuple,
               text :: binary,
               pos_x :: integer,
               pos_y :: integer,
               font_size :: integer,
-              color :: map | reference,
+              color :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_text(
             _dst,
             _text,
@@ -1901,15 +1901,15 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_drawing
       @spec image_draw_text_ex(
-              dst :: map | reference,
-              font :: map | reference,
+              dst :: tuple,
+              font :: tuple,
               text :: binary,
-              position :: map | reference,
+              position :: tuple,
               font_size :: float,
               spacing :: float,
-              tint :: map | reference,
+              tint :: tuple,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def image_draw_text_ex(
             _dst,
             _font,

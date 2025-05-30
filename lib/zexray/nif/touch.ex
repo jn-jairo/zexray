@@ -53,7 +53,7 @@ defmodule Zexray.NIF.Touch do
       @spec get_touch_position(
               index :: integer,
               return :: :value | :resource
-            ) :: map | reference
+            ) :: tuple
       def get_touch_position(
             _index,
             _return \\ :value
