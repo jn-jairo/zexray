@@ -1085,7 +1085,18 @@ pub fn ResourceBase(comptime T: type) type {
 
             const resource_type = @field(resources.resource_type, T.resource_name);
 
-            return @ptrCast(@alignCast(try Resource.get(env, record[1], resource_type)));
+            if (@hasDecl(T, "resource_type_aliases")) {
+                const resource = Resource.get(env, record[1], resource_type) catch |err| {
+                    for (T.resource_type_aliases) |resource_type_alias| {
+                        const resource_alias = Resource.get(env, record[1], resources.get_resource_type_from_key(resource_type_alias)) catch continue;
+                        return @ptrCast(@alignCast(resource_alias));
+                    }
+                    return err;
+                };
+                return @ptrCast(@alignCast(resource));
+            } else {
+                return @ptrCast(@alignCast(try Resource.get(env, record[1], resource_type)));
+            }
         }
 
         pub fn create(value: T.data_type) !**T.data_type {
@@ -5254,6 +5265,7 @@ pub const Sound = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.Sound;
     pub const resource_name = "sound";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{resources.ResourceTypeKey.sound_alias};
 
     pub const Resource = ResourceBase(Self);
 
