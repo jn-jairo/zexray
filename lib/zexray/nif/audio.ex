@@ -49,14 +49,54 @@ defmodule Zexray.NIF.Audio do
         set_sound_pan: 2,
         set_sound_pan: 3,
         get_sound_time_length: 1,
+        get_sound_time_played: 1,
+        get_sound_info: 1,
+        get_sound_info: 2,
         wave_copy: 1,
         wave_copy: 2,
         wave_crop: 3,
         wave_crop: 4,
         wave_format: 4,
         wave_format: 5,
+        load_wave_samples_normalized: 1,
         load_wave_samples: 1,
-        load_wave_samples_raw: 1,
+        load_wave_samples_ex: 4,
+        get_wave_info: 1,
+        get_wave_info: 2,
+
+        # Sound stream management
+        load_sound_stream: 1,
+        load_sound_stream: 2,
+        load_sound_stream_from_wave: 1,
+        load_sound_stream_from_wave: 2,
+        load_sound_stream_alias: 1,
+        load_sound_stream_alias: 2,
+        is_sound_stream_valid: 1,
+        update_sound_stream: 2,
+        update_sound_stream: 3,
+        load_sound_stream_next_samples: 1,
+        is_sound_stream_processed: 1,
+        play_sound_stream: 1,
+        play_sound_stream: 2,
+        stop_sound_stream: 1,
+        stop_sound_stream: 2,
+        pause_sound_stream: 1,
+        pause_sound_stream: 2,
+        resume_sound_stream: 1,
+        resume_sound_stream: 2,
+        is_sound_stream_playing: 1,
+        set_sound_stream_volume: 2,
+        set_sound_stream_volume: 3,
+        set_sound_stream_pitch: 2,
+        set_sound_stream_pitch: 3,
+        set_sound_stream_pan: 2,
+        set_sound_stream_pan: 3,
+        set_sound_stream_looping: 2,
+        set_sound_stream_looping: 3,
+        get_sound_stream_time_length: 1,
+        get_sound_stream_time_played: 1,
+        get_sound_stream_info: 1,
+        get_sound_stream_info: 2,
 
         # Music management
         load_music_stream: 1,
@@ -88,10 +128,14 @@ defmodule Zexray.NIF.Audio do
         set_music_looping: 3,
         get_music_time_length: 1,
         get_music_time_played: 1,
+        get_music_info: 1,
+        get_music_info: 2,
 
         # AudioStream management
         load_audio_stream: 3,
         load_audio_stream: 4,
+        load_audio_stream_from_audio_info: 1,
+        load_audio_stream_from_audio_info: 2,
         is_audio_stream_valid: 1,
         update_audio_stream: 2,
         update_audio_stream: 3,
@@ -111,7 +155,11 @@ defmodule Zexray.NIF.Audio do
         set_audio_stream_pitch: 3,
         set_audio_stream_pan: 2,
         set_audio_stream_pan: 3,
-        set_audio_stream_buffer_size_default: 1
+        set_audio_stream_buffer_size_default: 1,
+        get_audio_stream_time_length: 2,
+        get_audio_stream_time_played: 2,
+        get_audio_stream_info: 1,
+        get_audio_stream_info: 2
       ]
 
       ##########
@@ -353,7 +401,7 @@ defmodule Zexray.NIF.Audio do
 
       ```c
       // raylib.h
-      RLAPI bool IsAudioStreamProcessed(AudioStream stream);
+      RLAPI bool IsSoundProcessed(Sound sound);
       ```
       """
       @doc group: :music_management
@@ -547,6 +595,32 @@ defmodule Zexray.NIF.Audio do
       def get_sound_time_length(_sound), do: :erlang.nif_error(:undef)
 
       @doc """
+      Get current sound time played (in seconds)
+
+      ```c
+      // raylib.h
+      RLAPI float GetSoundTimePlayed(Sound sound);
+      ```
+      """
+      @doc group: :sound_management
+      @spec get_sound_time_played(sound :: tuple) :: float
+      def get_sound_time_played(_sound), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get sound info
+      """
+      @doc group: :sound_management
+      @spec get_sound_info(
+              sound :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def get_sound_info(
+            _sound,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
       Copy a wave to a new wave
 
       ```c
@@ -622,16 +696,367 @@ defmodule Zexray.NIF.Audio do
       ```
       """
       @doc group: :sound_management
-      @spec load_wave_samples(wave :: tuple) :: [float]
+      @spec load_wave_samples_normalized(wave :: tuple) :: [float]
+      def load_wave_samples_normalized(_wave), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load samples data from wave
+      """
+      @doc group: :sound_management
+      @spec load_wave_samples(wave :: tuple) ::
+              binary | [byte] | [integer] | [float]
       def load_wave_samples(_wave), do: :erlang.nif_error(:undef)
 
       @doc """
       Load samples data from wave
       """
       @doc group: :sound_management
-      @spec load_wave_samples_raw(wave :: tuple) ::
+      @spec load_wave_samples_ex(
+              wave :: tuple,
+              frame_count :: non_neg_integer,
+              frame_offset :: integer,
+              looping :: boolean
+            ) :: binary | [byte] | [integer] | [float]
+      def load_wave_samples_ex(
+            _wave,
+            _frame_count,
+            _frame_offset,
+            _looping
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get wave info
+      """
+      @doc group: :sound_management
+      @spec get_wave_info(
+              wave :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def get_wave_info(
+            _wave,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      #############################
+      #  Sound stream management  #
+      #############################
+
+      @doc """
+      Load sound stream from file
+
+      ```c
+      // raylib.h
+      RLAPI SoundStream LoadSoundStream(const char *fileName);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec load_sound_stream(
+              file_name :: binary,
+              return :: :value | :resource
+            ) :: tuple
+      def load_sound_stream(
+            _file_name,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load sound stream from wave data
+
+      ```c
+      // raylib.h
+      RLAPI SoundStream LoadSoundStreamFromWave(Wave wave);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec load_sound_stream_from_wave(
+              wave :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def load_sound_stream_from_wave(
+            _wave,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Create a new sound stream that shares the same sample data as the source sound, does not own the sound stream data
+
+      ```c
+      // raylib.h
+      RLAPI SoundStream LoadSoundStreamAlias(SoundStream source);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec load_sound_stream_alias(
+              source :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def load_sound_stream_alias(
+            _source,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Checks if a sound stream is valid (data loaded and buffers initialized)
+
+      ```c
+      // raylib.h
+      RLAPI bool IsSoundStreamValid(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec is_sound_stream_valid(sound_stream :: tuple) :: boolean
+      def is_sound_stream_valid(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Update sound stream buffer with new data
+
+      ```c
+      // raylib.h
+      RLAPI void UpdateSoundStream(SoundStream sound_stream, const void *data, int sampleCount);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec update_sound_stream(
+              sound_stream :: tuple,
+              data :: nil | binary | [byte] | [integer] | [float],
+              return :: :value | :resource
+            ) :: tuple
+      def update_sound_stream(
+            _sound_stream,
+            _data,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load next samples data from sound stream
+      """
+      @doc group: :sound_stream_management
+      @spec load_sound_stream_next_samples(sound_stream :: tuple) ::
               binary | [byte] | [integer] | [float]
-      def load_wave_samples_raw(_wave), do: :erlang.nif_error(:undef)
+      def load_sound_stream_next_samples(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Check if any audio stream buffers requires refill
+
+      ```c
+      // raylib.h
+      RLAPI bool IsSoundStreamProcessed(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :music_management
+      @spec is_sound_stream_processed(sound_stream :: tuple) :: boolean
+      def is_sound_stream_processed(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Play a sound_stream
+
+      ```c
+      // raylib.h
+      RLAPI void PlaySoundStream(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec play_sound_stream(
+              sound_stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def play_sound_stream(
+            _sound_stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Stop playing a sound stream
+
+      ```c
+      // raylib.h
+      RLAPI void StopSoundStream(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec stop_sound_stream(
+              sound_stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def stop_sound_stream(
+            _sound_stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Pause a sound stream
+
+      ```c
+      // raylib.h
+      RLAPI void PauseSoundStream(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec pause_sound_stream(
+              sound_stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def pause_sound_stream(
+            _sound_stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Resume a paused sound stream
+
+      ```c
+      // raylib.h
+      RLAPI void ResumeSoundStream(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec resume_sound_stream(
+              sound_stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def resume_sound_stream(
+            _sound_stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Check if a sound stream is currently playing
+
+      ```c
+      // raylib.h
+      RLAPI bool IsSoundStreamPlaying(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec is_sound_stream_playing(sound_stream :: tuple) :: boolean
+      def is_sound_stream_playing(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set volume for a sound stream (1.0 is max level)
+
+      ```c
+      // raylib.h
+      RLAPI void SetSoundStreamVolume(SoundStream sound_stream, float volume);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec set_sound_stream_volume(
+              sound_stream :: tuple,
+              volume :: float,
+              return :: :value | :resource
+            ) :: tuple
+      def set_sound_stream_volume(
+            _sound_stream,
+            _volume,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set pitch for a sound stream (1.0 is base level)
+
+      ```c
+      // raylib.h
+      RLAPI void SetSoundStreamPitch(SoundStream sound_stream, float pitch);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec set_sound_stream_pitch(
+              sound_stream :: tuple,
+              pitch :: float,
+              return :: :value | :resource
+            ) :: tuple
+      def set_sound_stream_pitch(
+            _sound_stream,
+            _pitch,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set pan for a sound stream (0.5 is center)
+
+      ```c
+      // raylib.h
+      RLAPI void SetSoundStreamPan(SoundStream sound_stream, float pan);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec set_sound_stream_pan(
+              sound_stream :: tuple,
+              pan :: float,
+              return :: :value | :resource
+            ) :: tuple
+      def set_sound_stream_pan(
+            _sound_stream,
+            _pan,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set looping for a sound stream
+      """
+      @doc group: :sound_stream_management
+      @spec set_sound_stream_looping(
+              sound_stream :: tuple,
+              looping :: boolean,
+              return :: :value | :resource
+            ) :: tuple
+      def set_sound_stream_looping(
+            _sound_stream,
+            _looping,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get sound stream time length (in seconds)
+
+      ```c
+      // raylib.h
+      RLAPI float GetSoundStreamTimeLength(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec get_sound_stream_time_length(sound_stream :: tuple) :: float
+      def get_sound_stream_time_length(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get current sound stream time played (in seconds)
+
+      ```c
+      // raylib.h
+      RLAPI float GetSoundStreamTimePlayed(SoundStream sound_stream);
+      ```
+      """
+      @doc group: :sound_stream_management
+      @spec get_sound_stream_time_played(sound_stream :: tuple) :: float
+      def get_sound_stream_time_played(_sound_stream), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get sound stream info
+      """
+      @doc group: :sound_stream_management
+      @spec get_sound_stream_info(
+              sound_stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def get_sound_stream_info(
+            _sound_stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
 
       ######################
       #  Music management  #
@@ -744,7 +1169,7 @@ defmodule Zexray.NIF.Audio do
 
       ```c
       // raylib.h
-      RLAPI bool IsAudioStreamProcessed(AudioStream stream);
+      RLAPI bool IsMusicStreamProcessed(Music music);
       ```
       """
       @doc group: :music_management
@@ -932,6 +1357,20 @@ defmodule Zexray.NIF.Audio do
       @spec get_music_time_played(music :: tuple) :: float
       def get_music_time_played(_music), do: :erlang.nif_error(:undef)
 
+      @doc """
+      Get music info
+      """
+      @doc group: :music_management
+      @spec get_music_info(
+              music :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def get_music_info(
+            _music,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
       ############################
       #  AudioStream management  #
       ############################
@@ -955,6 +1394,25 @@ defmodule Zexray.NIF.Audio do
             _sample_rate,
             _sample_size,
             _channels,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Load audio stream from audio info
+
+      ```c
+      // raylib.h
+      RLAPI AudioStream LoadAudioStreamFromAudioInfo(AudioInfo info);
+      ```
+      """
+      @doc group: :audio_stream_management
+      @spec load_audio_stream_from_audio_info(
+              info :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def load_audio_stream_from_audio_info(
+            _info,
             _return \\ :value
           ),
           do: :erlang.nif_error(:undef)
@@ -1166,6 +1624,58 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec set_audio_stream_buffer_size_default(size :: integer) :: :ok
       def set_audio_stream_buffer_size_default(_size), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get audio stream time length (in seconds)
+
+      ```c
+      // raylib.h
+      RLAPI float GetAudioStreamTimeLength(AudioStream stream, unsigned int frameCount);
+      ```
+      """
+      @doc group: :audio_stream_management
+      @spec get_audio_stream_time_length(
+              stream :: tuple,
+              frame_count :: non_neg_integer
+            ) :: float
+      def get_audio_stream_time_length(
+            _stream,
+            _frame_count
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get current audio stream time played (in seconds)
+
+      ```c
+      // raylib.h
+      RLAPI float GetAudioStreamTimePlayed(AudioStream stream, unsigned int frameCount);
+      ```
+      """
+      @doc group: :audio_stream_management
+      @spec get_audio_stream_time_played(
+              stream :: tuple,
+              frame_count :: non_neg_integer
+            ) :: float
+      def get_audio_stream_time_played(
+            _stream,
+            _frame_count
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get audio stream info
+      """
+      @doc group: :audio_stream_management
+      @spec get_audio_stream_info(
+              stream :: tuple,
+              return :: :value | :resource
+            ) :: tuple
+      def get_audio_stream_info(
+            _stream,
+            _return \\ :value
+          ),
+          do: :erlang.nif_error(:undef)
     end
   end
 end

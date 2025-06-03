@@ -4999,7 +4999,14 @@ pub const Wave = struct {
             value.sampleSize,
         );
 
-        const term_data_value = Binary.make_c(env, @ptrCast(value.data), data_size);
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.channels)};
+
+        const term_data_value = switch (value.sampleSize) {
+            8 => Array.make_c(UInt, u8, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            16 => Array.make_c(Int, c_short, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            32 => Array.make_c(Double, f32, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            else => Binary.make_c(env, @ptrCast(@alignCast(value.data)), data_size),
+        };
 
         return Tuple.make(env, &[_]e.ErlNifTerm{
             Atom.make(env, Self.resource_name),
@@ -5054,9 +5061,30 @@ pub const Wave = struct {
             value.sampleSize,
         );
 
-        const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
-        errdefer data.free();
-        value.data = data.data;
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.channels)};
+
+        switch (value.sampleSize) {
+            8 => {
+                var data = try ArgumentArrayC(UInt, u8, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            16 => {
+                var data = try ArgumentArrayC(Int, c_short, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            32 => {
+                var data = try ArgumentArrayC(Double, f32, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            else => {
+                const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+        }
 
         return value;
     }
@@ -5072,6 +5100,91 @@ pub const Wave = struct {
     pub fn get_data_size(frame_count: c_uint, channels: c_uint, sample_size: c_uint) usize {
         const sample_size_bytes: c_uint = @intFromFloat(@ceil(@as(f64, @floatFromInt(sample_size)) / 8));
         return @intCast(frame_count * channels * sample_size_bytes);
+    }
+};
+
+/////////////////
+//  AudioInfo  //
+/////////////////
+
+pub const AudioInfo = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.AudioInfo;
+    pub const resource_name = "audio_info";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.AudioInfo) e.ErlNifTerm {
+        // frame_count
+
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+
+        // sample_rate
+
+        const term_sample_rate_value = UInt.make(env, @intCast(value.sampleRate));
+
+        // sample_size
+
+        const term_sample_size_value = UInt.make(env, @intCast(value.sampleSize));
+
+        // channels
+
+        const term_channels_value = UInt.make(env, @intCast(value.channels));
+
+        return Tuple.make(env, &[_]e.ErlNifTerm{
+            Atom.make(env, Self.resource_name),
+            term_frame_count_value,
+            term_sample_rate_value,
+            term_sample_size_value,
+            term_channels_value,
+        });
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.AudioInfo {
+        const record = try Tuple.get(env, term);
+
+        if (record.len == 2) {
+            return (try Self.Resource.get_record(env, record)).*.*;
+        }
+
+        if (record.len != 5) {
+            return error.ArgumentError;
+        }
+
+        const term_frame_count_value = record[1];
+        const term_sample_rate_value = record[2];
+        const term_sample_size_value = record[3];
+        const term_channels_value = record[4];
+
+        var value = rl.AudioInfo{};
+
+        // frame_count
+
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        // sample_rate
+
+        value.sampleRate = @intCast(try UInt.get(env, term_sample_rate_value));
+
+        // sample_size
+
+        value.sampleSize = @intCast(try UInt.get(env, term_sample_size_value));
+
+        // channels
+
+        value.channels = @intCast(try UInt.get(env, term_channels_value));
+
+        return value;
+    }
+
+    pub fn unload(value: rl.AudioInfo) void {
+        _ = value;
+    }
+
+    pub fn free(value: rl.AudioInfo) void {
+        _ = value;
     }
 };
 
@@ -5387,6 +5500,277 @@ pub const SoundAlias = struct {
 
     pub fn free(value: rl.Sound) void {
         AudioStream.free(value.stream);
+    }
+};
+
+///////////////////
+//  SoundStream  //
+///////////////////
+
+pub const SoundStream = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.SoundStream;
+    pub const resource_name = "sound_stream";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{resources.ResourceTypeKey.sound_stream_alias};
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.SoundStream) e.ErlNifTerm {
+        // stream
+
+        const term_stream_value = AudioStream.make(env, value.stream);
+
+        // frame_count
+
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+
+        // looping
+
+        const term_looping_value = Boolean.make(env, value.looping);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.stream.channels,
+            value.stream.sampleSize,
+        );
+
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.stream.channels)};
+
+        const term_data_value = switch (value.stream.sampleSize) {
+            8 => Array.make_c(UInt, u8, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            16 => Array.make_c(Int, c_short, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            32 => Array.make_c(Double, f32, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            else => Binary.make_c(env, @ptrCast(@alignCast(value.data)), data_size),
+        };
+
+        return Tuple.make(env, &[_]e.ErlNifTerm{
+            Atom.make(env, Self.resource_name),
+            term_stream_value,
+            term_frame_count_value,
+            term_looping_value,
+            term_data_value,
+        });
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.SoundStream {
+        const record = try Tuple.get(env, term);
+
+        if (record.len == 2) {
+            return (try Self.Resource.get_record(env, record)).*.*;
+        }
+
+        if (record.len != 5) {
+            return error.ArgumentError;
+        }
+
+        const term_stream_value = record[1];
+        const term_frame_count_value = record[2];
+        const term_looping_value = record[3];
+        const term_data_value = record[4];
+
+        var value = rl.SoundStream{};
+
+        // stream
+
+        const stream = try Argument(AudioStream).get(env, term_stream_value);
+        errdefer stream.free();
+        value.stream = stream.data;
+
+        // frame_count
+
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        // looping
+
+        value.looping = try Boolean.get(env, term_looping_value);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.stream.channels,
+            value.stream.sampleSize,
+        );
+
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.stream.channels)};
+
+        switch (value.stream.sampleSize) {
+            8 => {
+                var data = try ArgumentArrayC(UInt, u8, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            16 => {
+                var data = try ArgumentArrayC(Int, c_short, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            32 => {
+                var data = try ArgumentArrayC(Double, f32, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            else => {
+                const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+        }
+
+        return value;
+    }
+
+    pub fn unload(value: rl.SoundStream) void {
+        rl.UnloadSoundStream(value);
+    }
+
+    pub fn free(value: rl.SoundStream) void {
+        AudioStream.free(value.stream);
+        rl.MemFree(value.data);
+    }
+
+    pub fn get_data_size(frame_count: c_uint, channels: c_uint, sample_size: c_uint) usize {
+        const sample_size_bytes: c_uint = @intFromFloat(@ceil(@as(f64, @floatFromInt(sample_size)) / 8));
+        return @intCast(frame_count * channels * sample_size_bytes);
+    }
+};
+
+////////////////////////
+//  SoundStreamAlias  //
+////////////////////////
+
+pub const SoundStreamAlias = struct {
+    const Self = @This();
+
+    pub const allocator = rl.allocator;
+    pub const data_type = rl.SoundStream;
+    pub const resource_name = "sound_stream_alias";
+
+    pub const Resource = ResourceBase(Self);
+
+    pub fn make(env: ?*e.ErlNifEnv, value: rl.SoundStream) e.ErlNifTerm {
+        // stream
+
+        const term_stream_value = AudioStream.make(env, value.stream);
+
+        // frame_count
+
+        const term_frame_count_value = UInt.make(env, @intCast(value.frameCount));
+
+        // looping
+
+        const term_looping_value = Boolean.make(env, value.looping);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.stream.channels,
+            value.stream.sampleSize,
+        );
+
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.stream.channels)};
+
+        const term_data_value = switch (value.stream.sampleSize) {
+            8 => Array.make_c(UInt, u8, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            16 => Array.make_c(Int, c_short, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            32 => Array.make_c(Double, f32, env, @ptrCast(@alignCast(value.data)), &data_lengths),
+            else => Binary.make_c(env, @ptrCast(@alignCast(value.data)), data_size),
+        };
+
+        return Tuple.make(env, &[_]e.ErlNifTerm{
+            Atom.make(env, Self.resource_name),
+            term_stream_value,
+            term_frame_count_value,
+            term_looping_value,
+            term_data_value,
+        });
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !rl.SoundStream {
+        const record = try Tuple.get(env, term);
+
+        if (record.len == 2) {
+            return (try Self.Resource.get_record(env, record)).*.*;
+        }
+
+        if (record.len != 5) {
+            return error.ArgumentError;
+        }
+
+        const term_stream_value = record[1];
+        const term_frame_count_value = record[2];
+        const term_looping_value = record[3];
+        const term_data_value = record[4];
+
+        var value = rl.SoundStream{};
+
+        // stream
+
+        const stream = try Argument(AudioStream).get(env, term_stream_value);
+        errdefer stream.free();
+        value.stream = stream.data;
+
+        // frame_count
+
+        value.frameCount = @intCast(try UInt.get(env, term_frame_count_value));
+
+        // looping
+
+        value.looping = try Boolean.get(env, term_looping_value);
+
+        // data
+
+        const data_size: usize = get_data_size(
+            value.frameCount,
+            value.stream.channels,
+            value.stream.sampleSize,
+        );
+
+        const data_lengths = [_]usize{@intCast(value.frameCount * value.stream.channels)};
+
+        switch (value.stream.sampleSize) {
+            8 => {
+                var data = try ArgumentArrayC(UInt, u8, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            16 => {
+                var data = try ArgumentArrayC(Int, c_short, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            32 => {
+                var data = try ArgumentArrayC(Double, f32, Self.allocator).get(env, term_data_value, &data_lengths);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+            else => {
+                const data = try ArgumentBinaryC(Binary, Self.allocator).get(env, term_data_value, data_size);
+                errdefer data.free();
+                value.data = @ptrCast(data.data);
+            },
+        }
+
+        return value;
+    }
+
+    pub fn unload(value: rl.SoundStream) void {
+        rl.UnloadSoundStreamAlias(value);
+    }
+
+    pub fn free(value: rl.SoundStream) void {
+        AudioStream.free(value.stream);
+        rl.MemFree(value.data);
+    }
+
+    pub fn get_data_size(frame_count: c_uint, channels: c_uint, sample_size: c_uint) usize {
+        const sample_size_bytes: c_uint = @intFromFloat(@ceil(@as(f64, @floatFromInt(sample_size)) / 8));
+        return @intCast(frame_count * channels * sample_size_bytes);
     }
 };
 

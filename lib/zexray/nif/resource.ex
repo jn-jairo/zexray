@@ -225,6 +225,12 @@ defmodule Zexray.NIF.Resource do
         wave_free_resource: 1,
         wave_update_resource: 2,
 
+        # AudioInfo
+        audio_info_to_resource: 1,
+        audio_info_from_resource: 1,
+        audio_info_free_resource: 1,
+        audio_info_update_resource: 2,
+
         # AudioStream
         audio_stream_to_resource: 1,
         audio_stream_from_resource: 1,
@@ -242,6 +248,18 @@ defmodule Zexray.NIF.Resource do
         sound_alias_from_resource: 1,
         sound_alias_free_resource: 1,
         sound_alias_update_resource: 2,
+
+        # SoundStream
+        sound_stream_to_resource: 1,
+        sound_stream_from_resource: 1,
+        sound_stream_free_resource: 1,
+        sound_stream_update_resource: 2,
+
+        # SoundStreamAlias
+        sound_stream_alias_to_resource: 1,
+        sound_stream_alias_from_resource: 1,
+        sound_stream_alias_free_resource: 1,
+        sound_stream_alias_update_resource: 2,
 
         # Music
         music_to_resource: 1,
@@ -1279,6 +1297,33 @@ defmodule Zexray.NIF.Resource do
           ),
           do: :erlang.nif_error(:undef)
 
+      ###############
+      #  AudioInfo  #
+      ###############
+
+      @doc group: :resource
+      @spec audio_info_to_resource(value :: tuple) :: tuple
+      def audio_info_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec audio_info_from_resource(resource :: tuple) :: tuple
+      def audio_info_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec audio_info_free_resource(resource :: tuple) :: :ok
+      def audio_info_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec audio_info_update_resource(
+              resource :: tuple,
+              value :: tuple
+            ) :: :ok
+      def audio_info_update_resource(
+            _resource,
+            _value
+          ),
+          do: :erlang.nif_error(:undef)
+
       #################
       #  AudioStream  #
       #################
@@ -1355,6 +1400,60 @@ defmodule Zexray.NIF.Resource do
               value :: tuple
             ) :: :ok
       def sound_alias_update_resource(
+            _resource,
+            _value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      #################
+      #  SoundStream  #
+      #################
+
+      @doc group: :resource
+      @spec sound_stream_to_resource(value :: tuple) :: tuple
+      def sound_stream_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_from_resource(resource :: tuple) :: tuple
+      def sound_stream_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_free_resource(resource :: tuple) :: :ok
+      def sound_stream_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_update_resource(
+              resource :: tuple,
+              value :: tuple
+            ) :: :ok
+      def sound_stream_update_resource(
+            _resource,
+            _value
+          ),
+          do: :erlang.nif_error(:undef)
+
+      ######################
+      #  SoundStreamAlias  #
+      ######################
+
+      @doc group: :resource
+      @spec sound_stream_alias_to_resource(value :: tuple) :: tuple
+      def sound_stream_alias_to_resource(_value), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_alias_from_resource(resource :: tuple) :: tuple
+      def sound_stream_alias_from_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_alias_free_resource(resource :: tuple) :: :ok
+      def sound_stream_alias_free_resource(_resource), do: :erlang.nif_error(:undef)
+
+      @doc group: :resource
+      @spec sound_stream_alias_update_resource(
+              resource :: tuple,
+              value :: tuple
+            ) :: :ok
+      def sound_stream_alias_update_resource(
             _resource,
             _value
           ),

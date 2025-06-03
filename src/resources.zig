@@ -41,11 +41,14 @@ pub const ResourceType = struct {
     ray_collision: *e.ErlNifResourceType = undefined,
     bounding_box: *e.ErlNifResourceType = undefined,
     wave: *e.ErlNifResourceType = undefined,
+    audio_info: *e.ErlNifResourceType = undefined,
     audio_buffer: *e.ErlNifResourceType = undefined,
     audio_processor: *e.ErlNifResourceType = undefined,
     audio_stream: *e.ErlNifResourceType = undefined,
     sound: *e.ErlNifResourceType = undefined,
     sound_alias: *e.ErlNifResourceType = undefined,
+    sound_stream: *e.ErlNifResourceType = undefined,
+    sound_stream_alias: *e.ErlNifResourceType = undefined,
     music_context_data: *e.ErlNifResourceType = undefined,
     music: *e.ErlNifResourceType = undefined,
     vr_device_info: *e.ErlNifResourceType = undefined,
@@ -204,6 +207,10 @@ pub const ResourceType = struct {
         core.Wave.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
 
+    pub fn audio_info_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.AudioInfo.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
     pub fn audio_buffer_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.AudioBuffer.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
@@ -222,6 +229,14 @@ pub const ResourceType = struct {
 
     pub fn sound_alias_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
         core.SoundAlias.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn sound_stream_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.SoundStream.Resource.destroy(@ptrCast(@alignCast(obj.?)));
+    }
+
+    pub fn sound_stream_alias_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
+        core.SoundStreamAlias.Resource.destroy(@ptrCast(@alignCast(obj.?)));
     }
 
     pub fn music_context_data_dtor(_: ?*e.ErlNifEnv, obj: ?*anyopaque) callconv(.C) void {
@@ -293,11 +308,14 @@ pub const ResourceTypeKey = enum {
     ray_collision,
     bounding_box,
     wave,
+    audio_info,
     audio_buffer,
     audio_processor,
     audio_stream,
     sound,
     sound_alias,
+    sound_stream,
+    sound_stream_alias,
     music_context_data,
     music,
     vr_device_info,
@@ -346,11 +364,14 @@ pub fn get_resource_type_from_key(key: ResourceTypeKey) *e.ErlNifResourceType {
         .ray_collision => resource_type.ray_collision,
         .bounding_box => resource_type.bounding_box,
         .wave => resource_type.wave,
+        .audio_info => resource_type.audio_info,
         .audio_buffer => resource_type.audio_buffer,
         .audio_processor => resource_type.audio_processor,
         .audio_stream => resource_type.audio_stream,
         .sound => resource_type.sound,
         .sound_alias => resource_type.sound_alias,
+        .sound_stream => resource_type.sound_stream,
+        .sound_stream_alias => resource_type.sound_stream_alias,
         .music_context_data => resource_type.music_context_data,
         .music => resource_type.music,
         .vr_device_info => resource_type.vr_device_info,
@@ -401,11 +422,14 @@ pub fn load_resources(env: ?*e.ErlNifEnv) bool {
     resource_type.ray_collision = e.enif_open_resource_type(env, null, "Zexray.Resource.RayCollision", &ResourceType.ray_collision_dtor, flags, null) orelse return false;
     resource_type.bounding_box = e.enif_open_resource_type(env, null, "Zexray.Resource.BoundingBox", &ResourceType.bounding_box_dtor, flags, null) orelse return false;
     resource_type.wave = e.enif_open_resource_type(env, null, "Zexray.Resource.Wave", &ResourceType.wave_dtor, flags, null) orelse return false;
+    resource_type.audio_info = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioInfo", &ResourceType.audio_info_dtor, flags, null) orelse return false;
     resource_type.audio_buffer = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioBuffer", &ResourceType.audio_buffer_dtor, flags, null) orelse return false;
     resource_type.audio_processor = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioProcessor", &ResourceType.audio_processor_dtor, flags, null) orelse return false;
     resource_type.audio_stream = e.enif_open_resource_type(env, null, "Zexray.Resource.AudioStream", &ResourceType.audio_stream_dtor, flags, null) orelse return false;
     resource_type.sound = e.enif_open_resource_type(env, null, "Zexray.Resource.Sound", &ResourceType.sound_dtor, flags, null) orelse return false;
     resource_type.sound_alias = e.enif_open_resource_type(env, null, "Zexray.Resource.SoundAlias", &ResourceType.sound_alias_dtor, flags, null) orelse return false;
+    resource_type.sound_stream = e.enif_open_resource_type(env, null, "Zexray.Resource.SoundStream", &ResourceType.sound_stream_dtor, flags, null) orelse return false;
+    resource_type.sound_stream_alias = e.enif_open_resource_type(env, null, "Zexray.Resource.SoundStreamAlias", &ResourceType.sound_stream_alias_dtor, flags, null) orelse return false;
     resource_type.music_context_data = e.enif_open_resource_type(env, null, "Zexray.Resource.MusicContextData", &ResourceType.music_context_data_dtor, flags, null) orelse return false;
     resource_type.music = e.enif_open_resource_type(env, null, "Zexray.Resource.Music", &ResourceType.music_dtor, flags, null) orelse return false;
     resource_type.vr_device_info = e.enif_open_resource_type(env, null, "Zexray.Resource.VrDeviceInfo", &ResourceType.vr_device_info_dtor, flags, null) orelse return false;

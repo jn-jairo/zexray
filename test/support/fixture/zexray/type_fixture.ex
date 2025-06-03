@@ -2,6 +2,7 @@ defmodule Zexray.TypeFixture do
   @moduledoc false
 
   require Zexray.Type.{
+    AudioInfo,
     AudioStream,
     AutomationEvent,
     AutomationEventList,
@@ -32,6 +33,8 @@ defmodule Zexray.TypeFixture do
     Shader,
     Sound,
     SoundAlias,
+    SoundStream,
+    SoundStreamAlias,
     Texture,
     Texture2D,
     TextureCubemap,
@@ -51,6 +54,7 @@ defmodule Zexray.TypeFixture do
   }
 
   alias Zexray.Type.{
+    AudioInfo,
     AudioStream,
     AutomationEvent,
     AutomationEventList,
@@ -81,6 +85,8 @@ defmodule Zexray.TypeFixture do
     Shader,
     Sound,
     SoundAlias,
+    SoundStream,
+    SoundStreamAlias,
     Texture,
     Texture2D,
     TextureCubemap,
@@ -98,6 +104,31 @@ defmodule Zexray.TypeFixture do
     VrStereoConfig,
     Wave
   }
+
+  def audio_info_fixture(type \\ :base) do
+    frame_count = 24_000
+    sample_rate = 16_000
+    sample_size = 8
+    channels = 1
+
+    case type do
+      t when t in [:base, :resource] ->
+        AudioInfo.t(
+          frame_count: frame_count,
+          sample_rate: sample_rate,
+          sample_size: sample_size,
+          channels: channels
+        )
+
+      :empty ->
+        AudioInfo.t(
+          frame_count: 0,
+          sample_rate: 0,
+          sample_size: 0,
+          channels: 0
+        )
+    end
+  end
 
   def audio_stream_fixture(type \\ :base) do
     sample_rate = 16_000
@@ -997,6 +1028,96 @@ defmodule Zexray.TypeFixture do
     end
   end
 
+  def sound_stream_fixture(type \\ :base) do
+    frame_count = 24_000
+    sample_size = 8
+    channels = 1
+    looping = true
+
+    case type do
+      :base ->
+        SoundStream.t(
+          stream: audio_stream_fixture(type),
+          frame_count: frame_count,
+          looping: looping,
+          data:
+            Enum.map(
+              1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
+              fn n ->
+                rem(n, 0x100)
+              end
+            )
+        )
+
+      :resource ->
+        SoundStream.t(
+          stream: AudioStream.t_resource(reference: make_ref()),
+          frame_count: frame_count,
+          looping: looping,
+          data:
+            Enum.map(
+              1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
+              fn n ->
+                rem(n, 0x100)
+              end
+            )
+        )
+
+      :empty ->
+        SoundStream.t(
+          stream: audio_stream_fixture(type),
+          frame_count: 0,
+          looping: false,
+          data: <<>>
+        )
+    end
+  end
+
+  def sound_stream_alias_fixture(type \\ :base) do
+    frame_count = 24_000
+    sample_size = 8
+    channels = 1
+    looping = true
+
+    case type do
+      :base ->
+        SoundStreamAlias.t(
+          stream: audio_stream_fixture(type),
+          frame_count: frame_count,
+          looping: looping,
+          data:
+            Enum.map(
+              1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
+              fn n ->
+                rem(n, 0x100)
+              end
+            )
+        )
+
+      :resource ->
+        SoundStreamAlias.t(
+          stream: AudioStream.t_resource(reference: make_ref()),
+          frame_count: frame_count,
+          looping: looping,
+          data:
+            Enum.map(
+              1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
+              fn n ->
+                rem(n, 0x100)
+              end
+            )
+        )
+
+      :empty ->
+        SoundStreamAlias.t(
+          stream: audio_stream_fixture(type),
+          frame_count: 0,
+          looping: false,
+          data: <<>>
+        )
+    end
+  end
+
   def texture_fixture(type \\ :base) do
     case type do
       t when t in [:base, :resource] ->
@@ -1414,7 +1535,6 @@ defmodule Zexray.TypeFixture do
                 rem(n, 0x100)
               end
             )
-            |> :binary.list_to_bin()
         )
 
       :empty ->

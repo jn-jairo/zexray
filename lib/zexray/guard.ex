@@ -164,6 +164,10 @@ defmodule Zexray.Guard do
   ##########
 
   @doc group: :type
+  defguard is_audio_info(value)
+           when is_record(value, :audio_info, 5) or is_record(value, :audio_info_resource, 2)
+
+  @doc group: :type
   defguard is_audio_stream(value)
            when is_record(value, :audio_stream, 6) or is_record(value, :audio_stream_resource, 2)
 
@@ -288,6 +292,15 @@ defmodule Zexray.Guard do
            when is_record(value, :sound_alias, 3) or is_record(value, :sound_alias_resource, 2)
 
   @doc group: :type
+  defguard is_sound_stream(value)
+           when is_record(value, :sound_stream, 5) or is_record(value, :sound_stream_resource, 2)
+
+  @doc group: :type
+  defguard is_sound_stream_alias(value)
+           when is_record(value, :sound_stream_alias, 5) or
+                  is_record(value, :sound_stream_alias_resource, 2)
+
+  @doc group: :type
   defguard is_texture(value)
            when is_record(value, :texture, 6) or is_record(value, :texture_resource, 2)
 
@@ -352,6 +365,9 @@ defmodule Zexray.Guard do
 
   @doc group: :type
   defguard is_wave(value) when is_record(value, :wave, 6) or is_record(value, :wave_resource, 2)
+
+  @doc group: :type
+  defguard is_like_audio_info(value) when is_audio_info(value) or is_record_like(value, 5)
 
   @doc group: :type
   defguard is_like_audio_stream(value) when is_audio_stream(value) or is_record_like(value, 6)
@@ -454,6 +470,14 @@ defmodule Zexray.Guard do
   @doc group: :type
   defguard is_like_sound_alias(value)
            when is_sound_alias(value) or is_record_like(value, 3) or is_sound(value)
+
+  @doc group: :type
+  defguard is_like_sound_stream(value)
+           when is_sound_stream(value) or is_record_like(value, 5) or is_sound_stream_alias(value)
+
+  @doc group: :type
+  defguard is_like_sound_stream_alias(value)
+           when is_sound_stream_alias(value) or is_record_like(value, 5) or is_sound_stream(value)
 
   @doc group: :type
   defguard is_like_texture(value)

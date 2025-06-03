@@ -24,6 +24,7 @@ defmodule Zexray.Type do
   defmacro __using__(_opts) do
     quote do
       require Zexray.Type.{
+        AudioInfo,
         AudioStream,
         AutomationEvent,
         AutomationEventList,
@@ -54,6 +55,8 @@ defmodule Zexray.Type do
         Shader,
         Sound,
         SoundAlias,
+        SoundStream,
+        SoundStreamAlias,
         Texture,
         Texture2D,
         TextureCubemap,
@@ -71,6 +74,20 @@ defmodule Zexray.Type do
         VrStereoConfig,
         Wave
       }
+
+      @doc false
+      defmacro type_audio_info(args \\ []) do
+        quote do
+          Zexray.Type.AudioInfo.t(unquote(args))
+        end
+      end
+
+      @doc false
+      defmacro type_audio_info(record, args) do
+        quote do
+          Zexray.Type.AudioInfo.t(unquote(record), unquote(args))
+        end
+      end
 
       @doc false
       defmacro type_audio_stream(args \\ []) do
@@ -489,6 +506,34 @@ defmodule Zexray.Type do
       defmacro type_sound_alias(record, args) do
         quote do
           Zexray.Type.SoundAlias.t(unquote(record), unquote(args))
+        end
+      end
+
+      @doc false
+      defmacro type_sound_stream(args \\ []) do
+        quote do
+          Zexray.Type.SoundStream.t(unquote(args))
+        end
+      end
+
+      @doc false
+      defmacro type_sound_stream(record, args) do
+        quote do
+          Zexray.Type.SoundStream.t(unquote(record), unquote(args))
+        end
+      end
+
+      @doc false
+      defmacro type_sound_stream_alias(args \\ []) do
+        quote do
+          Zexray.Type.SoundStreamAlias.t(unquote(args))
+        end
+      end
+
+      @doc false
+      defmacro type_sound_stream_alias(record, args) do
+        quote do
+          Zexray.Type.SoundStreamAlias.t(unquote(record), unquote(args))
         end
       end
 

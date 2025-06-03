@@ -27,7 +27,7 @@ defmodule Zexray.Type.Music do
   Record.defrecord(:t, :music,
     stream: nil,
     frame_count: 0,
-    looping: false,
+    looping: true,
     ctx_type: 0,
     ctx_data: nil
   )
