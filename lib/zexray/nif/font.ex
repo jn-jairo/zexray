@@ -31,8 +31,8 @@ defmodule Zexray.NIF.Font do
       ```
       """
       @doc group: :font_loading
-      @spec get_font_default(return :: :value | :resource) :: tuple
-      def get_font_default(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_font_default(return :: :auto | :value | :resource) :: tuple
+      def get_font_default(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Load font from file into GPU memory (VRAM)
@@ -45,11 +45,11 @@ defmodule Zexray.NIF.Font do
       @doc group: :font_loading
       @spec load_font(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_font(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -67,14 +67,14 @@ defmodule Zexray.NIF.Font do
               font_size :: integer,
               codepoints :: [integer],
               font_type :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_font_ex(
             _file_name,
             _font_size,
             _codepoints,
             _font_type,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -91,13 +91,13 @@ defmodule Zexray.NIF.Font do
               image :: tuple,
               key :: tuple,
               first_char :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_font_from_image(
             _image,
             _key,
             _first_char,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -116,7 +116,7 @@ defmodule Zexray.NIF.Font do
               font_size :: integer,
               codepoints :: [integer],
               font_type :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_font_from_memory(
             _file_type,
@@ -124,7 +124,7 @@ defmodule Zexray.NIF.Font do
             _font_size,
             _codepoints,
             _font_type,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 

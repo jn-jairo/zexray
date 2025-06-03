@@ -630,11 +630,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :model_management
       @spec load_model(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_model(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -649,11 +649,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :model_management
       @spec load_model_from_mesh(
               mesh :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_model_from_mesh(
             _mesh,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -680,11 +680,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :model_management
       @spec get_model_bounding_box(
               model :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_model_bounding_box(
             _model,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -962,12 +962,12 @@ defmodule Zexray.NIF.Shape3D do
       @spec upload_mesh(
               mesh :: tuple,
               dynamic :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def upload_mesh(
             _mesh,
             _dynamic,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1047,11 +1047,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :mesh_management
       @spec get_mesh_bounding_box(
               mesh :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_mesh_bounding_box(
             _mesh,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1066,11 +1066,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :mesh_management
       @spec gen_mesh_tangents(
               mesh :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_tangents(
             _mesh,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1109,12 +1109,12 @@ defmodule Zexray.NIF.Shape3D do
       @spec gen_mesh_poly(
               sides :: integer,
               radius :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_poly(
             _sides,
             _radius,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1132,14 +1132,14 @@ defmodule Zexray.NIF.Shape3D do
               length :: float,
               res_x :: integer,
               res_z :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_plane(
             _width,
             _length,
             _res_x,
             _res_z,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1156,13 +1156,13 @@ defmodule Zexray.NIF.Shape3D do
               width :: float,
               height :: float,
               length :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_cube(
             _width,
             _height,
             _length,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1179,13 +1179,13 @@ defmodule Zexray.NIF.Shape3D do
               radius :: float,
               rings :: integer,
               slices :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_sphere(
             _radius,
             _rings,
             _slices,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1202,13 +1202,13 @@ defmodule Zexray.NIF.Shape3D do
               radius :: float,
               rings :: integer,
               slices :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_hemi_sphere(
             _radius,
             _rings,
             _slices,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1225,13 +1225,13 @@ defmodule Zexray.NIF.Shape3D do
               radius :: float,
               height :: float,
               slices :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_cylinder(
             _radius,
             _height,
             _slices,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1248,13 +1248,13 @@ defmodule Zexray.NIF.Shape3D do
               radius :: float,
               height :: float,
               slices :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_cone(
             _radius,
             _height,
             _slices,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1272,14 +1272,14 @@ defmodule Zexray.NIF.Shape3D do
               size :: float,
               rad_seg :: integer,
               sides :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_torus(
             _radius,
             _size,
             _rad_seg,
             _sides,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1297,14 +1297,14 @@ defmodule Zexray.NIF.Shape3D do
               size :: float,
               rad_seg :: integer,
               sides :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_knot(
             _radius,
             _size,
             _rad_seg,
             _sides,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1320,12 +1320,12 @@ defmodule Zexray.NIF.Shape3D do
       @spec gen_mesh_heightmap(
               heightmap :: tuple,
               size :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_heightmap(
             _heightmap,
             _size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1341,12 +1341,12 @@ defmodule Zexray.NIF.Shape3D do
       @spec gen_mesh_cubicmap(
               cubicmap :: tuple,
               cube_size :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_cubicmap(
             _cubicmap,
             _cube_size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1365,11 +1365,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :material_management
       @spec load_materials(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: [tuple]
       def load_materials(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1382,8 +1382,8 @@ defmodule Zexray.NIF.Shape3D do
       ```
       """
       @doc group: :material_management
-      @spec load_material_default(return :: :value | :resource) :: tuple
-      def load_material_default(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec load_material_default(return :: :auto | :value | :resource) :: tuple
+      def load_material_default(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Check if a material is valid (shader assigned, map textures loaded in GPU)
@@ -1410,13 +1410,13 @@ defmodule Zexray.NIF.Shape3D do
               material :: tuple,
               map_type :: integer,
               texture :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_material_texture(
             _material,
             _map_type,
             _texture,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1433,13 +1433,13 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               mesh_id :: integer,
               material_id :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_model_mesh_material(
             _model,
             _mesh_id,
             _material_id,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1458,11 +1458,11 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :model_animation
       @spec load_model_animations(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: [tuple]
       def load_model_animations(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1479,13 +1479,13 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               anim :: tuple,
               frame :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_model_animation(
             _model,
             _anim,
             _frame,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1502,13 +1502,13 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               anim :: tuple,
               frame :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_model_animation_bones(
             _model,
             _anim,
             _frame,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1611,13 +1611,13 @@ defmodule Zexray.NIF.Shape3D do
               ray :: tuple,
               center :: tuple,
               radius :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_sphere(
             _ray,
             _center,
             _radius,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1633,12 +1633,12 @@ defmodule Zexray.NIF.Shape3D do
       @spec get_ray_collision_box(
               ray :: tuple,
               box :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_box(
             _ray,
             _box,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1655,13 +1655,13 @@ defmodule Zexray.NIF.Shape3D do
               ray :: tuple,
               mesh :: tuple,
               transform :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_mesh(
             _ray,
             _mesh,
             _transform,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1679,14 +1679,14 @@ defmodule Zexray.NIF.Shape3D do
               p1 :: tuple,
               p2 :: tuple,
               p3 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_triangle(
             _ray,
             _p1,
             _p2,
             _p3,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1705,7 +1705,7 @@ defmodule Zexray.NIF.Shape3D do
               p2 :: tuple,
               p3 :: tuple,
               p4 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_quad(
             _ray,
@@ -1713,7 +1713,7 @@ defmodule Zexray.NIF.Shape3D do
             _p2,
             _p3,
             _p4,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

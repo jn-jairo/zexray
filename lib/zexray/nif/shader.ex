@@ -47,12 +47,12 @@ defmodule Zexray.NIF.Shader do
       @spec load_shader(
               vs_file_name :: binary,
               fs_file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_shader(
             _vs_file_name,
             _fs_file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -68,12 +68,12 @@ defmodule Zexray.NIF.Shader do
       @spec load_shader_from_memory(
               vs_code :: binary,
               fs_code :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_shader_from_memory(
             _vs_code,
             _fs_code,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 

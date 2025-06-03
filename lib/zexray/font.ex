@@ -15,8 +15,8 @@ defmodule Zexray.Font do
   Get the default Font
   """
   @doc group: :loading
-  @spec get_default(return :: :value | :resource) :: Zexray.Type.Font.t_nif()
-  defdelegate get_default(return \\ :value), to: NIF, as: :get_font_default
+  @spec get_default(return :: :auto | :value | :resource) :: Zexray.Type.Font.t_nif()
+  defdelegate get_default(return \\ :auto), to: NIF, as: :get_font_default
 
   @doc """
   Load font from file into GPU memory (VRAM)
@@ -24,11 +24,11 @@ defmodule Zexray.Font do
   @doc group: :loading
   @spec load(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Font.t_nif()
   defdelegate load(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_font
@@ -42,14 +42,14 @@ defmodule Zexray.Font do
           font_size :: integer,
           codepoints :: [integer],
           font_type :: Zexray.Enum.FontType.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Font.t_nif()
   defdelegate load_ex(
                 file_name,
                 font_size,
                 codepoints \\ [],
                 font_type \\ enum_font_type(:default),
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_font_ex
@@ -62,13 +62,13 @@ defmodule Zexray.Font do
           image :: Zexray.Type.Image.t_all(),
           key :: Zexray.Type.Color.t_all(),
           first_char :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Font.t_nif()
   defdelegate load_from_image(
                 image,
                 key,
                 first_char,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_font_from_image
@@ -83,7 +83,7 @@ defmodule Zexray.Font do
           font_size :: integer,
           codepoints :: [integer],
           font_type :: Zexray.Enum.FontType.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Font.t_nif()
   defdelegate load_from_memory(
                 file_type,
@@ -91,7 +91,7 @@ defmodule Zexray.Font do
                 font_size,
                 codepoints \\ [],
                 font_type \\ enum_font_type(:default),
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_font_from_memory

@@ -91,7 +91,7 @@ defmodule Example do
           end)
 
         if not is_nil(sound) do
-          Zexray.Audio.play(sound, :resource)
+          Zexray.Audio.play(sound)
         end
       end
 

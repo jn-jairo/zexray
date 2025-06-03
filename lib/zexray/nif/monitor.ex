@@ -69,11 +69,11 @@ defmodule Zexray.NIF.Monitor do
       @doc group: :window
       @spec get_monitor_position(
               monitor :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_monitor_position(
             _monitor,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 

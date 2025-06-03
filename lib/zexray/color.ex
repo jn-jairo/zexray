@@ -29,12 +29,12 @@ defmodule Zexray.Color do
   @spec fade(
           color :: Zexray.Type.Color.t_all(),
           alpha :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate fade(
                 color,
                 alpha,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :fade
@@ -50,11 +50,11 @@ defmodule Zexray.Color do
   """
   @spec from_int(
           hex_value :: non_neg_integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate from_int(
                 hex_value,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_color
@@ -64,11 +64,11 @@ defmodule Zexray.Color do
   """
   @spec normalize(
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector4.t_nif()
   defdelegate normalize(
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_normalize
@@ -78,11 +78,11 @@ defmodule Zexray.Color do
   """
   @spec from_normalized(
           normalized :: Zexray.Type.Vector4.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate from_normalized(
                 normalized,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_from_normalized
@@ -92,11 +92,11 @@ defmodule Zexray.Color do
   """
   @spec to_hsv(
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector3.t_nif()
   defdelegate to_hsv(
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_to_hsv
@@ -108,13 +108,13 @@ defmodule Zexray.Color do
           hue :: float,
           saturation :: float,
           value :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate from_hsv(
                 hue,
                 saturation,
                 value,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_from_hsv
@@ -125,12 +125,12 @@ defmodule Zexray.Color do
   @spec tint(
           color :: Zexray.Type.Color.t_all(),
           tint :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate tint(
                 color,
                 tint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_tint
@@ -141,12 +141,12 @@ defmodule Zexray.Color do
   @spec brightness(
           color :: Zexray.Type.Color.t_all(),
           factor :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate brightness(
                 color,
                 factor,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_brightness
@@ -157,12 +157,12 @@ defmodule Zexray.Color do
   @spec contrast(
           color :: Zexray.Type.Color.t_all(),
           contrast :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate contrast(
                 color,
                 contrast,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_contrast
@@ -173,12 +173,12 @@ defmodule Zexray.Color do
   @spec alpha(
           color :: Zexray.Type.Color.t_all(),
           alpha :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate alpha(
                 color,
                 alpha,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_alpha
@@ -190,13 +190,13 @@ defmodule Zexray.Color do
           dst :: Zexray.Type.Color.t_all(),
           src :: Zexray.Type.Color.t_all(),
           tint :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate alpha_blend(
                 dst,
                 src,
                 tint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_alpha_blend
@@ -208,13 +208,13 @@ defmodule Zexray.Color do
           color1 :: Zexray.Type.Color.t_all(),
           color2 :: Zexray.Type.Color.t_all(),
           factor :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate lerp(
                 color1,
                 color2,
                 factor,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :color_lerp
@@ -225,12 +225,12 @@ defmodule Zexray.Color do
   @spec from_pixel_data(
           data :: binary,
           format :: Zexray.Enum.PixelFormat.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate from_pixel_data(
                 data,
                 format,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_pixel_color

@@ -48,11 +48,11 @@ defmodule Zexray.NIF.Texture do
       @doc group: :texture_loading
       @spec load_texture(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_texture(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -67,11 +67,11 @@ defmodule Zexray.NIF.Texture do
       @doc group: :texture_loading
       @spec load_texture_from_image(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_texture_from_image(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -87,12 +87,12 @@ defmodule Zexray.NIF.Texture do
       @spec load_texture_cubemap(
               image :: tuple,
               layout :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_texture_cubemap(
             _image,
             _layout,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -108,12 +108,12 @@ defmodule Zexray.NIF.Texture do
       @spec load_render_texture(
               width :: integer,
               height :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_render_texture(
             _width,
             _height,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -196,11 +196,11 @@ defmodule Zexray.NIF.Texture do
       @doc group: :texture_configuration
       @spec gen_texture_mipmaps(
               texture :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_texture_mipmaps(
             _texture,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 

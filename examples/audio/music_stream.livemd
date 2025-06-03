@@ -56,7 +56,7 @@ defmodule Example do
           fn ->
             music =
               Zexray.Audio.load_music("#{@resources_dir}/country.mp3", :resource)
-              |> Zexray.Audio.play(:resource)
+              |> Zexray.Audio.play()
 
             {music}
           end,
@@ -74,21 +74,21 @@ defmodule Example do
       # Update
 
       # Update music buffer with new stream data
-      Zexray.Audio.update(music, :resource)
+      Zexray.Audio.update(music)
 
       # Restart music playing (stop and play)
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
         music
-        |> Zexray.Audio.stop(:resource)
-        |> Zexray.Audio.play(:resource)
+        |> Zexray.Audio.stop()
+        |> Zexray.Audio.play()
       end
 
       # Pause/Resume music playing
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
         if Zexray.Audio.playing?(music) do
-          Zexray.Audio.pause(music, :resource)
+          Zexray.Audio.pause(music)
         else
-          Zexray.Audio.resume(music, :resource)
+          Zexray.Audio.resume(music)
         end
       end
 

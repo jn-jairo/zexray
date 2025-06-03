@@ -15,12 +15,12 @@ defmodule Zexray.Camera do
   @spec update(
           camera :: Zexray.Type.Camera.t_all(),
           mode :: Zexray.Enum.CameraMode.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate update(
                 camera,
                 mode,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :update_camera
@@ -33,14 +33,14 @@ defmodule Zexray.Camera do
           movement :: Zexray.Type.Vector3.t_all(),
           rotation :: Zexray.Type.Vector3.t_all(),
           zoom :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate update_pro(
                 camera,
                 movement,
                 rotation,
                 zoom,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :update_camera_pro
@@ -50,11 +50,11 @@ defmodule Zexray.Camera do
   """
   @spec get_forward(
           camera :: Zexray.Type.Camera.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector3.t_nif()
   defdelegate get_forward(
                 camera,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_camera_forward
@@ -65,11 +65,11 @@ defmodule Zexray.Camera do
   """
   @spec get_up(
           camera :: Zexray.Type.Camera.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector3.t_nif()
   defdelegate get_up(
                 camera,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_camera_up
@@ -79,11 +79,11 @@ defmodule Zexray.Camera do
   """
   @spec get_right(
           camera :: Zexray.Type.Camera.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector3.t_nif()
   defdelegate get_right(
                 camera,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_camera_right
@@ -95,13 +95,13 @@ defmodule Zexray.Camera do
           camera :: Zexray.Type.Camera.t_all(),
           distance :: float,
           move_in_world_plane :: boolean,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_forward(
                 camera,
                 distance,
                 move_in_world_plane,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_move_forward
@@ -112,12 +112,12 @@ defmodule Zexray.Camera do
   @spec move_up(
           camera :: Zexray.Type.Camera.t_all(),
           distance :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_up(
                 camera,
                 distance,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_move_up
@@ -129,13 +129,13 @@ defmodule Zexray.Camera do
           camera :: Zexray.Type.Camera.t_all(),
           distance :: float,
           move_in_world_plane :: boolean,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_right(
                 camera,
                 distance,
                 move_in_world_plane,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_move_right
@@ -146,12 +146,12 @@ defmodule Zexray.Camera do
   @spec move_to_target(
           camera :: Zexray.Type.Camera.t_all(),
           delta :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_to_target(
                 camera,
                 delta,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_move_to_target
@@ -166,13 +166,13 @@ defmodule Zexray.Camera do
           camera :: Zexray.Type.Camera.t_all(),
           angle :: float,
           rotate_around_target :: boolean,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate yaw(
                 camera,
                 angle,
                 rotate_around_target,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_yaw
@@ -190,7 +190,7 @@ defmodule Zexray.Camera do
           lock_view :: boolean,
           rotate_around_target :: boolean,
           rotate_up :: boolean,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate pitch(
                 camera,
@@ -198,7 +198,7 @@ defmodule Zexray.Camera do
                 lock_view,
                 rotate_around_target,
                 rotate_up,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_pitch
@@ -211,12 +211,12 @@ defmodule Zexray.Camera do
   @spec roll(
           camera :: Zexray.Type.Camera.t_all(),
           angle :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate roll(
                 camera,
                 angle,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :camera_roll
@@ -226,11 +226,11 @@ defmodule Zexray.Camera do
   """
   @spec get_view_matrix(
           camera :: Zexray.Type.Camera.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Matrix.t_nif()
   defdelegate get_view_matrix(
                 camera,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_camera_view_matrix
@@ -241,12 +241,12 @@ defmodule Zexray.Camera do
   @spec get_projection_matrix(
           camera :: Zexray.Type.Camera.t_all(),
           aspect :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Matrix.t_nif()
   defdelegate get_projection_matrix(
                 camera,
                 aspect,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_camera_projection_matrix

@@ -110,11 +110,11 @@ defmodule Zexray.NIF.Vr do
       @doc group: :vr
       @spec load_vr_stereo_config(
               device :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_vr_stereo_config(
             _device,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

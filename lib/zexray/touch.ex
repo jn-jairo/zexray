@@ -26,11 +26,11 @@ defmodule Zexray.Touch do
   """
   @spec get_position(
           index :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_position(
                 index,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_touch_position

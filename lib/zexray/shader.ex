@@ -21,12 +21,12 @@ defmodule Zexray.Shader do
   @spec load(
           vs_file_name :: binary,
           fs_file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Shader.t_nif()
   defdelegate load(
                 vs_file_name,
                 fs_file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_shader
@@ -37,12 +37,12 @@ defmodule Zexray.Shader do
   @spec load_from_memory(
           vs_code :: binary,
           fs_code :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Shader.t_nif()
   defdelegate load_from_memory(
                 vs_code,
                 fs_code,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_shader_from_memory

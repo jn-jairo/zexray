@@ -78,8 +78,8 @@ defmodule Zexray.NIF.Gesture do
       ```
       """
       @doc group: :gesture
-      @spec get_gesture_drag_vector(return :: :value | :resource) :: tuple
-      def get_gesture_drag_vector(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_gesture_drag_vector(return :: :auto | :value | :resource) :: tuple
+      def get_gesture_drag_vector(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Get gesture drag angle
@@ -102,8 +102,8 @@ defmodule Zexray.NIF.Gesture do
       ```
       """
       @doc group: :gesture
-      @spec get_gesture_pinch_vector(return :: :value | :resource) :: tuple
-      def get_gesture_pinch_vector(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_gesture_pinch_vector(return :: :auto | :value | :resource) :: tuple
+      def get_gesture_pinch_vector(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Get gesture pinch angle

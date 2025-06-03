@@ -36,8 +36,8 @@ defmodule Zexray.Gesture do
   @doc """
   Get gesture drag vector
   """
-  @spec get_drag_vector(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_drag_vector(return \\ :value), to: NIF, as: :get_gesture_drag_vector
+  @spec get_drag_vector(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_drag_vector(return \\ :auto), to: NIF, as: :get_gesture_drag_vector
 
   @doc """
   Get gesture drag angle
@@ -48,8 +48,8 @@ defmodule Zexray.Gesture do
   @doc """
   Get gesture pinch delta
   """
-  @spec get_pinch_vector(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_pinch_vector(return \\ :value), to: NIF, as: :get_gesture_pinch_vector
+  @spec get_pinch_vector(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_pinch_vector(return \\ :auto), to: NIF, as: :get_gesture_pinch_vector
 
   @doc """
   Get gesture pinch angle

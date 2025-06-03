@@ -265,11 +265,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_loading
       @spec load_wave(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_wave(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -285,12 +285,12 @@ defmodule Zexray.NIF.Audio do
       @spec load_wave_from_memory(
               file_type :: binary,
               file_data :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_wave_from_memory(
             _file_type,
             _file_data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -317,11 +317,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_loading
       @spec load_sound(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -336,11 +336,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_loading
       @spec load_sound_from_wave(
               wave :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound_from_wave(
             _wave,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -355,11 +355,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_loading
       @spec load_sound_alias(
               source :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound_alias(
             _source,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -387,12 +387,12 @@ defmodule Zexray.NIF.Audio do
       @spec update_sound(
               sound :: tuple,
               data :: binary | [byte] | [integer] | [float],
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_sound(
             _sound,
             _data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -442,11 +442,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec play_sound(
               sound :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def play_sound(
             _sound,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -461,11 +461,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec stop_sound(
               sound :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def stop_sound(
             _sound,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -480,11 +480,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec pause_sound(
               sound :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def pause_sound(
             _sound,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -499,11 +499,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec resume_sound(
               sound :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def resume_sound(
             _sound,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -531,12 +531,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_volume(
               sound :: tuple,
               volume :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_volume(
             _sound,
             _volume,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -552,12 +552,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_pitch(
               sound :: tuple,
               pitch :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_pitch(
             _sound,
             _pitch,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -573,12 +573,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_pan(
               sound :: tuple,
               pan :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_pan(
             _sound,
             _pan,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -612,11 +612,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec get_sound_info(
               sound :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_sound_info(
             _sound,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -631,11 +631,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec wave_copy(
               wave :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def wave_copy(
             _wave,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -652,13 +652,13 @@ defmodule Zexray.NIF.Audio do
               wave :: tuple,
               init_frame :: integer,
               final_frame :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def wave_crop(
             _wave,
             _init_frame,
             _final_frame,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -676,14 +676,14 @@ defmodule Zexray.NIF.Audio do
               sample_rate :: integer,
               sample_size :: integer,
               channels :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def wave_format(
             _wave,
             _sample_rate,
             _sample_size,
             _channels,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -731,11 +731,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec get_wave_info(
               wave :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_wave_info(
             _wave,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -754,11 +754,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec load_sound_stream(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound_stream(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -773,11 +773,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec load_sound_stream_from_wave(
               wave :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound_stream_from_wave(
             _wave,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -792,11 +792,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec load_sound_stream_alias(
               source :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_sound_stream_alias(
             _source,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -824,12 +824,12 @@ defmodule Zexray.NIF.Audio do
       @spec update_sound_stream(
               sound_stream :: tuple,
               data :: nil | binary | [byte] | [integer] | [float],
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_sound_stream(
             _sound_stream,
             _data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -864,11 +864,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec play_sound_stream(
               sound_stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def play_sound_stream(
             _sound_stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -883,11 +883,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec stop_sound_stream(
               sound_stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def stop_sound_stream(
             _sound_stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -902,11 +902,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec pause_sound_stream(
               sound_stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def pause_sound_stream(
             _sound_stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -921,11 +921,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec resume_sound_stream(
               sound_stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def resume_sound_stream(
             _sound_stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -953,12 +953,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_stream_volume(
               sound_stream :: tuple,
               volume :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_volume(
             _sound_stream,
             _volume,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -974,12 +974,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_stream_pitch(
               sound_stream :: tuple,
               pitch :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_pitch(
             _sound_stream,
             _pitch,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -995,12 +995,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_stream_pan(
               sound_stream :: tuple,
               pan :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_pan(
             _sound_stream,
             _pan,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1011,12 +1011,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_sound_stream_looping(
               sound_stream :: tuple,
               looping :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_looping(
             _sound_stream,
             _looping,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1050,11 +1050,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec get_sound_stream_info(
               sound_stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_sound_stream_info(
             _sound_stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1073,11 +1073,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec load_music_stream(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_music_stream(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1093,12 +1093,12 @@ defmodule Zexray.NIF.Audio do
       @spec load_music_stream_from_memory(
               file_type :: binary,
               file_data :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_music_stream_from_memory(
             _file_type,
             _file_data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1125,11 +1125,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec play_music_stream(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def play_music_stream(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1156,11 +1156,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec update_music_stream(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_music_stream(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1187,11 +1187,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec stop_music_stream(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def stop_music_stream(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1206,11 +1206,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec pause_music_stream(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def pause_music_stream(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1225,11 +1225,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec resume_music_stream(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def resume_music_stream(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1245,12 +1245,12 @@ defmodule Zexray.NIF.Audio do
       @spec seek_music_stream(
               music :: tuple,
               position :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def seek_music_stream(
             _music,
             _position,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1266,12 +1266,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_music_volume(
               music :: tuple,
               volume :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_music_volume(
             _music,
             _volume,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1287,12 +1287,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_music_pitch(
               music :: tuple,
               pitch :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_music_pitch(
             _music,
             _pitch,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1308,12 +1308,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_music_pan(
               music :: tuple,
               pan :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_music_pan(
             _music,
             _pan,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1324,12 +1324,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_music_looping(
               music :: tuple,
               looping :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_music_looping(
             _music,
             _looping,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1363,11 +1363,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec get_music_info(
               music :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_music_info(
             _music,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1388,13 +1388,13 @@ defmodule Zexray.NIF.Audio do
               sample_rate :: non_neg_integer,
               sample_size :: non_neg_integer,
               channels :: non_neg_integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_audio_stream(
             _sample_rate,
             _sample_size,
             _channels,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1409,11 +1409,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec load_audio_stream_from_audio_info(
               info :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_audio_stream_from_audio_info(
             _info,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1441,12 +1441,12 @@ defmodule Zexray.NIF.Audio do
       @spec update_audio_stream(
               sound :: tuple,
               data :: binary | [byte] | [integer] | [float],
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_audio_stream(
             _sound,
             _data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1473,11 +1473,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec play_audio_stream(
               stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def play_audio_stream(
             _stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1492,11 +1492,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec pause_audio_stream(
               stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def pause_audio_stream(
             _stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1511,11 +1511,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec resume_audio_stream(
               stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def resume_audio_stream(
             _stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1542,11 +1542,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec stop_audio_stream(
               stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def stop_audio_stream(
             _stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1562,12 +1562,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_audio_stream_volume(
               stream :: tuple,
               volume :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_volume(
             _stream,
             _volume,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1583,12 +1583,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_audio_stream_pitch(
               stream :: tuple,
               pitch :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_pitch(
             _stream,
             _pitch,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1604,12 +1604,12 @@ defmodule Zexray.NIF.Audio do
       @spec set_audio_stream_pan(
               stream :: tuple,
               pan :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_pan(
             _stream,
             _pan,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1669,11 +1669,11 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec get_audio_stream_info(
               stream :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_audio_stream_info(
             _stream,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

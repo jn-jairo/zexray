@@ -119,5 +119,19 @@ pub fn must_return_resource(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
         return e.enif_is_identical(types.Atom.make(env, "resource"), argv[index]) != 0;
     }
 
+    // default to value
     return false;
+}
+
+pub fn must_return_resource_auto(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm, index: usize, term: e.ErlNifTerm) bool {
+    if (argc == index + 1) {
+        if (e.enif_is_identical(types.Atom.make(env, "resource"), argv[index]) != 0) {
+            return true;
+        } else if (e.enif_is_identical(types.Atom.make(env, "auto"), argv[index]) != 0) {
+            return types.is_term_resource(env, term);
+        }
+    }
+
+    // defaults to auto
+    return types.is_term_resource(env, term);
 }

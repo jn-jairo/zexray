@@ -213,8 +213,8 @@ defmodule Zexray.Window do
   Takes a screenshot of current screen
   """
   @doc group: :action
-  @spec screenshot(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  defdelegate screenshot(return \\ :value), to: NIF, as: :screenshot
+  @spec screenshot(return :: :auto | :value | :resource) :: Zexray.Type.Image.t_nif()
+  defdelegate screenshot(return \\ :auto), to: NIF, as: :screenshot
 
   @doc """
   Takes a screenshot of current screen (filename extension defines format)
@@ -347,15 +347,15 @@ defmodule Zexray.Window do
   Get window position XY on monitor
   """
   @doc group: :property
-  @spec get_position(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_position(return \\ :value), to: NIF, as: :get_window_position
+  @spec get_position(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_position(return \\ :auto), to: NIF, as: :get_window_position
 
   @doc """
   Get window scale DPI factor
   """
   @doc group: :property
-  @spec get_scale_dpi(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_scale_dpi(return \\ :value), to: NIF, as: :get_window_scale_dpi
+  @spec get_scale_dpi(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_scale_dpi(return \\ :auto), to: NIF, as: :get_window_scale_dpi
 
   ###############
   #  Clipboard  #
@@ -379,6 +379,6 @@ defmodule Zexray.Window do
   Get clipboard image content
   """
   @doc group: :clipboard
-  @spec get_clipboard_image(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  defdelegate get_clipboard_image(return \\ :value), to: NIF, as: :get_clipboard_image
+  @spec get_clipboard_image(return :: :auto | :value | :resource) :: Zexray.Type.Image.t_nif()
+  defdelegate get_clipboard_image(return \\ :auto), to: NIF, as: :get_clipboard_image
 end

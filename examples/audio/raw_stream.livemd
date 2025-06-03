@@ -74,7 +74,7 @@ defmodule Example do
             # Init raw audio stream (sample rate: 44100, sample size: 16bit-short, channels: 1-mono) 
             stream =
               Zexray.Audio.load_stream(44_100, 16, 1, :resource)
-              |> Zexray.Audio.play(:resource)
+              |> Zexray.Audio.play()
 
             example_state(stream: stream)
           end,
@@ -156,7 +156,7 @@ defmodule Example do
           samples = Enum.reverse(samples)
 
           # Copy finished frame to audio stream
-          Zexray.Audio.update(stream, samples, :resource)
+          Zexray.Audio.update(stream, samples)
 
           {audio_frequency, sine_idx}
         else

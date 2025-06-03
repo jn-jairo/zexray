@@ -30,15 +30,15 @@ defmodule Zexray.Shape do
   Get texture that is used for shapes drawing
   """
   @doc group: :configuration
-  @spec get_texture(return :: :value | :resource) :: Zexray.Type.Texture2D.t_nif()
-  defdelegate get_texture(return \\ :value), to: NIF, as: :get_shapes_texture
+  @spec get_texture(return :: :auto | :value | :resource) :: Zexray.Type.Texture2D.t_nif()
+  defdelegate get_texture(return \\ :auto), to: NIF, as: :get_shapes_texture
 
   @doc """
   Get texture source rectangle that is used for shapes drawing
   """
   @doc group: :configuration
-  @spec get_texture_rectangle(return :: :value | :resource) :: Zexray.Type.Rectangle.t_nif()
-  defdelegate get_texture_rectangle(return \\ :value), to: NIF, as: :get_shapes_texture_rectangle
+  @spec get_texture_rectangle(return :: :auto | :value | :resource) :: Zexray.Type.Rectangle.t_nif()
+  defdelegate get_texture_rectangle(return \\ :auto), to: NIF, as: :get_shapes_texture_rectangle
 
   ###################
   #  Basic drawing  #
@@ -977,13 +977,13 @@ defmodule Zexray.Shape do
           start_pos :: Zexray.Type.Vector2.t_all(),
           end_pos :: Zexray.Type.Vector2.t_all(),
           t :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_spline_point_linear(
                 start_pos,
                 end_pos,
                 t,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_spline_point_linear
@@ -998,7 +998,7 @@ defmodule Zexray.Shape do
           p3 :: Zexray.Type.Vector2.t_all(),
           p4 :: Zexray.Type.Vector2.t_all(),
           t :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_spline_point_basis(
                 p1,
@@ -1006,7 +1006,7 @@ defmodule Zexray.Shape do
                 p3,
                 p4,
                 t,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_spline_point_basis
@@ -1021,7 +1021,7 @@ defmodule Zexray.Shape do
           p3 :: Zexray.Type.Vector2.t_all(),
           p4 :: Zexray.Type.Vector2.t_all(),
           t :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_spline_point_catmull_rom(
                 p1,
@@ -1029,7 +1029,7 @@ defmodule Zexray.Shape do
                 p3,
                 p4,
                 t,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_spline_point_catmull_rom
@@ -1043,14 +1043,14 @@ defmodule Zexray.Shape do
           c2 :: Zexray.Type.Vector2.t_all(),
           p3 :: Zexray.Type.Vector2.t_all(),
           t :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_spline_point_bezier_quad(
                 p1,
                 c2,
                 p3,
                 t,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_spline_point_bezier_quad
@@ -1065,7 +1065,7 @@ defmodule Zexray.Shape do
           c3 :: Zexray.Type.Vector2.t_all(),
           p4 :: Zexray.Type.Vector2.t_all(),
           t :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_spline_point_bezier_cubic(
                 p1,
@@ -1073,7 +1073,7 @@ defmodule Zexray.Shape do
                 c3,
                 p4,
                 t,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_spline_point_bezier_cubic
@@ -1273,14 +1273,14 @@ defmodule Zexray.Shape do
           end_pos1 :: Zexray.Type.Vector2.t_all(),
           start_pos2 :: Zexray.Type.Vector2.t_all(),
           end_pos2 :: Zexray.Type.Vector2.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: {collision :: boolean, collision_point :: Zexray.Type.Vector2.t_nif()}
   defdelegate collision_lines_ex?(
                 start_pos1,
                 end_pos1,
                 start_pos2,
                 end_pos2,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :check_collision_lines
@@ -1292,12 +1292,12 @@ defmodule Zexray.Shape do
   @spec collision_recs_ex?(
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: {collision :: boolean, collision_rec :: Zexray.Type.Rectangle.t_nif()}
   def collision_recs_ex?(
         rec1,
         rec2,
-        return \\ :value
+        return \\ :auto
       ) do
     collision_rec =
       NIF.get_collision_rec(
@@ -1331,12 +1331,12 @@ defmodule Zexray.Shape do
   @spec get_collision_rec(
           rec1 :: Zexray.Type.Rectangle.t_all(),
           rec2 :: Zexray.Type.Rectangle.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
   defdelegate get_collision_rec(
                 rec1,
                 rec2,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_collision_rec

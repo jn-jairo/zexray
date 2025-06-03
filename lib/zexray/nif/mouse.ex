@@ -109,8 +109,8 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_position(return :: :value | :resource) :: tuple
-      def get_mouse_position(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_mouse_position(return :: :auto | :value | :resource) :: tuple
+      def get_mouse_position(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Get mouse delta between frames
@@ -121,8 +121,8 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_delta(return :: :value | :resource) :: tuple
-      def get_mouse_delta(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_mouse_delta(return :: :auto | :value | :resource) :: tuple
+      def get_mouse_delta(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Set mouse position XY
@@ -202,8 +202,8 @@ defmodule Zexray.NIF.Mouse do
       ```
       """
       @doc group: :input_mouse
-      @spec get_mouse_wheel_move_v(return :: :value | :resource) :: tuple
-      def get_mouse_wheel_move_v(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_mouse_wheel_move_v(return :: :auto | :value | :resource) :: tuple
+      def get_mouse_wheel_move_v(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Set mouse cursor

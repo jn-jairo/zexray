@@ -174,14 +174,14 @@ defmodule Zexray.Text do
           text :: binary,
           font_size :: float,
           spacing :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate measure_ex(
                 font,
                 text,
                 font_size,
                 spacing,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :measure_text_ex
@@ -208,12 +208,12 @@ defmodule Zexray.Text do
   @spec get_glyph_info(
           font :: Zexray.Type.Font.t_all(),
           codepoint :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.GlyphInfo.t_nif()
   defdelegate get_glyph_info(
                 font,
                 codepoint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_glyph_info
@@ -225,12 +225,12 @@ defmodule Zexray.Text do
   @spec get_glyph_atlas_rec(
           font :: Zexray.Type.Font.t_all(),
           codepoint :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
   defdelegate get_glyph_atlas_rec(
                 font,
                 codepoint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_glyph_atlas_rec

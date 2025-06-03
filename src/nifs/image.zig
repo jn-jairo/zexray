@@ -1171,7 +1171,7 @@ fn nif_image_format(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1206,7 +1206,7 @@ fn nif_image_to_pot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1243,7 +1243,7 @@ fn nif_image_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1280,7 +1280,7 @@ fn nif_image_alpha_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1315,7 +1315,7 @@ fn nif_image_alpha_clear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -1356,7 +1356,7 @@ fn nif_image_alpha_mask(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1393,7 +1393,7 @@ fn nif_image_alpha_premultiply(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1424,7 +1424,7 @@ fn nif_image_blur_gaussian(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1459,7 +1459,7 @@ fn nif_image_kernel_convolution(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1497,7 +1497,7 @@ fn nif_image_resize(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -1536,7 +1536,7 @@ fn nif_image_resize_nn(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -1575,7 +1575,7 @@ fn nif_image_resize_canvas(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 6);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 6, argv[0]);
 
     // Arguments
 
@@ -1628,7 +1628,7 @@ fn nif_image_mipmaps(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1659,7 +1659,7 @@ fn nif_image_dither(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -1706,7 +1706,7 @@ fn nif_image_flip_vertical(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1737,7 +1737,7 @@ fn nif_image_flip_horizontal(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1768,7 +1768,7 @@ fn nif_image_rotate(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1803,7 +1803,7 @@ fn nif_image_rotate_cw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1834,7 +1834,7 @@ fn nif_image_rotate_ccw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1865,7 +1865,7 @@ fn nif_image_color_tint(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1902,7 +1902,7 @@ fn nif_image_color_invert(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1933,7 +1933,7 @@ fn nif_image_color_grayscale(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1964,7 +1964,7 @@ fn nif_image_color_contrast(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1999,7 +1999,7 @@ fn nif_image_color_brightness(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2034,7 +2034,7 @@ fn nif_image_color_replace(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2244,7 +2244,7 @@ fn nif_image_clear_background(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2281,7 +2281,7 @@ fn nif_image_draw_pixel(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2326,7 +2326,7 @@ fn nif_image_draw_pixel_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2369,7 +2369,7 @@ fn nif_image_draw_line(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 6);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 6, argv[0]);
 
     // Arguments
 
@@ -2422,7 +2422,7 @@ fn nif_image_draw_line_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2471,7 +2471,7 @@ fn nif_image_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -2524,7 +2524,7 @@ fn nif_image_draw_circle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -2573,7 +2573,7 @@ fn nif_image_draw_circle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2620,7 +2620,7 @@ fn nif_image_draw_circle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -2669,7 +2669,7 @@ fn nif_image_draw_circle_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2716,7 +2716,7 @@ fn nif_image_draw_rectangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 6);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 6, argv[0]);
 
     // Arguments
 
@@ -2769,7 +2769,7 @@ fn nif_image_draw_rectangle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2818,7 +2818,7 @@ fn nif_image_draw_rectangle_rec(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2861,7 +2861,7 @@ fn nif_image_draw_rectangle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -2908,7 +2908,7 @@ fn nif_image_draw_triangle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -2963,7 +2963,7 @@ fn nif_image_draw_triangle_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 7);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 7, argv[0]);
 
     // Arguments
 
@@ -3030,7 +3030,7 @@ fn nif_image_draw_triangle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -3085,7 +3085,7 @@ fn nif_image_draw_triangle_fan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -3129,7 +3129,7 @@ fn nif_image_draw_triangle_strip(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -3173,7 +3173,7 @@ fn nif_image_draw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -3228,7 +3228,7 @@ fn nif_image_draw_text(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 6);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 6, argv[0]);
 
     // Arguments
 
@@ -3283,7 +3283,7 @@ fn nif_image_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 7);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 7, argv[0]);
 
     // Arguments
 

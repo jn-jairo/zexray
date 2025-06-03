@@ -122,8 +122,8 @@ defmodule Zexray.NIF.Shape do
       ```
       """
       @doc group: :shapes_configuration
-      @spec get_shapes_texture(return :: :value | :resource) :: tuple
-      def get_shapes_texture(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_shapes_texture(return :: :auto | :value | :resource) :: tuple
+      def get_shapes_texture(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Get texture source rectangle that is used for shapes drawing
@@ -134,8 +134,8 @@ defmodule Zexray.NIF.Shape do
       ```
       """
       @doc group: :shapes_configuration
-      @spec get_shapes_texture_rectangle(return :: :value | :resource) :: tuple
-      def get_shapes_texture_rectangle(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_shapes_texture_rectangle(return :: :auto | :value | :resource) :: tuple
+      def get_shapes_texture_rectangle(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       ##########################
       #  Basic shapes drawing  #
@@ -1267,13 +1267,13 @@ defmodule Zexray.NIF.Shape do
               start_pos :: tuple,
               end_pos :: tuple,
               t :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_linear(
             _start_pos,
             _end_pos,
             _t,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1292,7 +1292,7 @@ defmodule Zexray.NIF.Shape do
               p3 :: tuple,
               p4 :: tuple,
               t :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_basis(
             _p1,
@@ -1300,7 +1300,7 @@ defmodule Zexray.NIF.Shape do
             _p3,
             _p4,
             _t,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1319,7 +1319,7 @@ defmodule Zexray.NIF.Shape do
               p3 :: tuple,
               p4 :: tuple,
               t :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_catmull_rom(
             _p1,
@@ -1327,7 +1327,7 @@ defmodule Zexray.NIF.Shape do
             _p3,
             _p4,
             _t,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1345,14 +1345,14 @@ defmodule Zexray.NIF.Shape do
               c2 :: tuple,
               p3 :: tuple,
               t :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_bezier_quad(
             _p1,
             _c2,
             _p3,
             _t,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1371,7 +1371,7 @@ defmodule Zexray.NIF.Shape do
               c3 :: tuple,
               p4 :: tuple,
               t :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_bezier_cubic(
             _p1,
@@ -1379,7 +1379,7 @@ defmodule Zexray.NIF.Shape do
             _c3,
             _p4,
             _t,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1592,14 +1592,14 @@ defmodule Zexray.NIF.Shape do
               end_pos1 :: tuple,
               start_pos2 :: tuple,
               end_pos2 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: {collision :: boolean, collision_point :: tuple}
       def check_collision_lines(
             _start_pos1,
             _end_pos1,
             _start_pos2,
             _end_pos2,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1615,12 +1615,12 @@ defmodule Zexray.NIF.Shape do
       @spec get_collision_rec(
               rec1 :: tuple,
               rec2 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_collision_rec(
             _rec1,
             _rec2,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

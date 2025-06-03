@@ -39,12 +39,12 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_screen_to_world_ray(
               position :: tuple,
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_screen_to_world_ray(
             _position,
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -62,14 +62,14 @@ defmodule Zexray.NIF.ScreenSpace do
               camera :: tuple,
               width :: integer,
               height :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_screen_to_world_ray_ex(
             _position,
             _camera,
             _width,
             _height,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -85,12 +85,12 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_world_to_screen(
               position :: tuple,
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_world_to_screen(
             _position,
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -108,14 +108,14 @@ defmodule Zexray.NIF.ScreenSpace do
               camera :: tuple,
               width :: integer,
               height :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_world_to_screen_ex(
             _position,
             _camera,
             _width,
             _height,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -131,12 +131,12 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_world_to_screen_2d(
               position :: tuple,
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_world_to_screen_2d(
             _position,
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -152,12 +152,12 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_screen_to_world_2d(
               position :: tuple,
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_screen_to_world_2d(
             _position,
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -172,11 +172,11 @@ defmodule Zexray.NIF.ScreenSpace do
       @doc group: :screen_space
       @spec get_camera_matrix(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_matrix(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -191,11 +191,11 @@ defmodule Zexray.NIF.ScreenSpace do
       @doc group: :screen_space
       @spec get_camera_matrix_2d(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_matrix_2d(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

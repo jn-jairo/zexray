@@ -85,8 +85,8 @@ defmodule Example do
           fn ->
             music =
               Zexray.Audio.load_sound_stream("#{@resources_dir}/country.mp3", :resource)
-              |> Zexray.Audio.set_looping(true, :resource)
-              |> Zexray.Audio.play(:resource)
+              |> Zexray.Audio.set_looping(true)
+              |> Zexray.Audio.play()
 
             # Allocate buffer for the delay effect
             # 1 second delay (device sampleRate*channels)
@@ -133,7 +133,7 @@ defmodule Example do
           {effect_delay_state, samples} =
             process_effect_delay(effect_delay_state, samples, effect_delay_enabled)
 
-          Zexray.Audio.update(music, samples, :resource)
+          Zexray.Audio.update(music, samples)
 
           {effect_lpf_state, effect_delay_state}
         else
@@ -143,16 +143,16 @@ defmodule Example do
       # Restart music playing (stop and play)
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
         music
-        |> Zexray.Audio.stop(:resource)
-        |> Zexray.Audio.play(:resource)
+        |> Zexray.Audio.stop()
+        |> Zexray.Audio.play()
       end
 
       # Pause/Resume music playing
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
         if Zexray.Audio.playing?(music) do
-          Zexray.Audio.pause(music, :resource)
+          Zexray.Audio.pause(music)
         else
-          Zexray.Audio.resume(music, :resource)
+          Zexray.Audio.resume(music)
         end
       end
 

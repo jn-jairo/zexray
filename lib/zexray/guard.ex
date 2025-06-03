@@ -3,7 +3,7 @@ defmodule Zexray.Guard do
   Guards
   """
 
-  defguard is_nif_return(value) when value in [:value, :resource]
+  defguard is_nif_return(value) when value in [:auto, :value, :resource]
 
   defguard is_non_neg_integer(value) when is_integer(value) and value >= 0
 

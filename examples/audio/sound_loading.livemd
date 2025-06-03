@@ -72,11 +72,11 @@ defmodule Example do
       # Update
 
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
-        Zexray.Audio.play(fx_wav, :resource)
+        Zexray.Audio.play(fx_wav)
       end
 
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:enter)) do
-        Zexray.Audio.play(fx_ogg, :resource)
+        Zexray.Audio.play(fx_ogg)
       end
 
       # Draw

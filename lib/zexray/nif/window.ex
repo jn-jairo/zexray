@@ -486,8 +486,8 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_window_position(return :: :value | :resource) :: tuple
-      def get_window_position(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_window_position(return :: :auto | :value | :resource) :: tuple
+      def get_window_position(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Get window scale DPI factor
@@ -498,8 +498,8 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_window_scale_dpi(return :: :value | :resource) :: tuple
-      def get_window_scale_dpi(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_window_scale_dpi(return :: :auto | :value | :resource) :: tuple
+      def get_window_scale_dpi(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Set clipboard text content
@@ -534,8 +534,8 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec get_clipboard_image(return :: :value | :resource) :: tuple
-      def get_clipboard_image(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec get_clipboard_image(return :: :auto | :value | :resource) :: tuple
+      def get_clipboard_image(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Enable waiting for events on EndDrawing(), no automatic event polling
@@ -565,8 +565,8 @@ defmodule Zexray.NIF.Window do
       Takes a screenshot of current screen
       """
       @doc group: :window
-      @spec screenshot(return :: :value | :resource) :: tuple
-      def screenshot(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec screenshot(return :: :auto | :value | :resource) :: tuple
+      def screenshot(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Takes a screenshot of current screen (filename extension defines format)

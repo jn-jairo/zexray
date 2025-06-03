@@ -1576,7 +1576,7 @@ fn nif_upload_mesh(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1898,7 +1898,7 @@ fn nif_gen_mesh_tangents(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2499,7 +2499,7 @@ fn nif_set_material_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2540,7 +2540,7 @@ fn nif_set_model_mesh_material(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2641,7 +2641,7 @@ fn nif_update_model_animation(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -2682,7 +2682,7 @@ fn nif_update_model_animation_bones(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 

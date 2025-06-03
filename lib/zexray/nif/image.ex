@@ -204,11 +204,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_loading
       @spec load_image(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_image(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -227,7 +227,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               format :: integer,
               header_size :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_image_raw(
             _file_name,
@@ -235,7 +235,7 @@ defmodule Zexray.NIF.Image do
             _height,
             _format,
             _header_size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -250,11 +250,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_loading
       @spec load_image_anim(
               file_name :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: {image :: tuple, frames :: integer}
       def load_image_anim(
             _file_name,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -270,12 +270,12 @@ defmodule Zexray.NIF.Image do
       @spec load_image_anim_from_memory(
               file_type :: binary,
               file_data :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: {image :: tuple, frames :: integer}
       def load_image_anim_from_memory(
             _file_type,
             _file_data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -291,12 +291,12 @@ defmodule Zexray.NIF.Image do
       @spec load_image_from_memory(
               file_type :: binary,
               file_data :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_image_from_memory(
             _file_type,
             _file_data,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -311,11 +311,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_loading
       @spec load_image_from_texture(
               texture :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def load_image_from_texture(
             _texture,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -328,8 +328,8 @@ defmodule Zexray.NIF.Image do
       ```
       """
       @doc group: :image_loading
-      @spec load_image_from_screen(return :: :value | :resource) :: tuple
-      def load_image_from_screen(_return \\ :value), do: :erlang.nif_error(:undef)
+      @spec load_image_from_screen(return :: :auto | :value | :resource) :: tuple
+      def load_image_from_screen(_return \\ :auto), do: :erlang.nif_error(:undef)
 
       @doc """
       Check if an image is valid (data and parameters)
@@ -398,13 +398,13 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_color(
             _width,
             _height,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -423,7 +423,7 @@ defmodule Zexray.NIF.Image do
               direction :: integer,
               color_start :: tuple,
               color_end :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_gradient_linear(
             _width,
@@ -431,7 +431,7 @@ defmodule Zexray.NIF.Image do
             _direction,
             _color_start,
             _color_end,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -450,7 +450,7 @@ defmodule Zexray.NIF.Image do
               density :: float,
               color_inner :: tuple,
               color_outer :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_gradient_radial(
             _width,
@@ -458,7 +458,7 @@ defmodule Zexray.NIF.Image do
             _density,
             _color_inner,
             _color_outer,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -477,7 +477,7 @@ defmodule Zexray.NIF.Image do
               density :: float,
               color_inner :: tuple,
               color_outer :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_gradient_square(
             _width,
@@ -485,7 +485,7 @@ defmodule Zexray.NIF.Image do
             _density,
             _color_inner,
             _color_outer,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -505,7 +505,7 @@ defmodule Zexray.NIF.Image do
               checks_y :: integer,
               color_1 :: tuple,
               color_2 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_checked(
             _width,
@@ -514,7 +514,7 @@ defmodule Zexray.NIF.Image do
             _checks_y,
             _color_1,
             _color_2,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -531,13 +531,13 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               factor :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_white_noise(
             _width,
             _height,
             _factor,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -556,7 +556,7 @@ defmodule Zexray.NIF.Image do
               offset_x :: integer,
               offset_y :: integer,
               scale :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_perlin_noise(
             _width,
@@ -564,7 +564,7 @@ defmodule Zexray.NIF.Image do
             _offset_x,
             _offset_y,
             _scale,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -581,13 +581,13 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               tile_size :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_cellular(
             _width,
             _height,
             _tile_size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -604,13 +604,13 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               text :: binary,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_text(
             _width,
             _height,
             _text,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -629,11 +629,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_copy(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_copy(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -649,12 +649,12 @@ defmodule Zexray.NIF.Image do
       @spec image_from_image(
               image :: tuple,
               rec :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_from_image(
             _image,
             _rec,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -670,12 +670,12 @@ defmodule Zexray.NIF.Image do
       @spec image_from_channel(
               image :: tuple,
               selected_channel :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_from_channel(
             _image,
             _selected_channel,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -692,13 +692,13 @@ defmodule Zexray.NIF.Image do
               text :: binary,
               font_size :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_text(
             _text,
             _font_size,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -717,7 +717,7 @@ defmodule Zexray.NIF.Image do
               font_size :: float,
               spacing :: float,
               tint :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_text_ex(
             _font,
@@ -725,7 +725,7 @@ defmodule Zexray.NIF.Image do
             _font_size,
             _spacing,
             _tint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -741,12 +741,12 @@ defmodule Zexray.NIF.Image do
       @spec image_format(
               image :: tuple,
               new_format :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_format(
             _image,
             _new_format,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -762,12 +762,12 @@ defmodule Zexray.NIF.Image do
       @spec image_to_pot(
               image :: tuple,
               fill :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_to_pot(
             _image,
             _fill,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -783,12 +783,12 @@ defmodule Zexray.NIF.Image do
       @spec image_crop(
               image :: tuple,
               crop :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_crop(
             _image,
             _crop,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -804,12 +804,12 @@ defmodule Zexray.NIF.Image do
       @spec image_alpha_crop(
               image :: tuple,
               threshold :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_crop(
             _image,
             _threshold,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -826,13 +826,13 @@ defmodule Zexray.NIF.Image do
               image :: tuple,
               color :: tuple,
               threshold :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_clear(
             _image,
             _color,
             _threshold,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -848,12 +848,12 @@ defmodule Zexray.NIF.Image do
       @spec image_alpha_mask(
               image :: tuple,
               alpha_mask :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_mask(
             _image,
             _alpha_mask,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -868,11 +868,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_alpha_premultiply(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_premultiply(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -888,12 +888,12 @@ defmodule Zexray.NIF.Image do
       @spec image_blur_gaussian(
               image :: tuple,
               blur_size :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_blur_gaussian(
             _image,
             _blur_size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -909,12 +909,12 @@ defmodule Zexray.NIF.Image do
       @spec image_kernel_convolution(
               image :: tuple,
               kernel :: [float],
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_kernel_convolution(
             _image,
             _kernel,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -931,13 +931,13 @@ defmodule Zexray.NIF.Image do
               image :: tuple,
               new_width :: integer,
               new_height :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_resize(
             _image,
             _new_width,
             _new_height,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -954,13 +954,13 @@ defmodule Zexray.NIF.Image do
               image :: tuple,
               new_width :: integer,
               new_height :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_resize_nn(
             _image,
             _new_width,
             _new_height,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -980,7 +980,7 @@ defmodule Zexray.NIF.Image do
               offset_x :: integer,
               offset_y :: integer,
               fill :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_resize_canvas(
             _image,
@@ -989,7 +989,7 @@ defmodule Zexray.NIF.Image do
             _offset_x,
             _offset_y,
             _fill,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1004,11 +1004,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_mipmaps(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_mipmaps(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1027,7 +1027,7 @@ defmodule Zexray.NIF.Image do
               g_bpp :: integer,
               b_bpp :: integer,
               a_bpp :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_dither(
             _image,
@@ -1035,7 +1035,7 @@ defmodule Zexray.NIF.Image do
             _g_bpp,
             _b_bpp,
             _a_bpp,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1050,11 +1050,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_flip_vertical(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_flip_vertical(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1069,11 +1069,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_flip_horizontal(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_flip_horizontal(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1089,12 +1089,12 @@ defmodule Zexray.NIF.Image do
       @spec image_rotate(
               image :: tuple,
               degrees :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_rotate(
             _image,
             _degrees,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1109,11 +1109,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_rotate_cw(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_rotate_cw(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1128,11 +1128,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_rotate_ccw(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_rotate_ccw(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1148,12 +1148,12 @@ defmodule Zexray.NIF.Image do
       @spec image_color_tint(
               image :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_tint(
             _image,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1168,11 +1168,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_color_invert(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_invert(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1187,11 +1187,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_color_grayscale(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_grayscale(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1207,12 +1207,12 @@ defmodule Zexray.NIF.Image do
       @spec image_color_contrast(
               image :: tuple,
               contrast :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_contrast(
             _image,
             _contrast,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1228,12 +1228,12 @@ defmodule Zexray.NIF.Image do
       @spec image_color_brightness(
               image :: tuple,
               brightness :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_brightness(
             _image,
             _brightness,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1250,13 +1250,13 @@ defmodule Zexray.NIF.Image do
               image :: tuple,
               color :: tuple,
               replace :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_color_replace(
             _image,
             _color,
             _replace,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1271,11 +1271,11 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec load_image_colors(
               image :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: [tuple]
       def load_image_colors(
             _image,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1291,12 +1291,12 @@ defmodule Zexray.NIF.Image do
       @spec load_image_palette(
               image :: tuple,
               max_palette_size :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: [tuple]
       def load_image_palette(
             _image,
             _max_palette_size,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1312,12 +1312,12 @@ defmodule Zexray.NIF.Image do
       @spec get_image_alpha_border(
               image :: tuple,
               threshold :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_image_alpha_border(
             _image,
             _threshold,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1334,13 +1334,13 @@ defmodule Zexray.NIF.Image do
               image :: tuple,
               x :: integer,
               y :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_image_color(
             _image,
             _x,
             _y,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1360,12 +1360,12 @@ defmodule Zexray.NIF.Image do
       @spec image_clear_background(
               dst :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_clear_background(
             _dst,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1383,14 +1383,14 @@ defmodule Zexray.NIF.Image do
               pos_x :: integer,
               pos_y :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_pixel(
             _dst,
             _pos_x,
             _pos_y,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1407,13 +1407,13 @@ defmodule Zexray.NIF.Image do
               dst :: tuple,
               position :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_pixel_v(
             _dst,
             _position,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1433,7 +1433,7 @@ defmodule Zexray.NIF.Image do
               end_pos_x :: integer,
               end_pos_y :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_line(
             _dst,
@@ -1442,7 +1442,7 @@ defmodule Zexray.NIF.Image do
             _end_pos_x,
             _end_pos_y,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1460,14 +1460,14 @@ defmodule Zexray.NIF.Image do
               start_pos :: tuple,
               end_pos :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_line_v(
             _dst,
             _start_pos,
             _end_pos,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1486,7 +1486,7 @@ defmodule Zexray.NIF.Image do
               end_pos :: tuple,
               thick :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_line_ex(
             _dst,
@@ -1494,7 +1494,7 @@ defmodule Zexray.NIF.Image do
             _end_pos,
             _thick,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1513,7 +1513,7 @@ defmodule Zexray.NIF.Image do
               center_y :: integer,
               radius :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_circle(
             _dst,
@@ -1521,7 +1521,7 @@ defmodule Zexray.NIF.Image do
             _center_y,
             _radius,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1539,14 +1539,14 @@ defmodule Zexray.NIF.Image do
               center :: tuple,
               radius :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_circle_v(
             _dst,
             _center,
             _radius,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1565,7 +1565,7 @@ defmodule Zexray.NIF.Image do
               center_y :: integer,
               radius :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_circle_lines(
             _dst,
@@ -1573,7 +1573,7 @@ defmodule Zexray.NIF.Image do
             _center_y,
             _radius,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1591,14 +1591,14 @@ defmodule Zexray.NIF.Image do
               center :: tuple,
               radius :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_circle_lines_v(
             _dst,
             _center,
             _radius,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1618,7 +1618,7 @@ defmodule Zexray.NIF.Image do
               width :: integer,
               height :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_rectangle(
             _dst,
@@ -1627,7 +1627,7 @@ defmodule Zexray.NIF.Image do
             _width,
             _height,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1645,14 +1645,14 @@ defmodule Zexray.NIF.Image do
               position :: tuple,
               size :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_rectangle_v(
             _dst,
             _position,
             _size,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1669,13 +1669,13 @@ defmodule Zexray.NIF.Image do
               dst :: tuple,
               rec :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_rectangle_rec(
             _dst,
             _rec,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1693,14 +1693,14 @@ defmodule Zexray.NIF.Image do
               rec :: tuple,
               thick :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_rectangle_lines(
             _dst,
             _rec,
             _thick,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1719,7 +1719,7 @@ defmodule Zexray.NIF.Image do
               v2 :: tuple,
               v3 :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_triangle(
             _dst,
@@ -1727,7 +1727,7 @@ defmodule Zexray.NIF.Image do
             _v2,
             _v3,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1748,7 +1748,7 @@ defmodule Zexray.NIF.Image do
               c1 :: tuple,
               c2 :: tuple,
               c3 :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_triangle_ex(
             _dst,
@@ -1758,7 +1758,7 @@ defmodule Zexray.NIF.Image do
             _c1,
             _c2,
             _c3,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1777,7 +1777,7 @@ defmodule Zexray.NIF.Image do
               v2 :: tuple,
               v3 :: tuple,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_triangle_lines(
             _dst,
@@ -1785,7 +1785,7 @@ defmodule Zexray.NIF.Image do
             _v2,
             _v3,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1802,13 +1802,13 @@ defmodule Zexray.NIF.Image do
               dst :: tuple,
               points :: [tuple],
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_triangle_fan(
             _dst,
             _points,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1825,13 +1825,13 @@ defmodule Zexray.NIF.Image do
               dst :: tuple,
               points :: [tuple],
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_triangle_strip(
             _dst,
             _points,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1850,7 +1850,7 @@ defmodule Zexray.NIF.Image do
               src_rec :: tuple,
               dst_rec :: tuple,
               tint :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw(
             _dst,
@@ -1858,7 +1858,7 @@ defmodule Zexray.NIF.Image do
             _src_rec,
             _dst_rec,
             _tint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1878,7 +1878,7 @@ defmodule Zexray.NIF.Image do
               pos_y :: integer,
               font_size :: integer,
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_text(
             _dst,
@@ -1887,7 +1887,7 @@ defmodule Zexray.NIF.Image do
             _pos_y,
             _font_size,
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1908,7 +1908,7 @@ defmodule Zexray.NIF.Image do
               font_size :: float,
               spacing :: float,
               tint :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def image_draw_text_ex(
             _dst,
@@ -1918,7 +1918,7 @@ defmodule Zexray.NIF.Image do
             _font_size,
             _spacing,
             _tint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

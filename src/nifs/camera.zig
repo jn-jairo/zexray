@@ -50,7 +50,7 @@ fn nif_update_camera(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -85,7 +85,7 @@ fn nif_update_camera_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -229,7 +229,7 @@ fn nif_camera_move_forward(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -268,7 +268,7 @@ fn nif_camera_move_up(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -303,7 +303,7 @@ fn nif_camera_move_right(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -342,7 +342,7 @@ fn nif_camera_move_to_target(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -380,7 +380,7 @@ fn nif_camera_yaw(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -423,7 +423,7 @@ fn nif_camera_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 5);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 5, argv[0]);
 
     // Arguments
 
@@ -472,7 +472,7 @@ fn nif_camera_roll(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 

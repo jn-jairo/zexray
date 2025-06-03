@@ -92,11 +92,11 @@ defmodule Zexray.Vr do
   """
   @spec load_vr_stereo_config(
           device :: Zexray.Type.VrDeviceInfo.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.VrStereoConfig.t_nif()
   defdelegate load_vr_stereo_config(
                 device,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_vr_stereo_config

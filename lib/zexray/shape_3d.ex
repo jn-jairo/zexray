@@ -426,11 +426,11 @@ defmodule Zexray.Shape3D do
   @doc group: :model_management
   @spec load_model(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Model.t_nif()
   defdelegate load_model(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_model
@@ -441,11 +441,11 @@ defmodule Zexray.Shape3D do
   @doc group: :model_management
   @spec load_model_from_mesh(
           mesh :: Zexray.Type.Mesh.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Model.t_nif()
   defdelegate load_model_from_mesh(
                 mesh,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_model_from_mesh
@@ -463,11 +463,11 @@ defmodule Zexray.Shape3D do
   @doc group: :model_management
   @spec get_model_bounding_box(
           model :: Zexray.Type.Model.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.BoundingBox.t_nif()
   defdelegate get_model_bounding_box(
                 model,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_model_bounding_box
@@ -701,12 +701,12 @@ defmodule Zexray.Shape3D do
   @spec upload_mesh(
           mesh :: Zexray.Type.Mesh.t_all(),
           dynamic :: boolean,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate upload_mesh(
                 mesh,
                 dynamic,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :upload_mesh
@@ -775,11 +775,11 @@ defmodule Zexray.Shape3D do
   @doc group: :mesh_management
   @spec get_mesh_bounding_box(
           mesh :: Zexray.Type.Mesh.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.BoundingBox.t_nif()
   defdelegate get_mesh_bounding_box(
                 mesh,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_mesh_bounding_box
@@ -790,11 +790,11 @@ defmodule Zexray.Shape3D do
   @doc group: :mesh_management
   @spec gen_mesh_tangents(
           mesh :: Zexray.Type.Mesh.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_tangents(
                 mesh,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_tangents
@@ -825,12 +825,12 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_poly(
           sides :: integer,
           radius :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_poly(
                 sides,
                 radius,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_poly
@@ -844,14 +844,14 @@ defmodule Zexray.Shape3D do
           length :: float,
           res_x :: integer,
           res_z :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_plane(
                 width,
                 length,
                 res_x,
                 res_z,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_plane
@@ -864,13 +864,13 @@ defmodule Zexray.Shape3D do
           width :: float,
           height :: float,
           length :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cube(
                 width,
                 height,
                 length,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_cube
@@ -883,13 +883,13 @@ defmodule Zexray.Shape3D do
           radius :: float,
           rings :: integer,
           slices :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_sphere(
                 radius,
                 rings,
                 slices,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_sphere
@@ -902,13 +902,13 @@ defmodule Zexray.Shape3D do
           radius :: float,
           rings :: integer,
           slices :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_hemi_sphere(
                 radius,
                 rings,
                 slices,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_hemi_sphere
@@ -921,13 +921,13 @@ defmodule Zexray.Shape3D do
           radius :: float,
           height :: float,
           slices :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cylinder(
                 radius,
                 height,
                 slices,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_cylinder
@@ -940,13 +940,13 @@ defmodule Zexray.Shape3D do
           radius :: float,
           height :: float,
           slices :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cone(
                 radius,
                 height,
                 slices,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_cone
@@ -960,14 +960,14 @@ defmodule Zexray.Shape3D do
           size :: float,
           rad_seg :: integer,
           sides :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_torus(
                 radius,
                 size,
                 rad_seg,
                 sides,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_torus
@@ -981,14 +981,14 @@ defmodule Zexray.Shape3D do
           size :: float,
           rad_seg :: integer,
           sides :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_knot(
                 radius,
                 size,
                 rad_seg,
                 sides,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_knot
@@ -1000,12 +1000,12 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_heightmap(
           heightmap :: Zexray.Type.Image.t_all(),
           size :: Zexray.Type.Vector3.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_heightmap(
                 heightmap,
                 size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_heightmap
@@ -1017,12 +1017,12 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_cubicmap(
           cubicmap :: Zexray.Type.Image.t_all(),
           cube_size :: Zexray.Type.Vector3.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cubicmap(
                 cubicmap,
                 cube_size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_mesh_cubicmap
@@ -1037,11 +1037,11 @@ defmodule Zexray.Shape3D do
   @doc group: :material_management
   @spec load_materials(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: [Zexray.Type.Material.t_nif()]
   defdelegate load_materials(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_materials
@@ -1050,8 +1050,8 @@ defmodule Zexray.Shape3D do
   Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
   """
   @doc group: :material_management
-  @spec load_material_default(return :: :value | :resource) :: Zexray.Type.Material.t_nif()
-  defdelegate load_material_default(return \\ :value), to: NIF, as: :load_material_default
+  @spec load_material_default(return :: :auto | :value | :resource) :: Zexray.Type.Material.t_nif()
+  defdelegate load_material_default(return \\ :auto), to: NIF, as: :load_material_default
 
   @doc """
   Check if a material is valid (shader assigned, map textures loaded in GPU)
@@ -1068,13 +1068,13 @@ defmodule Zexray.Shape3D do
           material :: Zexray.Type.Material.t_all(),
           map_type :: Zexray.Enum.MaterialMapIndex.t(),
           texture :: Zexray.Type.Texture2D.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Material.t_nif()
   defdelegate set_material_texture(
                 material,
                 map_type,
                 texture,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :set_material_texture
@@ -1087,13 +1087,13 @@ defmodule Zexray.Shape3D do
           model :: Zexray.Type.Model.t_all(),
           mesh_id :: integer,
           material_id :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Model.t_nif()
   defdelegate set_model_mesh_material(
                 model,
                 mesh_id,
                 material_id,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :set_model_mesh_material
@@ -1108,11 +1108,11 @@ defmodule Zexray.Shape3D do
   @doc group: :model_animation
   @spec load_model_animations(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: [Zexray.Type.ModelAnimation.t_nif()]
   defdelegate load_model_animations(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_model_animations
@@ -1125,13 +1125,13 @@ defmodule Zexray.Shape3D do
           model :: Zexray.Type.Model.t_all(),
           anim :: Zexray.Type.ModelAnimation.t_all(),
           frame :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Model.t_nif()
   defdelegate update_model_animation(
                 model,
                 anim,
                 frame,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :update_model_animation
@@ -1144,13 +1144,13 @@ defmodule Zexray.Shape3D do
           model :: Zexray.Type.Model.t_all(),
           anim :: Zexray.Type.ModelAnimation.t_all(),
           frame :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Model.t_nif()
   defdelegate update_model_animation_bones(
                 model,
                 anim,
                 frame,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :update_model_animation_bones
@@ -1233,13 +1233,13 @@ defmodule Zexray.Shape3D do
           ray :: Zexray.Type.Ray.t_all(),
           center :: Zexray.Type.Vector3.t_all(),
           radius :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RayCollision.t_nif()
   defdelegate get_ray_collision_sphere(
                 ray,
                 center,
                 radius,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_ray_collision_sphere
@@ -1251,12 +1251,12 @@ defmodule Zexray.Shape3D do
   @spec get_ray_collision_box(
           ray :: Zexray.Type.Ray.t_all(),
           box :: Zexray.Type.BoundingBox.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RayCollision.t_nif()
   defdelegate get_ray_collision_box(
                 ray,
                 box,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_ray_collision_box
@@ -1269,13 +1269,13 @@ defmodule Zexray.Shape3D do
           ray :: Zexray.Type.Ray.t_all(),
           mesh :: Zexray.Type.Mesh.t_all(),
           transform :: Zexray.Type.Matrix.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RayCollision.t_nif()
   defdelegate get_ray_collision_mesh(
                 ray,
                 mesh,
                 transform,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_ray_collision_mesh
@@ -1289,14 +1289,14 @@ defmodule Zexray.Shape3D do
           p1 :: Zexray.Type.Vector3.t_all(),
           p2 :: Zexray.Type.Vector3.t_all(),
           p3 :: Zexray.Type.Vector3.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RayCollision.t_nif()
   defdelegate get_ray_collision_triangle(
                 ray,
                 p1,
                 p2,
                 p3,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_ray_collision_triangle
@@ -1311,7 +1311,7 @@ defmodule Zexray.Shape3D do
           p2 :: Zexray.Type.Vector3.t_all(),
           p3 :: Zexray.Type.Vector3.t_all(),
           p4 :: Zexray.Type.Vector3.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RayCollision.t_nif()
   defdelegate get_ray_collision_quad(
                 ray,
@@ -1319,7 +1319,7 @@ defmodule Zexray.Shape3D do
                 p2,
                 p3,
                 p4,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_ray_collision_quad

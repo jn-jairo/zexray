@@ -32,11 +32,11 @@ defmodule Zexray.Monitor do
   """
   @spec get_position(
           monitor :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_position(
                 monitor,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_monitor_position

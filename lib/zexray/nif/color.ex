@@ -72,12 +72,12 @@ defmodule Zexray.NIF.Color do
       @spec fade(
               color :: tuple,
               alpha :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def fade(
             _color,
             _alpha,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -104,11 +104,11 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_normalize(
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_normalize(
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -123,11 +123,11 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_from_normalized(
               normalized :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_from_normalized(
             _normalized,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -142,11 +142,11 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_to_hsv(
               color :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_to_hsv(
             _color,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -163,13 +163,13 @@ defmodule Zexray.NIF.Color do
               hue :: float,
               saturation :: float,
               value :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_from_hsv(
             _hue,
             _saturation,
             _value,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -185,12 +185,12 @@ defmodule Zexray.NIF.Color do
       @spec color_tint(
               color :: tuple,
               tint :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_tint(
             _color,
             _tint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -206,12 +206,12 @@ defmodule Zexray.NIF.Color do
       @spec color_brightness(
               color :: tuple,
               factor :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_brightness(
             _color,
             _factor,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -227,12 +227,12 @@ defmodule Zexray.NIF.Color do
       @spec color_contrast(
               color :: tuple,
               contrast :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_contrast(
             _color,
             _contrast,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -248,12 +248,12 @@ defmodule Zexray.NIF.Color do
       @spec color_alpha(
               color :: tuple,
               alpha :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_alpha(
             _color,
             _alpha,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -270,13 +270,13 @@ defmodule Zexray.NIF.Color do
               dst :: tuple,
               src :: tuple,
               tint :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_alpha_blend(
             _dst,
             _src,
             _tint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -293,13 +293,13 @@ defmodule Zexray.NIF.Color do
               color1 :: tuple,
               color2 :: tuple,
               factor :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def color_lerp(
             _color1,
             _color2,
             _factor,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -314,11 +314,11 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec get_color(
               hex_value :: non_neg_integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_color(
             _hex_value,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -334,12 +334,12 @@ defmodule Zexray.NIF.Color do
       @spec get_pixel_color(
               data :: binary,
               format :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_pixel_color(
             _data,
             _format,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 

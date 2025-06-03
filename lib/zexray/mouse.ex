@@ -48,14 +48,14 @@ defmodule Zexray.Mouse do
   @doc """
   Get mouse position XY
   """
-  @spec get_position(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_position(return \\ :value), to: NIF, as: :get_mouse_position
+  @spec get_position(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_position(return \\ :auto), to: NIF, as: :get_mouse_position
 
   @doc """
   Get mouse delta between frames
   """
-  @spec get_delta(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_delta(return \\ :value), to: NIF, as: :get_mouse_delta
+  @spec get_delta(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_delta(return \\ :auto), to: NIF, as: :get_mouse_delta
 
   @doc """
   Set mouse position XY
@@ -108,8 +108,8 @@ defmodule Zexray.Mouse do
   @doc """
   Get mouse wheel movement for both X and Y
   """
-  @spec get_wheel_move_v(return :: :value | :resource) :: Zexray.Type.Vector2.t_nif()
-  defdelegate get_wheel_move_v(return \\ :value), to: NIF, as: :get_mouse_wheel_move_v
+  @spec get_wheel_move_v(return :: :auto | :value | :resource) :: Zexray.Type.Vector2.t_nif()
+  defdelegate get_wheel_move_v(return \\ :auto), to: NIF, as: :get_mouse_wheel_move_v
 
   @doc """
   Set mouse cursor

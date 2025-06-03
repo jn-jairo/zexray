@@ -33,11 +33,11 @@ defmodule Zexray.Image do
   @doc group: :loading
   @spec load(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate load(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image
@@ -52,7 +52,7 @@ defmodule Zexray.Image do
           height :: integer,
           format :: Zexray.Enum.PixelFormat.t(),
           header_size :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate load_raw(
                 file_name,
@@ -60,7 +60,7 @@ defmodule Zexray.Image do
                 height,
                 format,
                 header_size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_raw
@@ -71,11 +71,11 @@ defmodule Zexray.Image do
   @doc group: :loading
   @spec load_anim(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: {image :: Zexray.Type.Image.t_nif(), frames :: integer}
   defdelegate load_anim(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_anim
@@ -87,12 +87,12 @@ defmodule Zexray.Image do
   @spec load_anim_from_memory(
           file_type :: binary,
           file_data :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: {image :: Zexray.Type.Image.t_nif(), frames :: integer}
   defdelegate load_anim_from_memory(
                 file_type,
                 file_data,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_anim_from_memory
@@ -104,12 +104,12 @@ defmodule Zexray.Image do
   @spec load_from_memory(
           file_type :: binary,
           file_data :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate load_from_memory(
                 file_type,
                 file_data,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_from_memory
@@ -120,11 +120,11 @@ defmodule Zexray.Image do
   @doc group: :loading
   @spec load_from_texture(
           texture :: Zexray.Type.Texture2D.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate load_from_texture(
                 texture,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_from_texture
@@ -133,8 +133,8 @@ defmodule Zexray.Image do
   Load image from screen buffer and (screenshot)
   """
   @doc group: :loading
-  @spec load_from_screen(return :: :value | :resource) :: Zexray.Type.Image.t_nif()
-  defdelegate load_from_screen(return \\ :value), to: NIF, as: :load_image_from_screen
+  @spec load_from_screen(return :: :auto | :value | :resource) :: Zexray.Type.Image.t_nif()
+  defdelegate load_from_screen(return \\ :auto), to: NIF, as: :load_image_from_screen
 
   @doc """
   Check if an image is valid (data and parameters)
@@ -185,13 +185,13 @@ defmodule Zexray.Image do
           width :: integer,
           height :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_color(
                 width,
                 height,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_color
@@ -206,7 +206,7 @@ defmodule Zexray.Image do
           direction :: integer,
           color_start :: Zexray.Type.Color.t_all(),
           color_end :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_gradient_linear(
                 width,
@@ -214,7 +214,7 @@ defmodule Zexray.Image do
                 direction,
                 color_start,
                 color_end,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_gradient_linear
@@ -229,7 +229,7 @@ defmodule Zexray.Image do
           density :: float,
           color_inner :: Zexray.Type.Color.t_all(),
           color_outer :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_gradient_radial(
                 width,
@@ -237,7 +237,7 @@ defmodule Zexray.Image do
                 density,
                 color_inner,
                 color_outer,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_gradient_radial
@@ -252,7 +252,7 @@ defmodule Zexray.Image do
           density :: float,
           color_inner :: Zexray.Type.Color.t_all(),
           color_outer :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_gradient_square(
                 width,
@@ -260,7 +260,7 @@ defmodule Zexray.Image do
                 density,
                 color_inner,
                 color_outer,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_gradient_square
@@ -276,7 +276,7 @@ defmodule Zexray.Image do
           checks_y :: integer,
           color_1 :: Zexray.Type.Color.t_all(),
           color_2 :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_checked(
                 width,
@@ -285,7 +285,7 @@ defmodule Zexray.Image do
                 checks_y,
                 color_1,
                 color_2,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_checked
@@ -298,13 +298,13 @@ defmodule Zexray.Image do
           width :: integer,
           height :: integer,
           factor :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_white_noise(
                 width,
                 height,
                 factor,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_white_noise
@@ -319,7 +319,7 @@ defmodule Zexray.Image do
           offset_x :: integer,
           offset_y :: integer,
           scale :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_perlin_noise(
                 width,
@@ -327,7 +327,7 @@ defmodule Zexray.Image do
                 offset_x,
                 offset_y,
                 scale,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_perlin_noise
@@ -340,13 +340,13 @@ defmodule Zexray.Image do
           width :: integer,
           height :: integer,
           tile_size :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_cellular(
                 width,
                 height,
                 tile_size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_cellular
@@ -359,13 +359,13 @@ defmodule Zexray.Image do
           width :: integer,
           height :: integer,
           text :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_text(
                 width,
                 height,
                 text,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_image_text
@@ -380,11 +380,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec copy(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate copy(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_copy
@@ -396,12 +396,12 @@ defmodule Zexray.Image do
   @spec from_image(
           image :: Zexray.Type.Image.t_all(),
           rec :: Zexray.Type.Rectangle.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate from_image(
                 image,
                 rec,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_from_image
@@ -413,12 +413,12 @@ defmodule Zexray.Image do
   @spec from_channel(
           image :: Zexray.Type.Image.t_all(),
           selected_channel :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate from_channel(
                 image,
                 selected_channel,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_from_channel
@@ -431,13 +431,13 @@ defmodule Zexray.Image do
           text :: binary,
           font_size :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate text(
                 text,
                 font_size,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_text
@@ -452,7 +452,7 @@ defmodule Zexray.Image do
           font_size :: float,
           spacing :: float,
           tint :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate text_ex(
                 font,
@@ -460,7 +460,7 @@ defmodule Zexray.Image do
                 font_size,
                 spacing,
                 tint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_text_ex
@@ -472,12 +472,12 @@ defmodule Zexray.Image do
   @spec format(
           image :: Zexray.Type.Image.t_all(),
           new_format :: Zexray.Enum.PixelFormat.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate format(
                 image,
                 new_format,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_format
@@ -489,12 +489,12 @@ defmodule Zexray.Image do
   @spec to_pot(
           image :: Zexray.Type.Image.t_all(),
           fill :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate to_pot(
                 image,
                 fill,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_to_pot
@@ -506,12 +506,12 @@ defmodule Zexray.Image do
   @spec crop(
           image :: Zexray.Type.Image.t_all(),
           crop :: Zexray.Type.Rectangle.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate crop(
                 image,
                 crop,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_crop
@@ -523,12 +523,12 @@ defmodule Zexray.Image do
   @spec alpha_crop(
           image :: Zexray.Type.Image.t_all(),
           threshold :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_crop(
                 image,
                 threshold,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_alpha_crop
@@ -541,13 +541,13 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           color :: Zexray.Type.Color.t_all(),
           threshold :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_clear(
                 image,
                 color,
                 threshold,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_alpha_clear
@@ -559,12 +559,12 @@ defmodule Zexray.Image do
   @spec alpha_mask(
           image :: Zexray.Type.Image.t_all(),
           alpha_mask :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_mask(
                 image,
                 alpha_mask,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_alpha_mask
@@ -575,11 +575,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec alpha_premultiply(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_premultiply(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_alpha_premultiply
@@ -591,12 +591,12 @@ defmodule Zexray.Image do
   @spec blur_gaussian(
           image :: Zexray.Type.Image.t_all(),
           blur_size :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate blur_gaussian(
                 image,
                 blur_size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_blur_gaussian
@@ -608,12 +608,12 @@ defmodule Zexray.Image do
   @spec kernel_convolution(
           image :: Zexray.Type.Image.t_all(),
           kernel :: [float],
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate kernel_convolution(
                 image,
                 kernel,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_kernel_convolution
@@ -626,13 +626,13 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           new_width :: integer,
           new_height :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate resize(
                 image,
                 new_width,
                 new_height,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_resize
@@ -645,13 +645,13 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           new_width :: integer,
           new_height :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate resize_nn(
                 image,
                 new_width,
                 new_height,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_resize_nn
@@ -667,7 +667,7 @@ defmodule Zexray.Image do
           offset_x :: integer,
           offset_y :: integer,
           fill :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate resize_canvas(
                 image,
@@ -676,7 +676,7 @@ defmodule Zexray.Image do
                 offset_x,
                 offset_y,
                 fill,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_resize_canvas
@@ -687,11 +687,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec mipmaps(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate mipmaps(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_mipmaps
@@ -706,7 +706,7 @@ defmodule Zexray.Image do
           g_bpp :: integer,
           b_bpp :: integer,
           a_bpp :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate dither(
                 image,
@@ -714,7 +714,7 @@ defmodule Zexray.Image do
                 g_bpp,
                 b_bpp,
                 a_bpp,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_dither
@@ -725,11 +725,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec flip_vertical(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate flip_vertical(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_flip_vertical
@@ -740,11 +740,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec flip_horizontal(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate flip_horizontal(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_flip_horizontal
@@ -756,12 +756,12 @@ defmodule Zexray.Image do
   @spec rotate(
           image :: Zexray.Type.Image.t_all(),
           degrees :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate rotate(
                 image,
                 degrees,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_rotate
@@ -772,11 +772,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec rotate_cw(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate rotate_cw(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_rotate_cw
@@ -787,11 +787,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec rotate_ccw(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate rotate_ccw(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_rotate_ccw
@@ -803,12 +803,12 @@ defmodule Zexray.Image do
   @spec color_tint(
           image :: Zexray.Type.Image.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_tint(
                 image,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_tint
@@ -819,11 +819,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec color_invert(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_invert(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_invert
@@ -834,11 +834,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec color_grayscale(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_grayscale(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_grayscale
@@ -850,12 +850,12 @@ defmodule Zexray.Image do
   @spec color_contrast(
           image :: Zexray.Type.Image.t_all(),
           contrast :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_contrast(
                 image,
                 contrast,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_contrast
@@ -867,12 +867,12 @@ defmodule Zexray.Image do
   @spec color_brightness(
           image :: Zexray.Type.Image.t_all(),
           brightness :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_brightness(
                 image,
                 brightness,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_brightness
@@ -885,13 +885,13 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           color :: Zexray.Type.Color.t_all(),
           replace :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_replace(
                 image,
                 color,
                 replace,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_color_replace
@@ -902,11 +902,11 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec load_colors(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: [Zexray.Type.Color.t_nif()]
   defdelegate load_colors(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_colors
@@ -918,12 +918,12 @@ defmodule Zexray.Image do
   @spec load_palette(
           image :: Zexray.Type.Image.t_all(),
           max_palette_size :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: [Zexray.Type.Color.t_nif()]
   defdelegate load_palette(
                 image,
                 max_palette_size,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_image_palette
@@ -935,12 +935,12 @@ defmodule Zexray.Image do
   @spec get_alpha_border(
           image :: Zexray.Type.Image.t_all(),
           threshold :: float,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
   defdelegate get_alpha_border(
                 image,
                 threshold,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_image_alpha_border
@@ -953,13 +953,13 @@ defmodule Zexray.Image do
           image :: Zexray.Type.Image.t_all(),
           x :: integer,
           y :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
   defdelegate get_color(
                 image,
                 x,
                 y,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :get_image_color
@@ -975,12 +975,12 @@ defmodule Zexray.Image do
   @spec clear_background(
           dst :: Zexray.Type.Image.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate clear_background(
                 dst,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_clear_background
@@ -994,14 +994,14 @@ defmodule Zexray.Image do
           pos_x :: integer,
           pos_y :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_pixel(
                 dst,
                 pos_x,
                 pos_y,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_pixel
@@ -1014,13 +1014,13 @@ defmodule Zexray.Image do
           dst :: Zexray.Type.Image.t_all(),
           position :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_pixel_v(
                 dst,
                 position,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_pixel_v
@@ -1036,7 +1036,7 @@ defmodule Zexray.Image do
           end_pos_x :: integer,
           end_pos_y :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_line(
                 dst,
@@ -1045,7 +1045,7 @@ defmodule Zexray.Image do
                 end_pos_x,
                 end_pos_y,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_line
@@ -1059,14 +1059,14 @@ defmodule Zexray.Image do
           start_pos :: Zexray.Type.Vector2.t_all(),
           end_pos :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_line_v(
                 dst,
                 start_pos,
                 end_pos,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_line_v
@@ -1081,7 +1081,7 @@ defmodule Zexray.Image do
           end_pos :: Zexray.Type.Vector2.t_all(),
           thick :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_line_ex(
                 dst,
@@ -1089,7 +1089,7 @@ defmodule Zexray.Image do
                 end_pos,
                 thick,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_line_ex
@@ -1104,7 +1104,7 @@ defmodule Zexray.Image do
           center_y :: integer,
           radius :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_circle(
                 dst,
@@ -1112,7 +1112,7 @@ defmodule Zexray.Image do
                 center_y,
                 radius,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_circle
@@ -1126,14 +1126,14 @@ defmodule Zexray.Image do
           center :: Zexray.Type.Vector2.t_all(),
           radius :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_circle_v(
                 dst,
                 center,
                 radius,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_circle_v
@@ -1148,7 +1148,7 @@ defmodule Zexray.Image do
           center_y :: integer,
           radius :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_circle_lines(
                 dst,
@@ -1156,7 +1156,7 @@ defmodule Zexray.Image do
                 center_y,
                 radius,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_circle_lines
@@ -1170,14 +1170,14 @@ defmodule Zexray.Image do
           center :: Zexray.Type.Vector2.t_all(),
           radius :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_circle_lines_v(
                 dst,
                 center,
                 radius,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_circle_lines_v
@@ -1193,7 +1193,7 @@ defmodule Zexray.Image do
           width :: integer,
           height :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_rectangle(
                 dst,
@@ -1202,7 +1202,7 @@ defmodule Zexray.Image do
                 width,
                 height,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_rectangle
@@ -1216,14 +1216,14 @@ defmodule Zexray.Image do
           position :: Zexray.Type.Vector2.t_all(),
           size :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_rectangle_v(
                 dst,
                 position,
                 size,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_rectangle_v
@@ -1236,13 +1236,13 @@ defmodule Zexray.Image do
           dst :: Zexray.Type.Image.t_all(),
           rec :: Zexray.Type.Rectangle.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_rectangle_rec(
                 dst,
                 rec,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_rectangle_rec
@@ -1256,14 +1256,14 @@ defmodule Zexray.Image do
           rec :: Zexray.Type.Rectangle.t_all(),
           thick :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_rectangle_lines(
                 dst,
                 rec,
                 thick,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_rectangle_lines
@@ -1278,7 +1278,7 @@ defmodule Zexray.Image do
           v2 :: Zexray.Type.Vector2.t_all(),
           v3 :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_triangle(
                 dst,
@@ -1286,7 +1286,7 @@ defmodule Zexray.Image do
                 v2,
                 v3,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_triangle
@@ -1303,7 +1303,7 @@ defmodule Zexray.Image do
           c1 :: Zexray.Type.Color.t_all(),
           c2 :: Zexray.Type.Color.t_all(),
           c3 :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_triangle_ex(
                 dst,
@@ -1313,7 +1313,7 @@ defmodule Zexray.Image do
                 c1,
                 c2,
                 c3,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_triangle_ex
@@ -1328,7 +1328,7 @@ defmodule Zexray.Image do
           v2 :: Zexray.Type.Vector2.t_all(),
           v3 :: Zexray.Type.Vector2.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_triangle_lines(
                 dst,
@@ -1336,7 +1336,7 @@ defmodule Zexray.Image do
                 v2,
                 v3,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_triangle_lines
@@ -1349,13 +1349,13 @@ defmodule Zexray.Image do
           dst :: Zexray.Type.Image.t_all(),
           points :: [Zexray.Type.Vector2.t_all()],
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_triangle_fan(
                 dst,
                 points,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_triangle_fan
@@ -1368,13 +1368,13 @@ defmodule Zexray.Image do
           dst :: Zexray.Type.Image.t_all(),
           points :: [Zexray.Type.Vector2.t_all()],
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_triangle_strip(
                 dst,
                 points,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_triangle_strip
@@ -1389,7 +1389,7 @@ defmodule Zexray.Image do
           src_rec :: Zexray.Type.Rectangle.t_all(),
           dst_rec :: Zexray.Type.Rectangle.t_all(),
           tint :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw(
                 dst,
@@ -1397,7 +1397,7 @@ defmodule Zexray.Image do
                 src_rec,
                 dst_rec,
                 tint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw
@@ -1413,7 +1413,7 @@ defmodule Zexray.Image do
           pos_y :: integer,
           font_size :: integer,
           color :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_text(
                 dst,
@@ -1422,7 +1422,7 @@ defmodule Zexray.Image do
                 pos_y,
                 font_size,
                 color,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_text
@@ -1439,7 +1439,7 @@ defmodule Zexray.Image do
           font_size :: float,
           spacing :: float,
           tint :: Zexray.Type.Color.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate draw_text_ex(
                 dst,
@@ -1449,7 +1449,7 @@ defmodule Zexray.Image do
                 font_size,
                 spacing,
                 tint,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :image_draw_text_ex

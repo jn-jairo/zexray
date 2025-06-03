@@ -15,11 +15,11 @@ defmodule Zexray.Texture do
   @doc group: :loading
   @spec load(
           file_name :: binary,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Texture2D.t_nif()
   defdelegate load(
                 file_name,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_texture
@@ -30,11 +30,11 @@ defmodule Zexray.Texture do
   @doc group: :loading
   @spec load_from_image(
           image :: Zexray.Type.Image.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Texture2D.t_nif()
   defdelegate load_from_image(
                 image,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_texture_from_image
@@ -46,12 +46,12 @@ defmodule Zexray.Texture do
   @spec load_cubemap(
           image :: Zexray.Type.Image.t_all(),
           layout :: Zexray.Enum.CubemapLayout.t(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Texture2D.t_nif()
   defdelegate load_cubemap(
                 image,
                 layout,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_texture_cubemap
@@ -63,12 +63,12 @@ defmodule Zexray.Texture do
   @spec load_render_texture(
           width :: integer,
           height :: integer,
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.RenderTexture2D.t_nif()
   defdelegate load_render_texture(
                 width,
                 height,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :load_render_texture
@@ -129,11 +129,11 @@ defmodule Zexray.Texture do
   @doc group: :configuration
   @spec gen_mipmaps(
           texture :: Zexray.Type.Texture2D.t_all(),
-          return :: :value | :resource
+          return :: :auto | :value | :resource
         ) :: Zexray.Type.Texture2D.t_nif()
   defdelegate gen_mipmaps(
                 texture,
-                return \\ :value
+                return \\ :auto
               ),
               to: NIF,
               as: :gen_texture_mipmaps

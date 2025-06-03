@@ -231,14 +231,14 @@ defmodule Zexray.NIF.Text do
               text :: binary,
               font_size :: float,
               spacing :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def measure_text_ex(
             _font,
             _text,
             _font_size,
             _spacing,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -273,12 +273,12 @@ defmodule Zexray.NIF.Text do
       @spec get_glyph_info(
               font :: tuple,
               codepoint :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_glyph_info(
             _font,
             _codepoint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -294,12 +294,12 @@ defmodule Zexray.NIF.Text do
       @spec get_glyph_atlas_rec(
               font :: tuple,
               codepoint :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_glyph_atlas_rec(
             _font,
             _codepoint,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

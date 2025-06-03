@@ -300,7 +300,7 @@ fn nif_gen_texture_mipmaps(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 

@@ -519,7 +519,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -651,7 +651,7 @@ fn nif_play_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -682,7 +682,7 @@ fn nif_stop_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -713,7 +713,7 @@ fn nif_pause_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -744,7 +744,7 @@ fn nif_resume_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -799,7 +799,7 @@ fn nif_set_sound_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -834,7 +834,7 @@ fn nif_set_sound_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -869,7 +869,7 @@ fn nif_set_sound_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1013,7 +1013,7 @@ fn nif_wave_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 3);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 3, argv[0]);
 
     // Arguments
 
@@ -1052,7 +1052,7 @@ fn nif_wave_format(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 4);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 4, argv[0]);
 
     // Arguments
 
@@ -1467,7 +1467,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -1917,7 +1917,7 @@ fn nif_play_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1948,7 +1948,7 @@ fn nif_stop_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -1979,7 +1979,7 @@ fn nif_pause_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2010,7 +2010,7 @@ fn nif_resume_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2065,7 +2065,7 @@ fn nif_set_sound_stream_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2100,7 +2100,7 @@ fn nif_set_sound_stream_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2135,7 +2135,7 @@ fn nif_set_sound_stream_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2167,7 +2167,7 @@ fn nif_set_sound_stream_looping(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2378,7 +2378,7 @@ fn nif_play_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2433,7 +2433,7 @@ fn nif_update_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2488,7 +2488,7 @@ fn nif_stop_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2519,7 +2519,7 @@ fn nif_pause_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2550,7 +2550,7 @@ fn nif_resume_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -2581,7 +2581,7 @@ fn nif_seek_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2616,7 +2616,7 @@ fn nif_set_music_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2651,7 +2651,7 @@ fn nif_set_music_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2686,7 +2686,7 @@ fn nif_set_music_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2718,7 +2718,7 @@ fn nif_set_music_looping(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -2928,7 +2928,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -3026,7 +3026,7 @@ fn nif_play_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -3057,7 +3057,7 @@ fn nif_pause_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -3088,7 +3088,7 @@ fn nif_resume_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -3143,7 +3143,7 @@ fn nif_stop_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 1);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 1, argv[0]);
 
     // Arguments
 
@@ -3174,7 +3174,7 @@ fn nif_set_audio_stream_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -3209,7 +3209,7 @@ fn nif_set_audio_stream_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 
@@ -3244,7 +3244,7 @@ fn nif_set_audio_stream_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return type
 
-    const return_resource = core.must_return_resource(env, argc, argv, 2);
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
 
     // Arguments
 

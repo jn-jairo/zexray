@@ -146,8 +146,8 @@ defmodule Example do
 
             music =
               Zexray.Audio.load_music("#{@resources_dir}/mini1111.xm", :resource)
-              |> Zexray.Audio.set_looping(false, :resource)
-              |> Zexray.Audio.play(:resource)
+              |> Zexray.Audio.set_looping(false)
+              |> Zexray.Audio.play()
 
             example_state(
               colors: colors,
@@ -176,21 +176,21 @@ defmodule Example do
       ) = state
 
       # Update music buffer with new stream data
-      Zexray.Audio.update(music, :resource)
+      Zexray.Audio.update(music)
 
       # Restart music playing (stop and play)
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
         music
-        |> Zexray.Audio.stop(:resource)
-        |> Zexray.Audio.play(:resource)
+        |> Zexray.Audio.stop()
+        |> Zexray.Audio.play()
       end
 
       # Pause/Resume music playing
       if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
         if Zexray.Audio.playing?(music) do
-          Zexray.Audio.pause(music, :resource)
+          Zexray.Audio.pause(music)
         else
-          Zexray.Audio.resume(music, :resource)
+          Zexray.Audio.resume(music)
         end
       end
 
@@ -201,7 +201,7 @@ defmodule Example do
           true -> pitch
         end
 
-      Zexray.Audio.set_pitch(music, pitch, :resource)
+      Zexray.Audio.set_pitch(music, pitch)
 
       # Get time_played scaled to bar dimensions
       time_played =

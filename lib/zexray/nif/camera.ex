@@ -51,12 +51,12 @@ defmodule Zexray.NIF.Camera do
       @spec update_camera(
               camera :: tuple,
               mode :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_camera(
             _camera,
             _mode,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -74,14 +74,14 @@ defmodule Zexray.NIF.Camera do
               movement :: tuple,
               rotation :: tuple,
               zoom :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def update_camera_pro(
             _camera,
             _movement,
             _rotation,
             _zoom,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -96,11 +96,11 @@ defmodule Zexray.NIF.Camera do
       @doc group: :camera
       @spec get_camera_forward(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_forward(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -116,11 +116,11 @@ defmodule Zexray.NIF.Camera do
       @doc group: :camera
       @spec get_camera_up(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_up(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -135,11 +135,11 @@ defmodule Zexray.NIF.Camera do
       @doc group: :camera
       @spec get_camera_right(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_right(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -156,13 +156,13 @@ defmodule Zexray.NIF.Camera do
               camera :: tuple,
               distance :: float,
               move_in_world_plane :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_move_forward(
             _camera,
             _distance,
             _move_in_world_plane,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -178,12 +178,12 @@ defmodule Zexray.NIF.Camera do
       @spec camera_move_up(
               camera :: tuple,
               distance :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_move_up(
             _camera,
             _distance,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -200,13 +200,13 @@ defmodule Zexray.NIF.Camera do
               camera :: tuple,
               distance :: float,
               move_in_world_plane :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_move_right(
             _camera,
             _distance,
             _move_in_world_plane,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -222,12 +222,12 @@ defmodule Zexray.NIF.Camera do
       @spec camera_move_to_target(
               camera :: tuple,
               delta :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_move_to_target(
             _camera,
             _delta,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -247,13 +247,13 @@ defmodule Zexray.NIF.Camera do
               camera :: tuple,
               angle :: float,
               rotate_around_target :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_yaw(
             _camera,
             _angle,
             _rotate_around_target,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -276,7 +276,7 @@ defmodule Zexray.NIF.Camera do
               lock_view :: boolean,
               rotate_around_target :: boolean,
               rotate_up :: boolean,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_pitch(
             _camera,
@@ -284,7 +284,7 @@ defmodule Zexray.NIF.Camera do
             _lock_view,
             _rotate_around_target,
             _rotate_up,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -302,12 +302,12 @@ defmodule Zexray.NIF.Camera do
       @spec camera_roll(
               camera :: tuple,
               angle :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def camera_roll(
             _camera,
             _angle,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -322,11 +322,11 @@ defmodule Zexray.NIF.Camera do
       @doc group: :camera
       @spec get_camera_view_matrix(
               camera :: tuple,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_view_matrix(
             _camera,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
@@ -342,12 +342,12 @@ defmodule Zexray.NIF.Camera do
       @spec get_camera_projection_matrix(
               camera :: tuple,
               aspect :: float,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_camera_projection_matrix(
             _camera,
             _aspect,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
     end

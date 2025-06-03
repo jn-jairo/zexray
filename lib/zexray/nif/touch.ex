@@ -52,11 +52,11 @@ defmodule Zexray.NIF.Touch do
       @doc group: :input_touch
       @spec get_touch_position(
               index :: integer,
-              return :: :value | :resource
+              return :: :auto | :value | :resource
             ) :: tuple
       def get_touch_position(
             _index,
-            _return \\ :value
+            _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
 
