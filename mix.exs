@@ -137,9 +137,14 @@ defmodule Zexray.MixProject do
     [
       main: "readme",
       extras: [
-        "README.md"
-        # Examples
-        # "examples/hello_world.livemd": [filename: "example_hello_world"]
+        "README.md",
+        # Examples Audio
+        "examples/audio/sound_loading.livemd": [filename: "example_audio_sound_loading"],
+        "examples/audio/music_stream.livemd": [filename: "example_audio_music_stream"],
+        "examples/audio/module_playing.livemd": [filename: "example_audio_module_playing"],
+        "examples/audio/sound_multi.livemd": [filename: "example_audio_sound_multi"],
+        "examples/audio/raw_stream.livemd": [filename: "example_audio_raw_stream"],
+        "examples/audio/stream_effects.livemd": [filename: "example_audio_stream_effects"]
       ],
       source_ref: "v#{@version}",
       source_url: @source_url,
@@ -165,7 +170,7 @@ defmodule Zexray.MixProject do
         end
       end,
       groups_for_extras: [
-        Examples: ~r"examples"
+        "Examples: Audio": ~r"examples/audio"
       ],
       groups_for_modules: [
         Bindings: [

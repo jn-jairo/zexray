@@ -1,0 +1,128 @@
+# Music playing (streaming)
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★☆☆☆] 1/4
+
+```elixir
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/f5c96302d5623950dccdca31f8dd66d6d633dbd1"
+
+  use Zexray.Enum
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/country.mp3" => "#{@resources_url}/examples/audio/resources/country.mp3"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [audio] example - music playing (streaming)"
+
+  @buffer_size 4096
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 30 frames-per-second
+        Zexray.Timing.set_target_fps(30)
+
+        Zexray.Audio.set_buffer_size(@buffer_size)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            music =
+              Zexray.Audio.load_music("#{@resources_dir}/country.mp3", :resource)
+              |> Zexray.Audio.play(:resource)
+
+            {music}
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop({music} = state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      # Update music buffer with new stream data
+      Zexray.Audio.update(music, :resource)
+
+      # Restart music playing (stop and play)
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
+        music
+        |> Zexray.Audio.stop(:resource)
+        |> Zexray.Audio.play(:resource)
+      end
+
+      # Pause/Resume music playing
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
+        if Zexray.Audio.playing?(music) do
+          Zexray.Audio.pause(music, :resource)
+        else
+          Zexray.Audio.resume(music, :resource)
+        end
+      end
+
+      # Get normalized time played for current music stream
+      time_played = Zexray.Audio.get_time_played(music) / Zexray.Audio.get_time_length(music)
+
+      # Make sure time played is no longer than music
+      time_played = min(time_played, 1.0)
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Text.draw("MUSIC SHOULD BE PLAYING!", 255, 150, 20, enum_color(:lightgray))
+
+        Zexray.Shape.draw_rectangle(200, 200, 400, 12, enum_color(:lightgray))
+        Zexray.Shape.draw_rectangle(200, 200, trunc(time_played * 400), 12, enum_color(:maroon))
+        Zexray.Shape.draw_rectangle_lines(200, 200, 400, 12, enum_color(:gray))
+
+        Zexray.Text.draw("PRESS SPACE TO RESTART MUSIC", 215, 250, 20, enum_color(:lightgray))
+        Zexray.Text.draw("PRESS P TO PAUSE/RESUME MUSIC", 208, 280, 20, enum_color(:lightgray))
+      end)
+
+      loop(state)
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```

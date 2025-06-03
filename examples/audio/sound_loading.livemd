@@ -1,0 +1,116 @@
+# Sound loading and playing
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★☆☆☆] 1/4
+
+```elixir
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/f5c96302d5623950dccdca31f8dd66d6d633dbd1"
+
+  use Zexray.Enum
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/sound.wav" => "#{@resources_url}/examples/audio/resources/sound.wav",
+      "#{@resources_dir}/target.ogg" => "#{@resources_url}/examples/audio/resources/target.ogg"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [audio] example - sound loading and playing"
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 60 frames-per-second
+        Zexray.Timing.set_target_fps(60)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            {
+              # Load WAV audio file
+              Zexray.Audio.load_sound("#{@resources_dir}/sound.wav", :resource),
+              # Load OGG audio file
+              Zexray.Audio.load_sound("#{@resources_dir}/target.ogg", :resource)
+            }
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop({fx_wav, fx_ogg} = state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
+        Zexray.Audio.play(fx_wav, :resource)
+      end
+
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:enter)) do
+        Zexray.Audio.play(fx_ogg, :resource)
+      end
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Text.draw(
+          "Press SPACE to PLAY the WAV sound!",
+          200,
+          180,
+          20,
+          enum_color(:lightgray)
+        )
+
+        Zexray.Text.draw(
+          "Press ENTER to PLAY the OGG sound!",
+          200,
+          220,
+          20,
+          enum_color(:lightgray)
+        )
+      end)
+
+      loop(state)
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```

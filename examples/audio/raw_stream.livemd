@@ -1,0 +1,216 @@
+# Raw audio streaming
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★★☆] 3/4
+
+```elixir
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    # Cycles per second (hz)
+    frequency: 440.0,
+
+    # Audio frequency, for smoothing
+    audio_frequency: 440.0,
+
+    # Previous value, used to test if sine needs to be rewritten, and to smoothly modulate frequency
+    old_frequency: 1.0,
+
+    # Index for audio rendering
+    sine_idx: 0.0,
+
+    # Buffer for the single cycle waveform we are synthesizing
+    data: [],
+
+    # Raw audio stream
+    stream: nil
+  )
+
+  @type example_state ::
+          record(:example_state,
+            frequency: float,
+            audio_frequency: float,
+            old_frequency: float,
+            sine_idx: float,
+            data: [integer],
+            stream: Zexray.Type.AudioStream.t()
+          )
+end
+
+defmodule Example do
+  use Zexray.Enum
+  use Zexray.Type
+
+  import ExampleState
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [audio] example - raw audio streaming"
+
+  @max_samples 512
+  @buffer_size 4096
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 30 frames-per-second
+        Zexray.Timing.set_target_fps(30)
+
+        Zexray.Audio.set_buffer_size(@buffer_size)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            # Init raw audio stream (sample rate: 44100, sample size: 16bit-short, channels: 1-mono) 
+            stream =
+              Zexray.Audio.load_stream(44_100, 16, 1, :resource)
+              |> Zexray.Audio.play(:resource)
+
+            example_state(stream: stream)
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop(state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      example_state(
+        frequency: frequency,
+        audio_frequency: audio_frequency,
+        old_frequency: old_frequency,
+        sine_idx: sine_idx,
+        data: data,
+        stream: stream
+      ) = state
+
+      # Sample mouse input
+      type_vector2(
+        x: mouse_position_x,
+        y: mouse_position_y
+      ) = Zexray.Mouse.get_position()
+
+      frequency =
+        if Zexray.Mouse.down?(enum_mouse_button(:left)) do
+          frequency = 40.0 + mouse_position_y
+          pan = 1 - mouse_position_x / @screen_width
+          Zexray.Audio.set_pan(stream, pan)
+
+          frequency
+        else
+          frequency
+        end
+
+      # Rewrite the sine wave
+      {old_frequency, data} =
+        if frequency != old_frequency do
+          # Compute wavelength. Limit size in both directions
+          wave_length = max(min(trunc(22_050 / frequency), trunc(@max_samples / 2)), 1)
+
+          # Write sine wave
+          data =
+            0..(@screen_width - 1)
+            |> Enum.map(fn i ->
+              trunc(:math.sin(2 * :math.pi() * :erlang.float(i) / wave_length) * 32_000)
+            end)
+
+          {frequency, data}
+        else
+          {old_frequency, data}
+        end
+
+      # Refill audio stream if required
+      {audio_frequency, sine_idx} =
+        if Zexray.Audio.processed?(stream) do
+          audio_frequency = frequency + (audio_frequency - frequency) * 0.95
+          incr = audio_frequency / 44_100
+
+          {samples, sine_idx} =
+            1..@buffer_size
+            |> Enum.reduce({[], sine_idx}, fn _, {samples, sine_idx} ->
+              d = trunc(32_000 * :math.sin(2 * :math.pi() * sine_idx))
+
+              sine_idx = sine_idx + incr
+
+              sine_idx = if sine_idx > 1, do: sine_idx - 1, else: sine_idx
+
+              {[d | samples], sine_idx}
+            end)
+
+          samples = Enum.reverse(samples)
+
+          # Copy finished frame to audio stream
+          Zexray.Audio.update(stream, samples, :resource)
+
+          {audio_frequency, sine_idx}
+        else
+          {audio_frequency, sine_idx}
+        end
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Text.draw(
+          "sine frequency: #{trunc(frequency)}",
+          @screen_width - 220,
+          10,
+          20,
+          enum_color(:red)
+        )
+
+        Zexray.Text.draw(
+          "click mouse button to change frequency or pan",
+          10,
+          10,
+          20,
+          enum_color(:darkgray)
+        )
+
+        0..(@screen_width - 1)
+        |> Enum.each(fn x ->
+          y = trunc(250 + 50 * Enum.at(data, trunc(x * @max_samples / @screen_width), 0) / 32_000)
+
+          Zexray.Shape.draw_pixel(
+            x,
+            y,
+            enum_color(:red)
+          )
+        end)
+      end)
+
+      state
+      |> example_state(
+        frequency: frequency,
+        audio_frequency: audio_frequency,
+        old_frequency: old_frequency,
+        sine_idx: sine_idx,
+        data: data,
+        stream: stream
+      )
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.init()
+```

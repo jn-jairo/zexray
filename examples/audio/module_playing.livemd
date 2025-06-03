@@ -1,0 +1,335 @@
+# Module playing (streaming)
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★☆☆☆] 1/4
+
+```elixir
+defmodule CircleWave do
+  require Record
+  require Zexray.Enum.Color
+  require Zexray.Type.Vector2
+
+  Record.defrecord(:circle_wave,
+    position: Zexray.Type.Vector2.t(x: 0.0, y: 0.0),
+    radius: 0.0,
+    alpha: 0.0,
+    speed: 0.0,
+    color: Zexray.Enum.Color.enum(:black)
+  )
+
+  @type circle_wave ::
+          record(:circle_wave,
+            position: Zexray.Type.Vector2.t(),
+            radius: float,
+            alpha: float,
+            speed: float,
+            color: Zexray.Type.Color.t()
+          )
+end
+
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    colors: [],
+    circles: [],
+    music: nil,
+    pitch: 1.0
+  )
+
+  @type example_state ::
+          record(:example_state,
+            colors: [Zexray.Type.Color.t()],
+            circles: [CircleWave.circle_wave()],
+            music: Zexray.Type.Music.Resource.t(),
+            pitch: float
+          )
+end
+
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/f5c96302d5623950dccdca31f8dd66d6d633dbd1"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  import CircleWave
+  import ExampleState
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/mini1111.xm" => "#{@resources_url}/examples/audio/resources/mini1111.xm"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  defp get_random_value(min, max) do
+    :rand.uniform() * (max - min) + min
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [audio] example - module playing (streaming)"
+
+  @buffer_size 4096
+
+  @max_circles 64
+
+  def init do
+    # NOTE: Try to enable MSAA 4X
+    Zexray.Window.set_config_flags(enum_config_flag(:msaa_4x_hint))
+
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 60 frames-per-second
+        Zexray.Timing.set_target_fps(60)
+
+        Zexray.Audio.set_buffer_size(@buffer_size)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            colors =
+              [
+                enum_color(:orange),
+                enum_color(:red),
+                enum_color(:gold),
+                enum_color(:lime),
+                enum_color(:blue),
+                enum_color(:violet),
+                enum_color(:brown),
+                enum_color(:lightgray),
+                enum_color(:pink),
+                enum_color(:yellow),
+                enum_color(:green),
+                enum_color(:skyblue),
+                enum_color(:purple),
+                enum_color(:beige)
+              ]
+
+            circles =
+              Enum.map(1..@max_circles, fn _ ->
+                radius = get_random_value(10, 40)
+
+                circle_wave(
+                  alpha: 0.0,
+                  radius: radius,
+                  position:
+                    type_vector2(
+                      x: get_random_value(radius, @screen_width - radius),
+                      y: get_random_value(radius, @screen_height - radius)
+                    ),
+                  speed: get_random_value(1, 100) / 2_000,
+                  color: Enum.random(colors)
+                )
+              end)
+
+            music =
+              Zexray.Audio.load_music("#{@resources_dir}/mini1111.xm", :resource)
+              |> Zexray.Audio.set_looping(false, :resource)
+              |> Zexray.Audio.play(:resource)
+
+            example_state(
+              colors: colors,
+              circles: circles,
+              music: music
+            )
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop(state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      example_state(
+        colors: colors,
+        circles: circles,
+        music: music,
+        pitch: pitch
+      ) = state
+
+      # Update music buffer with new stream data
+      Zexray.Audio.update(music, :resource)
+
+      # Restart music playing (stop and play)
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
+        music
+        |> Zexray.Audio.stop(:resource)
+        |> Zexray.Audio.play(:resource)
+      end
+
+      # Pause/Resume music playing
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
+        if Zexray.Audio.playing?(music) do
+          Zexray.Audio.pause(music, :resource)
+        else
+          Zexray.Audio.resume(music, :resource)
+        end
+      end
+
+      pitch =
+        cond do
+          Zexray.Keyboard.down?(enum_keyboard_key(:down)) -> pitch - 0.01
+          Zexray.Keyboard.down?(enum_keyboard_key(:up)) -> pitch + 0.01
+          true -> pitch
+        end
+
+      Zexray.Audio.set_pitch(music, pitch, :resource)
+
+      # Get time_played scaled to bar dimensions
+      time_played =
+        Zexray.Audio.get_time_played(music) /
+          Zexray.Audio.get_time_length(music) * (@screen_width - 40)
+
+      # Color circles animation
+      circles =
+        circles
+        |> Enum.map(fn circle ->
+          circle_wave(
+            alpha: alpha,
+            radius: radius,
+            position: position,
+            speed: speed,
+            color: color
+          ) = circle
+
+          alpha = alpha + speed
+          radius = radius + speed * 10.0
+
+          speed = if alpha >= 1.0, do: speed * -1, else: speed
+
+          if alpha <= 0.0 do
+            radius = get_random_value(10, 40)
+
+            circle_wave(
+              alpha: 0.0,
+              radius: radius,
+              position:
+                type_vector2(
+                  x: get_random_value(radius, @screen_width - radius),
+                  y: get_random_value(radius, @screen_height - radius)
+                ),
+              speed: get_random_value(1, 100) / 2_000,
+              color: Enum.random(colors)
+            )
+          else
+            circle_wave(
+              alpha: alpha,
+              radius: radius,
+              position: position,
+              speed: speed,
+              color: color
+            )
+          end
+        end)
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        circles
+        |> Enum.each(fn circle ->
+          circle_wave(
+            alpha: alpha,
+            radius: radius,
+            position: position,
+            color: color
+          ) = circle
+
+          Zexray.Shape.draw_circle_v(
+            position,
+            radius,
+            Zexray.Color.fade(color, alpha)
+          )
+        end)
+
+        # Draw time bar
+
+        Zexray.Shape.draw_rectangle(
+          20,
+          @screen_height - 20 - 12,
+          @screen_width - 40,
+          12,
+          enum_color(:lightgray)
+        )
+
+        Zexray.Shape.draw_rectangle(
+          20,
+          @screen_height - 20 - 12,
+          trunc(time_played),
+          12,
+          enum_color(:maroon)
+        )
+
+        Zexray.Shape.draw_rectangle_lines(
+          20,
+          @screen_height - 20 - 12,
+          @screen_width - 40,
+          12,
+          enum_color(:gray)
+        )
+
+        # Draw help instructions
+
+        Zexray.Shape.draw_rectangle(20, 20, 425, 145, enum_color(:white))
+        Zexray.Shape.draw_rectangle_lines(20, 20, 425, 145, enum_color(:gray))
+        Zexray.Text.draw("PRESS SPACE TO RESTART MUSIC", 40, 40, 20, enum_color(:black))
+        Zexray.Text.draw("PRESS P TO PAUSE/RESUME", 40, 70, 20, enum_color(:black))
+
+        Zexray.Text.draw("PRESS UP/DOWN TO CHANGE SPEED", 40, 100, 20, enum_color(:black))
+
+        Zexray.Text.draw(
+          "SPEED: #{:erlang.float_to_binary(pitch, decimals: 2)}",
+          40,
+          130,
+          20,
+          enum_color(:maroon)
+        )
+      end)
+
+      state
+      |> example_state(
+        circles: circles,
+        pitch: pitch
+      )
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```

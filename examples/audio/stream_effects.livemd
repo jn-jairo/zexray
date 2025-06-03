@@ -1,0 +1,269 @@
+# Music stream processing effects
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★★★] 4/4
+
+```elixir
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    music: nil,
+    effect_lpf_enabled: false,
+    effect_lpf_state: {0.0, 0.0},
+    effect_delay_enabled: false,
+    effect_delay_state: :queue.new()
+  )
+
+  @type example_state ::
+          record(:example_state,
+            music: Zexray.Type.SoundStream.Resource.t(),
+            effect_lpf_enabled: boolean,
+            effect_lpf_state: {float, float},
+            effect_delay_enabled: boolean,
+            effect_delay_state: :queue.queue()
+          )
+end
+
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/f5c96302d5623950dccdca31f8dd66d6d633dbd1"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  import ExampleState
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/country.mp3" => "#{@resources_url}/examples/audio/resources/country.mp3"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "raylib [audio] example - stream effects"
+
+  @buffer_size 4096
+
+  # 70 Hz lowpass filter
+  @cutoff 70.0 / 44_100.0
+  # RC filter formula
+  @k @cutoff / (@cutoff + 0.1591549431)
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 30 frames-per-second
+        Zexray.Timing.set_target_fps(30)
+
+        Zexray.Audio.set_buffer_size(@buffer_size)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            music =
+              Zexray.Audio.load_sound_stream("#{@resources_dir}/country.mp3", :resource)
+              |> Zexray.Audio.set_looping(true, :resource)
+              |> Zexray.Audio.play(:resource)
+
+            # Allocate buffer for the delay effect
+            # 1 second delay (device sampleRate*channels)
+            effect_delay_state =
+              0..(48_000 * 2)
+              |> Enum.reduce(:queue.new(), fn _, queue ->
+                :queue.in(0.0, queue)
+              end)
+
+            example_state(
+              music: music,
+              effect_delay_state: effect_delay_state
+            )
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop(state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      example_state(
+        music: music,
+        effect_lpf_enabled: effect_lpf_enabled,
+        effect_lpf_state: effect_lpf_state,
+        effect_delay_enabled: effect_delay_enabled,
+        effect_delay_state: effect_delay_state
+      ) = state
+
+      # Update music buffer with new data
+      {effect_lpf_state, effect_delay_state} =
+        if Zexray.Audio.processed?(music) do
+          samples = Zexray.Audio.load_next_samples(music)
+
+          {effect_lpf_state, samples} =
+            process_effect_lpf(effect_lpf_state, samples, effect_lpf_enabled)
+
+          {effect_delay_state, samples} =
+            process_effect_delay(effect_delay_state, samples, effect_delay_enabled)
+
+          Zexray.Audio.update(music, samples, :resource)
+
+          {effect_lpf_state, effect_delay_state}
+        else
+          {effect_lpf_state, effect_delay_state}
+        end
+
+      # Restart music playing (stop and play)
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
+        music
+        |> Zexray.Audio.stop(:resource)
+        |> Zexray.Audio.play(:resource)
+      end
+
+      # Pause/Resume music playing
+      if Zexray.Keyboard.pressed?(enum_keyboard_key(:p)) do
+        if Zexray.Audio.playing?(music) do
+          Zexray.Audio.pause(music, :resource)
+        else
+          Zexray.Audio.resume(music, :resource)
+        end
+      end
+
+      # Add/Remove effect: lowpass filter
+      effect_lpf_enabled =
+        if Zexray.Keyboard.pressed?(enum_keyboard_key(:f)),
+          do: !effect_lpf_enabled,
+          else: effect_lpf_enabled
+
+      # Add/Remove effect: delay
+      effect_delay_enabled =
+        if Zexray.Keyboard.pressed?(enum_keyboard_key(:d)),
+          do: !effect_delay_enabled,
+          else: effect_delay_enabled
+
+      # Get normalized time played for current music
+      time_played = Zexray.Audio.get_time_played(music) / Zexray.Audio.get_time_length(music)
+
+      # Make sure time played is no longer than music
+      time_played = min(time_played, 1.0)
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Text.draw("MUSIC SHOULD BE PLAYING!", 255, 150, 20, enum_color(:lightgray))
+
+        Zexray.Shape.draw_rectangle(200, 200, 400, 12, enum_color(:lightgray))
+        Zexray.Shape.draw_rectangle(200, 200, trunc(time_played * 400), 12, enum_color(:maroon))
+        Zexray.Shape.draw_rectangle_lines(200, 200, 400, 12, enum_color(:gray))
+
+        Zexray.Text.draw("PRESS SPACE TO RESTART MUSIC", 215, 250, 20, enum_color(:lightgray))
+        Zexray.Text.draw("PRESS P TO PAUSE/RESUME MUSIC", 208, 280, 20, enum_color(:lightgray))
+
+        Zexray.Text.draw(
+          "PRESS F TO TOGGLE LPF EFFECT: #{bool_to_string(effect_lpf_enabled)}",
+          200,
+          320,
+          20,
+          enum_color(:gray)
+        )
+
+        Zexray.Text.draw(
+          "PRESS D TO TOGGLE DELAY EFFECT: #{bool_to_string(effect_delay_enabled)}",
+          180,
+          350,
+          20,
+          enum_color(:gray)
+        )
+      end)
+
+      state
+      |> example_state(
+        effect_lpf_enabled: effect_lpf_enabled,
+        effect_lpf_state: effect_lpf_state,
+        effect_delay_enabled: effect_delay_enabled,
+        effect_delay_state: effect_delay_state
+      )
+      |> loop()
+    end
+  end
+
+  defp process_effect_lpf(low, samples, false), do: {low, samples}
+
+  defp process_effect_lpf(low, samples, true) do
+    {low, _, samples} =
+      samples
+      |> Enum.reduce({low, :left, []}, fn d, {{low_l, low_r}, channel, data} ->
+        if channel == :left do
+          low_l = low_l + @k * (d - low_l)
+          {{low_l, low_r}, :right, [low_l | data]}
+        else
+          low_r = low_r + @k * (d - low_r)
+          {{low_l, low_r}, :left, [low_r | data]}
+        end
+      end)
+
+    {low, Enum.reverse(samples)}
+  end
+
+  defp process_effect_delay(queue, samples, enabled) do
+    {queue, samples} =
+      samples
+      |> Enum.reduce({queue, []}, fn d, {queue, data} ->
+        {{:value, delay}, queue} = :queue.out(queue)
+
+        d =
+          if enabled do
+            0.5 * d + 0.5 * delay
+          else
+            d
+          end
+
+        queue = :queue.in(d, queue)
+
+        {queue, [d | data]}
+      end)
+
+    {queue, Enum.reverse(samples)}
+  end
+
+  defp bool_to_string(true), do: "ON"
+  defp bool_to_string(false), do: "OFF"
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```
