@@ -17,6 +17,9 @@ defmodule Zexray.MixProject do
         "compile.zig_build": &zig_build/1
       ],
 
+      # Dialyzer
+      dialyzer: dialyzer(),
+
       # Docs
       name: "Zexray",
       source_url: @source_url,
@@ -44,7 +47,15 @@ defmodule Zexray.MixProject do
     [
       {:ex_doc, "~> 0.36.1", only: :dev, runtime: false},
       {:ex_unit_parameterize, "~> 0.1.0-alpha.4", only: :test, runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:eflambe, "~> 0.3.1", only: :dev, runtime: false},
       {:benchee, "~> 1.3", only: :dev, runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_apps: [:mix, :ex_unit]
     ]
   end
 
