@@ -8,7 +8,6 @@ const core = @import("../core.zig");
 
 pub const exported_nifs = [_]e.ErlNifFunc{
     // Shader
-    .{ .name = "shader_get_max_locations", .arity = 0, .fptr = core.nif_wrapper(nif_shader_get_max_locations), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "load_shader", .arity = 2, .fptr = core.nif_wrapper(nif_load_shader), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "load_shader", .arity = 3, .fptr = core.nif_wrapper(nif_load_shader), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "load_shader_from_memory", .arity = 2, .fptr = core.nif_wrapper(nif_load_shader_from_memory), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -25,19 +24,6 @@ pub const exported_nifs = [_]e.ErlNifFunc{
 //////////////
 //  Shader  //
 //////////////
-
-/// Get shader max locations for Shader.locs
-///
-/// config.h
-/// RL_MAX_SHADER_LOCATIONS
-fn nif_shader_get_max_locations(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
-    assert(argc == 0);
-    _ = argv;
-
-    // Return
-
-    return core.UInt.make(env, @intCast(core.Shader.MAX_LOCATIONS));
-}
 
 /// Load shader from files and bind default locations
 ///

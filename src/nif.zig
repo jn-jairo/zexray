@@ -28,9 +28,9 @@ fn unload(env: ?*e.ErlNifEnv, priv_data: ?*anyopaque) callconv(.C) void {
 
 const nif_resource = @import("./nifs/resource.zig");
 const nif_audio = @import("./nifs/audio.zig");
-const nif_automation_event = @import("./nifs/automation_event.zig");
 const nif_camera = @import("./nifs/camera.zig");
 const nif_color = @import("./nifs/color.zig");
+const nif_constant = @import("./nifs/constant.zig");
 const nif_cursor = @import("./nifs/cursor.zig");
 const nif_drawing = @import("./nifs/drawing.zig");
 const nif_file_system = @import("./nifs/file_system.zig");
@@ -40,9 +40,6 @@ const nif_gamepad = @import("./nifs/gamepad.zig");
 const nif_gesture = @import("./nifs/gesture.zig");
 const nif_image = @import("./nifs/image.zig");
 const nif_keyboard = @import("./nifs/keyboard.zig");
-const nif_material = @import("./nifs/material.zig");
-const nif_mesh = @import("./nifs/mesh.zig");
-const nif_model = @import("./nifs/model.zig");
 const nif_monitor = @import("./nifs/monitor.zig");
 const nif_mouse = @import("./nifs/mouse.zig");
 const nif_random = @import("./nifs/random.zig");
@@ -61,9 +58,9 @@ const nif_window = @import("./nifs/window.zig");
 
 const exported_nifs = nif_resource.exported_nifs ++
     nif_audio.exported_nifs ++
-    nif_automation_event.exported_nifs ++
     nif_camera.exported_nifs ++
     nif_color.exported_nifs ++
+    nif_constant.exported_nifs ++
     nif_cursor.exported_nifs ++
     nif_drawing.exported_nifs ++
     nif_file_system.exported_nifs ++
@@ -73,9 +70,6 @@ const exported_nifs = nif_resource.exported_nifs ++
     nif_gesture.exported_nifs ++
     nif_image.exported_nifs ++
     nif_keyboard.exported_nifs ++
-    nif_material.exported_nifs ++
-    nif_mesh.exported_nifs ++
-    nif_model.exported_nifs ++
     nif_monitor.exported_nifs ++
     nif_mouse.exported_nifs ++
     nif_random.exported_nifs ++

@@ -53,9 +53,9 @@ defmodule Zexray.NIF do
 
   use Zexray.NIF.Resource
   use Zexray.NIF.Audio
-  use Zexray.NIF.AutomationEvent
   use Zexray.NIF.Camera
   use Zexray.NIF.Color
+  use Zexray.NIF.Constant
   use Zexray.NIF.Cursor
   use Zexray.NIF.Drawing
   use Zexray.NIF.FileSystem
@@ -65,9 +65,6 @@ defmodule Zexray.NIF do
   use Zexray.NIF.Gesture
   use Zexray.NIF.Image
   use Zexray.NIF.Keyboard
-  use Zexray.NIF.Material
-  use Zexray.NIF.Mesh
-  use Zexray.NIF.Model
   use Zexray.NIF.Monitor
   use Zexray.NIF.Mouse
   use Zexray.NIF.Random
@@ -86,9 +83,9 @@ defmodule Zexray.NIF do
 
   @nifs @nifs_resource ++
           @nifs_audio ++
-          @nifs_automation_event ++
           @nifs_camera ++
           @nifs_color ++
+          @nifs_constant ++
           @nifs_cursor ++
           @nifs_drawing ++
           @nifs_file_system ++
@@ -98,9 +95,6 @@ defmodule Zexray.NIF do
           @nifs_gesture ++
           @nifs_image ++
           @nifs_keyboard ++
-          @nifs_material ++
-          @nifs_mesh ++
-          @nifs_model ++
           @nifs_monitor ++
           @nifs_mouse ++
           @nifs_random ++

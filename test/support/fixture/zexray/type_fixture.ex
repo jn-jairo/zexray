@@ -171,20 +171,20 @@ defmodule Zexray.TypeFixture do
         AutomationEvent.t(
           frame: 1,
           type: 1,
-          params: Enum.map(1..Zexray.AutomationEvent.max_params(), fn n -> n end)
+          params: Enum.map(1..Zexray.Constant.automation_event_max_params(), fn n -> n end)
         )
 
       :empty ->
         AutomationEvent.t(
           frame: 0,
           type: 0,
-          params: Enum.map(1..Zexray.AutomationEvent.max_params(), fn _ -> 0 end)
+          params: Enum.map(1..Zexray.Constant.automation_event_max_params(), fn _ -> 0 end)
         )
     end
   end
 
   def automation_event_list_fixture(type \\ :base) do
-    capacity = min(4, Zexray.AutomationEvent.automation_event_list_max_automation_events())
+    capacity = min(4, Zexray.Constant.automation_event_list_max_automation_events())
     count = capacity
 
     case type do
@@ -217,7 +217,7 @@ defmodule Zexray.TypeFixture do
       t when t in [:base, :resource] ->
         BoneInfo.t(
           name:
-            Enum.map(1..Zexray.Model.bone_info_max_name(), fn n -> "#{rem(n, 10)}" end)
+            Enum.map(1..Zexray.Constant.bone_info_max_name(), fn n -> "#{rem(n, 10)}" end)
             |> Enum.join(),
           parent: 1
         )
@@ -363,7 +363,7 @@ defmodule Zexray.TypeFixture do
   end
 
   def file_path_list_fixture(type \\ :base) do
-    capacity = min(4, Zexray.FileSystem.file_path_list_max_filepath_capacity())
+    capacity = min(4, Zexray.Constant.file_path_list_max_filepath_capacity())
     count = capacity
 
     case type do
@@ -376,7 +376,7 @@ defmodule Zexray.TypeFixture do
               Enum.map(
                 1..max(
                   1,
-                  trunc(Zexray.FileSystem.file_path_list_max_filepath_length() * i / capacity)
+                  trunc(Zexray.Constant.file_path_list_max_filepath_length() * i / capacity)
                 ),
                 fn n -> "#{rem(n, 10)}" end
               )
@@ -487,27 +487,37 @@ defmodule Zexray.TypeFixture do
       :base ->
         Material.t(
           shader: shader_fixture(type),
-          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(type) end),
+          maps:
+            Enum.map(1..Zexray.Constant.material_max_maps(), fn _ ->
+              material_map_fixture(type)
+            end),
           params:
-            Enum.map(1..Zexray.Material.max_params(), fn n -> Float.round(1.0 + n / 100, 2) end)
+            Enum.map(1..Zexray.Constant.material_max_params(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end)
         )
 
       :resource ->
         Material.t(
           shader: Shader.t_resource(reference: make_ref()),
           maps:
-            Enum.map(1..Zexray.Material.max_maps(), fn _ ->
+            Enum.map(1..Zexray.Constant.material_max_maps(), fn _ ->
               MaterialMap.t_resource(reference: make_ref())
             end),
           params:
-            Enum.map(1..Zexray.Material.max_params(), fn n -> Float.round(1.0 + n / 100, 2) end)
+            Enum.map(1..Zexray.Constant.material_max_params(), fn n ->
+              Float.round(1.0 + n / 100, 2)
+            end)
         )
 
       :empty ->
         Material.t(
           shader: shader_fixture(type),
-          maps: Enum.map(1..Zexray.Material.max_maps(), fn _ -> material_map_fixture(type) end),
-          params: Enum.map(1..Zexray.Material.max_params(), fn _ -> 0.0 end)
+          maps:
+            Enum.map(1..Zexray.Constant.material_max_maps(), fn _ ->
+              material_map_fixture(type)
+            end),
+          params: Enum.map(1..Zexray.Constant.material_max_params(), fn _ -> 0.0 end)
         )
     end
   end
@@ -608,7 +618,7 @@ defmodule Zexray.TypeFixture do
           bone_matrices: Enum.map(1..bone_count, fn _ -> matrix_fixture(type) end),
           bone_count: bone_count,
           vao_id: 0,
-          vbo_id: Enum.map(1..Zexray.Mesh.max_vertex_buffers(), fn _ -> 0 end)
+          vbo_id: Enum.map(1..Zexray.Constant.mesh_max_vertex_buffers(), fn _ -> 0 end)
         )
 
       :resource ->
@@ -633,7 +643,7 @@ defmodule Zexray.TypeFixture do
             Enum.map(1..bone_count, fn _ -> Matrix.t_resource(reference: make_ref()) end),
           bone_count: bone_count,
           vao_id: 0,
-          vbo_id: Enum.map(1..Zexray.Mesh.max_vertex_buffers(), fn _ -> 0 end)
+          vbo_id: Enum.map(1..Zexray.Constant.mesh_max_vertex_buffers(), fn _ -> 0 end)
         )
 
       :empty ->
@@ -725,7 +735,7 @@ defmodule Zexray.TypeFixture do
               end)
             end),
           name:
-            Enum.map(1..Zexray.Model.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
+            Enum.map(1..Zexray.Constant.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
             |> Enum.join()
         )
 
@@ -741,7 +751,7 @@ defmodule Zexray.TypeFixture do
               end)
             end),
           name:
-            Enum.map(1..Zexray.Model.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
+            Enum.map(1..Zexray.Constant.model_animation_max_name(), fn n -> "#{rem(n, 10)}" end)
             |> Enum.join()
         )
 
@@ -969,7 +979,7 @@ defmodule Zexray.TypeFixture do
       t when t in [:base, :resource] ->
         Shader.t(
           id: 0,
-          locs: Enum.map(1..Zexray.Shader.max_locations(), fn _ -> -1 end)
+          locs: Enum.map(1..Zexray.Constant.shader_max_locations(), fn _ -> -1 end)
         )
 
       :empty ->
@@ -1391,11 +1401,11 @@ defmodule Zexray.TypeFixture do
           lens_separation_distance: lens_separation_distance,
           interpupillary_distance: interpupillary_distance,
           lens_distortion_values:
-            Enum.map(1..Zexray.Vr.vr_device_info_max_lens_distortion_values(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_device_info_max_lens_distortion_values(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           chroma_ab_correction:
-            Enum.map(1..Zexray.Vr.vr_device_info_max_chroma_ab_correction(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_device_info_max_chroma_ab_correction(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end)
         )
@@ -1410,9 +1420,11 @@ defmodule Zexray.TypeFixture do
           lens_separation_distance: 0.0,
           interpupillary_distance: 0.0,
           lens_distortion_values:
-            Enum.map(1..Zexray.Vr.vr_device_info_max_lens_distortion_values(), fn _ -> 0.0 end),
+            Enum.map(1..Zexray.Constant.vr_device_info_max_lens_distortion_values(), fn _ ->
+              0.0
+            end),
           chroma_ab_correction:
-            Enum.map(1..Zexray.Vr.vr_device_info_max_chroma_ab_correction(), fn _ -> 0.0 end)
+            Enum.map(1..Zexray.Constant.vr_device_info_max_chroma_ab_correction(), fn _ -> 0.0 end)
         )
     end
   end
@@ -1422,35 +1434,35 @@ defmodule Zexray.TypeFixture do
       :base ->
         VrStereoConfig.t(
           projection:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_projection(), fn _ ->
               matrix_fixture(type)
             end),
           view_offset:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_view_offset(), fn _ ->
               matrix_fixture(type)
             end),
           left_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_lens_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           right_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_lens_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           left_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_screen_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           right_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_screen_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           scale:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           scale_in:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale_in(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end)
         )
@@ -1458,35 +1470,35 @@ defmodule Zexray.TypeFixture do
       :resource ->
         VrStereoConfig.t(
           projection:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_projection(), fn _ ->
               Matrix.t_resource(reference: make_ref())
             end),
           view_offset:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_view_offset(), fn _ ->
               Matrix.t_resource(reference: make_ref())
             end),
           left_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_lens_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           right_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_lens_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           left_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_screen_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           right_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_screen_center(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           scale:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end),
           scale_in:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn n ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale_in(), fn n ->
               Float.round(1.0 + n / 100, 2)
             end)
         )
@@ -1494,23 +1506,25 @@ defmodule Zexray.TypeFixture do
       :empty ->
         VrStereoConfig.t(
           projection:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_projection(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_projection(), fn _ ->
               matrix_fixture(type)
             end),
           view_offset:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_view_offset(), fn _ ->
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_view_offset(), fn _ ->
               matrix_fixture(type)
             end),
           left_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_lens_center(), fn _ -> 0.0 end),
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_lens_center(), fn _ -> 0.0 end),
           right_lens_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_lens_center(), fn _ -> 0.0 end),
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_lens_center(), fn _ -> 0.0 end),
           left_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_left_screen_center(), fn _ -> 0.0 end),
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_left_screen_center(), fn _ -> 0.0 end),
           right_screen_center:
-            Enum.map(1..Zexray.Vr.vr_stereo_config_max_right_screen_center(), fn _ -> 0.0 end),
-          scale: Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale(), fn _ -> 0.0 end),
-          scale_in: Enum.map(1..Zexray.Vr.vr_stereo_config_max_scale_in(), fn _ -> 0.0 end)
+            Enum.map(1..Zexray.Constant.vr_stereo_config_max_right_screen_center(), fn _ ->
+              0.0
+            end),
+          scale: Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale(), fn _ -> 0.0 end),
+          scale_in: Enum.map(1..Zexray.Constant.vr_stereo_config_max_scale_in(), fn _ -> 0.0 end)
         )
     end
   end

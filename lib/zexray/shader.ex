@@ -10,12 +10,6 @@ defmodule Zexray.Shader do
   ############
 
   @doc """
-  Get shader max locations for Shader.locs
-  """
-  @spec max_locations() :: non_neg_integer
-  defdelegate max_locations(), to: NIF, as: :shader_get_max_locations
-
-  @doc """
   Load shader from files and bind default locations
   """
   @spec load(
