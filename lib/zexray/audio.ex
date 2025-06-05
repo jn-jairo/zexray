@@ -78,8 +78,10 @@ defmodule Zexray.Audio do
   @doc group: :management
   def play(audio, return \\ :auto)
 
-  @spec play(sound_stream :: Zexray.Type.SoundStream.t_all(), return :: :auto | :value | :resource) ::
-          Zexray.Type.SoundStream.t_nif()
+  @spec play(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
   def play(sound_stream, return)
       when is_sound_stream(sound_stream) or is_sound_stream_alias(sound_stream) do
     play_sound_stream(sound_stream, return)
@@ -109,8 +111,10 @@ defmodule Zexray.Audio do
   @doc group: :management
   def stop(audio, return \\ :auto)
 
-  @spec stop(sound_stream :: Zexray.Type.SoundStream.t_all(), return :: :auto | :value | :resource) ::
-          Zexray.Type.SoundStream.t_nif()
+  @spec stop(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
   def stop(sound_stream, return)
       when is_sound_stream(sound_stream) or is_sound_stream_alias(sound_stream) do
     stop_sound_stream(sound_stream, return)
@@ -140,8 +144,10 @@ defmodule Zexray.Audio do
   @doc group: :management
   def pause(audio, return \\ :auto)
 
-  @spec pause(sound_stream :: Zexray.Type.SoundStream.t_all(), return :: :auto | :value | :resource) ::
-          Zexray.Type.SoundStream.t_nif()
+  @spec pause(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
   def pause(sound_stream, return)
       when is_sound_stream(sound_stream) or is_sound_stream_alias(sound_stream) do
     pause_sound_stream(sound_stream, return)
@@ -171,8 +177,10 @@ defmodule Zexray.Audio do
   @doc group: :management
   def resume(audio, return \\ :auto)
 
-  @spec resume(sound_stream :: Zexray.Type.SoundStream.t_all(), return :: :auto | :value | :resource) ::
-          Zexray.Type.SoundStream.t_nif()
+  @spec resume(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
   def resume(sound_stream, return)
       when is_sound_stream(sound_stream) or is_sound_stream_alias(sound_stream) do
     resume_sound_stream(sound_stream, return)

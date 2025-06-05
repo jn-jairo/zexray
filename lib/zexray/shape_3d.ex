@@ -1050,7 +1050,8 @@ defmodule Zexray.Shape3D do
   Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
   """
   @doc group: :material_management
-  @spec load_material_default(return :: :auto | :value | :resource) :: Zexray.Type.Material.t_nif()
+  @spec load_material_default(return :: :auto | :value | :resource) ::
+          Zexray.Type.Material.t_nif()
   defdelegate load_material_default(return \\ :auto), to: NIF, as: :load_material_default
 
   @doc """

@@ -37,7 +37,8 @@ defmodule Zexray.Shape do
   Get texture source rectangle that is used for shapes drawing
   """
   @doc group: :configuration
-  @spec get_texture_rectangle(return :: :auto | :value | :resource) :: Zexray.Type.Rectangle.t_nif()
+  @spec get_texture_rectangle(return :: :auto | :value | :resource) ::
+          Zexray.Type.Rectangle.t_nif()
   defdelegate get_texture_rectangle(return \\ :auto), to: NIF, as: :get_shapes_texture_rectangle
 
   ###################
