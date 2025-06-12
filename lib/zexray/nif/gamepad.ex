@@ -135,7 +135,7 @@ defmodule Zexray.NIF.Gamepad do
       def get_gamepad_button_pressed(), do: :erlang.nif_error(:undef)
 
       @doc """
-      Get gamepad axis count for a gamepad
+      Get axis count for a gamepad
 
       ```c
       // raylib.h
@@ -147,7 +147,7 @@ defmodule Zexray.NIF.Gamepad do
       def get_gamepad_axis_count(_gamepad), do: :erlang.nif_error(:undef)
 
       @doc """
-      Get axis movement value for a gamepad axis
+      Get movement value for a gamepad axis
 
       ```c
       // raylib.h

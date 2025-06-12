@@ -29,7 +29,9 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "draw_circle_lines", .arity = 4, .fptr = core.nif_wrapper(nif_draw_circle_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_circle_lines_v", .arity = 3, .fptr = core.nif_wrapper(nif_draw_circle_lines_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_ellipse", .arity = 5, .fptr = core.nif_wrapper(nif_draw_ellipse), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "draw_ellipse_v", .arity = 4, .fptr = core.nif_wrapper(nif_draw_ellipse_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_ellipse_lines", .arity = 5, .fptr = core.nif_wrapper(nif_draw_ellipse_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "draw_ellipse_lines_v", .arity = 4, .fptr = core.nif_wrapper(nif_draw_ellipse_lines_v), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_ring", .arity = 7, .fptr = core.nif_wrapper(nif_draw_ring), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_ring_lines", .arity = 7, .fptr = core.nif_wrapper(nif_draw_ring_lines), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "draw_rectangle", .arity = 5, .fptr = core.nif_wrapper(nif_draw_rectangle), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -741,6 +743,44 @@ fn nif_draw_ellipse(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     return core.Atom.make(env, "ok");
 }
 
+/// Draw ellipse (Vector version)
+///
+/// raylib.h
+/// RLAPI void DrawEllipseV(Vector2 center, float radiusH, float radiusV, Color color);
+fn nif_draw_ellipse_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4);
+
+    // Arguments
+
+    const arg_center = core.Argument(core.Vector2).get(env, argv[0]) catch {
+        return error.invalid_argument_center;
+    };
+    defer arg_center.free();
+    const center = arg_center.data;
+
+    const radius_h = core.Double.get(env, argv[1]) catch {
+        return error.invalid_argument_radius_h;
+    };
+
+    const radius_v = core.Double.get(env, argv[2]) catch {
+        return error.invalid_argument_radius_v;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.DrawEllipseV(center, @floatCast(radius_h), @floatCast(radius_v), color);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
 /// Draw ellipse outline
 ///
 /// raylib.h
@@ -775,6 +815,44 @@ fn nif_draw_ellipse_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     rl.DrawEllipseLines(center_x, center_y, @floatCast(radius_h), @floatCast(radius_v), color);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Draw ellipse outline (Vector version)
+///
+/// raylib.h
+/// RLAPI void DrawEllipseLinesV(Vector2 center, float radiusH, float radiusV, Color color);
+fn nif_draw_ellipse_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4);
+
+    // Arguments
+
+    const arg_center = core.Argument(core.Vector2).get(env, argv[0]) catch {
+        return error.invalid_argument_center;
+    };
+    defer arg_center.free();
+    const center = arg_center.data;
+
+    const radius_h = core.Double.get(env, argv[1]) catch {
+        return error.invalid_argument_radius_h;
+    };
+
+    const radius_v = core.Double.get(env, argv[2]) catch {
+        return error.invalid_argument_radius_v;
+    };
+
+    const arg_color = core.Argument(core.Color).get(env, argv[3]) catch {
+        return error.invalid_argument_color;
+    };
+    defer arg_color.free();
+    const color = arg_color.data;
+
+    // Function
+
+    rl.DrawEllipseLinesV(center, @floatCast(radius_h), @floatCast(radius_v), color);
 
     // Return
 
@@ -1122,7 +1200,7 @@ fn nif_draw_rectangle_gradient_h(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 /// Draw a gradient-filled rectangle with custom vertex colors
 ///
 /// raylib.h
-/// RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight);
+/// RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color bottomRight, Color topRight);
 fn nif_draw_rectangle_gradient_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 5);
 
@@ -2681,13 +2759,16 @@ fn nif_check_collision_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
+    const term_collision = core.Boolean.make(env, collision);
+
     const term_collision_point = core.maybe_make_struct_as_resource(core.Vector2, env, collision_point, return_resource) catch {
         return error.invalid_return;
     };
 
-    const term_collision = core.Boolean.make(env, collision);
-
-    return e.enif_make_tuple2(env, term_collision, term_collision_point);
+    return core.Tuple.make(env, &[_]e.ErlNifTerm{
+        term_collision,
+        term_collision_point,
+    });
 }
 
 /// Get collision rectangle for two rectangles collision

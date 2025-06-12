@@ -320,7 +320,10 @@ fn nif_load_image_anim(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     const term_frames = core.Int.make(env, frames);
 
-    return e.enif_make_tuple2(env, term_image, term_frames);
+    return core.Tuple.make(env, &[_]e.ErlNifTerm{
+        term_image,
+        term_frames,
+    });
 }
 
 /// Load image sequence from memory buffer
@@ -364,7 +367,10 @@ fn nif_load_image_anim_from_memory(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
 
     const term_frames = core.Int.make(env, frames);
 
-    return e.enif_make_tuple2(env, term_image, term_frames);
+    return core.Tuple.make(env, &[_]e.ErlNifTerm{
+        term_image,
+        term_frames,
+    });
 }
 
 /// Load image from memory buffer, fileType refers to extension: i.e. '.png'
@@ -3079,7 +3085,7 @@ fn nif_image_draw_triangle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 /// Draw a triangle fan defined by points within an image (first vertex is the center)
 ///
 /// raylib.h
-/// RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);
+/// RLAPI void ImageDrawTriangleFan(Image *dst, const Vector2 *points, int pointCount, Color color);
 fn nif_image_draw_triangle_fan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 3 or argc == 4);
 
@@ -3123,7 +3129,7 @@ fn nif_image_draw_triangle_fan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 /// Draw a triangle strip defined by points within an image
 ///
 /// raylib.h
-/// RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);
+/// RLAPI void ImageDrawTriangleStrip(Image *dst, const Vector2 *points, int pointCount, Color color);
 fn nif_image_draw_triangle_strip(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
     assert(argc == 3 or argc == 4);
 

@@ -196,7 +196,7 @@ defmodule Zexray.Window do
   defdelegate minimize(), to: NIF, as: :minimize_window
 
   @doc """
-  Set window state: not minimized/maximized
+  Restore window from being minimized/maximized
   """
   @doc group: :action
   @spec restore() :: :ok

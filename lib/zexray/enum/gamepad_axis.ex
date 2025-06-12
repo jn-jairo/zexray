@@ -1,6 +1,6 @@
 defmodule Zexray.Enum.GamepadAxis do
   @moduledoc """
-  Gamepad axis
+  Gamepad axes
 
   ## Values
 

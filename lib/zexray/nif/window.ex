@@ -282,7 +282,7 @@ defmodule Zexray.NIF.Window do
       def minimize_window(), do: :erlang.nif_error(:undef)
 
       @doc """
-      Set window state: not minimized/maximized
+      Restore window from being minimized/maximized
 
       ```c
       // raylib.h

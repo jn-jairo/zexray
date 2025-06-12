@@ -400,7 +400,7 @@ fn nif_minimize_window(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     return core.Atom.make(env, "ok");
 }
 
-/// Set window state: not minimized/maximized
+/// Restore window from being minimized/maximized
 ///
 /// raylib.h
 /// RLAPI void RestoreWindow(void);

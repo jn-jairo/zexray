@@ -84,13 +84,13 @@ defmodule Zexray.Gamepad do
   defdelegate get_pressed(), to: NIF, as: :get_gamepad_button_pressed
 
   @doc """
-  Get gamepad axis count for a gamepad
+  Get axis count for a gamepad
   """
   @spec get_axis_count(gamepad :: integer) :: integer
   defdelegate get_axis_count(gamepad), to: NIF, as: :get_gamepad_axis_count
 
   @doc """
-  Get axis movement value for a gamepad axis
+  Get movement value for a gamepad axis
   """
   @spec get_axis_movement(
           gamepad :: integer,

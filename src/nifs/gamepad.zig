@@ -190,7 +190,7 @@ fn nif_get_gamepad_button_pressed(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     return core.Int.make(env, gamepad_button_pressed);
 }
 
-/// Get gamepad axis count for a gamepad
+/// Get axis count for a gamepad
 ///
 /// raylib.h
 /// RLAPI int GetGamepadAxisCount(int gamepad);
@@ -212,7 +212,7 @@ fn nif_get_gamepad_axis_count(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     return core.Int.make(env, gamepad_axis_count);
 }
 
-/// Get axis movement value for a gamepad axis
+/// Get movement value for a gamepad axis
 ///
 /// raylib.h
 /// RLAPI float GetGamepadAxisMovement(int gamepad, int axis);

@@ -27,7 +27,9 @@ defmodule Zexray.NIF.Shape do
         draw_circle_lines: 4,
         draw_circle_lines_v: 3,
         draw_ellipse: 5,
+        draw_ellipse_v: 4,
         draw_ellipse_lines: 5,
+        draw_ellipse_lines_v: 4,
         draw_ring: 7,
         draw_ring_lines: 7,
         draw_rectangle: 5,
@@ -485,6 +487,29 @@ defmodule Zexray.NIF.Shape do
           do: :erlang.nif_error(:undef)
 
       @doc """
+      Draw ellipse (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void DrawEllipseV(Vector2 center, float radiusH, float radiusV, Color color);
+      ```
+      """
+      @doc group: :basic_shapes_drawing
+      @spec draw_ellipse_v(
+              center :: tuple,
+              radius_h :: float,
+              radius_v :: float,
+              color :: tuple
+            ) :: :ok
+      def draw_ellipse_v(
+            _center,
+            _radius_h,
+            _radius_v,
+            _color
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
       Draw ellipse outline
 
       ```c
@@ -503,6 +528,29 @@ defmodule Zexray.NIF.Shape do
       def draw_ellipse_lines(
             _center_x,
             _center_y,
+            _radius_h,
+            _radius_v,
+            _color
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Draw ellipse outline (Vector version)
+
+      ```c
+      // raylib.h
+      RLAPI void DrawEllipseLinesV(Vector2 center, float radiusH, float radiusV, Color color);
+      ```
+      """
+      @doc group: :basic_shapes_drawing
+      @spec draw_ellipse_lines_v(
+              center :: tuple,
+              radius_h :: float,
+              radius_v :: float,
+              color :: tuple
+            ) :: :ok
+      def draw_ellipse_lines_v(
+            _center,
             _radius_h,
             _radius_v,
             _color
@@ -714,7 +762,7 @@ defmodule Zexray.NIF.Shape do
 
       ```c
       // raylib.h
-      RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color topRight, Color bottomRight);
+      RLAPI void DrawRectangleGradientEx(Rectangle rec, Color topLeft, Color bottomLeft, Color bottomRight, Color topRight);
       ```
       """
       @doc group: :basic_shapes_drawing

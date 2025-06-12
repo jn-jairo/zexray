@@ -1794,7 +1794,7 @@ defmodule Zexray.NIF.Image do
 
       ```c
       // raylib.h
-      RLAPI void ImageDrawTriangleFan(Image *dst, Vector2 *points, int pointCount, Color color);
+      RLAPI void ImageDrawTriangleFan(Image *dst, const Vector2 *points, int pointCount, Color color);
       ```
       """
       @doc group: :image_drawing
@@ -1817,7 +1817,7 @@ defmodule Zexray.NIF.Image do
 
       ```c
       // raylib.h
-      RLAPI void ImageDrawTriangleStrip(Image *dst, Vector2 *points, int pointCount, Color color);
+      RLAPI void ImageDrawTriangleStrip(Image *dst, const Vector2 *points, int pointCount, Color color);
       ```
       """
       @doc group: :image_drawing

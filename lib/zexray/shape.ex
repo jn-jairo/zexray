@@ -329,6 +329,25 @@ defmodule Zexray.Shape do
               as: :draw_ellipse
 
   @doc """
+  Draw ellipse (Vector version)
+  """
+  @doc group: :basic_drawing
+  @spec draw_ellipse_v(
+          center :: Zexray.Type.Vector2.t_all(),
+          radius_h :: float,
+          radius_v :: float,
+          color :: Zexray.Type.Color.t_all()
+        ) :: :ok
+  defdelegate draw_ellipse_v(
+                center,
+                radius_h,
+                radius_v,
+                color
+              ),
+              to: NIF,
+              as: :draw_ellipse_v
+
+  @doc """
   Draw ellipse outline
   """
   @doc group: :basic_drawing
@@ -348,6 +367,25 @@ defmodule Zexray.Shape do
               ),
               to: NIF,
               as: :draw_ellipse_lines
+
+  @doc """
+  Draw ellipse outline (Vector version)
+  """
+  @doc group: :basic_drawing
+  @spec draw_ellipse_lines_v(
+          center :: Zexray.Type.Vector2.t_all(),
+          radius_h :: float,
+          radius_v :: float,
+          color :: Zexray.Type.Color.t_all()
+        ) :: :ok
+  defdelegate draw_ellipse_lines_v(
+                center,
+                radius_h,
+                radius_v,
+                color
+              ),
+              to: NIF,
+              as: :draw_ellipse_lines_v
 
   @doc """
   Draw ring
