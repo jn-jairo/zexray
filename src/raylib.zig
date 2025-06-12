@@ -2,6 +2,7 @@ const raylib = @cImport({
     @cInclude("raylib.h");
     @cInclude("config.h");
     @cInclude("rcamera.h");
+    @cInclude("raygui.h");
     @cInclude("stdio.h");
 });
 pub usingnamespace raylib;
@@ -23,6 +24,33 @@ const build_config = @import("config");
 const e = @import("./erl_nif.zig");
 
 pub const allocator = e.allocator;
+
+/// Size of icons in pixels (squared)
+pub const RAYGUI_ICON_SIZE: usize = 16;
+
+/// Maximum number of icons
+pub const RAYGUI_ICON_MAX_ICONS: usize = 256;
+
+// /// Maximum length of icon name id
+// const RAYGUI_ICON_MAX_NAME_LENGTH: usize = 32;
+
+/// Icons data is defined by bit array (every bit represents one pixel)
+/// Those arrays are stored as unsigned int data arrays, so,
+/// every array element defines 32 pixels (bits) of information
+/// One icon is defined by 8 int, (8 int * 32 bit = 256 bit = 16*16 pixels)
+/// NOTE: Number of elemens depend on RAYGUI_ICON_SIZE (by default 16x16 pixels)
+pub const RAYGUI_ICON_DATA_ELEMENTS: usize = (RAYGUI_ICON_SIZE * RAYGUI_ICON_SIZE / 32);
+
+/// Icons data for all gui possible icons (allocated on data segment by default)
+///
+/// NOTE 1: Every icon is codified in binary form, using 1 bit per pixel, so,
+/// every 16x16 icon requires 8 integers (16*16/32) to be stored
+///
+/// NOTE 2: A different icon set could be loaded over this array using GuiLoadIcons(),
+/// but loaded icons set must be same RAYGUI_ICON_SIZE and no more than RAYGUI_ICON_MAX_ICONS
+///
+/// guiIcons size is by default: 256*(16*16/32) = 2048*4 = 8192 bytes = 8 KB
+pub const RAYGUI_VALUEBOX_MAX_CHARS: usize = 32;
 
 pub const IVector2 = struct {
     x: c_int = std.mem.zeroes(c_int),

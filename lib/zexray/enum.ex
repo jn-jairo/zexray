@@ -32,6 +32,26 @@ defmodule Zexray.Enum do
         GamepadAxis,
         GamepadButton,
         Gesture,
+        GuiControl,
+        GuiIcon,
+        GuiPropertyCheckBox,
+        GuiPropertyColorPicker,
+        GuiPropertyComboBox,
+        GuiPropertyControl,
+        GuiPropertyDefault,
+        GuiPropertyDropdownBox,
+        GuiPropertyListView,
+        GuiPropertyProgressBar,
+        GuiPropertyScrollBar,
+        GuiPropertySlider,
+        GuiPropertyTextBox,
+        GuiPropertyToggle,
+        GuiPropertyValueBox,
+        GuiScrollBarSide,
+        GuiState,
+        GuiTextAlignment,
+        GuiTextAlignmentVertical,
+        GuiTextWrapMode,
         KeyboardKey,
         MaterialMapIndex,
         MouseButton,
@@ -114,6 +134,146 @@ defmodule Zexray.Enum do
       defmacro enum_gesture(value) do
         quote do
           Zexray.Enum.Gesture.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_control(value) do
+        quote do
+          Zexray.Enum.GuiControl.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_icon(value) do
+        quote do
+          Zexray.Enum.GuiIcon.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_check_box(value) do
+        quote do
+          Zexray.Enum.GuiPropertyCheckBox.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_color_picker(value) do
+        quote do
+          Zexray.Enum.GuiPropertyColorPicker.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_combo_box(value) do
+        quote do
+          Zexray.Enum.GuiPropertyComboBox.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_control(value) do
+        quote do
+          Zexray.Enum.GuiPropertyControl.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_default(value) do
+        quote do
+          Zexray.Enum.GuiPropertyDefault.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_dropdown_box(value) do
+        quote do
+          Zexray.Enum.GuiPropertyDropdownBox.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_list_view(value) do
+        quote do
+          Zexray.Enum.GuiPropertyListView.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_progress_bar(value) do
+        quote do
+          Zexray.Enum.GuiPropertyProgressBar.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_scroll_bar(value) do
+        quote do
+          Zexray.Enum.GuiPropertyScrollBar.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_slider(value) do
+        quote do
+          Zexray.Enum.GuiPropertySlider.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_text_box(value) do
+        quote do
+          Zexray.Enum.GuiPropertyTextBox.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_toggle(value) do
+        quote do
+          Zexray.Enum.GuiPropertyToggle.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_property_value_box(value) do
+        quote do
+          Zexray.Enum.GuiPropertyValueBox.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_scroll_bar_side(value) do
+        quote do
+          Zexray.Enum.GuiScrollBarSide.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_state(value) do
+        quote do
+          Zexray.Enum.GuiState.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_text_alignment(value) do
+        quote do
+          Zexray.Enum.GuiTextAlignment.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_text_alignment_vertical(value) do
+        quote do
+          Zexray.Enum.GuiTextAlignmentVertical.enum(unquote(value))
+        end
+      end
+
+      @doc false
+      defmacro enum_gui_text_wrap_mode(value) do
+        quote do
+          Zexray.Enum.GuiTextWrapMode.enum(unquote(value))
         end
       end
 

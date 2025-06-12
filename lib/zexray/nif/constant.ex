@@ -17,6 +17,12 @@ defmodule Zexray.NIF.Constant do
         get_file_path_list_max_filepath_capacity: 0,
         get_file_path_list_max_filepath_length: 0,
 
+        # Gui
+        get_gui_icon_max_icons: 0,
+        get_gui_icon_size: 0,
+        get_gui_icon_data_elements: 0,
+        get_gui_valuebox_max_chars: 0,
+
         # Material
         get_material_max_maps: 0,
         get_material_max_params: 0,
@@ -95,6 +101,45 @@ defmodule Zexray.NIF.Constant do
       @doc group: :file_system
       @spec get_file_path_list_max_filepath_length() :: non_neg_integer
       def get_file_path_list_max_filepath_length(), do: :erlang.nif_error(:undef)
+
+      #########
+      #  Gui  #
+      #########
+
+      @doc """
+      Maximum number of icons
+      """
+      @doc group: :file_system
+      @spec get_gui_icon_max_icons() :: non_neg_integer
+      def get_gui_icon_max_icons(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Size of icons in pixels (squared)
+      """
+      @doc group: :file_system
+      @spec get_gui_icon_size() :: non_neg_integer
+      def get_gui_icon_size(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Icons data is defined by bit array (every bit represents one pixel)
+
+      Those arrays are stored as unsigned int data arrays, so,
+      every array element defines 32 pixels (bits) of information
+
+      One icon is defined by 8 int, (8 int * 32 bit = 256 bit = 16*16 pixels)
+
+      NOTE: Number of elemens depend on RAYGUI_ICON_SIZE (by default 16x16 pixels)
+      """
+      @doc group: :file_system
+      @spec get_gui_icon_data_elements() :: non_neg_integer
+      def get_gui_icon_data_elements(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Value box max chars
+      """
+      @doc group: :file_system
+      @spec get_gui_valuebox_max_chars() :: non_neg_integer
+      def get_gui_valuebox_max_chars(), do: :erlang.nif_error(:undef)
 
       ##############
       #  Material  #

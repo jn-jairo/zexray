@@ -19,6 +19,12 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "get_file_path_list_max_filepath_capacity", .arity = 0, .fptr = core.nif_wrapper(nif_get_file_path_list_max_filepath_capacity), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_file_path_list_max_filepath_length", .arity = 0, .fptr = core.nif_wrapper(nif_get_file_path_list_max_filepath_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
+    // Gui
+    .{ .name = "get_gui_icon_max_icons", .arity = 0, .fptr = core.nif_wrapper(nif_get_gui_icon_max_icons), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gui_icon_size", .arity = 0, .fptr = core.nif_wrapper(nif_get_gui_icon_size), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gui_icon_data_elements", .arity = 0, .fptr = core.nif_wrapper(nif_get_gui_icon_data_elements), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_gui_valuebox_max_chars", .arity = 0, .fptr = core.nif_wrapper(nif_get_gui_valuebox_max_chars), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
     // Material
     .{ .name = "get_material_max_maps", .arity = 0, .fptr = core.nif_wrapper(nif_get_material_max_maps), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_material_max_params", .arity = 0, .fptr = core.nif_wrapper(nif_get_material_max_params), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -111,6 +117,54 @@ fn nif_get_file_path_list_max_filepath_length(env: ?*e.ErlNifEnv, argc: c_int, a
     // Return
 
     return core.UInt.make(env, @intCast(core.FilePathList.MAX_FILEPATH_LENGTH - 1));
+}
+
+///////////
+//  Gui  //
+///////////
+
+/// Maximum number of icons
+fn nif_get_gui_icon_max_icons(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(rl.RAYGUI_ICON_MAX_ICONS));
+}
+
+/// Size of icons in pixels (squared)
+fn nif_get_gui_icon_size(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(rl.RAYGUI_ICON_SIZE));
+}
+
+/// Icons data is defined by bit array (every bit represents one pixel)
+/// Those arrays are stored as unsigned int data arrays, so,
+/// every array element defines 32 pixels (bits) of information
+/// One icon is defined by 8 int, (8 int * 32 bit = 256 bit = 16*16 pixels)
+/// NOTE: Number of elemens depend on RAYGUI_ICON_SIZE (by default 16x16 pixels)
+fn nif_get_gui_icon_data_elements(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(rl.RAYGUI_ICON_DATA_ELEMENTS));
+}
+
+/// Value box max chars
+fn nif_get_gui_valuebox_max_chars(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(rl.RAYGUI_VALUEBOX_MAX_CHARS));
 }
 
 ////////////////

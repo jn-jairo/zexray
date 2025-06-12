@@ -57,6 +57,49 @@ defmodule Zexray.Constant do
     to: NIF,
     as: :get_file_path_list_max_filepath_length
 
+  #########
+  #  Gui  #
+  #########
+
+  @doc """
+  Maximum number of icons
+  """
+  @spec gui_icon_max_icons() :: non_neg_integer
+  defdelegate gui_icon_max_icons(),
+    to: NIF,
+    as: :get_gui_icon_max_icons
+
+  @doc """
+  Size of icons in pixels (squared)
+  """
+  @spec gui_icon_size() :: non_neg_integer
+  defdelegate gui_icon_size(),
+    to: NIF,
+    as: :get_gui_icon_size
+
+  @doc """
+  Icons data is defined by bit array (every bit represents one pixel)
+
+  Those arrays are stored as unsigned int data arrays, so,
+  every array element defines 32 pixels (bits) of information
+
+  One icon is defined by 8 int, (8 int * 32 bit = 256 bit = 16*16 pixels)
+
+  NOTE: Number of elemens depend on gui_icon_size (by default 16x16 pixels)
+  """
+  @spec gui_icon_data_elements() :: non_neg_integer
+  defdelegate gui_icon_data_elements(),
+    to: NIF,
+    as: :get_gui_icon_data_elements
+
+  @doc """
+  Maximum number of chars for value box (number as text)
+  """
+  @spec gui_valuebox_max_chars() :: non_neg_integer
+  defdelegate gui_valuebox_max_chars(),
+    to: NIF,
+    as: :get_gui_valuebox_max_chars
+
   ##############
   #  Material  #
   ##############

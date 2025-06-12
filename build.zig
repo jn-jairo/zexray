@@ -56,6 +56,12 @@ pub fn build(b: *std.Build) !void {
 
         try writer.writeAll(" -DSTBTT_malloc(x,u)=((void)(u),nif_alloc(x))");
         try writer.writeAll(" -DSTBTT_free(x,u)=((void)(u),nif_free(x))");
+
+        try writer.writeAll(" -DRAYGUI_MALLOC(sz)=nif_alloc(sz)");
+        try writer.writeAll(" -DRAYGUI_CALLOC(n,sz)=nif_calloc(n,sz)");
+        try writer.writeAll(" -DRAYGUI_FREE(p)=nif_free(p)");
+
+        try writer.writeAll(" -DRAYGUI_SUPPORT_LOG_INFO= -URAYGUI_SUPPORT_LOG_INFO");
     }
 
     try writer.print(" -DFONT_TTF_DEFAULT_SIZE={}", .{raylib_config.FONT_TTF_DEFAULT_SIZE});
