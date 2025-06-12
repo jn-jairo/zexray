@@ -370,10 +370,6 @@ pub const CString = struct {
         if (e.enif_inspect_binary(env, term, &binary) == 0) return error.ArgumentError;
         if (binary.size != 0 and (binary.size + 1) > length_c) return error.ArgumentError;
 
-        if (binary.size <= 0) {
-            return null;
-        }
-
         const value = try allocator.alloc(u8, length_c);
         errdefer allocator.free(value);
 
@@ -638,10 +634,11 @@ pub const Array = struct {
     fn _get_c(comptime T: type, comptime T_rl: type, allocator: std.mem.Allocator, env: ?*e.ErlNifEnv, term: e.ErlNifTerm, lengths_c: []const usize, depth: usize) ![*c]T_rl {
         assert(lengths_c.len > 0 and depth < lengths_c.len);
 
-        const length_c = lengths_c[depth];
+        var length_c = lengths_c[depth];
 
         var length: c_uint = undefined;
         if (e.enif_get_list_length(env, term, &length) == 0) return error.ArgumentError;
+        if (length_c == 0 and T == CString) length_c = @intCast(length);
         if (length != 0 and length != length_c) return error.ArgumentError;
 
         if (length <= 0) {
@@ -679,17 +676,31 @@ pub const Array = struct {
             if (child) |c| {
                 if (child_child == null and (T == Binary or T == CString)) {
                     values[i] = blk: {
-                        switch (@typeInfo(@TypeOf(T.get_c))) {
-                            .@"fn" => |fn_info| {
-                                if (fn_info.params.len == 4) {
-                                    break :blk try T.get_c(allocator, env, term_value_head, lengths_c[depth + 1]);
-                                } else {
-                                    break :blk try T.get_c(env, term_value_head, lengths_c[depth + 1]);
-                                }
-                            },
-                            else => @compileError("Get callback is not a function"),
+                        if (lengths_c[depth + 1] == 0 and T == CString) {
+                            switch (@typeInfo(@TypeOf(T.get_c_unknown))) {
+                                .@"fn" => |fn_info| {
+                                    if (fn_info.params.len == 3) {
+                                        break :blk try T.get_c_unknown(allocator, env, term_value_head);
+                                    } else {
+                                        break :blk try T.get_c_unknown(env, term_value_head);
+                                    }
+                                },
+                                else => @compileError("Get callback is not a function"),
+                            }
+                            @compileError("Invalid get callback");
+                        } else {
+                            switch (@typeInfo(@TypeOf(T.get_c))) {
+                                .@"fn" => |fn_info| {
+                                    if (fn_info.params.len == 4) {
+                                        break :blk try T.get_c(allocator, env, term_value_head, lengths_c[depth + 1]);
+                                    } else {
+                                        break :blk try T.get_c(env, term_value_head, lengths_c[depth + 1]);
+                                    }
+                                },
+                                else => @compileError("Get callback is not a function"),
+                            }
+                            @compileError("Invalid get callback");
                         }
-                        @compileError("Invalid get callback");
                     };
                 } else {
                     values[i] = try _get_c(T, c, allocator, env, term_value_head, lengths_c, depth + 1);
@@ -919,17 +930,31 @@ pub const Array = struct {
                 if (child) |c| {
                     if (child_child == null and (T == Binary or T == CString)) {
                         blk: {
-                            switch (@typeInfo(@TypeOf(T.free))) {
-                                .@"fn" => |fn_info| {
-                                    if (fn_info.params.len == 3) {
-                                        break :blk T.free_c(allocator, values[i], lengths_c[depth + 1]);
-                                    } else {
-                                        break :blk T.free_c(values[i], lengths_c[depth + 1]);
-                                    }
-                                },
-                                else => @compileError("Free callback is not a function"),
+                            if (lengths_c[depth + 1] == 0 and T == CString) {
+                                switch (@typeInfo(@TypeOf(T.free_c_unknown))) {
+                                    .@"fn" => |fn_info| {
+                                        if (fn_info.params.len == 2) {
+                                            break :blk T.free_c_unknown(allocator, values[i]);
+                                        } else {
+                                            break :blk T.free_c_unknown(values[i]);
+                                        }
+                                    },
+                                    else => @compileError("Free callback is not a function"),
+                                }
+                                @compileError("Invalid free callback");
+                            } else {
+                                switch (@typeInfo(@TypeOf(T.free_c))) {
+                                    .@"fn" => |fn_info| {
+                                        if (fn_info.params.len == 3) {
+                                            break :blk T.free_c(allocator, values[i], lengths_c[depth + 1]);
+                                        } else {
+                                            break :blk T.free_c(values[i], lengths_c[depth + 1]);
+                                        }
+                                    },
+                                    else => @compileError("Free callback is not a function"),
+                                }
+                                @compileError("Invalid free callback");
                             }
-                            @compileError("Invalid free callback");
                         }
                     } else {
                         const k = if (keep) |k| k[i] else null;
