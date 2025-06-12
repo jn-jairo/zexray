@@ -185,6 +185,22 @@ defmodule Zexray.Drawing do
   Run function with scissor mode (define screen area for following drawing)
   """
   @spec with_scissor_mode(
+          rec :: Zexray.Type.Rectangle.t_all(),
+          func :: (-> any)
+        ) :: any
+  def with_scissor_mode(rec, func) when is_function(func) do
+    try do
+      begin_scissor_mode(rec)
+      func.()
+    after
+      end_scissor_mode()
+    end
+  end
+
+  @doc """
+  Run function with scissor mode (define screen area for following drawing)
+  """
+  @spec with_scissor_mode(
           x :: integer,
           y :: integer,
           width :: integer,
@@ -199,6 +215,12 @@ defmodule Zexray.Drawing do
       end_scissor_mode()
     end
   end
+
+  @doc """
+  Begin scissor mode (define screen area for following drawing)
+  """
+  @spec begin_scissor_mode(rec :: Zexray.Type.Rectangle.t_all()) :: :ok
+  defdelegate begin_scissor_mode(rec), to: NIF, as: :begin_scissor_mode
 
   @doc """
   Begin scissor mode (define screen area for following drawing)

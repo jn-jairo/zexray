@@ -18,6 +18,7 @@ defmodule Zexray.NIF.Drawing do
         end_shader_mode: 0,
         begin_blend_mode: 1,
         end_blend_mode: 0,
+        begin_scissor_mode: 1,
         begin_scissor_mode: 4,
         end_scissor_mode: 0,
         begin_vr_stereo_mode: 1,
@@ -183,6 +184,18 @@ defmodule Zexray.NIF.Drawing do
       @doc group: :drawing
       @spec end_blend_mode() :: :ok
       def end_blend_mode(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Begin scissor mode (define screen area for following drawing)
+
+      ```c
+      // raylib.h
+      RLAPI void BeginScissorMode(Rectangle rec);
+      ```
+      """
+      @doc group: :drawing
+      @spec begin_scissor_mode(rec :: tuple) :: :ok
+      def begin_scissor_mode(_rec), do: :erlang.nif_error(:undef)
 
       @doc """
       Begin scissor mode (define screen area for following drawing)

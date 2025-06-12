@@ -21,6 +21,7 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "end_shader_mode", .arity = 0, .fptr = core.nif_wrapper(nif_end_shader_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "begin_blend_mode", .arity = 1, .fptr = core.nif_wrapper(nif_begin_blend_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "end_blend_mode", .arity = 0, .fptr = core.nif_wrapper(nif_end_blend_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "begin_scissor_mode", .arity = 1, .fptr = core.nif_wrapper(nif_begin_scissor_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "begin_scissor_mode", .arity = 4, .fptr = core.nif_wrapper(nif_begin_scissor_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "end_scissor_mode", .arity = 0, .fptr = core.nif_wrapper(nif_end_scissor_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "begin_vr_stereo_mode", .arity = 1, .fptr = core.nif_wrapper(nif_begin_vr_stereo_mode), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -297,25 +298,43 @@ fn nif_end_blend_mode(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 /// raylib.h
 /// RLAPI void BeginScissorMode(int x, int y, int width, int height);
 fn nif_begin_scissor_mode(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
-    assert(argc == 4);
+    assert(argc == 1 or argc == 4);
 
     // Arguments
 
-    const x = core.Int.get(env, argv[0]) catch {
-        return error.invalid_argument_x;
-    };
+    var x: c_int = undefined;
+    var y: c_int = undefined;
+    var width: c_int = undefined;
+    var height: c_int = undefined;
 
-    const y = core.Int.get(env, argv[1]) catch {
-        return error.invalid_argument_y;
-    };
+    if (argc == 1) {
+        const arg_rec = core.Argument(core.Rectangle).get(env, argv[0]) catch {
+            return error.invalid_argument_rec;
+        };
+        defer arg_rec.free();
+        const rec = arg_rec.data;
 
-    const width = core.Int.get(env, argv[2]) catch {
-        return error.invalid_argument_width;
-    };
+        x = @intFromFloat(rec.x);
+        y = @intFromFloat(rec.y);
+        width = @intFromFloat(rec.width);
+        height = @intFromFloat(rec.height);
+    } else {
+        x = core.Int.get(env, argv[0]) catch {
+            return error.invalid_argument_x;
+        };
 
-    const height = core.Int.get(env, argv[3]) catch {
-        return error.invalid_argument_height;
-    };
+        y = core.Int.get(env, argv[1]) catch {
+            return error.invalid_argument_y;
+        };
+
+        width = core.Int.get(env, argv[2]) catch {
+            return error.invalid_argument_width;
+        };
+
+        height = core.Int.get(env, argv[3]) catch {
+            return error.invalid_argument_height;
+        };
+    }
 
     // Function
 
