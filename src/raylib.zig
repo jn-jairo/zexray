@@ -360,6 +360,7 @@ pub fn GetAudioStreamInfo(stream: raylib.AudioStream) AudioInfo {
 /// Load sound stream from file
 pub fn LoadSoundStream(fileName: [*c]const u8) SoundStream {
     const wave = raylib.LoadWave(fileName);
+    defer raylib.UnloadWave(wave);
     return LoadSoundStreamFromWave(wave);
 }
 
@@ -367,10 +368,12 @@ pub fn LoadSoundStream(fileName: [*c]const u8) SoundStream {
 pub fn LoadSoundStreamFromWave(wave: raylib.Wave) SoundStream {
     var sound_stream = SoundStream{};
 
-    sound_stream.stream = raylib.LoadAudioStream(wave.sampleRate, wave.sampleSize, wave.channels);
-    sound_stream.frameCount = wave.frameCount;
+    const wave_copy = raylib.WaveCopy(wave);
+
+    sound_stream.stream = raylib.LoadAudioStream(wave_copy.sampleRate, wave_copy.sampleSize, wave_copy.channels);
+    sound_stream.frameCount = wave_copy.frameCount;
     sound_stream.looping = false;
-    sound_stream.data = wave.data;
+    sound_stream.data = wave_copy.data;
 
     return sound_stream;
 }
