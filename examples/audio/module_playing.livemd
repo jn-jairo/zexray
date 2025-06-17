@@ -55,7 +55,7 @@ end
 
 defmodule Example do
   @resources_dir System.tmp_dir!() <> "/zexray/resources"
-  @resources_url "https://github.com/raysan5/raylib/raw/f5c96302d5623950dccdca31f8dd66d6d633dbd1"
+  @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
 
   use Zexray.Enum
   use Zexray.Type
