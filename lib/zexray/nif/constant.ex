@@ -58,7 +58,7 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get automation event max params for AutomationEvent.params
       """
-      @doc group: :automation_event
+      @doc group: :constant
       @spec get_automation_event_max_params() :: non_neg_integer
       def get_automation_event_max_params(), do: :erlang.nif_error(:undef)
 
@@ -69,7 +69,7 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get automation event list max automation events for AutomationEventList.events
       """
-      @doc group: :automation_event
+      @doc group: :constant
       @spec get_automation_event_list_max_automation_events() :: non_neg_integer
       def get_automation_event_list_max_automation_events(), do: :erlang.nif_error(:undef)
 
@@ -80,7 +80,7 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get bone info max name for BoneInfo.name
       """
-      @doc group: :model
+      @doc group: :constant
       @spec get_bone_info_max_name() :: non_neg_integer
       def get_bone_info_max_name(), do: :erlang.nif_error(:undef)
 
@@ -91,14 +91,14 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get file path list max filepath capacity for FilePathList.paths
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_file_path_list_max_filepath_capacity() :: non_neg_integer
       def get_file_path_list_max_filepath_capacity(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get file path list max filepath length for FilePathList.paths
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_file_path_list_max_filepath_length() :: non_neg_integer
       def get_file_path_list_max_filepath_length(), do: :erlang.nif_error(:undef)
 
@@ -109,14 +109,14 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Maximum number of icons
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_gui_icon_max_icons() :: non_neg_integer
       def get_gui_icon_max_icons(), do: :erlang.nif_error(:undef)
 
       @doc """
       Size of icons in pixels (squared)
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_gui_icon_size() :: non_neg_integer
       def get_gui_icon_size(), do: :erlang.nif_error(:undef)
 
@@ -130,14 +130,14 @@ defmodule Zexray.NIF.Constant do
 
       NOTE: Number of elemens depend on RAYGUI_ICON_SIZE (by default 16x16 pixels)
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_gui_icon_data_elements() :: non_neg_integer
       def get_gui_icon_data_elements(), do: :erlang.nif_error(:undef)
 
       @doc """
       Value box max chars
       """
-      @doc group: :file_system
+      @doc group: :constant
       @spec get_gui_valuebox_max_chars() :: non_neg_integer
       def get_gui_valuebox_max_chars(), do: :erlang.nif_error(:undef)
 
@@ -153,14 +153,14 @@ defmodule Zexray.NIF.Constant do
       MAX_MATERIAL_MAPS
       ```
       """
-      @doc group: :material
+      @doc group: :constant
       @spec get_material_max_maps() :: non_neg_integer
       def get_material_max_maps(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get material max params for Material.params
       """
-      @doc group: :material
+      @doc group: :constant
       @spec get_material_max_params() :: non_neg_integer
       def get_material_max_params(), do: :erlang.nif_error(:undef)
 
@@ -176,7 +176,7 @@ defmodule Zexray.NIF.Constant do
       MAX_MESH_VERTEX_BUFFERS
       ```
       """
-      @doc group: :mesh
+      @doc group: :constant
       @spec get_mesh_max_vertex_buffers() :: non_neg_integer
       def get_mesh_max_vertex_buffers(), do: :erlang.nif_error(:undef)
 
@@ -187,7 +187,7 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get model animation max name for ModelAnimation.name
       """
-      @doc group: :model
+      @doc group: :constant
       @spec get_model_animation_max_name() :: non_neg_integer
       def get_model_animation_max_name(), do: :erlang.nif_error(:undef)
 
@@ -203,7 +203,7 @@ defmodule Zexray.NIF.Constant do
       RL_MAX_SHADER_LOCATIONS
       ```
       """
-      @doc group: :shader
+      @doc group: :constant
       @spec get_shader_max_locations() :: non_neg_integer
       def get_shader_max_locations(), do: :erlang.nif_error(:undef)
 
@@ -214,14 +214,14 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get vr device info max lens distortion values for VrDeviceInfo.lensDistortionValues
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_device_info_max_lens_distortion_values() :: non_neg_integer
       def get_vr_device_info_max_lens_distortion_values(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr device info max chroma ab correction for VrDeviceInfo.chromaAbCorrection
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_device_info_max_chroma_ab_correction() :: non_neg_integer
       def get_vr_device_info_max_chroma_ab_correction(), do: :erlang.nif_error(:undef)
 
@@ -232,56 +232,56 @@ defmodule Zexray.NIF.Constant do
       @doc """
       Get vr stereo config max projection for VrStereoConfig.projection
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_projection() :: non_neg_integer
       def get_vr_stereo_config_max_projection(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max view offset for VrStereoConfig.viewOffset
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_view_offset() :: non_neg_integer
       def get_vr_stereo_config_max_view_offset(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max left lens center for VrStereoConfig.leftLensCenter
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_left_lens_center() :: non_neg_integer
       def get_vr_stereo_config_max_left_lens_center(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max right lens center for VrStereoConfig.rightLensCenter
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_right_lens_center() :: non_neg_integer
       def get_vr_stereo_config_max_right_lens_center(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max left screen center for VrStereoConfig.leftScreenCenter
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_left_screen_center() :: non_neg_integer
       def get_vr_stereo_config_max_left_screen_center(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max right screen center for VrStereoConfig.rightScreenCenter
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_right_screen_center() :: non_neg_integer
       def get_vr_stereo_config_max_right_screen_center(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max scale for VrStereoConfig.scale
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_scale() :: non_neg_integer
       def get_vr_stereo_config_max_scale(), do: :erlang.nif_error(:undef)
 
       @doc """
       Get vr stereo config max scale in for VrStereoConfig.scaleIn
       """
-      @doc group: :vr
+      @doc group: :constant
       @spec get_vr_stereo_config_max_scale_in() :: non_neg_integer
       def get_vr_stereo_config_max_scale_in(), do: :erlang.nif_error(:undef)
     end
