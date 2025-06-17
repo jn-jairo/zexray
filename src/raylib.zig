@@ -16,8 +16,6 @@ var audio_lock: miniaudio.ma_mutex = undefined;
 const config = @import("config.zig");
 pub usingnamespace config;
 
-const rlgl = @import("rlgl.zig");
-
 const std = @import("std");
 const build_config = @import("config");
 

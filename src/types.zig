@@ -2,7 +2,6 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("./erl_nif.zig");
 const rl = @import("./raylib.zig");
-const rlgl = @import("./rlgl.zig");
 
 const resources = @import("./resources.zig");
 
