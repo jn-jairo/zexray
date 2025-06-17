@@ -13,6 +13,8 @@ defmodule Zexray.NIF.Audio do
         is_audio_device_ready: 0,
         set_master_volume: 1,
         get_master_volume: 0,
+        audio_begin_mode_3d: 2,
+        audio_end_mode_3d: 0,
 
         # Sound loading
         load_wave: 1,
@@ -48,6 +50,8 @@ defmodule Zexray.NIF.Audio do
         set_sound_pitch: 3,
         set_sound_pan: 2,
         set_sound_pan: 3,
+        set_sound_position: 2,
+        set_sound_position: 3,
         get_sound_time_length: 1,
         get_sound_time_played: 1,
         get_sound_info: 1,
@@ -93,6 +97,8 @@ defmodule Zexray.NIF.Audio do
         set_sound_stream_pan: 3,
         set_sound_stream_looping: 2,
         set_sound_stream_looping: 3,
+        set_sound_stream_position: 2,
+        set_sound_stream_position: 3,
         get_sound_stream_time_length: 1,
         get_sound_stream_time_played: 1,
         get_sound_stream_info: 1,
@@ -126,6 +132,8 @@ defmodule Zexray.NIF.Audio do
         set_music_pan: 3,
         set_music_looping: 2,
         set_music_looping: 3,
+        set_music_position: 2,
+        set_music_position: 3,
         get_music_time_length: 1,
         get_music_time_played: 1,
         get_music_info: 1,
@@ -155,6 +163,8 @@ defmodule Zexray.NIF.Audio do
         set_audio_stream_pitch: 3,
         set_audio_stream_pan: 2,
         set_audio_stream_pan: 3,
+        set_audio_stream_position: 2,
+        set_audio_stream_position: 3,
         set_audio_stream_buffer_size_default: 1,
         get_audio_stream_time_length: 2,
         get_audio_stream_time_played: 2,
@@ -249,6 +259,27 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_device_management
       @spec get_master_volume() :: float
       def get_master_volume(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Begin 3D mode with custom camera (3D)
+      """
+      @doc group: :audio_device_management
+      @spec audio_begin_mode_3d(
+              listener :: tuple,
+              max_distance :: float
+            ) :: :ok
+      def audio_begin_mode_3d(
+            _listener,
+            _max_distance
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Ends 3D mode
+      """
+      @doc group: :audio_device_management
+      @spec audio_end_mode_3d() :: :ok
+      def audio_end_mode_3d(), do: :erlang.nif_error(:undef)
 
       ###################
       #  Sound loading  #
@@ -578,6 +609,22 @@ defmodule Zexray.NIF.Audio do
       def set_sound_pan(
             _sound,
             _pan,
+            _return \\ :auto
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set position for a sound
+      """
+      @doc group: :sound_management
+      @spec set_sound_position(
+              sound :: tuple,
+              position :: nil | tuple,
+              return :: :auto | :value | :resource
+            ) :: tuple
+      def set_sound_position(
+            _sound,
+            _position,
             _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
@@ -1021,6 +1068,22 @@ defmodule Zexray.NIF.Audio do
           do: :erlang.nif_error(:undef)
 
       @doc """
+      Set position for a sound stream
+      """
+      @doc group: :sound_stream_management
+      @spec set_sound_stream_position(
+              sound_stream :: tuple,
+              position :: nil | tuple,
+              return :: :auto | :value | :resource
+            ) :: tuple
+      def set_sound_stream_position(
+            _sound_stream,
+            _position,
+            _return \\ :auto
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
       Get sound stream time length (in seconds)
 
       ```c
@@ -1334,6 +1397,22 @@ defmodule Zexray.NIF.Audio do
           do: :erlang.nif_error(:undef)
 
       @doc """
+      Set position for a music
+      """
+      @doc group: :music_management
+      @spec set_music_position(
+              music :: tuple,
+              position :: nil | tuple,
+              return :: :auto | :value | :resource
+            ) :: tuple
+      def set_music_position(
+            _music,
+            _position,
+            _return \\ :auto
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
       Get music time length (in seconds)
 
       ```c
@@ -1609,6 +1688,22 @@ defmodule Zexray.NIF.Audio do
       def set_audio_stream_pan(
             _stream,
             _pan,
+            _return \\ :auto
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Set position for a audio stream
+      """
+      @doc group: :audio_stream_management
+      @spec set_audio_stream_position(
+              stream :: tuple,
+              position :: nil | tuple,
+              return :: :auto | :value | :resource
+            ) :: tuple
+      def set_audio_stream_position(
+            _stream,
+            _position,
             _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)

@@ -36,6 +36,9 @@ defmodule Zexray.NIF.Constant do
         # Shader
         get_shader_max_locations: 0,
 
+        # SoundStream
+        get_sound_stream_max_position_state: 0,
+
         # VrDeviceInfo
         get_vr_device_info_max_lens_distortion_values: 0,
         get_vr_device_info_max_chroma_ab_correction: 0,
@@ -206,6 +209,17 @@ defmodule Zexray.NIF.Constant do
       @doc group: :constant
       @spec get_shader_max_locations() :: non_neg_integer
       def get_shader_max_locations(), do: :erlang.nif_error(:undef)
+
+      #################
+      #  SoundStream  #
+      #################
+
+      @doc """
+      Get sound stream max position state for SoundStream.position_state
+      """
+      @doc group: :constant
+      @spec get_sound_stream_max_position_state() :: non_neg_integer
+      def get_sound_stream_max_position_state(), do: :erlang.nif_error(:undef)
 
       ##################
       #  VrDeviceInfo  #

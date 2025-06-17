@@ -11,12 +11,14 @@ defmodule Zexray.Type.SoundStreamBase do
 
       ## Fields
 
-      |               |                                               |
-      | ------------- | --------------------------------------------- |
-      | `stream`      | Audio stream                                  |
-      | `frame_count` | Total number of frames (considering channels) |
-      | `looping`     | Audio looping enable                          |
-      | `data`        | Buffer data pointer                           |
+      |                  |                                               |
+      | ---------------- | --------------------------------------------- |
+      | `stream`         | Audio stream                                  |
+      | `frame_count`    | Total number of frames (considering channels) |
+      | `looping`        | Audio looping enable                          |
+      | `position`       | Audio 3D position                             |
+      | `position_state` | Audio 3D position state                       |
+      | `data`           | Buffer data pointer                           |
       """
 
       require Record
@@ -26,6 +28,8 @@ defmodule Zexray.Type.SoundStreamBase do
                 stream: Zexray.Type.AudioStream.t_nif(),
                 frame_count: non_neg_integer,
                 looping: boolean,
+                position: Zexray.Type.Vector3.t_nif(),
+                position_state: [float],
                 data: binary
               )
 
@@ -33,6 +37,8 @@ defmodule Zexray.Type.SoundStreamBase do
         stream: nil,
         frame_count: 0,
         looping: false,
+        position: nil,
+        position_state: [],
         data: nil
       )
 

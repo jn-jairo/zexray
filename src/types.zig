@@ -3435,6 +3435,7 @@ pub const Camera3D = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.Camera3D;
     pub const resource_name = "camera_3d";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{resources.ResourceTypeKey.camera};
 
     pub const Resource = ResourceBase(Self);
 
@@ -3536,6 +3537,7 @@ pub const Camera = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.Camera;
     pub const resource_name = "camera";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{resources.ResourceTypeKey.camera_3d};
 
     pub const Resource = ResourceBase(Self);
 
@@ -5541,6 +5543,8 @@ pub const SoundStream = struct {
 
     pub const Resource = ResourceBase(Self);
 
+    pub const MAX_POSITION_STATE: usize = get_field_array_length(rl.SoundStream, "position_state");
+
     pub fn make(env: ?*e.ErlNifEnv, value: rl.SoundStream) e.ErlNifTerm {
         // stream
 
@@ -5553,6 +5557,14 @@ pub const SoundStream = struct {
         // looping
 
         const term_looping_value = Boolean.make(env, value.looping);
+
+        // position
+
+        const term_position_value = if (value.position == null) Atom.make(env, "nil") else Vector3.make(env, value.position.?);
+
+        // position_state
+
+        const term_position_state_value = Array.make(Double, f32, env, &value.position_state);
 
         // data
 
@@ -5576,6 +5588,8 @@ pub const SoundStream = struct {
             term_stream_value,
             term_frame_count_value,
             term_looping_value,
+            term_position_value,
+            term_position_state_value,
             term_data_value,
         });
     }
@@ -5587,14 +5601,16 @@ pub const SoundStream = struct {
             return (try Self.Resource.get_record(env, record)).*.*;
         }
 
-        if (record.len != 5) {
+        if (record.len != 7) {
             return error.ArgumentError;
         }
 
         const term_stream_value = record[1];
         const term_frame_count_value = record[2];
         const term_looping_value = record[3];
-        const term_data_value = record[4];
+        const term_position_value = record[4];
+        const term_position_state_value = record[5];
+        const term_data_value = record[6];
 
         var value = rl.SoundStream{};
 
@@ -5611,6 +5627,23 @@ pub const SoundStream = struct {
         // looping
 
         value.looping = try Boolean.get(env, term_looping_value);
+
+        // position
+
+        const is_position_nil = e.enif_is_identical(Atom.make(env, "nil"), term_position_value) != 0;
+
+        if (is_position_nil) {
+            value.position = null;
+        } else {
+            const position = try Argument(Vector3).get(env, term_position_value);
+            errdefer position.free();
+            value.position = position.data;
+        }
+
+        // position_state
+
+        try Array.get_copy(Double, f32, Self.allocator, env, term_position_state_value, &value.position_state);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.position_state, null);
 
         // data
 
@@ -5676,6 +5709,8 @@ pub const SoundStreamAlias = struct {
 
     pub const Resource = ResourceBase(Self);
 
+    pub const MAX_POSITION_STATE: usize = get_field_array_length(rl.SoundStream, "position_state");
+
     pub fn make(env: ?*e.ErlNifEnv, value: rl.SoundStream) e.ErlNifTerm {
         // stream
 
@@ -5688,6 +5723,14 @@ pub const SoundStreamAlias = struct {
         // looping
 
         const term_looping_value = Boolean.make(env, value.looping);
+
+        // position
+
+        const term_position_value = if (value.position == null) Atom.make(env, "nil") else Vector3.make(env, value.position.?);
+
+        // position_state
+
+        const term_position_state_value = Array.make(Double, f32, env, &value.position_state);
 
         // data
 
@@ -5711,6 +5754,8 @@ pub const SoundStreamAlias = struct {
             term_stream_value,
             term_frame_count_value,
             term_looping_value,
+            term_position_value,
+            term_position_state_value,
             term_data_value,
         });
     }
@@ -5722,14 +5767,16 @@ pub const SoundStreamAlias = struct {
             return (try Self.Resource.get_record(env, record)).*.*;
         }
 
-        if (record.len != 5) {
+        if (record.len != 7) {
             return error.ArgumentError;
         }
 
         const term_stream_value = record[1];
         const term_frame_count_value = record[2];
         const term_looping_value = record[3];
-        const term_data_value = record[4];
+        const term_position_value = record[4];
+        const term_position_state_value = record[5];
+        const term_data_value = record[6];
 
         var value = rl.SoundStream{};
 
@@ -5746,6 +5793,23 @@ pub const SoundStreamAlias = struct {
         // looping
 
         value.looping = try Boolean.get(env, term_looping_value);
+
+        // position
+
+        const is_position_nil = e.enif_is_identical(Atom.make(env, "nil"), term_position_value) != 0;
+
+        if (is_position_nil) {
+            value.position = null;
+        } else {
+            const position = try Argument(Vector3).get(env, term_position_value);
+            errdefer position.free();
+            value.position = position.data;
+        }
+
+        // position_state
+
+        try Array.get_copy(Double, f32, Self.allocator, env, term_position_state_value, &value.position_state);
+        errdefer Array.free_copy(Double, f32, Self.allocator, &value.position_state, null);
 
         // data
 

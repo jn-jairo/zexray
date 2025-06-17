@@ -146,6 +146,16 @@ defmodule Zexray.Constant do
   @spec shader_max_locations() :: non_neg_integer
   defdelegate shader_max_locations(), to: NIF, as: :get_shader_max_locations
 
+  #################
+  #  SoundStream  #
+  #################
+
+  @doc """
+  Get sound stream max position state for SoundStream.position_state
+  """
+  @spec sound_stream_max_position_state() :: non_neg_integer
+  defdelegate sound_stream_max_position_state(), to: NIF, as: :get_sound_stream_max_position_state
+
   ##################
   #  VrDeviceInfo  #
   ##################

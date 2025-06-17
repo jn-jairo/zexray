@@ -1050,6 +1050,9 @@ defmodule Zexray.TypeFixture do
           stream: audio_stream_fixture(type),
           frame_count: frame_count,
           looping: looping,
+          position: vector3_fixture(type),
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn n -> 1.0 + n end),
           data:
             Enum.map(
               1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
@@ -1064,6 +1067,9 @@ defmodule Zexray.TypeFixture do
           stream: AudioStream.t_resource(reference: make_ref()),
           frame_count: frame_count,
           looping: looping,
+          position: Vector3.t_resource(reference: make_ref()),
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn n -> 1.0 + n end),
           data:
             Enum.map(
               1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
@@ -1078,6 +1084,9 @@ defmodule Zexray.TypeFixture do
           stream: audio_stream_fixture(type),
           frame_count: 0,
           looping: false,
+          position: nil,
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn _ -> 0.0 end),
           data: <<>>
         )
     end
@@ -1095,6 +1104,9 @@ defmodule Zexray.TypeFixture do
           stream: audio_stream_fixture(type),
           frame_count: frame_count,
           looping: looping,
+          position: vector3_fixture(type),
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn n -> 1.0 + n end),
           data:
             Enum.map(
               1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
@@ -1109,6 +1121,9 @@ defmodule Zexray.TypeFixture do
           stream: AudioStream.t_resource(reference: make_ref()),
           frame_count: frame_count,
           looping: looping,
+          position: Vector3.t_resource(reference: make_ref()),
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn n -> 1.0 + n end),
           data:
             Enum.map(
               1..Zexray.Audio.get_wave_data_size(frame_count, channels, sample_size),
@@ -1123,6 +1138,9 @@ defmodule Zexray.TypeFixture do
           stream: audio_stream_fixture(type),
           frame_count: 0,
           looping: false,
+          position: nil,
+          position_state:
+            Enum.map(1..Zexray.Constant.sound_stream_max_position_state(), fn _ -> 0.0 end),
           data: <<>>
         )
     end

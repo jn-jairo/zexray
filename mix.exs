@@ -143,6 +143,7 @@ defmodule Zexray.MixProject do
         "examples/audio/music_stream.livemd": [filename: "example_audio_music_stream"],
         "examples/audio/module_playing.livemd": [filename: "example_audio_module_playing"],
         "examples/audio/sound_multi.livemd": [filename: "example_audio_sound_multi"],
+        "examples/audio/sound_positioning.livemd": [filename: "example_audio_sound_positioning"],
         "examples/audio/raw_stream.livemd": [filename: "example_audio_raw_stream"],
         "examples/audio/stream_effects.livemd": [filename: "example_audio_stream_effects"],
         # Examples Gui

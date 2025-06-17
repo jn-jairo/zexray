@@ -38,6 +38,9 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     // Shader
     .{ .name = "get_shader_max_locations", .arity = 0, .fptr = core.nif_wrapper(nif_get_shader_max_locations), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
+    // SoundStream
+    .{ .name = "get_sound_stream_max_position_state", .arity = 0, .fptr = core.nif_wrapper(nif_get_sound_stream_max_position_state), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
     // VrDeviceInfo
     .{ .name = "get_vr_device_info_max_lens_distortion_values", .arity = 0, .fptr = core.nif_wrapper(nif_get_vr_device_info_max_lens_distortion_values), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_vr_device_info_max_chroma_ab_correction", .arity = 0, .fptr = core.nif_wrapper(nif_get_vr_device_info_max_chroma_ab_correction), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -240,6 +243,20 @@ fn nif_get_shader_max_locations(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     // Return
 
     return core.UInt.make(env, @intCast(core.Shader.MAX_LOCATIONS));
+}
+
+///////////////////
+//  SoundStream  //
+///////////////////
+
+/// Get sound stream max position state for SoundStream.position_state
+fn nif_get_sound_stream_max_position_state(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Return
+
+    return core.UInt.make(env, @intCast(core.SoundStream.MAX_POSITION_STATE));
 }
 
 ////////////////////

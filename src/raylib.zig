@@ -1,8 +1,11 @@
+const assert = std.debug.assert;
+
 const raylib = @cImport({
     @cInclude("raylib.h");
     @cInclude("config.h");
     @cInclude("rcamera.h");
     @cInclude("raygui.h");
+    @cInclude("raymath.h");
     @cInclude("stdio.h");
 });
 pub usingnamespace raylib;
@@ -12,6 +15,9 @@ const miniaudio = @cImport({
 });
 
 var audio_lock: miniaudio.ma_mutex = undefined;
+
+pub var mode_3d_listener: ?raylib.Camera3D = null;
+pub var mode_3d_listener_max_distance: ?f32 = null;
 
 const config = @import("config.zig");
 pub usingnamespace config;
@@ -97,6 +103,8 @@ pub const SoundStream = struct {
     stream: raylib.AudioStream = @import("std").mem.zeroes(raylib.AudioStream),
     frameCount: c_uint = @import("std").mem.zeroes(c_uint),
     looping: bool = @import("std").mem.zeroes(bool),
+    position: ?raylib.Vector3 = null,
+    position_state: [8]f32 = @import("std").mem.zeroes([8]f32),
     data: ?*anyopaque = @import("std").mem.zeroes(?*anyopaque),
 };
 
@@ -333,6 +341,11 @@ pub fn GetWaveInfo(wave: raylib.Wave) AudioInfo {
     return info;
 }
 
+/// Set looping for a music
+pub fn SetMusicLooping(music: *raylib.Music, looping: bool) void {
+    music.looping = looping;
+}
+
 /// Get music info
 pub fn GetMusicInfo(music: raylib.Music) AudioInfo {
     var info = AudioInfo{};
@@ -460,6 +473,11 @@ pub fn SetSoundStreamPan(sound_stream: SoundStream, pan: f32) void {
     raylib.SetAudioStreamPan(sound_stream.stream, pan);
 }
 
+/// Set looping for a sound stream
+pub fn SetSoundStreamLooping(sound_stream: *SoundStream, looping: bool) void {
+    sound_stream.looping = looping;
+}
+
 /// Get sound stream time length (in seconds)
 pub fn GetSoundStreamTimeLength(sound_stream: SoundStream) f32 {
     return @as(f32, @floatFromInt(sound_stream.frameCount)) / @as(f32, @floatFromInt(sound_stream.stream.sampleRate));
@@ -525,4 +543,241 @@ pub fn GetSoundStreamInfo(sound_stream: SoundStream) AudioInfo {
     info.channels = sound_stream.stream.channels;
 
     return info;
+}
+
+/// Set position for a sound
+pub fn SetSoundPosition(sound: *raylib.Sound, position: ?raylib.Vector3) void {
+    const computed_position = ComputeAudioPositionMode3D(position);
+
+    raylib.SetSoundVolume(sound.*, computed_position.volume);
+    raylib.SetSoundPan(sound.*, computed_position.pan);
+}
+
+/// Set position for a music
+pub fn SetMusicPosition(music: *raylib.Music, position: ?raylib.Vector3) void {
+    const computed_position = ComputeAudioPositionMode3D(position);
+
+    raylib.SetMusicVolume(music.*, computed_position.volume);
+    raylib.SetMusicPan(music.*, computed_position.pan);
+}
+
+/// Set position for a audio stream
+pub fn SetAudioStreamPosition(audio_stream: *raylib.AudioStream, position: ?raylib.Vector3) void {
+    const computed_position = ComputeAudioPositionMode3D(position);
+
+    raylib.SetAudioStreamVolume(audio_stream.*, computed_position.volume);
+    raylib.SetAudioStreamPan(audio_stream.*, computed_position.pan);
+}
+
+/// Set position for a sound stream
+pub fn SetSoundStreamPosition(sound_stream: *SoundStream, position: ?raylib.Vector3) void {
+    sound_stream.position = position;
+
+    const computed_position = ComputeAudioPositionMode3D(position);
+
+    SetSoundStreamVolume(sound_stream.*, computed_position.volume);
+    SetSoundStreamPan(sound_stream.*, computed_position.pan);
+}
+
+pub fn ComputeAudioPositionMode3D(position: ?raylib.Vector3) @typeInfo(@TypeOf(ComputeAudioPosition3D)).@"fn".return_type.? {
+    return ComputeAudioPosition3D(mode_3d_listener, mode_3d_listener_max_distance, position);
+}
+
+pub fn ComputeAudioPosition3D(listener: ?raylib.Camera3D, max_distance: ?f32, position: ?raylib.Vector3) struct { volume: f32, pan: f32, forward: f32, right: f32, up: f32 } {
+    if (listener != null and max_distance != null and position != null) {
+        // Calculate direction vector and distance between listener and sound source
+        const direction: raylib.Vector3 = raylib.Vector3Subtract(position.?, listener.?.position);
+        const distance: f32 = raylib.Vector3Length(direction);
+
+        // Apply logarithmic distance gain and clamp between 0-1
+        var gain: f32 = 1.0 / (1.0 + (distance / max_distance.?));
+        gain = raylib.Clamp(gain, 0.0, 1.0);
+
+        // Calculate normalized vectors for spatial positioning
+        const normalized_direction = raylib.Vector3Normalize(direction);
+        const forward = raylib.Vector3Normalize(raylib.Vector3Subtract(listener.?.target, listener.?.position));
+        const right = raylib.Vector3Normalize(raylib.Vector3CrossProduct(listener.?.up, forward));
+        const up = raylib.Vector3Normalize(listener.?.up);
+
+        // Calculate local directions
+        const forward_ratio: f32 = raylib.Vector3DotProduct(forward, normalized_direction);
+        const right_ratio: f32 = raylib.Vector3DotProduct(right, normalized_direction);
+        const up_ratio: f32 = raylib.Vector3DotProduct(up, normalized_direction);
+
+        // Reduce volume for sounds behind the listener
+        if (forward_ratio < 0.0) gain *= (1.0 + forward_ratio * 0.5);
+
+        // Set stereo panning based on sound position relative to listener
+        const pan: f32 = 0.5 + 0.5 * right_ratio;
+
+        return .{
+            .volume = gain,
+            .pan = pan,
+            .forward = forward_ratio,
+            .right = right_ratio,
+            .up = up_ratio,
+        };
+    } else {
+        return .{
+            .volume = 1.0,
+            .pan = 0.5,
+            .forward = 1.0,
+            .right = 0.0,
+            .up = 0.0,
+        };
+    }
+}
+
+/// Compute biquad peaking equalizer b,a 2nd order coefficients
+///
+/// q = how narrow or wide the filter affects the frequencies around the target frequency
+/// high q = very narrow, affets only frequencies very close to the target frequency
+/// low q = wider, affects a bigger range of frequencies around the target frequency
+///
+/// q ~ 0.3 = very wide
+/// q ~ 1.0 = moderate
+/// q ~ 5.0 = narrow
+/// q > 10  = very narrow
+///
+/// gain_db <= 6.0 for good effects, bigger gains may cause distortions
+pub fn BiquadPeakingEqualizer(sample_rate: c_uint, frequency: c_uint, q: f32, gain_db: f32) struct { b: [3]f32, a: [3]f32 } {
+    const a: f32 = std.math.pow(f32, 10, gain_db / 20);
+    const w0: f32 = 2 * std.math.pi * @as(f32, @floatFromInt(frequency)) / @as(f32, @floatFromInt(sample_rate));
+    const alpha: f32 = std.math.sin(w0) / (2 * q);
+
+    const b0: f32 = 1 + alpha * a;
+    const b1: f32 = -2 * std.math.cos(w0);
+    const b2: f32 = 1 - alpha * a;
+
+    const a0: f32 = 1 + alpha / a;
+    const a1: f32 = -2 * std.math.cos(w0);
+    const a2: f32 = 1 - alpha / a;
+
+    return .{
+        .b = [3]f32{ b0 / a0, b1 / a0, b2 / a0 },
+        .a = [3]f32{ 1.0, a1 / a0, a2 / a0 },
+    };
+}
+
+pub fn ApplyBiquadFilterMono(samples: []f32, b: [3]f32, a: [3]f32, hist: []f32) void {
+    assert(hist.len >= 4);
+
+    var x1: f32 = hist[0];
+    var x2: f32 = hist[1];
+    var y1: f32 = hist[2];
+    var y2: f32 = hist[3];
+
+    var y: f32 = 0;
+
+    for (0..samples.len) |i| {
+        y = b[0] * samples[i] + b[1] * x1 + b[2] * x2 - a[1] * y1 - a[2] * y2;
+        x2 = x1;
+        x1 = samples[i];
+        y2 = y1;
+        y1 = y;
+
+        samples[i] = y;
+    }
+
+    hist[0] = x1;
+    hist[1] = x2;
+    hist[2] = y1;
+    hist[3] = y2;
+}
+
+pub fn ApplyBiquadFilterStereo(samples: []f32, b: [3]f32, a: [3]f32, hist: []f32) void {
+    assert(hist.len >= 8);
+
+    // LEFT
+
+    var x1: f32 = hist[0];
+    var x2: f32 = hist[1];
+    var y1: f32 = hist[2];
+    var y2: f32 = hist[3];
+
+    var y: f32 = 0;
+
+    var i: usize = 0;
+    while (i < samples.len) {
+        y = b[0] * samples[i] + b[1] * x1 + b[2] * x2 - a[1] * y1 - a[2] * y2;
+
+        x2 = x1;
+        x1 = samples[i];
+        y2 = y1;
+        y1 = y;
+
+        samples[i] = y;
+
+        i += 2;
+    }
+
+    hist[0] = x1;
+    hist[1] = x2;
+    hist[2] = y1;
+    hist[3] = y2;
+
+    // RIGHT
+
+    x1 = hist[4];
+    x2 = hist[5];
+    y1 = hist[6];
+    y2 = hist[7];
+
+    y = 0;
+
+    i = 1;
+    while (i < samples.len) {
+        y = b[0] * samples[i] + b[1] * x1 + b[2] * x2 - a[1] * y1 - a[2] * y2;
+
+        x2 = x1;
+        x1 = samples[i];
+        y2 = y1;
+        y1 = y;
+
+        samples[i] = y;
+
+        i += 2;
+    }
+
+    hist[4] = x1;
+    hist[5] = x2;
+    hist[6] = y1;
+    hist[7] = y2;
+}
+
+pub fn ApplyBiquadFilter(channels: c_uint, samples: []f32, b: [3]f32, a: [3]f32, hist: []f32) void {
+    switch (channels) {
+        2 => ApplyBiquadFilterStereo(samples, b, a, hist),
+        1 => ApplyBiquadFilterMono(samples, b, a, hist),
+        else => unreachable,
+    }
+}
+
+pub fn ApplyFilterBehind(sample_rate: c_uint, channels: c_uint, samples: []f32, gain: f32, hist: []f32) void {
+    assert(hist.len >= 4 * channels);
+
+    const ba = BiquadPeakingEqualizer(sample_rate, 1_000, 1.0, 6.0 * gain);
+    ApplyBiquadFilter(channels, samples, ba.b, ba.a, hist[0 .. 4 * channels]);
+}
+
+pub fn ApplyFilterFront(sample_rate: c_uint, channels: c_uint, samples: []f32, gain: f32, hist: []f32) void {
+    assert(hist.len >= 3 * 4 * channels);
+
+    const ba_1 = BiquadPeakingEqualizer(sample_rate, 1_000, 1.0, -10.0 * gain);
+    const ba_2 = BiquadPeakingEqualizer(sample_rate, 3_000, 1.0, 6.0 * gain);
+    const ba_3 = BiquadPeakingEqualizer(sample_rate, 400, 1.0, 4.0 * gain);
+
+    // mono
+    // 0..4
+    // 4..8
+    // 8..12
+    //
+    // stereo
+    // 0..8
+    // 8..16
+    // 16..24
+
+    ApplyBiquadFilter(channels, samples, ba_1.b, ba_1.a, hist[0 .. 4 * channels]);
+    ApplyBiquadFilter(channels, samples, ba_2.b, ba_2.a, hist[4 * channels .. 2 * 4 * channels]);
+    ApplyBiquadFilter(channels, samples, ba_3.b, ba_3.a, hist[2 * 4 * channels .. 3 * 4 * channels]);
 }

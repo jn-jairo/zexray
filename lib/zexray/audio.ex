@@ -59,6 +59,51 @@ defmodule Zexray.Audio do
   @spec get_master_volume() :: float
   defdelegate get_master_volume(), to: NIF, as: :get_master_volume
 
+  @doc """
+  Run function with 3D mode with custom camera (3D)
+  """
+  @doc group: :device_management
+  @spec with_mode_3d(
+          listener :: Zexray.Type.Camera3D.t_all(),
+          max_distance :: float,
+          func :: (-> any)
+        ) :: any
+  def with_mode_3d(
+        listener,
+        max_distance,
+        func
+      )
+      when is_function(func) do
+    try do
+      begin_mode_3d(listener, max_distance)
+      func.()
+    after
+      end_mode_3d()
+    end
+  end
+
+  @doc """
+  Begin 3D mode with custom camera (3D)
+  """
+  @doc group: :device_management
+  @spec begin_mode_3d(
+          listener :: Zexray.Type.Camera3D.t_all(),
+          max_distance :: float
+        ) :: :ok
+  defdelegate begin_mode_3d(
+                listener,
+                max_distance
+              ),
+              to: NIF,
+              as: :audio_begin_mode_3d
+
+  @doc """
+  Ends 3D mode
+  """
+  @doc group: :device_management
+  @spec end_mode_3d() :: :ok
+  defdelegate end_mode_3d(), to: NIF, as: :audio_end_mode_3d
+
   ################
   #  Management  #
   ################
@@ -437,6 +482,52 @@ defmodule Zexray.Audio do
         ) :: Zexray.Type.Music.t_nif()
   def set_looping(music, looping, return) when is_music(music) do
     set_music_looping(music, looping, return)
+  end
+
+  @doc """
+  Set position for an audio
+  """
+  @doc group: :management
+  def set_position(audio, position, return \\ :auto)
+
+  @spec set_position(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
+  def set_position(sound_stream, position, return)
+      when is_sound_stream(sound_stream) or is_sound_stream_alias(sound_stream) do
+    set_sound_stream_position(sound_stream, position, return)
+  end
+
+  @spec set_position(
+          sound :: Zexray.Type.Sound.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.Sound.t_nif()
+  def set_position(sound, position, return)
+      when is_sound(sound) or is_sound_alias(sound) do
+    set_sound_position(sound, position, return)
+  end
+
+  @spec set_position(
+          music :: Zexray.Type.Music.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.Music.t_nif()
+  def set_position(music, position, return)
+      when is_music(music) do
+    set_music_position(music, position, return)
+  end
+
+  @spec set_position(
+          stream :: Zexray.Type.AudioStream.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.AudioStream.t_nif()
+  def set_position(stream, position, return)
+      when is_audio_stream(stream) do
+    set_stream_position(stream, position, return)
   end
 
   @doc """
@@ -881,6 +972,23 @@ defmodule Zexray.Audio do
               as: :set_sound_pan
 
   @doc """
+  Set position for a sound
+  """
+  @doc group: :sound
+  @spec set_sound_position(
+          sound :: Zexray.Type.Sound.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.Sound.t_nif()
+  defdelegate set_sound_position(
+                sound,
+                position,
+                return \\ :auto
+              ),
+              to: NIF,
+              as: :set_sound_position
+
+  @doc """
   Get sound time length (in seconds)
   """
   @doc group: :sound
@@ -1261,6 +1369,23 @@ defmodule Zexray.Audio do
               as: :set_sound_stream_looping
 
   @doc """
+  Set position for a sound stream
+  """
+  @doc group: :sound_stream
+  @spec set_sound_stream_position(
+          sound_stream :: Zexray.Type.SoundStream.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.SoundStream.t_nif()
+  defdelegate set_sound_stream_position(
+                sound_stream,
+                position,
+                return \\ :auto
+              ),
+              to: NIF,
+              as: :set_sound_stream_position
+
+  @doc """
   Get sound stream time length (in seconds)
   """
   @doc group: :sound_stream
@@ -1511,6 +1636,23 @@ defmodule Zexray.Audio do
               as: :set_music_looping
 
   @doc """
+  Set position for a music
+  """
+  @doc group: :music
+  @spec set_music_position(
+          music :: Zexray.Type.Music.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.Music.t_nif()
+  defdelegate set_music_position(
+                music,
+                position,
+                return \\ :auto
+              ),
+              to: NIF,
+              as: :set_music_position
+
+  @doc """
   Get music time length (in seconds)
   """
   @doc group: :music
@@ -1729,6 +1871,23 @@ defmodule Zexray.Audio do
               ),
               to: NIF,
               as: :set_audio_stream_pan
+
+  @doc """
+  Set position for a audio stream
+  """
+  @doc group: :stream
+  @spec set_stream_position(
+          stream :: Zexray.Type.AudioStream.t_all(),
+          position :: nil | Zexray.Type.Vector3.t_all(),
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.AudioStream.t_nif()
+  defdelegate set_stream_position(
+                stream,
+                position,
+                return \\ :auto
+              ),
+              to: NIF,
+              as: :set_audio_stream_position
 
   @doc """
   Default size for new audio streams in frames

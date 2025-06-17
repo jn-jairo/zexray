@@ -15,6 +15,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "is_audio_device_ready", .arity = 0, .fptr = core.nif_wrapper(nif_is_audio_device_ready), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_master_volume", .arity = 1, .fptr = core.nif_wrapper(nif_set_master_volume), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_master_volume", .arity = 0, .fptr = core.nif_wrapper(nif_get_master_volume), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "audio_begin_mode_3d", .arity = 2, .fptr = core.nif_wrapper(nif_audio_begin_mode_3d), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "audio_end_mode_3d", .arity = 0, .fptr = core.nif_wrapper(nif_audio_end_mode_3d), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Sound loading
     .{ .name = "load_wave", .arity = 1, .fptr = core.nif_wrapper(nif_load_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -50,6 +52,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "set_sound_pitch", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_pitch), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_sound_pan", .arity = 2, .fptr = core.nif_wrapper(nif_set_sound_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_sound_pan", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_sound_position", .arity = 2, .fptr = core.nif_wrapper(nif_set_sound_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_sound_position", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_time_length", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_time_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_time_played", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_time_played), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_info", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -95,6 +99,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "set_sound_stream_pan", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_stream_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_sound_stream_looping", .arity = 2, .fptr = core.nif_wrapper(nif_set_sound_stream_looping), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_sound_stream_looping", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_stream_looping), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_sound_stream_position", .arity = 2, .fptr = core.nif_wrapper(nif_set_sound_stream_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_sound_stream_position", .arity = 3, .fptr = core.nif_wrapper(nif_set_sound_stream_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_stream_time_length", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_stream_time_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_stream_time_played", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_stream_time_played), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_sound_stream_info", .arity = 1, .fptr = core.nif_wrapper(nif_get_sound_stream_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -128,6 +134,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "set_music_pan", .arity = 3, .fptr = core.nif_wrapper(nif_set_music_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_music_looping", .arity = 2, .fptr = core.nif_wrapper(nif_set_music_looping), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_music_looping", .arity = 3, .fptr = core.nif_wrapper(nif_set_music_looping), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_music_position", .arity = 2, .fptr = core.nif_wrapper(nif_set_music_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_music_position", .arity = 3, .fptr = core.nif_wrapper(nif_set_music_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_music_time_length", .arity = 1, .fptr = core.nif_wrapper(nif_get_music_time_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_music_time_played", .arity = 1, .fptr = core.nif_wrapper(nif_get_music_time_played), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_music_info", .arity = 1, .fptr = core.nif_wrapper(nif_get_music_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -157,6 +165,8 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "set_audio_stream_pitch", .arity = 3, .fptr = core.nif_wrapper(nif_set_audio_stream_pitch), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_audio_stream_pan", .arity = 2, .fptr = core.nif_wrapper(nif_set_audio_stream_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_audio_stream_pan", .arity = 3, .fptr = core.nif_wrapper(nif_set_audio_stream_pan), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_audio_stream_position", .arity = 2, .fptr = core.nif_wrapper(nif_set_audio_stream_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "set_audio_stream_position", .arity = 3, .fptr = core.nif_wrapper(nif_set_audio_stream_position), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "set_audio_stream_buffer_size_default", .arity = 1, .fptr = core.nif_wrapper(nif_set_audio_stream_buffer_size_default), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_audio_stream_time_length", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_stream_time_length), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_audio_stream_time_played", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_stream_time_played), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -289,6 +299,47 @@ fn nif_get_master_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     // Return
 
     return core.Double.make(env, @floatCast(master_volume));
+}
+
+/// Begin 3D mode with custom camera (3D)
+fn nif_audio_begin_mode_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2);
+
+    // Arguments
+
+    const arg_listener = core.Argument(core.Camera3D).get(env, argv[0]) catch {
+        return error.invalid_argument_listener;
+    };
+    defer arg_listener.free();
+    const listener = arg_listener.data;
+
+    const max_distance: f32 = @floatCast(core.Double.get(env, argv[1]) catch {
+        return error.invalid_argument_max_distance;
+    });
+
+    // Function
+
+    rl.mode_3d_listener = listener;
+    rl.mode_3d_listener_max_distance = max_distance;
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Ends 3D mode
+fn nif_audio_end_mode_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Function
+
+    rl.mode_3d_listener = null;
+    rl.mode_3d_listener_max_distance = null;
+
+    // Return
+
+    return core.Atom.make(env, "ok");
 }
 
 /////////////////////
@@ -887,6 +938,45 @@ fn nif_set_sound_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     // Function
 
     rl.SetSoundPan(sound.*, @floatCast(pan));
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Sound, env, argv[0], sound.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Set position for a sound
+fn nif_set_sound_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Return type
+
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
+
+    // Arguments
+
+    var arg_sound = core.Argument(core.Sound).get(env, argv[0]) catch {
+        return error.invalid_argument_sound;
+    };
+    defer if (!return_resource) arg_sound.free();
+    errdefer if (return_resource) arg_sound.free();
+    const sound = &arg_sound.data;
+
+    const is_position_nil = e.enif_is_identical(core.Atom.make(env, "nil"), argv[1]) != 0;
+    var position: ?rl.Vector3 = null;
+
+    if (!is_position_nil) {
+        const arg_position = core.Argument(core.Vector3).get(env, argv[1]) catch {
+            return error.invalid_argument_position;
+        };
+        defer arg_position.free();
+        position = arg_position.data;
+    }
+
+    // Function
+
+    rl.SetSoundPosition(sound, position);
 
     // Return
 
@@ -1533,7 +1623,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                         @memset(data[data_i..data_size], 0);
                     }
 
-                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
+                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data.len, sound_stream.stream.channels)));
                 } else {
                     var arg_data = core.ArgumentArray(core.UInt, u8, rl.allocator).get(env, argv[1]) catch {
                         return error.invalid_argument_data;
@@ -1541,6 +1631,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                     defer arg_data.free();
                     const data = arg_data.data;
                     const data_size: c_uint = @intCast(arg_data.length);
+                    if (data_size == 0) return error.invalid_argument_data;
 
                     rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
                 }
@@ -1583,7 +1674,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                         @memset(data[data_i..data_size], 0);
                     }
 
-                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
+                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data.len, sound_stream.stream.channels)));
                 } else {
                     var arg_data = core.ArgumentArray(core.Int, c_short, rl.allocator).get(env, argv[1]) catch {
                         return error.invalid_argument_data;
@@ -1591,6 +1682,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                     defer arg_data.free();
                     const data = arg_data.data;
                     const data_size: c_uint = @intCast(arg_data.length);
+                    if (data_size == 0) return error.invalid_argument_data;
 
                     rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
                 }
@@ -1633,7 +1725,14 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                         @memset(data[data_i..data_size], 0);
                     }
 
-                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
+                    if (sound_stream.position) |position| {
+                        const computed_position = rl.ComputeAudioPositionMode3D(position);
+                        if (computed_position.forward < 0.0) {
+                            rl.ApplyFilterBehind(sound_stream.stream.sampleRate, sound_stream.stream.channels, data, computed_position.volume, &sound_stream.position_state);
+                        }
+                    }
+
+                    rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data.len, sound_stream.stream.channels)));
                 } else {
                     var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[1]) catch {
                         return error.invalid_argument_data;
@@ -1641,6 +1740,14 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                     defer arg_data.free();
                     const data = arg_data.data;
                     const data_size: c_uint = @intCast(arg_data.length);
+                    if (data_size == 0) return error.invalid_argument_data;
+
+                    if (sound_stream.position) |position| {
+                        const computed_position = rl.ComputeAudioPositionMode3D(position);
+                        if (computed_position.forward < 0.0) {
+                            rl.ApplyFilterBehind(sound_stream.stream.sampleRate, sound_stream.stream.channels, data.?, computed_position.volume, &sound_stream.position_state);
+                        }
+                    }
 
                     rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels)));
                 }
@@ -1691,6 +1798,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                     defer arg_data.free();
                     const data = arg_data.data;
                     const data_size: c_uint = @intCast(arg_data.length);
+                    if (data_size == 0) return error.invalid_argument_data;
 
                     rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound_stream.stream.channels * sound_stream.stream.sampleSize)));
                 }
@@ -2184,7 +2292,46 @@ fn nif_set_sound_stream_looping(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Function
 
-    sound_stream.looping = looping;
+    rl.SetSoundStreamLooping(sound_stream, looping);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.SoundStream, env, argv[0], sound_stream.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Set position for a sound stream
+fn nif_set_sound_stream_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Return type
+
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
+
+    // Arguments
+
+    var arg_sound_stream = core.Argument(core.SoundStream).get(env, argv[0]) catch {
+        return error.invalid_argument_sound_stream;
+    };
+    defer if (!return_resource) arg_sound_stream.free();
+    errdefer if (return_resource) arg_sound_stream.free();
+    const sound_stream = &arg_sound_stream.data;
+
+    const is_position_nil = e.enif_is_identical(core.Atom.make(env, "nil"), argv[1]) != 0;
+    var position: ?rl.Vector3 = null;
+
+    if (!is_position_nil) {
+        const arg_position = core.Argument(core.Vector3).get(env, argv[1]) catch {
+            return error.invalid_argument_position;
+        };
+        defer arg_position.free();
+        position = arg_position.data;
+    }
+
+    // Function
+
+    rl.SetSoundStreamPosition(sound_stream, position);
 
     // Return
 
@@ -2735,7 +2882,46 @@ fn nif_set_music_looping(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    music.looping = looping;
+    rl.SetMusicLooping(music, looping);
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.Music, env, argv[0], music.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Set position for a music
+fn nif_set_music_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Return type
+
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
+
+    // Arguments
+
+    var arg_music = core.Argument(core.Music).get(env, argv[0]) catch {
+        return error.invalid_argument_music;
+    };
+    defer if (!return_resource) arg_music.free();
+    errdefer if (return_resource) arg_music.free();
+    const music = &arg_music.data;
+
+    const is_position_nil = e.enif_is_identical(core.Atom.make(env, "nil"), argv[1]) != 0;
+    var position: ?rl.Vector3 = null;
+
+    if (!is_position_nil) {
+        const arg_position = core.Argument(core.Vector3).get(env, argv[1]) catch {
+            return error.invalid_argument_position;
+        };
+        defer arg_position.free();
+        position = arg_position.data;
+    }
+
+    // Function
+
+    rl.SetMusicPosition(music, position);
 
     // Return
 
@@ -3262,6 +3448,45 @@ fn nif_set_audio_stream_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     // Function
 
     rl.SetAudioStreamPan(stream.*, @floatCast(pan));
+
+    // Return
+
+    return core.maybe_make_struct_or_resource(core.AudioStream, env, argv[0], stream.*, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Set position for a audio stream
+fn nif_set_audio_stream_position(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 2 or argc == 3);
+
+    // Return type
+
+    const return_resource = core.must_return_resource_auto(env, argc, argv, 2, argv[0]);
+
+    // Arguments
+
+    var arg_stream = core.Argument(core.AudioStream).get(env, argv[0]) catch {
+        return error.invalid_argument_stream;
+    };
+    defer if (!return_resource) arg_stream.free();
+    errdefer if (return_resource) arg_stream.free();
+    const stream = &arg_stream.data;
+
+    const is_position_nil = e.enif_is_identical(core.Atom.make(env, "nil"), argv[1]) != 0;
+    var position: ?rl.Vector3 = null;
+
+    if (!is_position_nil) {
+        const arg_position = core.Argument(core.Vector3).get(env, argv[1]) catch {
+            return error.invalid_argument_position;
+        };
+        defer arg_position.free();
+        position = arg_position.data;
+    }
+
+    // Function
+
+    rl.SetAudioStreamPosition(stream, position);
 
     // Return
 
