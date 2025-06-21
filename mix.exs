@@ -138,6 +138,8 @@ defmodule Zexray.MixProject do
       main: "readme",
       extras: [
         "README.md",
+        # Examples Core
+        "examples/core/2d_camera.livemd": [filename: "example_core_2d_camera"],
         # Examples Audio
         "examples/audio/sound_loading.livemd": [filename: "example_audio_sound_loading"],
         "examples/audio/music_stream.livemd": [filename: "example_audio_music_stream"],
@@ -173,6 +175,7 @@ defmodule Zexray.MixProject do
         end
       end,
       groups_for_extras: [
+        "Examples: Core": ~r"examples/core",
         "Examples: Audio": ~r"examples/audio",
         "Examples: Gui": ~r"examples/gui"
       ],

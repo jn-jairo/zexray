@@ -1,0 +1,221 @@
+# 2D Camera system
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★☆☆] 2/4
+
+```elixir
+defmodule Example do
+  use Zexray.Enum
+  use Zexray.Type
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [core] example - 2d camera"
+
+  @max_buildings 100
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Set our game to run at 60 frames-per-second
+      Zexray.Timing.set_target_fps(60)
+
+      # Manage resources loading/unloading
+      Zexray.Resource.with_resource(
+        fn ->
+          player = type_rectangle(x: 400.0, y: 280.0, width: 40.0, height: 40.0)
+
+          {_spacing, buildings} =
+            0..@max_buildings
+            |> Enum.reduce({0, []}, fn _, {spacing, buildings} ->
+              width = get_random_value(50, 200)
+              height = get_random_value(100, 800)
+
+              building =
+                type_rectangle(
+                  width: width,
+                  height: height,
+                  y: @screen_height - 130.0 - height,
+                  x: -6_000.0 + spacing
+                )
+
+              build_color =
+                type_color(
+                  r: trunc(get_random_value(200, 240)),
+                  g: trunc(get_random_value(200, 240)),
+                  b: trunc(get_random_value(200, 250)),
+                  a: 255
+                )
+
+              {spacing + width, [{building, build_color} | buildings]}
+            end)
+
+          camera =
+            type_camera_2d(
+              target:
+                type_vector2(
+                  x: type_rectangle(player, :x) + 20.0,
+                  y: type_rectangle(player, :y) + 20.0
+                ),
+              offset:
+                type_vector2(
+                  x: @screen_width / 2.0,
+                  y: @screen_height / 2.0
+                ),
+              rotation: 0.0,
+              zoom: 1.0
+            )
+
+          {player, camera, buildings}
+        end,
+        &loop/1
+      )
+    end)
+  end
+
+  defp get_random_value(min, max) do
+    :rand.uniform() * (max - min) + min
+  end
+
+  defp loop({player, camera, buildings}) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+      type_rectangle(x: player_x, y: player_y) = player
+
+      type_camera_2d(
+        rotation: camera_rotation,
+        zoom: camera_zoom
+      ) = camera
+
+      # Player movement
+      player_x =
+        cond do
+          Zexray.Keyboard.down?(enum_keyboard_key(:right)) -> player_x + 2
+          Zexray.Keyboard.down?(enum_keyboard_key(:left)) -> player_x - 2
+          true -> player_x
+        end
+
+      # Camera target follows player
+      camera_target = type_vector2(x: player_x + 20, y: player_y + 20)
+
+      # Camera rotation controls
+      camera_rotation =
+        cond do
+          Zexray.Keyboard.down?(enum_keyboard_key(:a)) -> camera_rotation - 1
+          Zexray.Keyboard.down?(enum_keyboard_key(:s)) -> camera_rotation + 1
+          true -> camera_rotation
+        end
+
+      # Limit camera rotation to 80 degrees (-40 to 40)
+      camera_rotation =
+        cond do
+          camera_rotation > 40 -> 40.0
+          camera_rotation < -40 -> -40.0
+          true -> camera_rotation
+        end
+
+      # Camera zoom controls
+      # Uses log scaling to provide consistent zoom speed
+      camera_zoom = :math.exp(:math.log(camera_zoom) + Zexray.Mouse.get_wheel_move() * 0.1)
+
+      camera_zoom =
+        cond do
+          camera_zoom > 3.0 -> 3.0
+          camera_zoom < 0.1 -> 0.1
+          true -> camera_zoom
+        end
+
+      # Camera reset (zoom and rotation)
+      {camera_zoom, camera_rotation} =
+        if Zexray.Keyboard.pressed?(enum_keyboard_key(:r)) do
+          {1.0, 0.0}
+        else
+          {camera_zoom, camera_rotation}
+        end
+
+      player = type_rectangle(player, x: player_x)
+
+      camera =
+        type_camera_2d(camera,
+          target: camera_target,
+          rotation: camera_rotation,
+          zoom: camera_zoom
+        )
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Drawing.with_mode_2d(camera, fn ->
+          Zexray.Shape.draw_rectangle(-6_000, 320, 13_000, 8_000, enum_color(:darkgray))
+
+          buildings
+          |> Enum.each(fn {building, build_color} ->
+            Zexray.Shape.draw_rectangle_rec(building, build_color)
+          end)
+
+          Zexray.Shape.draw_rectangle_rec(player, enum_color(:red))
+
+          type_vector2(x: camera_target_x, y: camera_target_y) = camera_target
+
+          Zexray.Shape.draw_line(
+            trunc(camera_target_x),
+            @screen_height * -10,
+            trunc(camera_target_x),
+            @screen_width * 10,
+            enum_color(:green)
+          )
+
+          Zexray.Shape.draw_line(
+            @screen_width * -10,
+            trunc(camera_target_y),
+            @screen_width * 10,
+            trunc(camera_target_y),
+            enum_color(:green)
+          )
+        end)
+
+        Zexray.Text.draw("SCREEN AREA", 640, 10, 20, enum_color(:red))
+
+        Zexray.Shape.draw_rectangle_lines_ex(
+          type_rectangle(
+            x: 0.0,
+            y: 0.0,
+            width: :erlang.float(@screen_width),
+            height: :erlang.float(@screen_height)
+          ),
+          5.0,
+          enum_color(:red)
+        )
+
+        Zexray.Shape.draw_rectangle(10, 10, 250, 113, type_color(enum_color(:skyblue), a: 127))
+        Zexray.Shape.draw_rectangle_lines(10, 10, 250, 113, enum_color(:blue))
+
+        Zexray.Text.draw("Free 2d camera controls:", 20, 20, 10, enum_color(:black))
+        Zexray.Text.draw("- Right/Left to move Offset", 40, 40, 10, enum_color(:darkgray))
+        Zexray.Text.draw("- Mouse Wheel to Zoom in-out", 40, 60, 10, enum_color(:darkgray))
+        Zexray.Text.draw("- A / S to Rotate", 40, 80, 10, enum_color(:darkgray))
+        Zexray.Text.draw("- R to reset Zoom and Rotation", 40, 100, 10, enum_color(:darkgray))
+      end)
+
+      {player, camera, buildings}
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.init()
+```
