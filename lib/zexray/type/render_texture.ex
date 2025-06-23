@@ -20,6 +20,8 @@ defmodule Zexray.Type.RenderTextureBase do
 
       require Record
 
+      require Zexray.Type.Texture
+
       @type t ::
               record(:t,
                 id: non_neg_integer,
@@ -28,9 +30,9 @@ defmodule Zexray.Type.RenderTextureBase do
               )
 
       Record.defrecord(:t, unquote(prefix_atom),
-        id: nil,
-        texture: nil,
-        depth: nil
+        id: 0,
+        texture: Zexray.Type.Texture.t(),
+        depth: Zexray.Type.Texture.t()
       )
 
       use Zexray.Type.TypeBase, prefix: unquote(prefix)

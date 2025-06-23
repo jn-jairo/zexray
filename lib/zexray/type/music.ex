@@ -15,6 +15,8 @@ defmodule Zexray.Type.Music do
 
   require Record
 
+  require Zexray.Type.AudioStream
+
   @type t ::
           record(:t,
             stream: Zexray.Type.AudioStream.t_nif(),
@@ -25,7 +27,7 @@ defmodule Zexray.Type.Music do
           )
 
   Record.defrecord(:t, :music,
-    stream: nil,
+    stream: Zexray.Type.AudioStream.t(),
     frame_count: 0,
     looping: true,
     ctx_type: 0,

@@ -12,6 +12,8 @@ defmodule Zexray.Type.BoundingBox do
 
   require Record
 
+  require Zexray.Type.Vector3
+
   @type t ::
           record(:t,
             min: Zexray.Type.Vector3.t_nif(),
@@ -19,8 +21,8 @@ defmodule Zexray.Type.BoundingBox do
           )
 
   Record.defrecord(:t, :bounding_box,
-    min: nil,
-    max: nil
+    min: Zexray.Type.Vector3.t(),
+    max: Zexray.Type.Vector3.t()
   )
 
   use Zexray.Type.TypeBase, prefix: "bounding_box"

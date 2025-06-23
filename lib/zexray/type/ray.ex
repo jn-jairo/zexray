@@ -12,6 +12,8 @@ defmodule Zexray.Type.Ray do
 
   require Record
 
+  require Zexray.Type.Vector3
+
   @type t ::
           record(:t,
             position: Zexray.Type.Vector3.t_nif(),
@@ -19,8 +21,8 @@ defmodule Zexray.Type.Ray do
           )
 
   Record.defrecord(:t, :ray,
-    position: nil,
-    direction: nil
+    position: Zexray.Type.Vector3.t(),
+    direction: Zexray.Type.Vector3.t()
   )
 
   use Zexray.Type.TypeBase, prefix: "ray"

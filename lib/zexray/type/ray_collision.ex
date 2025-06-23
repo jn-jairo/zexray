@@ -14,6 +14,8 @@ defmodule Zexray.Type.RayCollision do
 
   require Record
 
+  require Zexray.Type.Vector3
+
   @type t ::
           record(:t,
             hit: boolean,
@@ -24,9 +26,9 @@ defmodule Zexray.Type.RayCollision do
 
   Record.defrecord(:t, :ray_collision,
     hit: false,
-    distance: nil,
-    point: nil,
-    normal: nil
+    distance: 0.0,
+    point: Zexray.Type.Vector3.t(),
+    normal: Zexray.Type.Vector3.t()
   )
 
   use Zexray.Type.TypeBase, prefix: "ray_collision"

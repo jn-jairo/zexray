@@ -22,6 +22,9 @@ defmodule Zexray.Type.Camera3DBase do
 
       require Record
 
+      require Zexray.Enum.CameraProjection
+      require Zexray.Type.Vector3
+
       @type t ::
               record(:t,
                 position: Zexray.Type.Vector3.t_nif(),
@@ -32,11 +35,11 @@ defmodule Zexray.Type.Camera3DBase do
               )
 
       Record.defrecord(:t, unquote(prefix_atom),
-        position: nil,
-        target: nil,
-        up: nil,
-        fovy: nil,
-        projection: nil
+        position: Zexray.Type.Vector3.t(),
+        target: Zexray.Type.Vector3.t(),
+        up: Zexray.Type.Vector3.t(),
+        fovy: 0.0,
+        projection: Zexray.Enum.CameraProjection.enum(:perspective)
       )
 
       use Zexray.Type.TypeBase, prefix: unquote(prefix)

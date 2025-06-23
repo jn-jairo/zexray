@@ -29,7 +29,7 @@ defmodule Zexray.Type.Wave do
     sample_rate: 0,
     sample_size: 8,
     channels: 1,
-    data: nil
+    data: <<>>
   )
 
   use Zexray.Type.TypeBase, prefix: "wave"

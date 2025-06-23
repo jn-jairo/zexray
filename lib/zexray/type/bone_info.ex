@@ -19,8 +19,8 @@ defmodule Zexray.Type.BoneInfo do
           )
 
   Record.defrecord(:t, :bone_info,
-    name: nil,
-    parent: nil
+    name: "",
+    parent: 0
   )
 
   use Zexray.Type.TypeBase, prefix: "bone_info"

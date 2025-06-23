@@ -29,7 +29,7 @@ defmodule Zexray.Type.ModelAnimation do
     frame_count: 0,
     bones: [],
     frame_poses: [],
-    name: nil
+    name: ""
   )
 
   use Zexray.Type.TypeBase, prefix: "model_animation"

@@ -19,6 +19,8 @@ defmodule Zexray.Type.SoundBase do
 
       require Record
 
+      require Zexray.Type.AudioStream
+
       @type t ::
               record(:t,
                 stream: Zexray.Type.AudioStream.t_nif(),
@@ -26,7 +28,7 @@ defmodule Zexray.Type.SoundBase do
               )
 
       Record.defrecord(:t, unquote(prefix_atom),
-        stream: nil,
+        stream: Zexray.Type.AudioStream.t(),
         frame_count: 0
       )
 

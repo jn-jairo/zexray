@@ -19,6 +19,8 @@ defmodule Zexray.Type.Model do
 
   require Record
 
+  require Zexray.Type.Matrix
+
   @type t ::
           record(:t,
             transform: Zexray.Type.Matrix.t_nif(),
@@ -33,7 +35,7 @@ defmodule Zexray.Type.Model do
           )
 
   Record.defrecord(:t, :model,
-    transform: nil,
+    transform: Zexray.Type.Matrix.t(),
     mesh_count: 0,
     material_count: 0,
     meshes: [],

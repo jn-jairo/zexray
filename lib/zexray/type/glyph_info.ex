@@ -15,6 +15,8 @@ defmodule Zexray.Type.GlyphInfo do
 
   require Record
 
+  require Zexray.Type.Image
+
   @type t ::
           record(:t,
             value: integer,
@@ -25,11 +27,11 @@ defmodule Zexray.Type.GlyphInfo do
           )
 
   Record.defrecord(:t, :glyph_info,
-    value: nil,
+    value: 0,
     offset_x: 0,
     offset_y: 0,
     advance_x: 0,
-    image: nil
+    image: Zexray.Type.Image.t()
   )
 
   use Zexray.Type.TypeBase, prefix: "glyph_info"

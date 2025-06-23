@@ -16,6 +16,8 @@ defmodule Zexray.Type.Font do
 
   require Record
 
+  require Zexray.Type.Texture
+
   @type t ::
           record(:t,
             base_size: integer,
@@ -27,10 +29,10 @@ defmodule Zexray.Type.Font do
           )
 
   Record.defrecord(:t, :font,
-    base_size: nil,
+    base_size: 0,
     glyph_count: 0,
     glyph_padding: 0,
-    texture: nil,
+    texture: Zexray.Type.Texture.t(),
     recs: [],
     glyphs: []
   )

@@ -14,6 +14,8 @@ defmodule Zexray.Type.Camera2D do
 
   require Record
 
+  require Zexray.Type.Vector2
+
   @type t ::
           record(:t,
             offset: Zexray.Type.Vector2.t_nif(),
@@ -23,9 +25,9 @@ defmodule Zexray.Type.Camera2D do
           )
 
   Record.defrecord(:t, :camera_2d,
-    offset: nil,
-    target: nil,
-    rotation: nil,
+    offset: Zexray.Type.Vector2.t(),
+    target: Zexray.Type.Vector2.t(),
+    rotation: 0.0,
     zoom: 1.0
   )
 

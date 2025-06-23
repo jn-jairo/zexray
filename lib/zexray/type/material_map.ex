@@ -13,6 +13,9 @@ defmodule Zexray.Type.MaterialMap do
 
   require Record
 
+  require Zexray.Type.Color
+  require Zexray.Type.Texture2D
+
   @type t ::
           record(:t,
             texture: Zexray.Type.Texture2D.t_nif(),
@@ -21,8 +24,8 @@ defmodule Zexray.Type.MaterialMap do
           )
 
   Record.defrecord(:t, :material_map,
-    texture: nil,
-    color: nil,
+    texture: Zexray.Type.Texture2D.t(),
+    color: Zexray.Type.Color.t(),
     value: 0.0
   )
 

@@ -22,6 +22,8 @@ defmodule Zexray.Type.TextureBase do
 
       require Record
 
+      require Zexray.Enum.PixelFormat
+
       @type t ::
               record(:t,
                 id: non_neg_integer,
@@ -32,11 +34,11 @@ defmodule Zexray.Type.TextureBase do
               )
 
       Record.defrecord(:t, unquote(prefix_atom),
-        id: nil,
+        id: 0,
         width: 0,
         height: 0,
         mipmaps: 1,
-        format: nil
+        format: Zexray.Enum.PixelFormat.enum(:uncompressed_r8g8b8a8)
       )
 
       use Zexray.Type.TypeBase, prefix: unquote(prefix)

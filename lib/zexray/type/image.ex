@@ -15,6 +15,8 @@ defmodule Zexray.Type.Image do
 
   require Record
 
+  require Zexray.Enum.PixelFormat
+
   @type t ::
           record(:t,
             data: binary,
@@ -25,11 +27,11 @@ defmodule Zexray.Type.Image do
           )
 
   Record.defrecord(:t, :image,
-    data: nil,
+    data: <<>>,
     width: 0,
     height: 0,
     mipmaps: 1,
-    format: nil
+    format: Zexray.Enum.PixelFormat.enum(:uncompressed_r8g8b8a8)
   )
 
   use Zexray.Type.TypeBase, prefix: "image"

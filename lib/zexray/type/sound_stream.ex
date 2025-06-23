@@ -23,23 +23,25 @@ defmodule Zexray.Type.SoundStreamBase do
 
       require Record
 
+      require Zexray.Type.AudioStream
+
       @type t ::
               record(:t,
                 stream: Zexray.Type.AudioStream.t_nif(),
                 frame_count: non_neg_integer,
                 looping: boolean,
-                position: Zexray.Type.Vector3.t_nif(),
+                position: nil | Zexray.Type.Vector3.t_nif(),
                 position_state: [float],
                 data: binary
               )
 
       Record.defrecord(:t, unquote(prefix_atom),
-        stream: nil,
+        stream: Zexray.Type.AudioStream.t(),
         frame_count: 0,
         looping: false,
         position: nil,
         position_state: [],
-        data: nil
+        data: <<>>
       )
 
       use Zexray.Type.TypeBase, prefix: unquote(prefix)

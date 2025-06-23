@@ -13,6 +13,9 @@ defmodule Zexray.Type.Transform do
 
   require Record
 
+  require Zexray.Type.Quaternion
+  require Zexray.Type.Vector3
+
   @type t ::
           record(:t,
             translation: Zexray.Type.Vector3.t_nif(),
@@ -21,9 +24,9 @@ defmodule Zexray.Type.Transform do
           )
 
   Record.defrecord(:t, :transform,
-    translation: nil,
-    rotation: nil,
-    scale: nil
+    translation: Zexray.Type.Vector3.t(),
+    rotation: Zexray.Type.Quaternion.t(),
+    scale: Zexray.Type.Vector3.t()
   )
 
   use Zexray.Type.TypeBase, prefix: "transform"

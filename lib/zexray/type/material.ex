@@ -13,6 +13,8 @@ defmodule Zexray.Type.Material do
 
   require Record
 
+  require Zexray.Type.Shader
+
   @type t ::
           record(:t,
             shader: Zexray.Type.Shader.t_nif(),
@@ -21,7 +23,7 @@ defmodule Zexray.Type.Material do
           )
 
   Record.defrecord(:t, :material,
-    shader: nil,
+    shader: Zexray.Type.Shader.t(),
     maps: [],
     params: []
   )
