@@ -121,9 +121,9 @@ pub const Double = struct {
     }
 };
 
-////////////
+///////////
 //  Int  //
-////////////
+///////////
 
 pub const Int = struct {
     pub const data_type = c_int;
