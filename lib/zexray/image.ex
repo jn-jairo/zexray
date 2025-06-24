@@ -5,6 +5,10 @@ defmodule Zexray.Image do
 
   alias Zexray.NIF
 
+  ###########
+  #  Image  #
+  ###########
+
   @doc """
   Get image data size in bytes for certain format
   """
