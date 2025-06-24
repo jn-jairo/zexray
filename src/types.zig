@@ -2,6 +2,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("./erl_nif.zig");
 const rl = @import("./raylib.zig");
+const utils = @import("./utils.zig");
 
 const resources = @import("./resources.zig");
 
@@ -1128,7 +1129,7 @@ pub fn ResourceBase(comptime T: type) type {
             const resource_type = @field(resources.resource_type, T.resource_name);
 
             const resource: **T.data_type = @ptrCast(@alignCast(try Resource.create(resource_type, @sizeOf(*T.data_type))));
-            defer rl.TRACELOGD("RESOURCE: Created %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            defer utils.TRACELOGD("RESOURCE: Created %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
 
             resource.* = try allocator.create(T.data_type);
             resource.*.* = value;
@@ -1138,19 +1139,19 @@ pub fn ResourceBase(comptime T: type) type {
 
         pub fn update(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type) !void {
             const resource = try get(env, term);
-            defer rl.TRACELOGD("RESOURCE: Updated %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            defer utils.TRACELOGD("RESOURCE: Updated %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
             resource.*.* = value;
         }
 
         pub fn replace(env: ?*e.ErlNifEnv, term: e.ErlNifTerm, value: T.data_type) !void {
             const resource = try get(env, term);
-            defer rl.TRACELOGD("RESOURCE: Replaced %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            defer utils.TRACELOGD("RESOURCE: Replaced %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
             T.free(resource.*.*);
             resource.*.* = value;
         }
 
         pub fn destroy(resource: **T.data_type) void {
-            defer rl.TRACELOGD("RESOURCE: Destroyed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            defer utils.TRACELOGD("RESOURCE: Destroyed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
             const allocator = resources.ResourceType.allocator;
             allocator.destroy(resource.*);
         }
@@ -1160,7 +1161,7 @@ pub fn ResourceBase(comptime T: type) type {
         }
 
         pub fn free(resource: **T.data_type) void {
-            defer rl.TRACELOGD("RESOURCE: Freed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
+            defer utils.TRACELOGD("RESOURCE: Freed %s %s", .{ T.resource_name, ptr_to_c_string(resource) });
             T.unload(resource.*.*);
         }
     };
@@ -4617,7 +4618,7 @@ pub const Model = struct {
         rl.MemFree(value.bones);
         rl.MemFree(value.bindPose);
 
-        rl.TRACELOG(rl.LOG_INFO, "MODEL: Unloaded model (and meshes) from RAM and VRAM", .{});
+        utils.TRACELOG(rl.LOG_INFO, "MODEL: Unloaded model (and meshes) from RAM and VRAM", .{});
     }
 
     pub fn free(value: rl.Model) void {

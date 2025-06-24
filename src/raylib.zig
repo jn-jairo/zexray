@@ -7,6 +7,8 @@ const raylib = @cImport({
     @cInclude("raygui.h");
     @cInclude("raymath.h");
     @cInclude("stdio.h");
+    @cInclude("utils.h");
+    @cInclude("rlgl.h");
 });
 pub usingnamespace raylib;
 
@@ -24,6 +26,7 @@ pub usingnamespace config;
 
 const std = @import("std");
 const build_config = @import("config");
+const utils = @import("utils.zig");
 
 const e = @import("./erl_nif.zig");
 
@@ -143,20 +146,6 @@ pub const AudioBuffer = extern struct {
     prev: ?*AudioBuffer = std.mem.zeroes(?*AudioBuffer), // Previous audio buffer on the list
 };
 
-/// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
-pub fn TRACELOG(logLevel: c_int, text: [*c]const u8, args: anytype) void {
-    if (build_config.trace_log) {
-        @call(.auto, raylib.TraceLog, .{ logLevel, text } ++ args);
-    }
-}
-
-/// Show trace log messages (LOG_DEBUG)
-pub fn TRACELOGD(text: [*c]const u8, args: anytype) void {
-    if (build_config.trace_log and build_config.trace_log_debug) {
-        @call(.auto, raylib.TraceLog, .{ raylib.LOG_DEBUG, text } ++ args);
-    }
-}
-
 /// Takes a screenshot of current screen
 pub fn Screenshot() raylib.Image {
     return raylib.LoadImageFromScreen();
@@ -170,9 +159,9 @@ pub fn TakeScreenshot2(fileName: [*c]const u8) bool {
     const ok = raylib.ExportImage(image, fileName);
 
     if (ok) {
-        TRACELOG(raylib.LOG_INFO, "SYSTEM: [%s] Screenshot taken successfully", .{fileName});
+        utils.TRACELOG(raylib.LOG_INFO, "SYSTEM: [%s] Screenshot taken successfully", .{fileName});
     } else {
-        TRACELOG(raylib.LOG_WARNING, "SYSTEM: [%s] Screenshot could not be saved", .{fileName});
+        utils.TRACELOG(raylib.LOG_WARNING, "SYSTEM: [%s] Screenshot could not be saved", .{fileName});
     }
 
     return ok;
@@ -208,7 +197,7 @@ pub fn LoadFontFromMemoryEx(fileType: [*c]const u8, fileData: [*c]const u8, data
             font.glyphs[i].image = raylib.ImageFromImage(atlas, font.recs[i]);
         }
 
-        TRACELOG(raylib.LOG_INFO, "FONT: Data loaded successfully (%i pixel size | %i glyphs)", .{ font.baseSize, font.glyphCount });
+        utils.TRACELOG(raylib.LOG_INFO, "FONT: Data loaded successfully (%i pixel size | %i glyphs)", .{ font.baseSize, font.glyphCount });
     } else {
         font = raylib.GetFontDefault();
     }

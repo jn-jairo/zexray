@@ -158,6 +158,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
 
     lib.installHeader(raygui_dep.path("src/raygui.h"), "raygui.h");
     lib.installHeader(raylib_dep.path("src/external/miniaudio.h"), "miniaudio.h");
+    lib.installHeader(raylib_dep.path("src/utils.h"), "utils.h");
 
     return .{
         .lib = lib,

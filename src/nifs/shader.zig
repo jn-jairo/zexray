@@ -2,7 +2,6 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("../erl_nif.zig");
 const rl = @import("../raylib.zig");
-const rlgl = @import("../rlgl.zig");
 
 const core = @import("../core.zig");
 
@@ -211,13 +210,13 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     // Function
 
     switch (uniform_type) {
-        rlgl.RL_SHADER_UNIFORM_FLOAT => {
+        rl.RL_SHADER_UNIFORM_FLOAT => {
             const value: f32 = @floatCast(core.Double.get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             });
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_VEC2 => {
+        rl.RL_SHADER_UNIFORM_VEC2 => {
             const arg_value = core.Argument(core.Vector2).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -225,7 +224,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_VEC3 => {
+        rl.RL_SHADER_UNIFORM_VEC3 => {
             const arg_value = core.Argument(core.Vector3).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -233,7 +232,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_VEC4 => {
+        rl.RL_SHADER_UNIFORM_VEC4 => {
             const arg_value = core.Argument(core.Vector4).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -241,13 +240,13 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_INT => {
+        rl.RL_SHADER_UNIFORM_INT => {
             const value = core.Int.get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC2 => {
+        rl.RL_SHADER_UNIFORM_IVEC2 => {
             const arg_value = core.Argument(core.IVector2).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -255,7 +254,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC3 => {
+        rl.RL_SHADER_UNIFORM_IVEC3 => {
             const arg_value = core.Argument(core.IVector3).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -263,7 +262,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC4 => {
+        rl.RL_SHADER_UNIFORM_IVEC4 => {
             const arg_value = core.Argument(core.IVector4).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -271,13 +270,13 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_UINT => {
+        rl.RL_SHADER_UNIFORM_UINT => {
             const value = core.UInt.get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC2 => {
+        rl.RL_SHADER_UNIFORM_UIVEC2 => {
             const arg_value = core.Argument(core.UIVector2).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -285,7 +284,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC3 => {
+        rl.RL_SHADER_UNIFORM_UIVEC3 => {
             const arg_value = core.Argument(core.UIVector3).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -293,7 +292,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC4 => {
+        rl.RL_SHADER_UNIFORM_UIVEC4 => {
             const arg_value = core.Argument(core.UIVector4).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -301,7 +300,7 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
             const value = arg_value.data;
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
-        rlgl.RL_SHADER_UNIFORM_SAMPLER2D => {
+        rl.RL_SHADER_UNIFORM_SAMPLER2D => {
             const value = core.Int.get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -343,7 +342,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     switch (uniform_type) {
-        rlgl.RL_SHADER_UNIFORM_FLOAT => {
+        rl.RL_SHADER_UNIFORM_FLOAT => {
             var arg_value = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -352,7 +351,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_VEC2 => {
+        rl.RL_SHADER_UNIFORM_VEC2 => {
             var arg_value = core.ArgumentArray(core.Vector2, core.Vector2.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -361,7 +360,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_VEC3 => {
+        rl.RL_SHADER_UNIFORM_VEC3 => {
             var arg_value = core.ArgumentArray(core.Vector3, core.Vector3.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -370,7 +369,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_VEC4 => {
+        rl.RL_SHADER_UNIFORM_VEC4 => {
             var arg_value = core.ArgumentArray(core.Vector4, core.Vector4.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -379,7 +378,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_INT => {
+        rl.RL_SHADER_UNIFORM_INT => {
             var arg_value = core.ArgumentArray(core.Int, core.Int.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -388,7 +387,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC2 => {
+        rl.RL_SHADER_UNIFORM_IVEC2 => {
             var arg_value = core.ArgumentArray(core.IVector2, core.IVector2.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -397,7 +396,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC3 => {
+        rl.RL_SHADER_UNIFORM_IVEC3 => {
             var arg_value = core.ArgumentArray(core.IVector3, core.IVector3.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -406,7 +405,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_IVEC4 => {
+        rl.RL_SHADER_UNIFORM_IVEC4 => {
             var arg_value = core.ArgumentArray(core.IVector4, core.IVector4.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -415,7 +414,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_UINT => {
+        rl.RL_SHADER_UNIFORM_UINT => {
             var arg_value = core.ArgumentArray(core.UInt, core.UInt.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -424,7 +423,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC2 => {
+        rl.RL_SHADER_UNIFORM_UIVEC2 => {
             var arg_value = core.ArgumentArray(core.UIVector2, core.UIVector2.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -433,7 +432,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC3 => {
+        rl.RL_SHADER_UNIFORM_UIVEC3 => {
             var arg_value = core.ArgumentArray(core.UIVector3, core.UIVector3.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -442,7 +441,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_UIVEC4 => {
+        rl.RL_SHADER_UNIFORM_UIVEC4 => {
             var arg_value = core.ArgumentArray(core.UIVector4, core.UIVector4.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
@@ -451,7 +450,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
             const count = arg_value.length;
             rl.SetShaderValueV(shader, loc_index, @ptrCast(value), uniform_type, @intCast(count));
         },
-        rlgl.RL_SHADER_UNIFORM_SAMPLER2D => {
+        rl.RL_SHADER_UNIFORM_SAMPLER2D => {
             var arg_value = core.ArgumentArray(core.Int, core.Int.data_type, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
