@@ -73,15 +73,15 @@ defmodule Example do
 
             camera =
               type_camera_3d(
-                position: type_vector3(x: 0.0, y: 1.0, z: 0.0),
-                target: type_vector3(x: 0.0, y: 1.0, z: 1.0),
-                up: type_vector3(x: 0.0, y: 1.0, z: 0.0),
-                fovy: 60.0,
+                position: type_vector3(x: 0, y: 1, z: 0),
+                target: type_vector3(x: 0, y: 1, z: 1),
+                up: type_vector3(x: 0, y: 1, z: 0),
+                fovy: 60,
                 projection: enum_camera_projection(:perspective)
               )
               |> Zexray.Resource.new!()
 
-            max_distance = 20.0
+            max_distance = 20
 
             {
               sound,
@@ -108,9 +108,9 @@ defmodule Example do
 
       sphere_pos =
         type_vector3(
-          x: 5.0 * :math.cos(th),
-          y: 0.0,
-          z: 5.0 * :math.sin(th)
+          x: 5 * :math.cos(th),
+          y: 0,
+          z: 5 * :math.sin(th)
         )
 
       Zexray.Audio.with_mode_3d(camera, max_distance, fn ->
@@ -125,7 +125,7 @@ defmodule Example do
         Zexray.Drawing.clear_background(enum_color(:raywhite))
 
         Zexray.Drawing.with_mode_3d(camera, fn ->
-          Zexray.Shape3D.draw_grid(10, 2.0)
+          Zexray.Shape3D.draw_grid(10, 2)
           Zexray.Shape3D.draw_sphere(sphere_pos, 0.5, enum_color(:red))
         end)
       end)

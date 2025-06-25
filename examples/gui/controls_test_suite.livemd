@@ -42,10 +42,10 @@ defmodule ExampleState do
     toggle_group_active: 0,
     toggle_slider_active: 0,
     color_picker_value: Zexray.Enum.Color.enum(:red),
-    slider_value: 50.0,
-    slider_bar_value: 60.0,
+    slider_value: 50,
+    slider_bar_value: 60,
     progress_value: 0.1,
-    view_scroll: Zexray.Type.Vector2.t(x: 0.0, y: 0.0),
+    view_scroll: Zexray.Type.Vector2.t(x: 0, y: 0),
     alpha_value: 0.5,
     text_box_multi_text:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\nThisisastringlongerthanexpectedwithoutspacestotestcharbreaksforthosecases,checkingifworkingasexpected.\n\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -79,11 +79,11 @@ defmodule ExampleState do
             toggle_group_active: integer,
             toggle_slider_active: integer,
             color_picker_value: Zexray.Type.Color.t_all(),
-            slider_value: float,
-            slider_bar_value: float,
-            progress_value: float,
+            slider_value: number,
+            slider_bar_value: number,
+            progress_value: number,
             view_scroll: Zexray.Type.Vector2.t_all(),
-            alpha_value: float,
+            alpha_value: number,
             text_box_multi_text: binary,
             text_box_multi_edit_mode: boolean
           )
@@ -117,6 +117,10 @@ defmodule Example do
         &loop/1
       )
     end)
+  end
+
+  defp format_number(value) do
+    :erlang.float_to_binary(value * 1.0, decimals: 2)
   end
 
   defp loop(state) do
@@ -211,8 +215,8 @@ defmodule Example do
 
       progress_value =
         cond do
-          progress_value > 1.0 -> 1.0
-          progress_value < 0.0 -> 0.0
+          progress_value > 1 -> 1
+          progress_value < 0 -> 0
           true -> progress_value
         end
 
@@ -234,7 +238,7 @@ defmodule Example do
 
         {_, force_squared_checked} =
           Zexray.Gui.check_box(
-            type_rectangle(x: 25.0, y: 108.0, width: 15.0, height: 15.0),
+            type_rectangle(x: 25, y: 108, width: 15, height: 15),
             "FORCE CHECK!",
             force_squared_checked
           )
@@ -247,7 +251,7 @@ defmodule Example do
 
         {spinner_001_changed, spinner_001_value} =
           Zexray.Gui.spinner(
-            type_rectangle(x: 25.0, y: 135.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 135, width: 125, height: 30),
             "",
             spinner_001_value,
             0,
@@ -260,7 +264,7 @@ defmodule Example do
 
         {value_box_002_changed, value_box_002_value} =
           Zexray.Gui.value_box(
-            type_rectangle(x: 25.0, y: 175.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 175, width: 125, height: 30),
             "",
             value_box_002_value,
             0,
@@ -279,7 +283,7 @@ defmodule Example do
 
         {text_box_changed, text_box_text} =
           Zexray.Gui.text_box(
-            type_rectangle(x: 25.0, y: 215.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 215, width: 125, height: 30),
             text_box_text,
             64,
             text_box_edit_mode
@@ -296,12 +300,12 @@ defmodule Example do
 
         show_text_input_box =
           Zexray.Gui.button(
-            type_rectangle(x: 25.0, y: 255.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 255, width: 125, height: 30),
             Zexray.Gui.icon_text(enum_gui_icon(:file_save), "Save File")
           ) or show_text_input_box
 
         Zexray.Gui.group_box(
-          type_rectangle(x: 25.0, y: 310.0, width: 125.0, height: 150.0),
+          type_rectangle(x: 25, y: 310, width: 125, height: 150),
           "STATES"
         )
 
@@ -311,7 +315,7 @@ defmodule Example do
 
         _ =
           Zexray.Gui.button(
-            type_rectangle(x: 30.0, y: 320.0, width: 115.0, height: 30.0),
+            type_rectangle(x: 30, y: 320, width: 115, height: 30),
             "NORMAL"
           )
 
@@ -319,7 +323,7 @@ defmodule Example do
 
         _ =
           Zexray.Gui.button(
-            type_rectangle(x: 30.0, y: 355.0, width: 115.0, height: 30.0),
+            type_rectangle(x: 30, y: 355, width: 115, height: 30),
             "FOCUSED"
           )
 
@@ -327,7 +331,7 @@ defmodule Example do
 
         _ =
           Zexray.Gui.button(
-            type_rectangle(x: 30.0, y: 390.0, width: 115.0, height: 30.0),
+            type_rectangle(x: 30, y: 390, width: 115, height: 30),
             "PRESSED"
           )
 
@@ -335,7 +339,7 @@ defmodule Example do
 
         _ =
           Zexray.Gui.button(
-            type_rectangle(x: 30.0, y: 425.0, width: 115.0, height: 30.0),
+            type_rectangle(x: 30, y: 425, width: 115, height: 30),
             "DISABLED"
           )
 
@@ -345,7 +349,7 @@ defmodule Example do
 
         visual_style_active =
           Zexray.Gui.combo_box(
-            type_rectangle(x: 25.0, y: 480.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 480, width: 125, height: 30),
             "default;dark",
             visual_style_active
           )
@@ -369,7 +373,7 @@ defmodule Example do
 
         {dropdown_box_001_pressed, dropdown_box_001_active} =
           Zexray.Gui.dropdown_box(
-            type_rectangle(x: 25.0, y: 65.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 65, width: 125, height: 30),
             "#01#ONE;#02#TWO;#03#THREE;#04#FOUR",
             dropdown_box_001_active,
             dropdown_001_edit_mode
@@ -396,7 +400,7 @@ defmodule Example do
 
         {dropdown_box_000_pressed, dropdown_box_000_active} =
           Zexray.Gui.dropdown_box(
-            type_rectangle(x: 25.0, y: 25.0, width: 125.0, height: 30.0),
+            type_rectangle(x: 25, y: 25, width: 125, height: 30),
             "ONE;TWO;THREE",
             dropdown_box_000_active,
             dropdown_000_edit_mode
@@ -417,7 +421,7 @@ defmodule Example do
 
         {list_view_scroll_index, list_view_active} =
           Zexray.Gui.list_view(
-            type_rectangle(x: 165.0, y: 25.0, width: 140.0, height: 124.0),
+            type_rectangle(x: 165, y: 25, width: 140, height: 124),
             "Charmander;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey",
             list_view_scroll_index,
             list_view_active
@@ -425,7 +429,7 @@ defmodule Example do
 
         {list_view_ex_scroll_index, list_view_ex_active, list_view_ex_focus} =
           Zexray.Gui.list_view_ex(
-            type_rectangle(x: 165.0, y: 162.0, width: 140.0, height: 184.0),
+            type_rectangle(x: 165, y: 162, width: 140, height: 184),
             ["This", "is", "a", "list view", "with", "disable", "elements", "amazing!"],
             list_view_ex_scroll_index,
             list_view_ex_active,
@@ -440,7 +444,7 @@ defmodule Example do
 
         toggle_group_active =
           Zexray.Gui.toggle_group(
-            type_rectangle(x: 165.0, y: 360.0, width: 140.0, height: 24.0),
+            type_rectangle(x: 165, y: 360, width: 140, height: 24),
             "#1#ONE\n#3#TWO\n#8#THREE\n#23#",
             toggle_group_active
           )
@@ -455,7 +459,7 @@ defmodule Example do
 
         toggle_slider_active =
           Zexray.Gui.toggle_slider(
-            type_rectangle(x: 165.0, y: 480.0, width: 140.0, height: 30.0),
+            type_rectangle(x: 165, y: 480, width: 140, height: 30),
             "ON;OFF",
             toggle_slider_active
           )
@@ -469,13 +473,13 @@ defmodule Example do
         # Third GUI column
 
         Zexray.Gui.panel(
-          type_rectangle(x: 320.0, y: 25.0, width: 225.0, height: 140.0),
+          type_rectangle(x: 320, y: 25, width: 225, height: 140),
           "Panel Info"
         )
 
         color_picker_value =
           Zexray.Gui.color_picker(
-            type_rectangle(x: 320.0, y: 185.0, width: 196.0, height: 192.0),
+            type_rectangle(x: 320, y: 185, width: 196, height: 192),
             "",
             color_picker_value
           )
@@ -484,62 +488,62 @@ defmodule Example do
 
         {_, slider_value} =
           Zexray.Gui.slider(
-            type_rectangle(x: 355.0, y: 400.0, width: 165.0, height: 20.0),
+            type_rectangle(x: 355, y: 400, width: 165, height: 20),
             "TEST",
-            "#{:erlang.float_to_binary(slider_value, decimals: 2)}",
+            "#{format_number(slider_value)}",
             slider_value,
-            -50.0,
-            100.0
+            -50,
+            100
           )
 
         {_, slider_bar_value} =
           Zexray.Gui.slider_bar(
-            type_rectangle(x: 320.0, y: 430.0, width: 200.0, height: 20.0),
+            type_rectangle(x: 320, y: 430, width: 200, height: 20),
             "",
             "#{trunc(slider_bar_value)}",
             slider_bar_value,
-            0.0,
-            100.0
+            0,
+            100
           )
 
         progress_value =
           Zexray.Gui.progress_bar(
-            type_rectangle(x: 320.0, y: 460.0, width: 200.0, height: 20.0),
+            type_rectangle(x: 320, y: 460, width: 200, height: 20),
             "",
             "#{trunc(progress_value * 100)}%",
             progress_value,
-            0.0,
-            1.0
+            0,
+            1
           )
 
         Zexray.Gui.enable()
 
         # NOTE: View rectangle could be used to perform some scissor test
-        view = type_rectangle(x: 0.0, y: 0.0, width: 0.0, height: 0.0)
+        view = type_rectangle(x: 0, y: 0, width: 0, height: 0)
 
         {view_scroll, _view} =
           Zexray.Gui.scroll_panel(
-            type_rectangle(x: 560.0, y: 25.0, width: 102.0, height: 354.0),
+            type_rectangle(x: 560, y: 25, width: 102, height: 354),
             "",
-            type_rectangle(x: 560.0, y: 25.0, width: 300.0, height: 1200.0),
+            type_rectangle(x: 560, y: 25, width: 300, height: 1200),
             view_scroll,
             view
           )
 
-        mouse_cell = type_vector2(x: 0.0, y: 0.0)
+        mouse_cell = type_vector2(x: 0, y: 0)
 
         _mouse_cell =
           Zexray.Gui.grid(
-            type_rectangle(x: 560.0, y: 25.0 + 180.0 + 195.0, width: 100.0, height: 120.0),
+            type_rectangle(x: 560, y: 25 + 180 + 195, width: 100, height: 120),
             "",
-            20.0,
+            20,
             3,
             mouse_cell
           )
 
         alpha_value =
           Zexray.Gui.color_bar_alpha(
-            type_rectangle(x: 320.0, y: 490.0, width: 200.0, height: 30.0),
+            type_rectangle(x: 320, y: 490, width: 200, height: 30),
             "",
             alpha_value
           )
@@ -560,7 +564,7 @@ defmodule Example do
 
         {text_box_multi_changed, text_box_multi_text} =
           Zexray.Gui.text_box(
-            type_rectangle(x: 678.0, y: 25.0, width: 258.0, height: 492.0),
+            type_rectangle(x: 678, y: 25, width: 258, height: 492),
             text_box_multi_text,
             1024,
             text_box_multi_edit_mode
@@ -585,10 +589,10 @@ defmodule Example do
 
         Zexray.Gui.status_bar(
           type_rectangle(
-            x: 0.0,
-            y: @screen_height - 20.0,
-            width: :erlang.float(@screen_width),
-            height: 20.0
+            x: 0,
+            y: @screen_height - 20,
+            width: @screen_width,
+            height: 20
           ),
           "This is a status bar"
         )
@@ -663,10 +667,10 @@ defmodule Example do
     {should_close, button_pressed, text_input, _secret_view_active} =
       Zexray.Gui.text_input_box(
         type_rectangle(
-          x: :erlang.float(@screen_width / 2 - 120),
-          y: :erlang.float(@screen_height / 2 - 60),
-          width: 240.0,
-          height: 140.0
+          x: @screen_width / 2 - 120,
+          y: @screen_height / 2 - 60,
+          width: 240,
+          height: 140
         ),
         Zexray.Gui.icon_text(enum_gui_icon(:file_save), "Save file as ..."),
         "Introduce output file name:",
@@ -690,10 +694,10 @@ defmodule Example do
     {should_close, button_pressed} =
       Zexray.Gui.message_box(
         type_rectangle(
-          x: :erlang.float(@screen_width / 2 - 125),
-          y: :erlang.float(@screen_height / 2 - 50),
-          width: 250.0,
-          height: 100.0
+          x: @screen_width / 2 - 125,
+          y: @screen_height / 2 - 50,
+          width: 250,
+          height: 100
         ),
         Zexray.Gui.icon_text(enum_gui_icon(:exit), "Close Window"),
         "Do you really want to exit?",

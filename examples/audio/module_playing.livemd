@@ -17,19 +17,19 @@ defmodule CircleWave do
   require Zexray.Type.Vector2
 
   Record.defrecord(:circle_wave,
-    position: Zexray.Type.Vector2.t(x: 0.0, y: 0.0),
-    radius: 0.0,
-    alpha: 0.0,
-    speed: 0.0,
+    position: Zexray.Type.Vector2.t(x: 0, y: 0),
+    radius: 0,
+    alpha: 0,
+    speed: 0,
     color: Zexray.Enum.Color.enum(:black)
   )
 
   @type circle_wave ::
           record(:circle_wave,
             position: Zexray.Type.Vector2.t(),
-            radius: float,
-            alpha: float,
-            speed: float,
+            radius: number,
+            alpha: number,
+            speed: number,
             color: Zexray.Type.Color.t()
           )
 end
@@ -41,7 +41,7 @@ defmodule ExampleState do
     colors: [],
     circles: [],
     music: nil,
-    pitch: 1.0
+    pitch: 1
   )
 
   @type example_state ::
@@ -49,7 +49,7 @@ defmodule ExampleState do
             colors: [Zexray.Type.Color.t()],
             circles: [CircleWave.circle_wave()],
             music: Zexray.Type.Music.Resource.t(),
-            pitch: float
+            pitch: number
           )
 end
 
@@ -132,7 +132,7 @@ defmodule Example do
                 radius = get_random_value(10, 40)
 
                 circle_wave(
-                  alpha: 0.0,
+                  alpha: 0,
                   radius: radius,
                   position:
                     type_vector2(
@@ -159,6 +159,10 @@ defmodule Example do
         )
       end)
     end)
+  end
+
+  defp format_number(value) do
+    :erlang.float_to_binary(value * 1.0, decimals: 2)
   end
 
   defp loop(state) do
@@ -221,15 +225,15 @@ defmodule Example do
           ) = circle
 
           alpha = alpha + speed
-          radius = radius + speed * 10.0
+          radius = radius + speed * 10
 
-          speed = if alpha >= 1.0, do: speed * -1, else: speed
+          speed = if alpha >= 1, do: speed * -1, else: speed
 
-          if alpha <= 0.0 do
+          if alpha <= 0 do
             radius = get_random_value(10, 40)
 
             circle_wave(
-              alpha: 0.0,
+              alpha: 0,
               radius: radius,
               position:
                 type_vector2(
@@ -307,7 +311,7 @@ defmodule Example do
         Zexray.Text.draw("PRESS UP/DOWN TO CHANGE SPEED", 40, 100, 20, enum_color(:black))
 
         Zexray.Text.draw(
-          "SPEED: #{:erlang.float_to_binary(pitch, decimals: 2)}",
+          "SPEED: #{format_number(pitch)}",
           40,
           130,
           20,

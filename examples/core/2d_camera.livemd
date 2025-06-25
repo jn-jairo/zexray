@@ -30,7 +30,7 @@ defmodule Example do
       # Manage resources loading/unloading
       Zexray.Resource.with_resource(
         fn ->
-          player = type_rectangle(x: 400.0, y: 280.0, width: 40.0, height: 40.0)
+          player = type_rectangle(x: 400, y: 280, width: 40, height: 40)
 
           {_spacing, buildings} =
             0..@max_buildings
@@ -42,8 +42,8 @@ defmodule Example do
                 type_rectangle(
                   width: width,
                   height: height,
-                  y: @screen_height - 130.0 - height,
-                  x: -6_000.0 + spacing
+                  y: @screen_height - 130 - height,
+                  x: -6_000 + spacing
                 )
 
               build_color =
@@ -61,16 +61,16 @@ defmodule Example do
             type_camera_2d(
               target:
                 type_vector2(
-                  x: type_rectangle(player, :x) + 20.0,
-                  y: type_rectangle(player, :y) + 20.0
+                  x: type_rectangle(player, :x) + 20,
+                  y: type_rectangle(player, :y) + 20
                 ),
               offset:
                 type_vector2(
-                  x: @screen_width / 2.0,
-                  y: @screen_height / 2.0
+                  x: @screen_width / 2,
+                  y: @screen_height / 2
                 ),
-              rotation: 0.0,
-              zoom: 1.0
+              rotation: 0,
+              zoom: 1
             )
 
           {player, camera, buildings}
@@ -119,8 +119,8 @@ defmodule Example do
       # Limit camera rotation to 80 degrees (-40 to 40)
       camera_rotation =
         cond do
-          camera_rotation > 40 -> 40.0
-          camera_rotation < -40 -> -40.0
+          camera_rotation > 40 -> 40
+          camera_rotation < -40 -> -40
           true -> camera_rotation
         end
 
@@ -130,7 +130,7 @@ defmodule Example do
 
       camera_zoom =
         cond do
-          camera_zoom > 3.0 -> 3.0
+          camera_zoom > 3 -> 3
           camera_zoom < 0.1 -> 0.1
           true -> camera_zoom
         end
@@ -138,7 +138,7 @@ defmodule Example do
       # Camera reset (zoom and rotation)
       {camera_zoom, camera_rotation} =
         if Zexray.Keyboard.pressed?(enum_keyboard_key(:r)) do
-          {1.0, 0.0}
+          {1, 0}
         else
           {camera_zoom, camera_rotation}
         end
@@ -190,12 +190,12 @@ defmodule Example do
 
         Zexray.Shape.draw_rectangle_lines_ex(
           type_rectangle(
-            x: 0.0,
-            y: 0.0,
-            width: :erlang.float(@screen_width),
-            height: :erlang.float(@screen_height)
+            x: 0,
+            y: 0,
+            width: @screen_width,
+            height: @screen_height
           ),
-          5.0,
+          5,
           enum_color(:red)
         )
 

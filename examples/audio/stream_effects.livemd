@@ -17,7 +17,7 @@ defmodule ExampleState do
   Record.defrecord(:example_state,
     music: nil,
     effect_lpf_enabled: false,
-    effect_lpf_state: {0.0, 0.0},
+    effect_lpf_state: {0, 0},
     effect_delay_enabled: false,
     effect_delay_state: :queue.new()
   )
@@ -26,7 +26,7 @@ defmodule ExampleState do
           record(:example_state,
             music: Zexray.Type.SoundStream.Resource.t(),
             effect_lpf_enabled: boolean,
-            effect_lpf_state: {float, float},
+            effect_lpf_state: {number, number},
             effect_delay_enabled: boolean,
             effect_delay_state: :queue.queue()
           )
@@ -66,7 +66,7 @@ defmodule Example do
   @buffer_size 4096
 
   # 70 Hz lowpass filter
-  @cutoff 70.0 / 44_100.0
+  @cutoff 70 / 44_100
   # RC filter formula
   @k @cutoff / (@cutoff + 0.1591549431)
 
@@ -93,7 +93,7 @@ defmodule Example do
             effect_delay_state =
               0..(48_000 * 2)
               |> Enum.reduce(:queue.new(), fn _, queue ->
-                :queue.in(0.0, queue)
+                :queue.in(0, queue)
               end)
 
             example_state(
@@ -172,7 +172,7 @@ defmodule Example do
       time_played = Zexray.Audio.get_time_played(music) / Zexray.Audio.get_time_length(music)
 
       # Make sure time played is no longer than music
-      time_played = min(time_played, 1.0)
+      time_played = min(time_played, 1)
 
       # Draw
 

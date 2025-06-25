@@ -16,16 +16,16 @@ defmodule ExampleState do
 
   Record.defrecord(:example_state,
     # Cycles per second (hz)
-    frequency: 440.0,
+    frequency: 440,
 
     # Audio frequency, for smoothing
-    audio_frequency: 440.0,
+    audio_frequency: 440,
 
     # Previous value, used to test if sine needs to be rewritten, and to smoothly modulate frequency
-    old_frequency: 1.0,
+    old_frequency: 1,
 
     # Index for audio rendering
-    sine_idx: 0.0,
+    sine_idx: 0,
 
     # Buffer for the single cycle waveform we are synthesizing
     data: [],
@@ -36,10 +36,10 @@ defmodule ExampleState do
 
   @type example_state ::
           record(:example_state,
-            frequency: float,
-            audio_frequency: float,
-            old_frequency: float,
-            sine_idx: float,
+            frequency: number,
+            audio_frequency: number,
+            old_frequency: number,
+            sine_idx: number,
             data: [integer],
             stream: Zexray.Type.AudioStream.t()
           )
@@ -108,7 +108,7 @@ defmodule Example do
 
       frequency =
         if Zexray.Mouse.down?(enum_mouse_button(:left)) do
-          frequency = 40.0 + mouse_position_y
+          frequency = 40 + mouse_position_y
           pan = 1 - mouse_position_x / @screen_width
           Zexray.Audio.set_pan(stream, pan)
 
@@ -127,7 +127,7 @@ defmodule Example do
           data =
             0..(@screen_width - 1)
             |> Enum.map(fn i ->
-              trunc(:math.sin(2 * :math.pi() * :erlang.float(i) / wave_length) * 32_000)
+              trunc(:math.sin(2 * :math.pi() * i / wave_length) * 32_000)
             end)
 
           {frequency, data}

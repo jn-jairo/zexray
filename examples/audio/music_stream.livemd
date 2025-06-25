@@ -96,7 +96,7 @@ defmodule Example do
       time_played = Zexray.Audio.get_time_played(music) / Zexray.Audio.get_time_length(music)
 
       # Make sure time played is no longer than music
-      time_played = min(time_played, 1.0)
+      time_played = min(time_played, 1)
 
       # Draw
 
