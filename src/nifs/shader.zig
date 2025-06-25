@@ -211,9 +211,9 @@ fn nif_set_shader_value(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     switch (uniform_type) {
         rl.RL_SHADER_UNIFORM_FLOAT => {
-            const value: f32 = @floatCast(core.Double.get(env, argv[2]) catch {
+            const value = core.Float.get(env, argv[2]) catch {
                 return error.invalid_argument_value;
-            });
+            };
             rl.SetShaderValue(shader, loc_index, &value, uniform_type);
         },
         rl.RL_SHADER_UNIFORM_VEC2 => {
@@ -343,7 +343,7 @@ fn nif_set_shader_value_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     switch (uniform_type) {
         rl.RL_SHADER_UNIFORM_FLOAT => {
-            var arg_value = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+            var arg_value = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                 return error.invalid_argument_value;
             };
             defer arg_value.free();

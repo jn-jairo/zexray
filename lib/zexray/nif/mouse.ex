@@ -172,8 +172,8 @@ defmodule Zexray.NIF.Mouse do
       """
       @doc group: :input_mouse
       @spec set_mouse_scale(
-              scale_x :: float,
-              scale_y :: float
+              scale_x :: number,
+              scale_y :: number
             ) :: :ok
       def set_mouse_scale(
             _scale_x,

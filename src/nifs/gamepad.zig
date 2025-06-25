@@ -235,7 +235,7 @@ fn nif_get_gamepad_axis_movement(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Return
 
-    return core.Double.make(env, @floatCast(gamepad_axis_movement));
+    return core.Float.make(env, gamepad_axis_movement);
 }
 
 /// Set internal gamepad mappings (SDL_GameControllerDB)
@@ -302,21 +302,21 @@ fn nif_set_gamepad_vibration(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
         return error.invalid_argument_gamepad;
     };
 
-    const left_motor = core.Double.get(env, argv[1]) catch {
+    const left_motor = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_left_motor;
     };
 
-    const right_motor = core.Double.get(env, argv[2]) catch {
+    const right_motor = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_right_motor;
     };
 
-    const duration = core.Double.get(env, argv[3]) catch {
+    const duration = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_duration;
     };
 
     // Function
 
-    rl.SetGamepadVibration(gamepad, @floatCast(left_motor), @floatCast(right_motor), @floatCast(duration));
+    rl.SetGamepadVibration(gamepad, left_motor, right_motor, duration);
 
     // Return
 

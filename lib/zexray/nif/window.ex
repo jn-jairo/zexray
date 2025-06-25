@@ -414,7 +414,7 @@ defmodule Zexray.NIF.Window do
       ```
       """
       @doc group: :window
-      @spec set_window_opacity(opacity :: float) :: :ok
+      @spec set_window_opacity(opacity :: number) :: :ok
       def set_window_opacity(_opacity), do: :erlang.nif_error(:undef)
 
       @doc """

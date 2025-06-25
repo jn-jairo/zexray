@@ -53,7 +53,7 @@ fn nif_get_frame_time(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Return
 
-    return core.Double.make(env, @floatCast(frame_time));
+    return core.Float.make(env, frame_time);
 }
 
 /// Get elapsed time in seconds since InitWindow()
@@ -70,7 +70,7 @@ fn nif_get_time(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !
 
     // Return
 
-    return core.Double.make(env, @floatCast(time));
+    return core.Double.make(env, time);
 }
 
 /// Get current FPS

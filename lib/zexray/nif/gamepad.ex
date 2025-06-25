@@ -188,9 +188,9 @@ defmodule Zexray.NIF.Gamepad do
       @doc group: :input_gamepad
       @spec set_gamepad_vibration(
               gamepad :: integer,
-              left_motor :: float,
-              right_motor :: float,
-              duration :: float
+              left_motor :: number,
+              right_motor :: number,
+              duration :: number
             ) :: :ok
       def set_gamepad_vibration(
             _gamepad,

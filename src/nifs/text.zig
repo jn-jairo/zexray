@@ -125,11 +125,11 @@ fn nif_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     defer arg_position.free();
     const position = arg_position.data;
 
-    const font_size = core.Double.get(env, argv[3]) catch {
+    const font_size = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[4]) catch {
+    const spacing = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -141,7 +141,7 @@ fn nif_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Function
 
-    rl.DrawTextEx(font, text, position, @floatCast(font_size), @floatCast(spacing), tint);
+    rl.DrawTextEx(font, text, position, font_size, spacing, tint);
 
     // Return
 
@@ -181,15 +181,15 @@ fn nif_draw_text_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     defer arg_origin.free();
     const origin = arg_origin.data;
 
-    const rotation = core.Double.get(env, argv[4]) catch {
+    const rotation = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_rotation;
     };
 
-    const font_size = core.Double.get(env, argv[5]) catch {
+    const font_size = core.Float.get(env, argv[5]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[6]) catch {
+    const spacing = core.Float.get(env, argv[6]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -201,7 +201,7 @@ fn nif_draw_text_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    rl.DrawTextPro(font, text, position, origin, @floatCast(rotation), @floatCast(font_size), @floatCast(spacing), tint);
+    rl.DrawTextPro(font, text, position, origin, rotation, font_size, spacing, tint);
 
     // Return
 
@@ -233,7 +233,7 @@ fn nif_draw_text_codepoint(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_position.free();
     const position = arg_position.data;
 
-    const font_size = core.Double.get(env, argv[3]) catch {
+    const font_size = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_font_size;
     };
 
@@ -245,7 +245,7 @@ fn nif_draw_text_codepoint(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Function
 
-    rl.DrawTextCodepoint(font, codepoint, position, @floatCast(font_size), tint);
+    rl.DrawTextCodepoint(font, codepoint, position, font_size, tint);
 
     // Return
 
@@ -280,11 +280,11 @@ fn nif_draw_text_codepoints(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     defer arg_position.free();
     const position = arg_position.data;
 
-    const font_size = core.Double.get(env, argv[3]) catch {
+    const font_size = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[4]) catch {
+    const spacing = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -296,7 +296,7 @@ fn nif_draw_text_codepoints(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    rl.DrawTextCodepoints(font, @ptrCast(codepoints), @intCast(codepoints_count), position, @floatCast(font_size), @floatCast(spacing), tint);
+    rl.DrawTextCodepoints(font, @ptrCast(codepoints), @intCast(codepoints_count), position, font_size, spacing, tint);
 
     // Return
 
@@ -382,17 +382,17 @@ fn nif_measure_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     defer arg_text.free();
     const text = arg_text.data;
 
-    const font_size = core.Double.get(env, argv[2]) catch {
+    const font_size = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[3]) catch {
+    const spacing = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_spacing;
     };
 
     // Function
 
-    const size = rl.MeasureTextEx(font, text, @floatCast(font_size), @floatCast(spacing));
+    const size = rl.MeasureTextEx(font, text, font_size, spacing);
     defer if (!return_resource) core.Vector2.unload(size);
     errdefer if (return_resource) core.Vector2.unload(size);
 

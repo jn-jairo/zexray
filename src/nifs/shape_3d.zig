@@ -207,7 +207,7 @@ fn nif_draw_circle_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -217,7 +217,7 @@ fn nif_draw_circle_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_rotation_axis.free();
     const rotation_axis = arg_rotation_axis.data;
 
-    const rotation_angle = core.Double.get(env, argv[3]) catch {
+    const rotation_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation_angle;
     };
 
@@ -229,7 +229,7 @@ fn nif_draw_circle_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    rl.DrawCircle3D(center, @floatCast(radius), rotation_axis, @floatCast(rotation_angle), color);
+    rl.DrawCircle3D(center, radius, rotation_axis, rotation_angle, color);
 
     // Return
 
@@ -324,15 +324,15 @@ fn nif_draw_cube(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
     defer arg_position.free();
     const position = arg_position.data;
 
-    const width = core.Double.get(env, argv[1]) catch {
+    const width = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_width;
     };
 
-    const height = core.Double.get(env, argv[2]) catch {
+    const height = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_height;
     };
 
-    const length = core.Double.get(env, argv[3]) catch {
+    const length = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_length;
     };
 
@@ -344,7 +344,7 @@ fn nif_draw_cube(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Function
 
-    rl.DrawCube(position, @floatCast(width), @floatCast(height), @floatCast(length), color);
+    rl.DrawCube(position, width, height, length, color);
 
     // Return
 
@@ -402,15 +402,15 @@ fn nif_draw_cube_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     defer arg_position.free();
     const position = arg_position.data;
 
-    const width = core.Double.get(env, argv[1]) catch {
+    const width = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_width;
     };
 
-    const height = core.Double.get(env, argv[2]) catch {
+    const height = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_height;
     };
 
-    const length = core.Double.get(env, argv[3]) catch {
+    const length = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_length;
     };
 
@@ -422,7 +422,7 @@ fn nif_draw_cube_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Function
 
-    rl.DrawCubeWires(position, @floatCast(width), @floatCast(height), @floatCast(length), color);
+    rl.DrawCubeWires(position, width, height, length, color);
 
     // Return
 
@@ -480,7 +480,7 @@ fn nif_draw_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
     defer arg_center_pos.free();
     const center_pos = arg_center_pos.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -492,7 +492,7 @@ fn nif_draw_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Function
 
-    rl.DrawSphere(center_pos, @floatCast(radius), color);
+    rl.DrawSphere(center_pos, radius, color);
 
     // Return
 
@@ -514,7 +514,7 @@ fn nif_draw_sphere_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_center_pos.free();
     const center_pos = arg_center_pos.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -534,7 +534,7 @@ fn nif_draw_sphere_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    rl.DrawSphereEx(center_pos, @floatCast(radius), rings, slices, color);
+    rl.DrawSphereEx(center_pos, radius, rings, slices, color);
 
     // Return
 
@@ -556,7 +556,7 @@ fn nif_draw_sphere_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     defer arg_center_pos.free();
     const center_pos = arg_center_pos.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -576,7 +576,7 @@ fn nif_draw_sphere_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.DrawSphereWires(center_pos, @floatCast(radius), rings, slices, color);
+    rl.DrawSphereWires(center_pos, radius, rings, slices, color);
 
     // Return
 
@@ -598,15 +598,15 @@ fn nif_draw_cylinder(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     defer arg_position.free();
     const position = arg_position.data;
 
-    const radius_top = core.Double.get(env, argv[1]) catch {
+    const radius_top = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius_top;
     };
 
-    const radius_bottom = core.Double.get(env, argv[2]) catch {
+    const radius_bottom = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_bottom;
     };
 
-    const height = core.Double.get(env, argv[3]) catch {
+    const height = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_height;
     };
 
@@ -622,7 +622,7 @@ fn nif_draw_cylinder(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    rl.DrawCylinder(position, @floatCast(radius_top), @floatCast(radius_bottom), @floatCast(height), slices, color);
+    rl.DrawCylinder(position, radius_top, radius_bottom, height, slices, color);
 
     // Return
 
@@ -650,11 +650,11 @@ fn nif_draw_cylinder_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const start_radius = core.Double.get(env, argv[2]) catch {
+    const start_radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_start_radius;
     };
 
-    const end_radius = core.Double.get(env, argv[3]) catch {
+    const end_radius = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_end_radius;
     };
 
@@ -670,7 +670,7 @@ fn nif_draw_cylinder_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Function
 
-    rl.DrawCylinderEx(start_pos, end_pos, @floatCast(start_radius), @floatCast(end_radius), sides, color);
+    rl.DrawCylinderEx(start_pos, end_pos, start_radius, end_radius, sides, color);
 
     // Return
 
@@ -692,15 +692,15 @@ fn nif_draw_cylinder_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_position.free();
     const position = arg_position.data;
 
-    const radius_top = core.Double.get(env, argv[1]) catch {
+    const radius_top = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius_top;
     };
 
-    const radius_bottom = core.Double.get(env, argv[2]) catch {
+    const radius_bottom = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_bottom;
     };
 
-    const height = core.Double.get(env, argv[3]) catch {
+    const height = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_height;
     };
 
@@ -716,7 +716,7 @@ fn nif_draw_cylinder_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Function
 
-    rl.DrawCylinderWires(position, @floatCast(radius_top), @floatCast(radius_bottom), @floatCast(height), slices, color);
+    rl.DrawCylinderWires(position, radius_top, radius_bottom, height, slices, color);
 
     // Return
 
@@ -744,11 +744,11 @@ fn nif_draw_cylinder_wires_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const start_radius = core.Double.get(env, argv[2]) catch {
+    const start_radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_start_radius;
     };
 
-    const end_radius = core.Double.get(env, argv[3]) catch {
+    const end_radius = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_end_radius;
     };
 
@@ -764,7 +764,7 @@ fn nif_draw_cylinder_wires_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Function
 
-    rl.DrawCylinderWiresEx(start_pos, end_pos, @floatCast(start_radius), @floatCast(end_radius), sides, color);
+    rl.DrawCylinderWiresEx(start_pos, end_pos, start_radius, end_radius, sides, color);
 
     // Return
 
@@ -792,7 +792,7 @@ fn nif_draw_capsule(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -812,7 +812,7 @@ fn nif_draw_capsule(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Function
 
-    rl.DrawCapsule(start_pos, end_pos, @floatCast(radius), slices, rings, color);
+    rl.DrawCapsule(start_pos, end_pos, radius, slices, rings, color);
 
     // Return
 
@@ -840,7 +840,7 @@ fn nif_draw_capsule_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -860,7 +860,7 @@ fn nif_draw_capsule_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawCapsuleWires(start_pos, end_pos, @floatCast(radius), slices, rings, color);
+    rl.DrawCapsuleWires(start_pos, end_pos, radius, slices, rings, color);
 
     // Return
 
@@ -946,13 +946,13 @@ fn nif_draw_grid(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
         return error.invalid_argument_slices;
     };
 
-    const spacing = core.Double.get(env, argv[1]) catch {
+    const spacing = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_spacing;
     };
 
     // Function
 
-    rl.DrawGrid(slices, @floatCast(spacing));
+    rl.DrawGrid(slices, spacing);
 
     // Return
 
@@ -1108,7 +1108,7 @@ fn nif_draw_model(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     defer arg_position.free();
     const position = arg_position.data;
 
-    const scale = core.Double.get(env, argv[2]) catch {
+    const scale = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_scale;
     };
 
@@ -1120,7 +1120,7 @@ fn nif_draw_model(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
 
     // Function
 
-    rl.DrawModel(model, position, @floatCast(scale), tint);
+    rl.DrawModel(model, position, scale, tint);
 
     // Return
 
@@ -1154,7 +1154,7 @@ fn nif_draw_model_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     defer arg_rotation_axis.free();
     const rotation_axis = arg_rotation_axis.data;
 
-    const rotation_angle = core.Double.get(env, argv[3]) catch {
+    const rotation_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation_angle;
     };
 
@@ -1172,7 +1172,7 @@ fn nif_draw_model_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    rl.DrawModelEx(model, position, rotation_axis, @floatCast(rotation_angle), scale, tint);
+    rl.DrawModelEx(model, position, rotation_axis, rotation_angle, scale, tint);
 
     // Return
 
@@ -1200,7 +1200,7 @@ fn nif_draw_model_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_position.free();
     const position = arg_position.data;
 
-    const scale = core.Double.get(env, argv[2]) catch {
+    const scale = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_scale;
     };
 
@@ -1212,7 +1212,7 @@ fn nif_draw_model_wires(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Function
 
-    rl.DrawModelWires(model, position, @floatCast(scale), tint);
+    rl.DrawModelWires(model, position, scale, tint);
 
     // Return
 
@@ -1246,7 +1246,7 @@ fn nif_draw_model_wires_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_rotation_axis.free();
     const rotation_axis = arg_rotation_axis.data;
 
-    const rotation_angle = core.Double.get(env, argv[3]) catch {
+    const rotation_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation_angle;
     };
 
@@ -1264,7 +1264,7 @@ fn nif_draw_model_wires_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Function
 
-    rl.DrawModelWiresEx(model, position, rotation_axis, @floatCast(rotation_angle), scale, tint);
+    rl.DrawModelWiresEx(model, position, rotation_axis, rotation_angle, scale, tint);
 
     // Return
 
@@ -1292,7 +1292,7 @@ fn nif_draw_model_points(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     defer arg_position.free();
     const position = arg_position.data;
 
-    const scale = core.Double.get(env, argv[2]) catch {
+    const scale = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_scale;
     };
 
@@ -1304,7 +1304,7 @@ fn nif_draw_model_points(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.DrawModelPoints(model, position, @floatCast(scale), tint);
+    rl.DrawModelPoints(model, position, scale, tint);
 
     // Return
 
@@ -1338,7 +1338,7 @@ fn nif_draw_model_points_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     defer arg_rotation_axis.free();
     const rotation_axis = arg_rotation_axis.data;
 
-    const rotation_angle = core.Double.get(env, argv[3]) catch {
+    const rotation_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation_angle;
     };
 
@@ -1356,7 +1356,7 @@ fn nif_draw_model_points_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    rl.DrawModelPointsEx(model, position, rotation_axis, @floatCast(rotation_angle), scale, tint);
+    rl.DrawModelPointsEx(model, position, rotation_axis, rotation_angle, scale, tint);
 
     // Return
 
@@ -1420,7 +1420,7 @@ fn nif_draw_billboard(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_position.free();
     const position = arg_position.data;
 
-    const scale = core.Double.get(env, argv[3]) catch {
+    const scale = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_scale;
     };
 
@@ -1432,7 +1432,7 @@ fn nif_draw_billboard(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    rl.DrawBillboard(camera, texture, position, @floatCast(scale), tint);
+    rl.DrawBillboard(camera, texture, position, scale, tint);
 
     // Return
 
@@ -1544,7 +1544,7 @@ fn nif_draw_billboard_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     defer arg_origin.free();
     const origin = arg_origin.data;
 
-    const rotation = core.Double.get(env, argv[7]) catch {
+    const rotation = core.Float.get(env, argv[7]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -1556,7 +1556,7 @@ fn nif_draw_billboard_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawBillboardPro(camera, texture, source, position, up, size, origin, @floatCast(rotation), tint);
+    rl.DrawBillboardPro(camera, texture, source, position, up, size, origin, rotation, tint);
 
     // Return
 
@@ -1636,7 +1636,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 3;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1651,7 +1651,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 2;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1666,7 +1666,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 3;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1696,7 +1696,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 4;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1711,7 +1711,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 2;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1756,7 +1756,7 @@ fn nif_update_mesh_buffer(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
                 const data_size = mesh.vertexCount * 4;
                 rl.UpdateMeshBuffer(mesh, index, @ptrCast(data), @intCast(data_size * @sizeOf(f32)), offset * @sizeOf(f32));
             } else {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[2]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[2]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -1971,13 +1971,13 @@ fn nif_gen_mesh_poly(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
         return error.invalid_argument_sides;
     };
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
     // Function
 
-    const mesh = rl.GenMeshPoly(sides, @floatCast(radius));
+    const mesh = rl.GenMeshPoly(sides, radius);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2001,11 +2001,11 @@ fn nif_gen_mesh_plane(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Arguments
 
-    const width = core.Double.get(env, argv[0]) catch {
+    const width = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_width;
     };
 
-    const length = core.Double.get(env, argv[1]) catch {
+    const length = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_length;
     };
 
@@ -2019,7 +2019,7 @@ fn nif_gen_mesh_plane(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    const mesh = rl.GenMeshPlane(@floatCast(width), @floatCast(length), res_x, res_z);
+    const mesh = rl.GenMeshPlane(width, length, res_x, res_z);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2043,21 +2043,21 @@ fn nif_gen_mesh_cube(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const width = core.Double.get(env, argv[0]) catch {
+    const width = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_width;
     };
 
-    const height = core.Double.get(env, argv[1]) catch {
+    const height = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_height;
     };
 
-    const length = core.Double.get(env, argv[2]) catch {
+    const length = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_length;
     };
 
     // Function
 
-    const mesh = rl.GenMeshCube(@floatCast(width), @floatCast(height), @floatCast(length));
+    const mesh = rl.GenMeshCube(width, height, length);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2081,7 +2081,7 @@ fn nif_gen_mesh_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -2095,7 +2095,7 @@ fn nif_gen_mesh_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Function
 
-    const mesh = rl.GenMeshSphere(@floatCast(radius), rings, slices);
+    const mesh = rl.GenMeshSphere(radius, rings, slices);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2119,7 +2119,7 @@ fn nif_gen_mesh_hemi_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -2133,7 +2133,7 @@ fn nif_gen_mesh_hemi_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    const mesh = rl.GenMeshHemiSphere(@floatCast(radius), rings, slices);
+    const mesh = rl.GenMeshHemiSphere(radius, rings, slices);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2157,11 +2157,11 @@ fn nif_gen_mesh_cylinder(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
-    const height = core.Double.get(env, argv[1]) catch {
+    const height = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_height;
     };
 
@@ -2171,7 +2171,7 @@ fn nif_gen_mesh_cylinder(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    const mesh = rl.GenMeshCylinder(@floatCast(radius), @floatCast(height), slices);
+    const mesh = rl.GenMeshCylinder(radius, height, slices);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2195,11 +2195,11 @@ fn nif_gen_mesh_cone(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
-    const height = core.Double.get(env, argv[1]) catch {
+    const height = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_height;
     };
 
@@ -2209,7 +2209,7 @@ fn nif_gen_mesh_cone(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    const mesh = rl.GenMeshCone(@floatCast(radius), @floatCast(height), slices);
+    const mesh = rl.GenMeshCone(radius, height, slices);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2233,11 +2233,11 @@ fn nif_gen_mesh_torus(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
-    const size = core.Double.get(env, argv[1]) catch {
+    const size = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_size;
     };
 
@@ -2251,7 +2251,7 @@ fn nif_gen_mesh_torus(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    const mesh = rl.GenMeshTorus(@floatCast(radius), @floatCast(size), rad_seg, sides);
+    const mesh = rl.GenMeshTorus(radius, size, rad_seg, sides);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2275,11 +2275,11 @@ fn nif_gen_mesh_knot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const radius = core.Double.get(env, argv[0]) catch {
+    const radius = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_radius;
     };
 
-    const size = core.Double.get(env, argv[1]) catch {
+    const size = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_size;
     };
 
@@ -2293,7 +2293,7 @@ fn nif_gen_mesh_knot(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    const mesh = rl.GenMeshKnot(@floatCast(radius), @floatCast(size), rad_seg, sides);
+    const mesh = rl.GenMeshKnot(radius, size, rad_seg, sides);
     defer if (!return_resource) core.Mesh.unload(mesh);
     errdefer if (return_resource) core.Mesh.unload(mesh);
 
@@ -2763,7 +2763,7 @@ fn nif_check_collision_spheres(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_center1.free();
     const center1 = arg_center1.data;
 
-    const radius1 = core.Double.get(env, argv[1]) catch {
+    const radius1 = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius1;
     };
 
@@ -2773,13 +2773,13 @@ fn nif_check_collision_spheres(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_center2.free();
     const center2 = arg_center2.data;
 
-    const radius2 = core.Double.get(env, argv[3]) catch {
+    const radius2 = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_radius2;
     };
 
     // Function
 
-    const collision = rl.CheckCollisionSpheres(center1, @floatCast(radius1), center2, @floatCast(radius2));
+    const collision = rl.CheckCollisionSpheres(center1, radius1, center2, radius2);
 
     // Return
 
@@ -2837,13 +2837,13 @@ fn nif_check_collision_box_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
     // Function
 
-    const collision = rl.CheckCollisionBoxSphere(box, center, @floatCast(radius));
+    const collision = rl.CheckCollisionBoxSphere(box, center, radius);
 
     // Return
 
@@ -2875,13 +2875,13 @@ fn nif_get_ray_collision_sphere(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
     // Function
 
-    const ray_collision = rl.GetRayCollisionSphere(ray, center, @floatCast(radius));
+    const ray_collision = rl.GetRayCollisionSphere(ray, center, radius);
     defer if (!return_resource) core.RayCollision.unload(ray_collision);
     errdefer if (return_resource) core.RayCollision.unload(ray_collision);
 

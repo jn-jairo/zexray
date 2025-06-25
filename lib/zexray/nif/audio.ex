@@ -245,7 +245,7 @@ defmodule Zexray.NIF.Audio do
       ```
       """
       @doc group: :audio_device_management
-      @spec set_master_volume(volume :: float) :: :ok
+      @spec set_master_volume(volume :: number) :: :ok
       def set_master_volume(_volume), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -266,7 +266,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_device_management
       @spec audio_begin_mode_3d(
               listener :: tuple,
-              max_distance :: float
+              max_distance :: number
             ) :: :ok
       def audio_begin_mode_3d(
             _listener,
@@ -561,7 +561,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec set_sound_volume(
               sound :: tuple,
-              volume :: float,
+              volume :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_volume(
@@ -582,7 +582,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec set_sound_pitch(
               sound :: tuple,
-              pitch :: float,
+              pitch :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_pitch(
@@ -603,7 +603,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_management
       @spec set_sound_pan(
               sound :: tuple,
-              pan :: float,
+              pan :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_pan(
@@ -999,7 +999,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec set_sound_stream_volume(
               sound_stream :: tuple,
-              volume :: float,
+              volume :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_volume(
@@ -1020,7 +1020,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec set_sound_stream_pitch(
               sound_stream :: tuple,
-              pitch :: float,
+              pitch :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_pitch(
@@ -1041,7 +1041,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :sound_stream_management
       @spec set_sound_stream_pan(
               sound_stream :: tuple,
-              pan :: float,
+              pan :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_sound_stream_pan(
@@ -1307,7 +1307,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec seek_music_stream(
               music :: tuple,
-              position :: float,
+              position :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def seek_music_stream(
@@ -1328,7 +1328,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec set_music_volume(
               music :: tuple,
-              volume :: float,
+              volume :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_music_volume(
@@ -1349,7 +1349,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec set_music_pitch(
               music :: tuple,
-              pitch :: float,
+              pitch :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_music_pitch(
@@ -1370,7 +1370,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :music_management
       @spec set_music_pan(
               music :: tuple,
-              pan :: float,
+              pan :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_music_pan(
@@ -1640,7 +1640,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec set_audio_stream_volume(
               stream :: tuple,
-              volume :: float,
+              volume :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_volume(
@@ -1661,7 +1661,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec set_audio_stream_pitch(
               stream :: tuple,
-              pitch :: float,
+              pitch :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_pitch(
@@ -1682,7 +1682,7 @@ defmodule Zexray.NIF.Audio do
       @doc group: :audio_stream_management
       @spec set_audio_stream_pan(
               stream :: tuple,
-              pan :: float,
+              pan :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def set_audio_stream_pan(

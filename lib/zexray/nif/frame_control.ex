@@ -47,7 +47,7 @@ defmodule Zexray.NIF.FrameControl do
       ```
       """
       @doc group: :frame_control
-      @spec wait_time(seconds :: float) :: :ok
+      @spec wait_time(seconds :: number) :: :ok
       def wait_time(_seconds), do: :erlang.nif_error(:undef)
     end
   end

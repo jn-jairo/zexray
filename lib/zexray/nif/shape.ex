@@ -241,7 +241,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_line_ex(
               start_pos :: tuple,
               end_pos :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_line_ex(
@@ -283,7 +283,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_line_bezier(
               start_pos :: tuple,
               end_pos :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_line_bezier(
@@ -306,7 +306,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_circle(
               center_x :: integer,
               center_y :: integer,
-              radius :: float,
+              radius :: number,
               color :: tuple
             ) :: :ok
       def draw_circle(
@@ -328,9 +328,9 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_circle_sector(
               center :: tuple,
-              radius :: float,
-              start_angle :: float,
-              end_angle :: float,
+              radius :: number,
+              start_angle :: number,
+              end_angle :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -355,9 +355,9 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_circle_sector_lines(
               center :: tuple,
-              radius :: float,
-              start_angle :: float,
-              end_angle :: float,
+              radius :: number,
+              start_angle :: number,
+              end_angle :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -383,7 +383,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_circle_gradient(
               center_x :: integer,
               center_y :: integer,
-              radius :: float,
+              radius :: number,
               inner :: tuple,
               outer :: tuple
             ) :: :ok
@@ -407,7 +407,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_circle_v(
               center :: tuple,
-              radius :: float,
+              radius :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_v(
@@ -429,7 +429,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_circle_lines(
               center_x :: integer,
               center_y :: integer,
-              radius :: float,
+              radius :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_lines(
@@ -451,7 +451,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_circle_lines_v(
               center :: tuple,
-              radius :: float,
+              radius :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_lines_v(
@@ -473,8 +473,8 @@ defmodule Zexray.NIF.Shape do
       @spec draw_ellipse(
               center_x :: integer,
               center_y :: integer,
-              radius_h :: float,
-              radius_v :: float,
+              radius_h :: number,
+              radius_v :: number,
               color :: tuple
             ) :: :ok
       def draw_ellipse(
@@ -497,8 +497,8 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_ellipse_v(
               center :: tuple,
-              radius_h :: float,
-              radius_v :: float,
+              radius_h :: number,
+              radius_v :: number,
               color :: tuple
             ) :: :ok
       def draw_ellipse_v(
@@ -521,8 +521,8 @@ defmodule Zexray.NIF.Shape do
       @spec draw_ellipse_lines(
               center_x :: integer,
               center_y :: integer,
-              radius_h :: float,
-              radius_v :: float,
+              radius_h :: number,
+              radius_v :: number,
               color :: tuple
             ) :: :ok
       def draw_ellipse_lines(
@@ -545,8 +545,8 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_ellipse_lines_v(
               center :: tuple,
-              radius_h :: float,
-              radius_v :: float,
+              radius_h :: number,
+              radius_v :: number,
               color :: tuple
             ) :: :ok
       def draw_ellipse_lines_v(
@@ -568,10 +568,10 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_ring(
               center :: tuple,
-              inner_radius :: float,
-              outer_radius :: float,
-              start_angle :: float,
-              end_angle :: float,
+              inner_radius :: number,
+              outer_radius :: number,
+              start_angle :: number,
+              end_angle :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -597,10 +597,10 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_ring_lines(
               center :: tuple,
-              inner_radius :: float,
-              outer_radius :: float,
-              start_angle :: float,
-              end_angle :: float,
+              inner_radius :: number,
+              outer_radius :: number,
+              start_angle :: number,
+              end_angle :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -692,7 +692,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_rectangle_pro(
               rec :: tuple,
               origin :: tuple,
-              rotation :: float,
+              rotation :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_pro(
@@ -818,7 +818,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_lines_ex(
               rec :: tuple,
-              line_thick :: float,
+              line_thick :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_lines_ex(
@@ -839,7 +839,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_rounded(
               rec :: tuple,
-              roundness :: float,
+              roundness :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -862,7 +862,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_rounded_lines(
               rec :: tuple,
-              roundness :: float,
+              roundness :: number,
               segments :: integer,
               color :: tuple
             ) :: :ok
@@ -885,9 +885,9 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_rounded_lines_ex(
               rec :: tuple,
-              roundness :: float,
+              roundness :: number,
               segments :: integer,
-              line_thick :: float,
+              line_thick :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_rounded_lines_ex(
@@ -995,8 +995,8 @@ defmodule Zexray.NIF.Shape do
       @spec draw_poly(
               center :: tuple,
               sides :: integer,
-              radius :: float,
-              rotation :: float,
+              radius :: number,
+              rotation :: number,
               color :: tuple
             ) :: :ok
       def draw_poly(
@@ -1020,8 +1020,8 @@ defmodule Zexray.NIF.Shape do
       @spec draw_poly_lines(
               center :: tuple,
               sides :: integer,
-              radius :: float,
-              rotation :: float,
+              radius :: number,
+              rotation :: number,
               color :: tuple
             ) :: :ok
       def draw_poly_lines(
@@ -1045,9 +1045,9 @@ defmodule Zexray.NIF.Shape do
       @spec draw_poly_lines_ex(
               center :: tuple,
               sides :: integer,
-              radius :: float,
-              rotation :: float,
-              line_thick :: float,
+              radius :: number,
+              rotation :: number,
+              line_thick :: number,
               color :: tuple
             ) :: :ok
       def draw_poly_lines_ex(
@@ -1075,7 +1075,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :splines_drawing
       @spec draw_spline_linear(
               points :: [tuple],
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_linear(
@@ -1096,7 +1096,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :splines_drawing
       @spec draw_spline_basis(
               points :: [tuple],
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_basis(
@@ -1117,7 +1117,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :splines_drawing
       @spec draw_spline_catmull_rom(
               points :: [tuple],
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_catmull_rom(
@@ -1138,7 +1138,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :splines_drawing
       @spec draw_spline_bezier_quadratic(
               points :: [tuple],
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_bezier_quadratic(
@@ -1159,7 +1159,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :splines_drawing
       @spec draw_spline_bezier_cubic(
               points :: [tuple],
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_bezier_cubic(
@@ -1181,7 +1181,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_spline_segment_linear(
               p1 :: tuple,
               p2 :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_segment_linear(
@@ -1206,7 +1206,7 @@ defmodule Zexray.NIF.Shape do
               p2 :: tuple,
               p3 :: tuple,
               p4 :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_segment_basis(
@@ -1233,7 +1233,7 @@ defmodule Zexray.NIF.Shape do
               p2 :: tuple,
               p3 :: tuple,
               p4 :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_segment_catmull_rom(
@@ -1259,7 +1259,7 @@ defmodule Zexray.NIF.Shape do
               p1 :: tuple,
               c2 :: tuple,
               p3 :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_segment_bezier_quadratic(
@@ -1285,7 +1285,7 @@ defmodule Zexray.NIF.Shape do
               c2 :: tuple,
               c3 :: tuple,
               p4 :: tuple,
-              thick :: float,
+              thick :: number,
               color :: tuple
             ) :: :ok
       def draw_spline_segment_bezier_cubic(
@@ -1314,7 +1314,7 @@ defmodule Zexray.NIF.Shape do
       @spec get_spline_point_linear(
               start_pos :: tuple,
               end_pos :: tuple,
-              t :: float,
+              t :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_linear(
@@ -1339,7 +1339,7 @@ defmodule Zexray.NIF.Shape do
               p2 :: tuple,
               p3 :: tuple,
               p4 :: tuple,
-              t :: float,
+              t :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_basis(
@@ -1366,7 +1366,7 @@ defmodule Zexray.NIF.Shape do
               p2 :: tuple,
               p3 :: tuple,
               p4 :: tuple,
-              t :: float,
+              t :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_catmull_rom(
@@ -1392,7 +1392,7 @@ defmodule Zexray.NIF.Shape do
               p1 :: tuple,
               c2 :: tuple,
               p3 :: tuple,
-              t :: float,
+              t :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_bezier_quad(
@@ -1418,7 +1418,7 @@ defmodule Zexray.NIF.Shape do
               c2 :: tuple,
               c3 :: tuple,
               p4 :: tuple,
-              t :: float,
+              t :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_spline_point_bezier_cubic(
@@ -1465,9 +1465,9 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_collision_detection
       @spec check_collision_circles(
               center1 :: tuple,
-              radius1 :: float,
+              radius1 :: number,
               center2 :: tuple,
-              radius2 :: float
+              radius2 :: number
             ) :: boolean
       def check_collision_circles(
             _center1,
@@ -1488,7 +1488,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_collision_detection
       @spec check_collision_circle_rec(
               center :: tuple,
-              radius :: float,
+              radius :: number,
               rec :: tuple
             ) :: boolean
       def check_collision_circle_rec(
@@ -1509,7 +1509,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_collision_detection
       @spec check_collision_circle_line(
               center :: tuple,
-              radius :: float,
+              radius :: number,
               p1 :: tuple,
               p2 :: tuple
             ) :: boolean
@@ -1552,7 +1552,7 @@ defmodule Zexray.NIF.Shape do
       @spec check_collision_point_circle(
               point :: tuple,
               center :: tuple,
-              radius :: float
+              radius :: number
             ) :: boolean
       def check_collision_point_circle(
             _point,

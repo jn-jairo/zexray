@@ -339,7 +339,7 @@ fn nif_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const thick = core.Double.get(env, argv[2]) catch {
+    const thick = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -351,7 +351,7 @@ fn nif_draw_line_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Function
 
-    rl.DrawLineEx(start_pos, end_pos, @floatCast(thick), color);
+    rl.DrawLineEx(start_pos, end_pos, thick, color);
 
     // Return
 
@@ -410,7 +410,7 @@ fn nif_draw_line_bezier(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const thick = core.Double.get(env, argv[2]) catch {
+    const thick = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -422,7 +422,7 @@ fn nif_draw_line_bezier(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Function
 
-    rl.DrawLineBezier(start_pos, end_pos, @floatCast(thick), color);
+    rl.DrawLineBezier(start_pos, end_pos, thick, color);
 
     // Return
 
@@ -446,7 +446,7 @@ fn nif_draw_circle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
         return error.invalid_argument_center_y;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -458,7 +458,7 @@ fn nif_draw_circle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
 
     // Function
 
-    rl.DrawCircle(center_x, center_y, @floatCast(radius), color);
+    rl.DrawCircle(center_x, center_y, radius, color);
 
     // Return
 
@@ -480,15 +480,15 @@ fn nif_draw_circle_sector(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
-    const start_angle = core.Double.get(env, argv[2]) catch {
+    const start_angle = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_start_angle;
     };
 
-    const end_angle = core.Double.get(env, argv[3]) catch {
+    const end_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_end_angle;
     };
 
@@ -504,7 +504,7 @@ fn nif_draw_circle_sector(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawCircleSector(center, @floatCast(radius), @floatCast(start_angle), @floatCast(end_angle), segments, color);
+    rl.DrawCircleSector(center, radius, start_angle, end_angle, segments, color);
 
     // Return
 
@@ -526,15 +526,15 @@ fn nif_draw_circle_sector_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
-    const start_angle = core.Double.get(env, argv[2]) catch {
+    const start_angle = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_start_angle;
     };
 
-    const end_angle = core.Double.get(env, argv[3]) catch {
+    const end_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_end_angle;
     };
 
@@ -550,7 +550,7 @@ fn nif_draw_circle_sector_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Function
 
-    rl.DrawCircleSectorLines(center, @floatCast(radius), @floatCast(start_angle), @floatCast(end_angle), segments, color);
+    rl.DrawCircleSectorLines(center, radius, start_angle, end_angle, segments, color);
 
     // Return
 
@@ -574,7 +574,7 @@ fn nif_draw_circle_gradient(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
         return error.invalid_argument_center_y;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -592,7 +592,7 @@ fn nif_draw_circle_gradient(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    rl.DrawCircleGradient(center_x, center_y, @floatCast(radius), inner, outer);
+    rl.DrawCircleGradient(center_x, center_y, radius, inner, outer);
 
     // Return
 
@@ -614,7 +614,7 @@ fn nif_draw_circle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -626,7 +626,7 @@ fn nif_draw_circle_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    rl.DrawCircleV(center, @floatCast(radius), color);
+    rl.DrawCircleV(center, radius, color);
 
     // Return
 
@@ -650,7 +650,7 @@ fn nif_draw_circle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
         return error.invalid_argument_center_y;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -662,7 +662,7 @@ fn nif_draw_circle_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.DrawCircleLines(center_x, center_y, @floatCast(radius), color);
+    rl.DrawCircleLines(center_x, center_y, radius, color);
 
     // Return
 
@@ -684,7 +684,7 @@ fn nif_draw_circle_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -696,7 +696,7 @@ fn nif_draw_circle_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Function
 
-    rl.DrawCircleLinesV(center, @floatCast(radius), color);
+    rl.DrawCircleLinesV(center, radius, color);
 
     // Return
 
@@ -720,11 +720,11 @@ fn nif_draw_ellipse(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
         return error.invalid_argument_center_y;
     };
 
-    const radius_h = core.Double.get(env, argv[2]) catch {
+    const radius_h = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_h;
     };
 
-    const radius_v = core.Double.get(env, argv[3]) catch {
+    const radius_v = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_radius_v;
     };
 
@@ -736,7 +736,7 @@ fn nif_draw_ellipse(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
 
     // Function
 
-    rl.DrawEllipse(center_x, center_y, @floatCast(radius_h), @floatCast(radius_v), color);
+    rl.DrawEllipse(center_x, center_y, radius_h, radius_v, color);
 
     // Return
 
@@ -758,11 +758,11 @@ fn nif_draw_ellipse_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius_h = core.Double.get(env, argv[1]) catch {
+    const radius_h = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius_h;
     };
 
-    const radius_v = core.Double.get(env, argv[2]) catch {
+    const radius_v = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_v;
     };
 
@@ -774,7 +774,7 @@ fn nif_draw_ellipse_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Function
 
-    rl.DrawEllipseV(center, @floatCast(radius_h), @floatCast(radius_v), color);
+    rl.DrawEllipseV(center, radius_h, radius_v, color);
 
     // Return
 
@@ -798,11 +798,11 @@ fn nif_draw_ellipse_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
         return error.invalid_argument_center_y;
     };
 
-    const radius_h = core.Double.get(env, argv[2]) catch {
+    const radius_h = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_h;
     };
 
-    const radius_v = core.Double.get(env, argv[3]) catch {
+    const radius_v = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_radius_v;
     };
 
@@ -814,7 +814,7 @@ fn nif_draw_ellipse_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawEllipseLines(center_x, center_y, @floatCast(radius_h), @floatCast(radius_v), color);
+    rl.DrawEllipseLines(center_x, center_y, radius_h, radius_v, color);
 
     // Return
 
@@ -836,11 +836,11 @@ fn nif_draw_ellipse_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius_h = core.Double.get(env, argv[1]) catch {
+    const radius_h = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius_h;
     };
 
-    const radius_v = core.Double.get(env, argv[2]) catch {
+    const radius_v = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius_v;
     };
 
@@ -852,7 +852,7 @@ fn nif_draw_ellipse_lines_v(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    rl.DrawEllipseLinesV(center, @floatCast(radius_h), @floatCast(radius_v), color);
+    rl.DrawEllipseLinesV(center, radius_h, radius_v, color);
 
     // Return
 
@@ -874,19 +874,19 @@ fn nif_draw_ring(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
     defer arg_center.free();
     const center = arg_center.data;
 
-    const inner_radius = core.Double.get(env, argv[1]) catch {
+    const inner_radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_inner_radius;
     };
 
-    const outer_radius = core.Double.get(env, argv[2]) catch {
+    const outer_radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_outer_radius;
     };
 
-    const start_angle = core.Double.get(env, argv[3]) catch {
+    const start_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_start_angle;
     };
 
-    const end_angle = core.Double.get(env, argv[4]) catch {
+    const end_angle = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_end_angle;
     };
 
@@ -902,7 +902,7 @@ fn nif_draw_ring(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Function
 
-    rl.DrawRing(center, @floatCast(inner_radius), @floatCast(outer_radius), @floatCast(start_angle), @floatCast(end_angle), segments, color);
+    rl.DrawRing(center, inner_radius, outer_radius, start_angle, end_angle, segments, color);
 
     // Return
 
@@ -924,19 +924,19 @@ fn nif_draw_ring_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     defer arg_center.free();
     const center = arg_center.data;
 
-    const inner_radius = core.Double.get(env, argv[1]) catch {
+    const inner_radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_inner_radius;
     };
 
-    const outer_radius = core.Double.get(env, argv[2]) catch {
+    const outer_radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_outer_radius;
     };
 
-    const start_angle = core.Double.get(env, argv[3]) catch {
+    const start_angle = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_start_angle;
     };
 
-    const end_angle = core.Double.get(env, argv[4]) catch {
+    const end_angle = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_end_angle;
     };
 
@@ -952,7 +952,7 @@ fn nif_draw_ring_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Function
 
-    rl.DrawRingLines(center, @floatCast(inner_radius), @floatCast(outer_radius), @floatCast(start_angle), @floatCast(end_angle), segments, color);
+    rl.DrawRingLines(center, inner_radius, outer_radius, start_angle, end_angle, segments, color);
 
     // Return
 
@@ -1086,7 +1086,7 @@ fn nif_draw_rectangle_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     defer arg_origin.free();
     const origin = arg_origin.data;
 
-    const rotation = core.Double.get(env, argv[2]) catch {
+    const rotation = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -1098,7 +1098,7 @@ fn nif_draw_rectangle_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawRectanglePro(rec, origin, @floatCast(rotation), color);
+    rl.DrawRectanglePro(rec, origin, rotation, color);
 
     // Return
 
@@ -1300,7 +1300,7 @@ fn nif_draw_rectangle_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_rec.free();
     const rec = arg_rec.data;
 
-    const line_thick = core.Double.get(env, argv[1]) catch {
+    const line_thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_line_thick;
     };
 
@@ -1312,7 +1312,7 @@ fn nif_draw_rectangle_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Function
 
-    rl.DrawRectangleLinesEx(rec, @floatCast(line_thick), color);
+    rl.DrawRectangleLinesEx(rec, line_thick, color);
 
     // Return
 
@@ -1334,7 +1334,7 @@ fn nif_draw_rectangle_rounded(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     defer arg_rec.free();
     const rec = arg_rec.data;
 
-    const roundness = core.Double.get(env, argv[1]) catch {
+    const roundness = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_roundness;
     };
 
@@ -1350,7 +1350,7 @@ fn nif_draw_rectangle_rounded(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Function
 
-    rl.DrawRectangleRounded(rec, @floatCast(roundness), segments, color);
+    rl.DrawRectangleRounded(rec, roundness, segments, color);
 
     // Return
 
@@ -1372,7 +1372,7 @@ fn nif_draw_rectangle_rounded_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     defer arg_rec.free();
     const rec = arg_rec.data;
 
-    const roundness = core.Double.get(env, argv[1]) catch {
+    const roundness = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_roundness;
     };
 
@@ -1388,7 +1388,7 @@ fn nif_draw_rectangle_rounded_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Function
 
-    rl.DrawRectangleRoundedLines(rec, @floatCast(roundness), segments, color);
+    rl.DrawRectangleRoundedLines(rec, roundness, segments, color);
 
     // Return
 
@@ -1410,7 +1410,7 @@ fn nif_draw_rectangle_rounded_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     defer arg_rec.free();
     const rec = arg_rec.data;
 
-    const roundness = core.Double.get(env, argv[1]) catch {
+    const roundness = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_roundness;
     };
 
@@ -1418,7 +1418,7 @@ fn nif_draw_rectangle_rounded_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
         return error.invalid_argument_segments;
     };
 
-    const line_thick = core.Double.get(env, argv[3]) catch {
+    const line_thick = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_line_thick;
     };
 
@@ -1430,7 +1430,7 @@ fn nif_draw_rectangle_rounded_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
 
     // Function
 
-    rl.DrawRectangleRoundedLinesEx(rec, @floatCast(roundness), segments, @floatCast(line_thick), color);
+    rl.DrawRectangleRoundedLinesEx(rec, roundness, segments, line_thick, color);
 
     // Return
 
@@ -1602,11 +1602,11 @@ fn nif_draw_poly(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
         return error.invalid_argument_sides;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
-    const rotation = core.Double.get(env, argv[3]) catch {
+    const rotation = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -1618,7 +1618,7 @@ fn nif_draw_poly(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Function
 
-    rl.DrawPoly(center, sides, @floatCast(radius), @floatCast(rotation), color);
+    rl.DrawPoly(center, sides, radius, rotation, color);
 
     // Return
 
@@ -1644,11 +1644,11 @@ fn nif_draw_poly_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
         return error.invalid_argument_sides;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
-    const rotation = core.Double.get(env, argv[3]) catch {
+    const rotation = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -1660,7 +1660,7 @@ fn nif_draw_poly_lines(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Function
 
-    rl.DrawPolyLines(center, sides, @floatCast(radius), @floatCast(rotation), color);
+    rl.DrawPolyLines(center, sides, radius, rotation, color);
 
     // Return
 
@@ -1686,15 +1686,15 @@ fn nif_draw_poly_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
         return error.invalid_argument_sides;
     };
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
-    const rotation = core.Double.get(env, argv[3]) catch {
+    const rotation = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_rotation;
     };
 
-    const line_thick = core.Double.get(env, argv[4]) catch {
+    const line_thick = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_line_thick;
     };
 
@@ -1706,7 +1706,7 @@ fn nif_draw_poly_lines_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawPolyLinesEx(center, sides, @floatCast(radius), @floatCast(rotation), @floatCast(line_thick), color);
+    rl.DrawPolyLinesEx(center, sides, radius, rotation, line_thick, color);
 
     // Return
 
@@ -1733,7 +1733,7 @@ fn nif_draw_spline_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     const points = arg_points.data;
     const point_count = arg_points.length;
 
-    const thick = core.Double.get(env, argv[1]) catch {
+    const thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1745,7 +1745,7 @@ fn nif_draw_spline_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.DrawSplineLinear(@ptrCast(points), @intCast(point_count), @floatCast(thick), color);
+    rl.DrawSplineLinear(@ptrCast(points), @intCast(point_count), thick, color);
 
     // Return
 
@@ -1768,7 +1768,7 @@ fn nif_draw_spline_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     const points = arg_points.data;
     const point_count = arg_points.length;
 
-    const thick = core.Double.get(env, argv[1]) catch {
+    const thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1780,7 +1780,7 @@ fn nif_draw_spline_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Function
 
-    rl.DrawSplineBasis(@ptrCast(points), @intCast(point_count), @floatCast(thick), color);
+    rl.DrawSplineBasis(@ptrCast(points), @intCast(point_count), thick, color);
 
     // Return
 
@@ -1803,7 +1803,7 @@ fn nif_draw_spline_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     const points = arg_points.data;
     const point_count = arg_points.length;
 
-    const thick = core.Double.get(env, argv[1]) catch {
+    const thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1815,7 +1815,7 @@ fn nif_draw_spline_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Function
 
-    rl.DrawSplineCatmullRom(@ptrCast(points), @intCast(point_count), @floatCast(thick), color);
+    rl.DrawSplineCatmullRom(@ptrCast(points), @intCast(point_count), thick, color);
 
     // Return
 
@@ -1838,7 +1838,7 @@ fn nif_draw_spline_bezier_quadratic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     const points = arg_points.data;
     const point_count = arg_points.length;
 
-    const thick = core.Double.get(env, argv[1]) catch {
+    const thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1850,7 +1850,7 @@ fn nif_draw_spline_bezier_quadratic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Function
 
-    rl.DrawSplineBezierQuadratic(@ptrCast(points), @intCast(point_count), @floatCast(thick), color);
+    rl.DrawSplineBezierQuadratic(@ptrCast(points), @intCast(point_count), thick, color);
 
     // Return
 
@@ -1873,7 +1873,7 @@ fn nif_draw_spline_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     const points = arg_points.data;
     const point_count = arg_points.length;
 
-    const thick = core.Double.get(env, argv[1]) catch {
+    const thick = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1885,7 +1885,7 @@ fn nif_draw_spline_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
 
     // Function
 
-    rl.DrawSplineBezierCubic(@ptrCast(points), @intCast(point_count), @floatCast(thick), color);
+    rl.DrawSplineBezierCubic(@ptrCast(points), @intCast(point_count), thick, color);
 
     // Return
 
@@ -1913,7 +1913,7 @@ fn nif_draw_spline_segment_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     defer arg_p2.free();
     const p2 = arg_p2.data;
 
-    const thick = core.Double.get(env, argv[2]) catch {
+    const thick = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1925,7 +1925,7 @@ fn nif_draw_spline_segment_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 
     // Function
 
-    rl.DrawSplineSegmentLinear(p1, p2, @floatCast(thick), color);
+    rl.DrawSplineSegmentLinear(p1, p2, thick, color);
 
     // Return
 
@@ -1965,7 +1965,7 @@ fn nif_draw_spline_segment_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const thick = core.Double.get(env, argv[4]) catch {
+    const thick = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -1977,7 +1977,7 @@ fn nif_draw_spline_segment_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Function
 
-    rl.DrawSplineSegmentBasis(p1, p2, p3, p4, @floatCast(thick), color);
+    rl.DrawSplineSegmentBasis(p1, p2, p3, p4, thick, color);
 
     // Return
 
@@ -2017,7 +2017,7 @@ fn nif_draw_spline_segment_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const thick = core.Double.get(env, argv[4]) catch {
+    const thick = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -2029,7 +2029,7 @@ fn nif_draw_spline_segment_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
 
     // Function
 
-    rl.DrawSplineSegmentCatmullRom(p1, p2, p3, p4, @floatCast(thick), color);
+    rl.DrawSplineSegmentCatmullRom(p1, p2, p3, p4, thick, color);
 
     // Return
 
@@ -2063,7 +2063,7 @@ fn nif_draw_spline_segment_bezier_quadratic(env: ?*e.ErlNifEnv, argc: c_int, arg
     defer arg_p3.free();
     const p3 = arg_p3.data;
 
-    const thick = core.Double.get(env, argv[3]) catch {
+    const thick = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -2075,7 +2075,7 @@ fn nif_draw_spline_segment_bezier_quadratic(env: ?*e.ErlNifEnv, argc: c_int, arg
 
     // Function
 
-    rl.DrawSplineSegmentBezierQuadratic(p1, c2, p3, @floatCast(thick), color);
+    rl.DrawSplineSegmentBezierQuadratic(p1, c2, p3, thick, color);
 
     // Return
 
@@ -2115,7 +2115,7 @@ fn nif_draw_spline_segment_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const thick = core.Double.get(env, argv[4]) catch {
+    const thick = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_thick;
     };
 
@@ -2127,7 +2127,7 @@ fn nif_draw_spline_segment_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [
 
     // Function
 
-    rl.DrawSplineSegmentBezierCubic(p1, c2, c3, p4, @floatCast(thick), color);
+    rl.DrawSplineSegmentBezierCubic(p1, c2, c3, p4, thick, color);
 
     // Return
 
@@ -2163,13 +2163,13 @@ fn nif_get_spline_point_linear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_end_pos.free();
     const end_pos = arg_end_pos.data;
 
-    const t = core.Double.get(env, argv[2]) catch {
+    const t = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_t;
     };
 
     // Function
 
-    const point = rl.GetSplinePointLinear(start_pos, end_pos, @floatCast(t));
+    const point = rl.GetSplinePointLinear(start_pos, end_pos, t);
     defer if (!return_resource) core.Vector2.unload(point);
     errdefer if (return_resource) core.Vector2.unload(point);
 
@@ -2217,13 +2217,13 @@ fn nif_get_spline_point_basis(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const t = core.Double.get(env, argv[4]) catch {
+    const t = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_t;
     };
 
     // Function
 
-    const point = rl.GetSplinePointBasis(p1, p2, p3, p4, @floatCast(t));
+    const point = rl.GetSplinePointBasis(p1, p2, p3, p4, t);
     defer if (!return_resource) core.Vector2.unload(point);
     errdefer if (return_resource) core.Vector2.unload(point);
 
@@ -2271,13 +2271,13 @@ fn nif_get_spline_point_catmull_rom(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const t = core.Double.get(env, argv[4]) catch {
+    const t = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_t;
     };
 
     // Function
 
-    const point = rl.GetSplinePointCatmullRom(p1, p2, p3, p4, @floatCast(t));
+    const point = rl.GetSplinePointCatmullRom(p1, p2, p3, p4, t);
     defer if (!return_resource) core.Vector2.unload(point);
     errdefer if (return_resource) core.Vector2.unload(point);
 
@@ -2319,13 +2319,13 @@ fn nif_get_spline_point_bezier_quad(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     defer arg_p3.free();
     const p3 = arg_p3.data;
 
-    const t = core.Double.get(env, argv[3]) catch {
+    const t = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_t;
     };
 
     // Function
 
-    const point = rl.GetSplinePointBezierQuad(p1, c2, p3, @floatCast(t));
+    const point = rl.GetSplinePointBezierQuad(p1, c2, p3, t);
     defer if (!return_resource) core.Vector2.unload(point);
     errdefer if (return_resource) core.Vector2.unload(point);
 
@@ -2373,13 +2373,13 @@ fn nif_get_spline_point_bezier_cubic(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
     defer arg_p4.free();
     const p4 = arg_p4.data;
 
-    const t = core.Double.get(env, argv[4]) catch {
+    const t = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_t;
     };
 
     // Function
 
-    const point = rl.GetSplinePointBezierCubic(p1, c2, c3, p4, @floatCast(t));
+    const point = rl.GetSplinePointBezierCubic(p1, c2, c3, p4, t);
     defer if (!return_resource) core.Vector2.unload(point);
     errdefer if (return_resource) core.Vector2.unload(point);
 
@@ -2439,7 +2439,7 @@ fn nif_check_collision_circles(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_center1.free();
     const center1 = arg_center1.data;
 
-    const radius1 = core.Double.get(env, argv[1]) catch {
+    const radius1 = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius1;
     };
 
@@ -2449,13 +2449,13 @@ fn nif_check_collision_circles(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     defer arg_center2.free();
     const center2 = arg_center2.data;
 
-    const radius2 = core.Double.get(env, argv[3]) catch {
+    const radius2 = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_radius2;
     };
 
     // Function
 
-    const collision = rl.CheckCollisionCircles(center1, @floatCast(radius1), center2, @floatCast(radius2));
+    const collision = rl.CheckCollisionCircles(center1, radius1, center2, radius2);
 
     // Return
 
@@ -2477,7 +2477,7 @@ fn nif_check_collision_circle_rec(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -2489,7 +2489,7 @@ fn nif_check_collision_circle_rec(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]con
 
     // Function
 
-    const collision = rl.CheckCollisionCircleRec(center, @floatCast(radius), rec);
+    const collision = rl.CheckCollisionCircleRec(center, radius, rec);
 
     // Return
 
@@ -2511,7 +2511,7 @@ fn nif_check_collision_circle_line(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[1]) catch {
+    const radius = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_radius;
     };
 
@@ -2529,7 +2529,7 @@ fn nif_check_collision_circle_line(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]co
 
     // Function
 
-    const collision = rl.CheckCollisionCircleLine(center, @floatCast(radius), p1, p2);
+    const collision = rl.CheckCollisionCircleLine(center, radius, p1, p2);
 
     // Return
 
@@ -2587,13 +2587,13 @@ fn nif_check_collision_point_circle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
     defer arg_center.free();
     const center = arg_center.data;
 
-    const radius = core.Double.get(env, argv[2]) catch {
+    const radius = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_radius;
     };
 
     // Function
 
-    const collision = rl.CheckCollisionPointCircle(point, center, @floatCast(radius));
+    const collision = rl.CheckCollisionPointCircle(point, center, radius);
 
     // Return
 

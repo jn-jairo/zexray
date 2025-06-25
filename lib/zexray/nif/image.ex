@@ -447,7 +447,7 @@ defmodule Zexray.NIF.Image do
       @spec gen_image_gradient_radial(
               width :: integer,
               height :: integer,
-              density :: float,
+              density :: number,
               color_inner :: tuple,
               color_outer :: tuple,
               return :: :auto | :value | :resource
@@ -474,7 +474,7 @@ defmodule Zexray.NIF.Image do
       @spec gen_image_gradient_square(
               width :: integer,
               height :: integer,
-              density :: float,
+              density :: number,
               color_inner :: tuple,
               color_outer :: tuple,
               return :: :auto | :value | :resource
@@ -530,7 +530,7 @@ defmodule Zexray.NIF.Image do
       @spec gen_image_white_noise(
               width :: integer,
               height :: integer,
-              factor :: float,
+              factor :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_white_noise(
@@ -555,7 +555,7 @@ defmodule Zexray.NIF.Image do
               height :: integer,
               offset_x :: integer,
               offset_y :: integer,
-              scale :: float,
+              scale :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_perlin_noise(
@@ -714,8 +714,8 @@ defmodule Zexray.NIF.Image do
       @spec image_text_ex(
               font :: tuple,
               text :: binary,
-              font_size :: float,
-              spacing :: float,
+              font_size :: number,
+              spacing :: number,
               tint :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -803,7 +803,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_alpha_crop(
               image :: tuple,
-              threshold :: float,
+              threshold :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_crop(
@@ -825,7 +825,7 @@ defmodule Zexray.NIF.Image do
       @spec image_alpha_clear(
               image :: tuple,
               color :: tuple,
-              threshold :: float,
+              threshold :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_alpha_clear(
@@ -908,7 +908,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_kernel_convolution(
               image :: tuple,
-              kernel :: [float],
+              kernel :: [number],
               return :: :auto | :value | :resource
             ) :: tuple
       def image_kernel_convolution(
@@ -1206,7 +1206,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_color_contrast(
               image :: tuple,
-              contrast :: float,
+              contrast :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_color_contrast(
@@ -1311,7 +1311,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec get_image_alpha_border(
               image :: tuple,
-              threshold :: float,
+              threshold :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_image_alpha_border(
@@ -1905,8 +1905,8 @@ defmodule Zexray.NIF.Image do
               font :: tuple,
               text :: binary,
               position :: tuple,
-              font_size :: float,
-              spacing :: float,
+              font_size :: number,
+              spacing :: number,
               tint :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple

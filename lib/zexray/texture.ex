@@ -215,8 +215,8 @@ defmodule Zexray.Texture do
   @spec draw_ex(
           texture :: Zexray.Type.Texture2D.t_all(),
           position :: Zexray.Type.Vector2.t_all(),
-          rotation :: float,
-          scale :: float,
+          rotation :: number,
+          scale :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_ex(
@@ -257,7 +257,7 @@ defmodule Zexray.Texture do
           source :: Zexray.Type.Rectangle.t_all(),
           dest :: Zexray.Type.Rectangle.t_all(),
           origin :: Zexray.Type.Vector2.t_all(),
-          rotation :: float,
+          rotation :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_pro(
@@ -280,7 +280,7 @@ defmodule Zexray.Texture do
           n_patch_info :: Zexray.Type.NPatchInfo.t_all(),
           dest :: Zexray.Type.Rectangle.t_all(),
           origin :: Zexray.Type.Vector2.t_all(),
-          rotation :: float,
+          rotation :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_n_patch(

@@ -32,7 +32,7 @@ defmodule Zexray.Camera do
           camera :: Zexray.Type.Camera.t_all(),
           movement :: Zexray.Type.Vector3.t_all(),
           rotation :: Zexray.Type.Vector3.t_all(),
-          zoom :: float,
+          zoom :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate update_pro(
@@ -93,7 +93,7 @@ defmodule Zexray.Camera do
   """
   @spec move_forward(
           camera :: Zexray.Type.Camera.t_all(),
-          distance :: float,
+          distance :: number,
           move_in_world_plane :: boolean,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
@@ -111,7 +111,7 @@ defmodule Zexray.Camera do
   """
   @spec move_up(
           camera :: Zexray.Type.Camera.t_all(),
-          distance :: float,
+          distance :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_up(
@@ -127,7 +127,7 @@ defmodule Zexray.Camera do
   """
   @spec move_right(
           camera :: Zexray.Type.Camera.t_all(),
-          distance :: float,
+          distance :: number,
           move_in_world_plane :: boolean,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
@@ -145,7 +145,7 @@ defmodule Zexray.Camera do
   """
   @spec move_to_target(
           camera :: Zexray.Type.Camera.t_all(),
-          delta :: float,
+          delta :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate move_to_target(
@@ -164,7 +164,7 @@ defmodule Zexray.Camera do
   """
   @spec yaw(
           camera :: Zexray.Type.Camera.t_all(),
-          angle :: float,
+          angle :: number,
           rotate_around_target :: boolean,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
@@ -186,7 +186,7 @@ defmodule Zexray.Camera do
   """
   @spec pitch(
           camera :: Zexray.Type.Camera.t_all(),
-          angle :: float,
+          angle :: number,
           lock_view :: boolean,
           rotate_around_target :: boolean,
           rotate_up :: boolean,
@@ -210,7 +210,7 @@ defmodule Zexray.Camera do
   """
   @spec roll(
           camera :: Zexray.Type.Camera.t_all(),
-          angle :: float,
+          angle :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Camera.t_nif()
   defdelegate roll(
@@ -240,7 +240,7 @@ defmodule Zexray.Camera do
   """
   @spec get_projection_matrix(
           camera :: Zexray.Type.Camera.t_all(),
-          aspect :: float,
+          aspect :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Matrix.t_nif()
   defdelegate get_projection_matrix(

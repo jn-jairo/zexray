@@ -190,13 +190,13 @@ fn nif_gui_set_alpha(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Arguments
 
-    const alpha = core.Double.get(env, argv[0]) catch {
+    const alpha = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_alpha;
     };
 
     // Function
 
-    rl.GuiSetAlpha(@floatCast(alpha));
+    rl.GuiSetAlpha(alpha);
 
     // Return
 
@@ -1348,9 +1348,9 @@ fn nif_gui_value_box_float(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_text_value.free();
     const text_value = arg_text_value.data;
 
-    var value: f32 = @floatCast(core.Double.get(env, argv[3]) catch {
+    var value = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_value;
-    });
+    };
 
     const edit_mode = core.Boolean.get(env, argv[4]) catch {
         return error.invalid_argument_edit_mode;
@@ -1366,7 +1366,7 @@ fn nif_gui_value_box_float(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     const term_text_value = core.CString.make_c_unknown(env, text_value);
 
-    const term_value = core.Double.make(env, @floatCast(value));
+    const term_value = core.Float.make(env, value);
 
     return core.Tuple.make(env, &[_]e.ErlNifTerm{
         term_changed,
@@ -1447,27 +1447,27 @@ fn nif_gui_slider(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     defer arg_text_right.free();
     const text_right = arg_text_right.data;
 
-    var value: f32 = @floatCast(core.Double.get(env, argv[3]) catch {
+    var value = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_value;
-    });
+    };
 
-    const min_value = core.Double.get(env, argv[4]) catch {
+    const min_value = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_min_value;
     };
 
-    const max_value = core.Double.get(env, argv[5]) catch {
+    const max_value = core.Float.get(env, argv[5]) catch {
         return error.invalid_argument_max_value;
     };
 
     // Function
 
-    const changed = rl.GuiSlider(bounds, text_left, text_right, &value, @floatCast(min_value), @floatCast(max_value)) != 0;
+    const changed = rl.GuiSlider(bounds, text_left, text_right, &value, min_value, max_value) != 0;
 
     // Return
 
     const term_changed = core.Boolean.make(env, changed);
 
-    const term_value = core.Double.make(env, @floatCast(value));
+    const term_value = core.Float.make(env, value);
 
     return core.Tuple.make(env, &[_]e.ErlNifTerm{
         term_changed,
@@ -1502,27 +1502,27 @@ fn nif_gui_slider_bar(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_text_right.free();
     const text_right = arg_text_right.data;
 
-    var value: f32 = @floatCast(core.Double.get(env, argv[3]) catch {
+    var value = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_value;
-    });
+    };
 
-    const min_value = core.Double.get(env, argv[4]) catch {
+    const min_value = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_min_value;
     };
 
-    const max_value = core.Double.get(env, argv[5]) catch {
+    const max_value = core.Float.get(env, argv[5]) catch {
         return error.invalid_argument_max_value;
     };
 
     // Function
 
-    const changed = rl.GuiSliderBar(bounds, text_left, text_right, &value, @floatCast(min_value), @floatCast(max_value)) != 0;
+    const changed = rl.GuiSliderBar(bounds, text_left, text_right, &value, min_value, max_value) != 0;
 
     // Return
 
     const term_changed = core.Boolean.make(env, changed);
 
-    const term_value = core.Double.make(env, @floatCast(value));
+    const term_value = core.Float.make(env, value);
 
     return core.Tuple.make(env, &[_]e.ErlNifTerm{
         term_changed,
@@ -1557,25 +1557,25 @@ fn nif_gui_progress_bar(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_text_right.free();
     const text_right = arg_text_right.data;
 
-    var value: f32 = @floatCast(core.Double.get(env, argv[3]) catch {
+    var value = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_value;
-    });
+    };
 
-    const min_value = core.Double.get(env, argv[4]) catch {
+    const min_value = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_min_value;
     };
 
-    const max_value = core.Double.get(env, argv[5]) catch {
+    const max_value = core.Float.get(env, argv[5]) catch {
         return error.invalid_argument_max_value;
     };
 
     // Function
 
-    _ = rl.GuiProgressBar(bounds, text_left, text_right, &value, @floatCast(min_value), @floatCast(max_value));
+    _ = rl.GuiProgressBar(bounds, text_left, text_right, &value, min_value, max_value);
 
     // Return
 
-    return core.Double.make(env, @floatCast(value));
+    return core.Float.make(env, value);
 }
 
 /// Status Bar control, shows info text
@@ -1663,7 +1663,7 @@ fn nif_gui_grid(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !
     defer arg_text.free();
     const text = arg_text.data;
 
-    const spacing = core.Double.get(env, argv[2]) catch {
+    const spacing = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -1680,7 +1680,7 @@ fn nif_gui_grid(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !
 
     // Function
 
-    _ = rl.GuiGrid(bounds, text, @floatCast(spacing), subdivs, @ptrCast(mouse_cell));
+    _ = rl.GuiGrid(bounds, text, spacing, subdivs, @ptrCast(mouse_cell));
 
     // Return
 
@@ -2023,9 +2023,9 @@ fn nif_gui_color_bar_alpha(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_text.free();
     const text = arg_text.data;
 
-    var alpha: f32 = @floatCast(core.Double.get(env, argv[2]) catch {
+    var alpha = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_alpha;
-    });
+    };
 
     // Function
 
@@ -2033,7 +2033,7 @@ fn nif_gui_color_bar_alpha(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
     // Return
 
-    return core.Double.make(env, @floatCast(alpha));
+    return core.Float.make(env, alpha);
 }
 
 /// Color Bar Hue control
@@ -2057,9 +2057,9 @@ fn nif_gui_color_bar_hue(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     defer arg_text.free();
     const text = arg_text.data;
 
-    var value: f32 = @floatCast(core.Double.get(env, argv[2]) catch {
+    var value = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_value;
-    });
+    };
 
     // Function
 
@@ -2067,7 +2067,7 @@ fn nif_gui_color_bar_hue(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return
 
-    return core.Double.make(env, @floatCast(value));
+    return core.Float.make(env, value);
 }
 
 /// Color Picker control that avoids conversion to RGB on each call (multiple color controls)

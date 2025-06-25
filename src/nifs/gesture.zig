@@ -98,7 +98,7 @@ fn nif_get_gesture_hold_duration(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Return
 
-    return core.Double.make(env, @floatCast(gesture_hold_duration));
+    return core.Float.make(env, gesture_hold_duration);
 }
 
 /// Get gesture drag vector
@@ -139,7 +139,7 @@ fn nif_get_gesture_drag_angle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
 
     // Return
 
-    return core.Double.make(env, @floatCast(gesture_drag_angle));
+    return core.Float.make(env, gesture_drag_angle);
 }
 
 /// Get gesture pinch delta
@@ -180,5 +180,5 @@ fn nif_get_gesture_pinch_angle(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
 
     // Return
 
-    return core.Double.make(env, @floatCast(gesture_pinch_angle));
+    return core.Float.make(env, gesture_pinch_angle);
 }

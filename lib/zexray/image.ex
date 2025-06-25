@@ -230,7 +230,7 @@ defmodule Zexray.Image do
   @spec gen_gradient_radial(
           width :: integer,
           height :: integer,
-          density :: float,
+          density :: number,
           color_inner :: Zexray.Type.Color.t_all(),
           color_outer :: Zexray.Type.Color.t_all(),
           return :: :auto | :value | :resource
@@ -253,7 +253,7 @@ defmodule Zexray.Image do
   @spec gen_gradient_square(
           width :: integer,
           height :: integer,
-          density :: float,
+          density :: number,
           color_inner :: Zexray.Type.Color.t_all(),
           color_outer :: Zexray.Type.Color.t_all(),
           return :: :auto | :value | :resource
@@ -301,7 +301,7 @@ defmodule Zexray.Image do
   @spec gen_white_noise(
           width :: integer,
           height :: integer,
-          factor :: float,
+          factor :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_white_noise(
@@ -322,7 +322,7 @@ defmodule Zexray.Image do
           height :: integer,
           offset_x :: integer,
           offset_y :: integer,
-          scale :: float,
+          scale :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate gen_perlin_noise(
@@ -453,8 +453,8 @@ defmodule Zexray.Image do
   @spec text_ex(
           font :: Zexray.Type.Font.t_all(),
           text :: binary,
-          font_size :: float,
-          spacing :: float,
+          font_size :: number,
+          spacing :: number,
           tint :: Zexray.Type.Color.t_all(),
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
@@ -526,7 +526,7 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec alpha_crop(
           image :: Zexray.Type.Image.t_all(),
-          threshold :: float,
+          threshold :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_crop(
@@ -544,7 +544,7 @@ defmodule Zexray.Image do
   @spec alpha_clear(
           image :: Zexray.Type.Image.t_all(),
           color :: Zexray.Type.Color.t_all(),
-          threshold :: float,
+          threshold :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate alpha_clear(
@@ -611,7 +611,7 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec kernel_convolution(
           image :: Zexray.Type.Image.t_all(),
-          kernel :: [float],
+          kernel :: [number],
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate kernel_convolution(
@@ -853,7 +853,7 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec color_contrast(
           image :: Zexray.Type.Image.t_all(),
-          contrast :: float,
+          contrast :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()
   defdelegate color_contrast(
@@ -938,7 +938,7 @@ defmodule Zexray.Image do
   @doc group: :manipulation
   @spec get_alpha_border(
           image :: Zexray.Type.Image.t_all(),
-          threshold :: float,
+          threshold :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Rectangle.t_nif()
   defdelegate get_alpha_border(
@@ -1440,8 +1440,8 @@ defmodule Zexray.Image do
           font :: Zexray.Type.Font.t_all(),
           text :: binary,
           position :: Zexray.Type.Vector2.t_all(),
-          font_size :: float,
-          spacing :: float,
+          font_size :: number,
+          spacing :: number,
           tint :: Zexray.Type.Color.t_all(),
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Image.t_nif()

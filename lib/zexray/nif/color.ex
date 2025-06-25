@@ -71,7 +71,7 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec fade(
               color :: tuple,
-              alpha :: float,
+              alpha :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def fade(
@@ -160,9 +160,9 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec color_from_hsv(
-              hue :: float,
-              saturation :: float,
-              value :: float,
+              hue :: number,
+              saturation :: number,
+              value :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def color_from_hsv(
@@ -205,7 +205,7 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_brightness(
               color :: tuple,
-              factor :: float,
+              factor :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def color_brightness(
@@ -226,7 +226,7 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_contrast(
               color :: tuple,
-              contrast :: float,
+              contrast :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def color_contrast(
@@ -247,7 +247,7 @@ defmodule Zexray.NIF.Color do
       @doc group: :color
       @spec color_alpha(
               color :: tuple,
-              alpha :: float,
+              alpha :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def color_alpha(
@@ -292,7 +292,7 @@ defmodule Zexray.NIF.Color do
       @spec color_lerp(
               color1 :: tuple,
               color2 :: tuple,
-              factor :: float,
+              factor :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def color_lerp(

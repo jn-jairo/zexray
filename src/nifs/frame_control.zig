@@ -59,7 +59,7 @@ fn nif_wait_time(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) 
 
     // Arguments
 
-    const seconds: f64 = core.Double.get(env, argv[0]) catch {
+    const seconds = core.Double.get(env, argv[0]) catch {
         return error.invalid_argument_seconds;
     };
 

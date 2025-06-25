@@ -129,9 +129,9 @@ defmodule Zexray.Gamepad do
   """
   @spec set_vibration(
           gamepad :: integer,
-          left_motor :: float,
-          right_motor :: float,
-          duration :: float
+          left_motor :: number,
+          right_motor :: number,
+          duration :: number
         ) :: :ok
   defdelegate set_vibration(
                 gamepad,

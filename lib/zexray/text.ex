@@ -53,8 +53,8 @@ defmodule Zexray.Text do
           font :: Zexray.Type.Font.t_all(),
           text :: binary,
           position :: Zexray.Type.Vector2.t_all(),
-          font_size :: float,
-          spacing :: float,
+          font_size :: number,
+          spacing :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_ex(
@@ -77,9 +77,9 @@ defmodule Zexray.Text do
           text :: binary,
           position :: Zexray.Type.Vector2.t_all(),
           origin :: Zexray.Type.Vector2.t_all(),
-          rotation :: float,
-          font_size :: float,
-          spacing :: float,
+          rotation :: number,
+          font_size :: number,
+          spacing :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_pro(
@@ -103,7 +103,7 @@ defmodule Zexray.Text do
           font :: Zexray.Type.Font.t_all(),
           codepoint :: integer,
           position :: Zexray.Type.Vector2.t_all(),
-          font_size :: float,
+          font_size :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_codepoint(
@@ -124,8 +124,8 @@ defmodule Zexray.Text do
           font :: Zexray.Type.Font.t_all(),
           codepoints :: [integer],
           position :: Zexray.Type.Vector2.t_all(),
-          font_size :: float,
-          spacing :: float,
+          font_size :: number,
+          spacing :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_codepoints(
@@ -172,8 +172,8 @@ defmodule Zexray.Text do
   @spec measure_ex(
           font :: Zexray.Type.Font.t_all(),
           text :: binary,
-          font_size :: float,
-          spacing :: float,
+          font_size :: number,
+          spacing :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate measure_ex(

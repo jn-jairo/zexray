@@ -163,7 +163,7 @@ defmodule Zexray.NIF.Gui do
       ```
       """
       @doc group: :gui_state_control
-      @spec gui_set_alpha(alpha :: float) :: :ok
+      @spec gui_set_alpha(alpha :: number) :: :ok
       def gui_set_alpha(_alpha), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -840,7 +840,7 @@ defmodule Zexray.NIF.Gui do
               bounds :: tuple,
               text :: binary,
               text_value :: binary,
-              value :: float,
+              value :: number,
               edit_mode :: boolean
             ) :: {changed :: boolean, text_value :: binary, value :: float}
       def gui_value_box_float(
@@ -888,9 +888,9 @@ defmodule Zexray.NIF.Gui do
               bounds :: tuple,
               text_left :: binary,
               text_right :: binary,
-              value :: float,
-              min_value :: float,
-              max_value :: float
+              value :: number,
+              min_value :: number,
+              max_value :: number
             ) :: {changed :: boolean, value :: float}
       def gui_slider(
             _bounds,
@@ -915,9 +915,9 @@ defmodule Zexray.NIF.Gui do
               bounds :: tuple,
               text_left :: binary,
               text_right :: binary,
-              value :: float,
-              min_value :: float,
-              max_value :: float
+              value :: number,
+              min_value :: number,
+              max_value :: number
             ) :: {changed :: boolean, value :: float}
       def gui_slider_bar(
             _bounds,
@@ -942,9 +942,9 @@ defmodule Zexray.NIF.Gui do
               bounds :: tuple,
               text_left :: binary,
               text_right :: binary,
-              value :: float,
-              min_value :: float,
-              max_value :: float
+              value :: number,
+              min_value :: number,
+              max_value :: number
             ) :: float
       def gui_progress_bar(
             _bounds,
@@ -1006,7 +1006,7 @@ defmodule Zexray.NIF.Gui do
       @spec gui_grid(
               bounds :: tuple,
               text :: binary,
-              spacing :: float,
+              spacing :: number,
               subdivs :: integer,
               mouse_cell :: tuple,
               return :: :auto | :value | :resource
@@ -1185,7 +1185,7 @@ defmodule Zexray.NIF.Gui do
       @spec gui_color_bar_alpha(
               bounds :: tuple,
               text :: binary,
-              alpha :: float
+              alpha :: number
             ) :: float
       def gui_color_bar_alpha(
             _bounds,
@@ -1206,7 +1206,7 @@ defmodule Zexray.NIF.Gui do
       @spec gui_color_bar_hue(
               bounds :: tuple,
               text :: binary,
-              value :: float
+              value :: number
             ) :: float
       def gui_color_bar_hue(
             _bounds,

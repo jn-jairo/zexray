@@ -24,6 +24,6 @@ defmodule Zexray.FrameControl do
   @doc """
   Wait for some time (halt program execution)
   """
-  @spec wait_time(seconds :: float) :: :ok
+  @spec wait_time(seconds :: number) :: :ok
   defdelegate wait_time(seconds), to: NIF, as: :wait_time
 end

@@ -51,7 +51,7 @@ defmodule Zexray.Gui do
   Set gui controls alpha (global state), alpha goes from 0.0f to 1.0f
   """
   @doc group: :state_control
-  @spec set_alpha(alpha :: float) :: :ok
+  @spec set_alpha(alpha :: number) :: :ok
   defdelegate set_alpha(alpha), to: NIF, as: :gui_set_alpha
 
   @doc """
@@ -699,7 +699,7 @@ defmodule Zexray.Gui do
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
           text_value :: binary,
-          value :: float,
+          value :: number,
           edit_mode :: boolean
         ) :: {changed :: boolean, text_value :: binary, value :: float}
   defdelegate value_box_float(
@@ -739,9 +739,9 @@ defmodule Zexray.Gui do
           bounds :: Zexray.Type.Rectangle.t_all(),
           text_left :: binary,
           text_right :: binary,
-          value :: float,
-          min_value :: float,
-          max_value :: float
+          value :: number,
+          min_value :: number,
+          max_value :: number
         ) :: {changed :: boolean, value :: float}
   defdelegate slider(
                 bounds,
@@ -762,9 +762,9 @@ defmodule Zexray.Gui do
           bounds :: Zexray.Type.Rectangle.t_all(),
           text_left :: binary,
           text_right :: binary,
-          value :: float,
-          min_value :: float,
-          max_value :: float
+          value :: number,
+          min_value :: number,
+          max_value :: number
         ) :: {changed :: boolean, value :: float}
   defdelegate slider_bar(
                 bounds,
@@ -785,9 +785,9 @@ defmodule Zexray.Gui do
           bounds :: Zexray.Type.Rectangle.t_all(),
           text_left :: binary,
           text_right :: binary,
-          value :: float,
-          min_value :: float,
-          max_value :: float
+          value :: number,
+          min_value :: number,
+          max_value :: number
         ) :: float
   defdelegate progress_bar(
                 bounds,
@@ -837,7 +837,7 @@ defmodule Zexray.Gui do
   @spec grid(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          spacing :: float,
+          spacing :: number,
           subdivs :: integer,
           mouse_cell :: Zexray.Type.Vector2.t_all(),
           return :: :auto | :value | :resource
@@ -988,7 +988,7 @@ defmodule Zexray.Gui do
   @spec color_bar_alpha(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          alpha :: float
+          alpha :: number
         ) :: float
   defdelegate color_bar_alpha(
                 bounds,
@@ -1005,7 +1005,7 @@ defmodule Zexray.Gui do
   @spec color_bar_hue(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          value :: float
+          value :: number
         ) :: float
   defdelegate color_bar_hue(
                 bounds,

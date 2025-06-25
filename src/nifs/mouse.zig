@@ -261,17 +261,17 @@ fn nif_set_mouse_scale(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Arguments
 
-    const scale_x = core.Double.get(env, argv[0]) catch {
+    const scale_x = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_scale_x;
     };
 
-    const scale_y = core.Double.get(env, argv[1]) catch {
+    const scale_y = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_scale_y;
     };
 
     // Function
 
-    rl.SetMouseScale(@floatCast(scale_x), @floatCast(scale_y));
+    rl.SetMouseScale(scale_x, scale_y);
 
     // Return
 
@@ -292,7 +292,7 @@ fn nif_get_mouse_wheel_move(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Return
 
-    return core.Double.make(env, @floatCast(mouse_wheel_move));
+    return core.Float.make(env, mouse_wheel_move);
 }
 
 /// Get mouse wheel movement for both X and Y

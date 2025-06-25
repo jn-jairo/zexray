@@ -92,13 +92,13 @@ fn nif_fade(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.Er
     defer arg_color.free();
     const color = arg_color.data;
 
-    const alpha = core.Double.get(env, argv[1]) catch {
+    const alpha = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_alpha;
     };
 
     // Function
 
-    const new_color = rl.Fade(color, @floatCast(alpha));
+    const new_color = rl.Fade(color, alpha);
     defer if (!return_resource) core.Color.unload(new_color);
     errdefer if (return_resource) core.Color.unload(new_color);
 
@@ -242,21 +242,21 @@ fn nif_color_from_hsv(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
 
     // Arguments
 
-    const hue = core.Double.get(env, argv[0]) catch {
+    const hue = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_hue;
     };
 
-    const saturation = core.Double.get(env, argv[1]) catch {
+    const saturation = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_saturation;
     };
 
-    const value = core.Double.get(env, argv[2]) catch {
+    const value = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_value;
     };
 
     // Function
 
-    const color = rl.ColorFromHSV(@floatCast(hue), @floatCast(saturation), @floatCast(value));
+    const color = rl.ColorFromHSV(hue, saturation, value);
     defer if (!return_resource) core.Color.unload(color);
     errdefer if (return_resource) core.Color.unload(color);
 
@@ -324,13 +324,13 @@ fn nif_color_brightness(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_color.free();
     const color = arg_color.data;
 
-    const factor = core.Double.get(env, argv[1]) catch {
+    const factor = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_factor;
     };
 
     // Function
 
-    const new_color = rl.ColorBrightness(color, @floatCast(factor));
+    const new_color = rl.ColorBrightness(color, factor);
     defer if (!return_resource) core.Color.unload(new_color);
     errdefer if (return_resource) core.Color.unload(new_color);
 
@@ -360,13 +360,13 @@ fn nif_color_contrast(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifT
     defer arg_color.free();
     const color = arg_color.data;
 
-    const contrast = core.Double.get(env, argv[1]) catch {
+    const contrast = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_contrast;
     };
 
     // Function
 
-    const new_color = rl.ColorContrast(color, @floatCast(contrast));
+    const new_color = rl.ColorContrast(color, contrast);
     defer if (!return_resource) core.Color.unload(new_color);
     errdefer if (return_resource) core.Color.unload(new_color);
 
@@ -396,13 +396,13 @@ fn nif_color_alpha(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm
     defer arg_color.free();
     const color = arg_color.data;
 
-    const alpha = core.Double.get(env, argv[1]) catch {
+    const alpha = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_alpha;
     };
 
     // Function
 
-    const new_color = rl.ColorAlpha(color, @floatCast(alpha));
+    const new_color = rl.ColorAlpha(color, alpha);
     defer if (!return_resource) core.Color.unload(new_color);
     errdefer if (return_resource) core.Color.unload(new_color);
 
@@ -482,13 +482,13 @@ fn nif_color_lerp(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm)
     defer arg_color2.free();
     const color2 = arg_color2.data;
 
-    const factor = core.Double.get(env, argv[2]) catch {
+    const factor = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_factor;
     };
 
     // Function
 
-    const new_color = rl.ColorLerp(color1, color2, @floatCast(factor));
+    const new_color = rl.ColorLerp(color1, color2, factor);
     defer if (!return_resource) core.Color.unload(new_color);
     errdefer if (return_resource) core.Color.unload(new_color);
 

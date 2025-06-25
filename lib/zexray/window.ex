@@ -312,7 +312,7 @@ defmodule Zexray.Window do
   Set window opacity [0.0f..1.0f]
   """
   @doc group: :property
-  @spec set_opacity(opacity :: float) :: :ok
+  @spec set_opacity(opacity :: number) :: :ok
   defdelegate set_opacity(opacity), to: NIF, as: :set_window_opacity
 
   @doc """

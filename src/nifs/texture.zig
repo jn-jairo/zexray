@@ -477,11 +477,11 @@ fn nif_draw_texture_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     defer arg_position.free();
     const position = arg_position.data;
 
-    const rotation = core.Double.get(env, argv[2]) catch {
+    const rotation = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_rotation;
     };
 
-    const scale = core.Double.get(env, argv[3]) catch {
+    const scale = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_scale;
     };
 
@@ -493,7 +493,7 @@ fn nif_draw_texture_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
 
     // Function
 
-    rl.DrawTextureEx(texture, position, @floatCast(rotation), @floatCast(scale), tint);
+    rl.DrawTextureEx(texture, position, rotation, scale, tint);
 
     // Return
 
@@ -575,7 +575,7 @@ fn nif_draw_texture_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     defer arg_origin.free();
     const origin = arg_origin.data;
 
-    const rotation = core.Double.get(env, argv[4]) catch {
+    const rotation = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -587,7 +587,7 @@ fn nif_draw_texture_pro(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
 
     // Function
 
-    rl.DrawTexturePro(texture, source, dest, origin, @floatCast(rotation), tint);
+    rl.DrawTexturePro(texture, source, dest, origin, rotation, tint);
 
     // Return
 
@@ -627,7 +627,7 @@ fn nif_draw_texture_n_patch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     defer arg_origin.free();
     const origin = arg_origin.data;
 
-    const rotation = core.Double.get(env, argv[4]) catch {
+    const rotation = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_rotation;
     };
 
@@ -639,7 +639,7 @@ fn nif_draw_texture_n_patch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
 
     // Function
 
-    rl.DrawTextureNPatch(texture, n_patch_info, dest, origin, @floatCast(rotation), tint);
+    rl.DrawTextureNPatch(texture, n_patch_info, dest, origin, rotation, tint);
 
     // Return
 

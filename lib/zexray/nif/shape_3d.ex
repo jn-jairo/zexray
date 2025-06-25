@@ -175,9 +175,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_circle_3d(
               center :: tuple,
-              radius :: float,
+              radius :: number,
               rotation_axis :: tuple,
-              rotation_angle :: float,
+              rotation_angle :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_3d(
@@ -242,9 +242,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube(
               position :: tuple,
-              width :: float,
-              height :: float,
-              length :: float,
+              width :: number,
+              height :: number,
+              length :: number,
               color :: tuple
             ) :: :ok
       def draw_cube(
@@ -288,9 +288,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cube_wires(
               position :: tuple,
-              width :: float,
-              height :: float,
-              length :: float,
+              width :: number,
+              height :: number,
+              length :: number,
               color :: tuple
             ) :: :ok
       def draw_cube_wires(
@@ -334,7 +334,7 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere(
               center_pos :: tuple,
-              radius :: float,
+              radius :: number,
               color :: tuple
             ) :: :ok
       def draw_sphere(
@@ -355,7 +355,7 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere_ex(
               center_pos :: tuple,
-              radius :: float,
+              radius :: number,
               rings :: integer,
               slices :: integer,
               color :: tuple
@@ -380,7 +380,7 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_sphere_wires(
               center_pos :: tuple,
-              radius :: float,
+              radius :: number,
               rings :: integer,
               slices :: integer,
               color :: tuple
@@ -405,9 +405,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder(
               position :: tuple,
-              radius_top :: float,
-              radius_bottom :: float,
-              height :: float,
+              radius_top :: number,
+              radius_bottom :: number,
+              height :: number,
               slices :: integer,
               color :: tuple
             ) :: :ok
@@ -433,8 +433,8 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_cylinder_ex(
               start_pos :: tuple,
               end_pos :: tuple,
-              start_radius :: float,
-              end_radius :: float,
+              start_radius :: number,
+              end_radius :: number,
               sides :: integer,
               color :: tuple
             ) :: :ok
@@ -459,9 +459,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_cylinder_wires(
               position :: tuple,
-              radius_top :: float,
-              radius_bottom :: float,
-              height :: float,
+              radius_top :: number,
+              radius_bottom :: number,
+              height :: number,
               slices :: integer,
               color :: tuple
             ) :: :ok
@@ -487,8 +487,8 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_cylinder_wires_ex(
               start_pos :: tuple,
               end_pos :: tuple,
-              start_radius :: float,
-              end_radius :: float,
+              start_radius :: number,
+              end_radius :: number,
               sides :: integer,
               color :: tuple
             ) :: :ok
@@ -514,7 +514,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_capsule(
               start_pos :: tuple,
               end_pos :: tuple,
-              radius :: float,
+              radius :: number,
               slices :: integer,
               rings :: integer,
               color :: tuple
@@ -541,7 +541,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_capsule_wires(
               start_pos :: tuple,
               end_pos :: tuple,
-              radius :: float,
+              radius :: number,
               slices :: integer,
               rings :: integer,
               color :: tuple
@@ -607,7 +607,7 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :basic_3d_shapes_drawing
       @spec draw_grid(
               slices :: integer,
-              spacing :: float
+              spacing :: number
             ) :: :ok
       def draw_grid(
             _slices,
@@ -704,7 +704,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_model(
               model :: tuple,
               position :: tuple,
-              scale :: float,
+              scale :: number,
               tint :: tuple
             ) :: :ok
       def draw_model(
@@ -728,7 +728,7 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               position :: tuple,
               rotation_axis :: tuple,
-              rotation_angle :: float,
+              rotation_angle :: number,
               scale :: tuple,
               tint :: tuple
             ) :: :ok
@@ -754,7 +754,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_model_wires(
               model :: tuple,
               position :: tuple,
-              scale :: float,
+              scale :: number,
               tint :: tuple
             ) :: :ok
       def draw_model_wires(
@@ -778,7 +778,7 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               position :: tuple,
               rotation_axis :: tuple,
-              rotation_angle :: float,
+              rotation_angle :: number,
               scale :: tuple,
               tint :: tuple
             ) :: :ok
@@ -804,7 +804,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec draw_model_points(
               model :: tuple,
               position :: tuple,
-              scale :: float,
+              scale :: number,
               tint :: tuple
             ) :: :ok
       def draw_model_points(
@@ -828,7 +828,7 @@ defmodule Zexray.NIF.Shape3D do
               model :: tuple,
               position :: tuple,
               rotation_axis :: tuple,
-              rotation_angle :: float,
+              rotation_angle :: number,
               scale :: tuple,
               tint :: tuple
             ) :: :ok
@@ -874,7 +874,7 @@ defmodule Zexray.NIF.Shape3D do
               camera :: tuple,
               texture :: tuple,
               position :: tuple,
-              scale :: float,
+              scale :: number,
               tint :: tuple
             ) :: :ok
       def draw_billboard(
@@ -930,7 +930,7 @@ defmodule Zexray.NIF.Shape3D do
               up :: tuple,
               size :: tuple,
               origin :: tuple,
-              rotation :: float,
+              rotation :: number,
               tint :: tuple
             ) :: :ok
       def draw_billboard_pro(
@@ -1108,7 +1108,7 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :mesh_generation
       @spec gen_mesh_poly(
               sides :: integer,
-              radius :: float,
+              radius :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_poly(
@@ -1128,8 +1128,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_plane(
-              width :: float,
-              length :: float,
+              width :: number,
+              length :: number,
               res_x :: integer,
               res_z :: integer,
               return :: :auto | :value | :resource
@@ -1153,9 +1153,9 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_cube(
-              width :: float,
-              height :: float,
-              length :: float,
+              width :: number,
+              height :: number,
+              length :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def gen_mesh_cube(
@@ -1176,7 +1176,7 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_sphere(
-              radius :: float,
+              radius :: number,
               rings :: integer,
               slices :: integer,
               return :: :auto | :value | :resource
@@ -1199,7 +1199,7 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_hemi_sphere(
-              radius :: float,
+              radius :: number,
               rings :: integer,
               slices :: integer,
               return :: :auto | :value | :resource
@@ -1222,8 +1222,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_cylinder(
-              radius :: float,
-              height :: float,
+              radius :: number,
+              height :: number,
               slices :: integer,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1245,8 +1245,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_cone(
-              radius :: float,
-              height :: float,
+              radius :: number,
+              height :: number,
               slices :: integer,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1268,8 +1268,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_torus(
-              radius :: float,
-              size :: float,
+              radius :: number,
+              size :: number,
               rad_seg :: integer,
               sides :: integer,
               return :: :auto | :value | :resource
@@ -1293,8 +1293,8 @@ defmodule Zexray.NIF.Shape3D do
       """
       @doc group: :mesh_generation
       @spec gen_mesh_knot(
-              radius :: float,
-              size :: float,
+              radius :: number,
+              size :: number,
               rad_seg :: integer,
               sides :: integer,
               return :: :auto | :value | :resource
@@ -1546,9 +1546,9 @@ defmodule Zexray.NIF.Shape3D do
       @doc group: :collision_detection
       @spec check_collision_spheres(
               center1 :: tuple,
-              radius1 :: float,
+              radius1 :: number,
               center2 :: tuple,
-              radius2 :: float
+              radius2 :: number
             ) :: boolean
       def check_collision_spheres(
             _center1,
@@ -1589,7 +1589,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec check_collision_box_sphere(
               box :: tuple,
               center :: tuple,
-              radius :: float
+              radius :: number
             ) :: boolean
       def check_collision_box_sphere(
             _box,
@@ -1610,7 +1610,7 @@ defmodule Zexray.NIF.Shape3D do
       @spec get_ray_collision_sphere(
               ray :: tuple,
               center :: tuple,
-              radius :: float,
+              radius :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_ray_collision_sphere(

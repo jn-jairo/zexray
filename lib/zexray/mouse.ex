@@ -89,8 +89,8 @@ defmodule Zexray.Mouse do
   Set mouse scaling
   """
   @spec set_scale(
-          scale_x :: float,
-          scale_y :: float
+          scale_x :: number,
+          scale_y :: number
         ) :: :ok
   defdelegate set_scale(
                 scale_x,

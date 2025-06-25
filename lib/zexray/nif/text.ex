@@ -85,8 +85,8 @@ defmodule Zexray.NIF.Text do
               font :: tuple,
               text :: binary,
               position :: tuple,
-              font_size :: float,
-              spacing :: float,
+              font_size :: number,
+              spacing :: number,
               tint :: tuple
             ) :: :ok
       def draw_text_ex(
@@ -113,9 +113,9 @@ defmodule Zexray.NIF.Text do
               text :: binary,
               position :: tuple,
               origin :: tuple,
-              rotation :: float,
-              font_size :: float,
-              spacing :: float,
+              rotation :: number,
+              font_size :: number,
+              spacing :: number,
               tint :: tuple
             ) :: :ok
       def draw_text_pro(
@@ -143,7 +143,7 @@ defmodule Zexray.NIF.Text do
               font :: tuple,
               codepoint :: integer,
               position :: tuple,
-              font_size :: float,
+              font_size :: number,
               tint :: tuple
             ) :: :ok
       def draw_text_codepoint(
@@ -168,8 +168,8 @@ defmodule Zexray.NIF.Text do
               font :: tuple,
               codepoints :: [integer],
               position :: tuple,
-              font_size :: float,
-              spacing :: float,
+              font_size :: number,
+              spacing :: number,
               tint :: tuple
             ) :: :ok
       def draw_text_codepoints(
@@ -229,8 +229,8 @@ defmodule Zexray.NIF.Text do
       @spec measure_text_ex(
               font :: tuple,
               text :: binary,
-              font_size :: float,
-              spacing :: float,
+              font_size :: number,
+              spacing :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def measure_text_ex(

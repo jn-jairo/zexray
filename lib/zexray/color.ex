@@ -28,7 +28,7 @@ defmodule Zexray.Color do
   """
   @spec fade(
           color :: Zexray.Type.Color.t_all(),
-          alpha :: float,
+          alpha :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate fade(
@@ -105,9 +105,9 @@ defmodule Zexray.Color do
   Get a Color from HSV values, hue [0..360], saturation/value [0..1]
   """
   @spec from_hsv(
-          hue :: float,
-          saturation :: float,
-          value :: float,
+          hue :: number,
+          saturation :: number,
+          value :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate from_hsv(
@@ -140,7 +140,7 @@ defmodule Zexray.Color do
   """
   @spec brightness(
           color :: Zexray.Type.Color.t_all(),
-          factor :: float,
+          factor :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate brightness(
@@ -156,7 +156,7 @@ defmodule Zexray.Color do
   """
   @spec contrast(
           color :: Zexray.Type.Color.t_all(),
-          contrast :: float,
+          contrast :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate contrast(
@@ -172,7 +172,7 @@ defmodule Zexray.Color do
   """
   @spec alpha(
           color :: Zexray.Type.Color.t_all(),
-          alpha :: float,
+          alpha :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate alpha(
@@ -207,7 +207,7 @@ defmodule Zexray.Color do
   @spec lerp(
           color1 :: Zexray.Type.Color.t_all(),
           color2 :: Zexray.Type.Color.t_all(),
-          factor :: float,
+          factor :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Color.t_nif()
   defdelegate lerp(

@@ -49,7 +49,7 @@ defmodule Zexray.Audio do
   Set master volume (listener)
   """
   @doc group: :device_management
-  @spec set_master_volume(volume :: float) :: :ok
+  @spec set_master_volume(volume :: number) :: :ok
   defdelegate set_master_volume(volume), to: NIF, as: :set_master_volume
 
   @doc """
@@ -65,7 +65,7 @@ defmodule Zexray.Audio do
   @doc group: :device_management
   @spec with_mode_3d(
           listener :: Zexray.Type.Camera3D.t_all(),
-          max_distance :: float,
+          max_distance :: number,
           func :: (-> any)
         ) :: any
   def with_mode_3d(
@@ -88,7 +88,7 @@ defmodule Zexray.Audio do
   @doc group: :device_management
   @spec begin_mode_3d(
           listener :: Zexray.Type.Camera3D.t_all(),
-          max_distance :: float
+          max_distance :: number
         ) :: :ok
   defdelegate begin_mode_3d(
                 listener,
@@ -338,7 +338,7 @@ defmodule Zexray.Audio do
 
   @spec set_volume(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   def set_volume(sound_stream, volume, return)
@@ -348,7 +348,7 @@ defmodule Zexray.Audio do
 
   @spec set_volume(
           sound :: Zexray.Type.Sound.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   def set_volume(sound, volume, return) when is_sound(sound) or is_sound_alias(sound) do
@@ -357,7 +357,7 @@ defmodule Zexray.Audio do
 
   @spec set_volume(
           music :: Zexray.Type.Music.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   def set_volume(music, volume, return) when is_music(music) do
@@ -366,7 +366,7 @@ defmodule Zexray.Audio do
 
   @spec set_volume(
           stream :: Zexray.Type.AudioStream.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   def set_volume(stream, volume, return) when is_audio_stream(stream) do
@@ -381,7 +381,7 @@ defmodule Zexray.Audio do
 
   @spec set_pitch(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   def set_pitch(sound_stream, pitch, return)
@@ -391,7 +391,7 @@ defmodule Zexray.Audio do
 
   @spec set_pitch(
           sound :: Zexray.Type.Sound.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   def set_pitch(sound, pitch, return) when is_sound(sound) or is_sound_alias(sound) do
@@ -400,7 +400,7 @@ defmodule Zexray.Audio do
 
   @spec set_pitch(
           music :: Zexray.Type.Music.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   def set_pitch(music, pitch, return) when is_music(music) do
@@ -409,7 +409,7 @@ defmodule Zexray.Audio do
 
   @spec set_pitch(
           stream :: Zexray.Type.AudioStream.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   def set_pitch(stream, pitch, return) when is_audio_stream(stream) do
@@ -424,7 +424,7 @@ defmodule Zexray.Audio do
 
   @spec set_pan(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   def set_pan(sound_stream, pan, return)
@@ -434,7 +434,7 @@ defmodule Zexray.Audio do
 
   @spec set_pan(
           sound :: Zexray.Type.Sound.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   def set_pan(sound, pan, return) when is_sound(sound) or is_sound_alias(sound) do
@@ -443,7 +443,7 @@ defmodule Zexray.Audio do
 
   @spec set_pan(
           music :: Zexray.Type.Music.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   def set_pan(music, pan, return) when is_music(music) do
@@ -452,7 +452,7 @@ defmodule Zexray.Audio do
 
   @spec set_pan(
           stream :: Zexray.Type.AudioStream.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   def set_pan(stream, pan, return) when is_audio_stream(stream) do
@@ -926,7 +926,7 @@ defmodule Zexray.Audio do
   @doc group: :sound
   @spec set_sound_volume(
           sound :: Zexray.Type.Sound.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   defdelegate set_sound_volume(
@@ -943,7 +943,7 @@ defmodule Zexray.Audio do
   @doc group: :sound
   @spec set_sound_pitch(
           sound :: Zexray.Type.Sound.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   defdelegate set_sound_pitch(
@@ -960,7 +960,7 @@ defmodule Zexray.Audio do
   @doc group: :sound
   @spec set_sound_pan(
           sound :: Zexray.Type.Sound.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Sound.t_nif()
   defdelegate set_sound_pan(
@@ -1306,7 +1306,7 @@ defmodule Zexray.Audio do
   @doc group: :sound_stream
   @spec set_sound_stream_volume(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   defdelegate set_sound_stream_volume(
@@ -1323,7 +1323,7 @@ defmodule Zexray.Audio do
   @doc group: :sound_stream
   @spec set_sound_stream_pitch(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   defdelegate set_sound_stream_pitch(
@@ -1340,7 +1340,7 @@ defmodule Zexray.Audio do
   @doc group: :sound_stream
   @spec set_sound_stream_pan(
           sound_stream :: Zexray.Type.SoundStream.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.SoundStream.t_nif()
   defdelegate set_sound_stream_pan(
@@ -1556,7 +1556,7 @@ defmodule Zexray.Audio do
   @doc group: :music
   @spec seek_music(
           music :: Zexray.Type.Music.t_all(),
-          position :: float,
+          position :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   defdelegate seek_music(
@@ -1573,7 +1573,7 @@ defmodule Zexray.Audio do
   @doc group: :music
   @spec set_music_volume(
           music :: Zexray.Type.Music.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   defdelegate set_music_volume(
@@ -1590,7 +1590,7 @@ defmodule Zexray.Audio do
   @doc group: :music
   @spec set_music_pitch(
           music :: Zexray.Type.Music.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   defdelegate set_music_pitch(
@@ -1607,7 +1607,7 @@ defmodule Zexray.Audio do
   @doc group: :music
   @spec set_music_pan(
           music :: Zexray.Type.Music.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Music.t_nif()
   defdelegate set_music_pan(
@@ -1827,7 +1827,7 @@ defmodule Zexray.Audio do
   @doc group: :stream
   @spec set_stream_volume(
           stream :: Zexray.Type.AudioStream.t_all(),
-          volume :: float,
+          volume :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   defdelegate set_stream_volume(
@@ -1844,7 +1844,7 @@ defmodule Zexray.Audio do
   @doc group: :stream
   @spec set_stream_pitch(
           stream :: Zexray.Type.AudioStream.t_all(),
-          pitch :: float,
+          pitch :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   defdelegate set_stream_pitch(
@@ -1861,7 +1861,7 @@ defmodule Zexray.Audio do
   @doc group: :stream
   @spec set_stream_pan(
           stream :: Zexray.Type.AudioStream.t_all(),
-          pan :: float,
+          pan :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.AudioStream.t_nif()
   defdelegate set_stream_pan(

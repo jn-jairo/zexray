@@ -668,7 +668,7 @@ fn nif_gen_image_gradient_radial(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
         return error.invalid_argument_height;
     };
 
-    const density = core.Double.get(env, argv[2]) catch {
+    const density = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_density;
     };
 
@@ -686,7 +686,7 @@ fn nif_gen_image_gradient_radial(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Function
 
-    const image = rl.GenImageGradientRadial(width, height, @floatCast(density), color_inner, color_outer);
+    const image = rl.GenImageGradientRadial(width, height, density, color_inner, color_outer);
     defer if (!return_resource) core.Image.unload(image);
     errdefer if (return_resource) core.Image.unload(image);
 
@@ -718,7 +718,7 @@ fn nif_gen_image_gradient_square(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
         return error.invalid_argument_height;
     };
 
-    const density = core.Double.get(env, argv[2]) catch {
+    const density = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_density;
     };
 
@@ -736,7 +736,7 @@ fn nif_gen_image_gradient_square(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]cons
 
     // Function
 
-    const image = rl.GenImageGradientSquare(width, height, @floatCast(density), color_inner, color_outer);
+    const image = rl.GenImageGradientSquare(width, height, density, color_inner, color_outer);
     defer if (!return_resource) core.Image.unload(image);
     errdefer if (return_resource) core.Image.unload(image);
 
@@ -822,13 +822,13 @@ fn nif_gen_image_white_noise(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
         return error.invalid_argument_height;
     };
 
-    const factor = core.Double.get(env, argv[2]) catch {
+    const factor = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_factor;
     };
 
     // Function
 
-    const image = rl.GenImageWhiteNoise(width, height, @floatCast(factor));
+    const image = rl.GenImageWhiteNoise(width, height, factor);
     defer if (!return_resource) core.Image.unload(image);
     errdefer if (return_resource) core.Image.unload(image);
 
@@ -868,13 +868,13 @@ fn nif_gen_image_perlin_noise(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
         return error.invalid_argument_offset_y;
     };
 
-    const scale = core.Double.get(env, argv[4]) catch {
+    const scale = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_scale;
     };
 
     // Function
 
-    const image = rl.GenImagePerlinNoise(width, height, offset_x, offset_y, @floatCast(scale));
+    const image = rl.GenImagePerlinNoise(width, height, offset_x, offset_y, scale);
     defer if (!return_resource) core.Image.unload(image);
     errdefer if (return_resource) core.Image.unload(image);
 
@@ -1141,11 +1141,11 @@ fn nif_image_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     defer arg_text.free();
     const text = arg_text.data;
 
-    const font_size = core.Double.get(env, argv[2]) catch {
+    const font_size = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[3]) catch {
+    const spacing = core.Float.get(env, argv[3]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -1157,7 +1157,7 @@ fn nif_image_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
 
     // Function
 
-    const image = rl.ImageTextEx(font, text, @floatCast(font_size), @floatCast(spacing), tint);
+    const image = rl.ImageTextEx(font, text, font_size, spacing, tint);
     defer if (!return_resource) core.Image.unload(image);
     errdefer if (return_resource) core.Image.unload(image);
 
@@ -1297,13 +1297,13 @@ fn nif_image_alpha_crop(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     errdefer if (return_resource) arg_image.free();
     const image = &arg_image.data;
 
-    const threshold = core.Double.get(env, argv[1]) catch {
+    const threshold = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_threshold;
     };
 
     // Function
 
-    rl.ImageAlphaCrop(@ptrCast(image), @floatCast(threshold));
+    rl.ImageAlphaCrop(@ptrCast(image), threshold);
 
     // Return
 
@@ -1338,13 +1338,13 @@ fn nif_image_alpha_clear(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     defer arg_color.free();
     const color = arg_color.data;
 
-    const threshold = core.Double.get(env, argv[2]) catch {
+    const threshold = core.Float.get(env, argv[2]) catch {
         return error.invalid_argument_threshold;
     };
 
     // Function
 
-    rl.ImageAlphaClear(@ptrCast(image), color, @floatCast(threshold));
+    rl.ImageAlphaClear(@ptrCast(image), color, threshold);
 
     // Return
 
@@ -1476,7 +1476,7 @@ fn nif_image_kernel_convolution(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const
     errdefer if (return_resource) arg_image.free();
     const image = &arg_image.data;
 
-    var arg_kernel = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[1]) catch {
+    var arg_kernel = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[1]) catch {
         return error.invalid_argument_kernel;
     };
     defer arg_kernel.free();
@@ -1981,13 +1981,13 @@ fn nif_image_color_contrast(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer if (return_resource) arg_image.free();
     const image = &arg_image.data;
 
-    const contrast = core.Double.get(env, argv[1]) catch {
+    const contrast = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_contrast;
     };
 
     // Function
 
-    rl.ImageColorContrast(@ptrCast(image), @floatCast(contrast));
+    rl.ImageColorContrast(@ptrCast(image), contrast);
 
     // Return
 
@@ -2180,13 +2180,13 @@ fn nif_get_image_alpha_border(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     defer arg_image.free();
     const image = arg_image.data;
 
-    const threshold = core.Double.get(env, argv[1]) catch {
+    const threshold = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_threshold;
     };
 
     // Function
 
-    const image_alpha_border = rl.GetImageAlphaBorder(image, @floatCast(threshold));
+    const image_alpha_border = rl.GetImageAlphaBorder(image, threshold);
     defer if (!return_resource) core.Rectangle.unload(image_alpha_border);
     errdefer if (return_resource) core.Rectangle.unload(image_alpha_border);
 
@@ -3318,11 +3318,11 @@ fn nif_image_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     defer arg_position.free();
     const position = arg_position.data;
 
-    const font_size = core.Double.get(env, argv[4]) catch {
+    const font_size = core.Float.get(env, argv[4]) catch {
         return error.invalid_argument_font_size;
     };
 
-    const spacing = core.Double.get(env, argv[5]) catch {
+    const spacing = core.Float.get(env, argv[5]) catch {
         return error.invalid_argument_spacing;
     };
 
@@ -3334,7 +3334,7 @@ fn nif_image_draw_text_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Function
 
-    rl.ImageDrawTextEx(@ptrCast(dst), font, text, position, @floatCast(font_size), @floatCast(spacing), tint);
+    rl.ImageDrawTextEx(@ptrCast(dst), font, text, position, font_size, spacing, tint);
 
     // Return
 

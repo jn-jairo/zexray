@@ -302,8 +302,8 @@ defmodule Zexray.NIF.Texture do
       @spec draw_texture_ex(
               texture :: tuple,
               position :: tuple,
-              rotation :: float,
-              scale :: float,
+              rotation :: number,
+              scale :: number,
               tint :: tuple
             ) :: :ok
       def draw_texture_ex(
@@ -352,7 +352,7 @@ defmodule Zexray.NIF.Texture do
               source :: tuple,
               dest :: tuple,
               origin :: tuple,
-              rotation :: float,
+              rotation :: number,
               tint :: tuple
             ) :: :ok
       def draw_texture_pro(
@@ -379,7 +379,7 @@ defmodule Zexray.NIF.Texture do
               n_patch_info :: tuple,
               dest :: tuple,
               origin :: tuple,
-              rotation :: float,
+              rotation :: number,
               tint :: tuple
             ) :: :ok
       def draw_texture_n_patch(

@@ -271,13 +271,13 @@ fn nif_set_master_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Arguments
 
-    const volume = core.Double.get(env, argv[0]) catch {
+    const volume = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_volume;
     };
 
     // Function
 
-    rl.SetMasterVolume(@floatCast(volume));
+    rl.SetMasterVolume(volume);
 
     // Return
 
@@ -298,7 +298,7 @@ fn nif_get_master_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
 
     // Return
 
-    return core.Double.make(env, @floatCast(master_volume));
+    return core.Float.make(env, master_volume);
 }
 
 /// Begin 3D mode with custom camera (3D)
@@ -313,9 +313,9 @@ fn nif_audio_begin_mode_3d(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
     defer arg_listener.free();
     const listener = arg_listener.data;
 
-    const max_distance: f32 = @floatCast(core.Double.get(env, argv[1]) catch {
+    const max_distance = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_max_distance;
-    });
+    };
 
     // Function
 
@@ -606,7 +606,7 @@ fn nif_update_sound(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTer
                 rl.UpdateSound(sound.*, @ptrCast(data), @intCast(@divTrunc(data_size, sound.stream.channels)));
             },
             32 => {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[1]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[1]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -861,13 +861,13 @@ fn nif_set_sound_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     errdefer if (return_resource) arg_sound.free();
     const sound = &arg_sound.data;
 
-    const volume = core.Double.get(env, argv[1]) catch {
+    const volume = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_volume;
     };
 
     // Function
 
-    rl.SetSoundVolume(sound.*, @floatCast(volume));
+    rl.SetSoundVolume(sound.*, volume);
 
     // Return
 
@@ -896,13 +896,13 @@ fn nif_set_sound_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     errdefer if (return_resource) arg_sound.free();
     const sound = &arg_sound.data;
 
-    const pitch = core.Double.get(env, argv[1]) catch {
+    const pitch = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pitch;
     };
 
     // Function
 
-    rl.SetSoundPitch(sound.*, @floatCast(pitch));
+    rl.SetSoundPitch(sound.*, pitch);
 
     // Return
 
@@ -931,13 +931,13 @@ fn nif_set_sound_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     errdefer if (return_resource) arg_sound.free();
     const sound = &arg_sound.data;
 
-    const pan = core.Double.get(env, argv[1]) catch {
+    const pan = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pan;
     };
 
     // Function
 
-    rl.SetSoundPan(sound.*, @floatCast(pan));
+    rl.SetSoundPan(sound.*, pan);
 
     // Return
 
@@ -1006,7 +1006,7 @@ fn nif_get_sound_time_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
-    return core.Double.make(env, @floatCast(sound_time_length));
+    return core.Float.make(env, sound_time_length);
 }
 
 /// Get current sound time played (in seconds)
@@ -1030,7 +1030,7 @@ fn nif_get_sound_time_played(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
-    return core.Double.make(env, @floatCast(sound_time_played));
+    return core.Float.make(env, sound_time_played);
 }
 
 /// Get sound info
@@ -1200,7 +1200,7 @@ fn nif_load_wave_samples_normalized(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     const samples_lengths = [_]usize{@intCast(wave.frameCount * wave.channels)};
 
-    return core.Array.make_c(core.Double, f32, env, samples_c, &samples_lengths);
+    return core.Array.make_c(core.Float, f32, env, samples_c, &samples_lengths);
 }
 
 /// Load samples data from wave
@@ -1223,7 +1223,7 @@ fn nif_load_wave_samples(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     return switch (wave.sampleSize) {
         8 => core.Array.make_c(core.UInt, u8, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
         16 => core.Array.make_c(core.Int, c_short, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
-        32 => core.Array.make_c(core.Double, f32, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
+        32 => core.Array.make_c(core.Float, f32, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
         else => core.Binary.make_c(env, @ptrCast(@alignCast(wave.data)), samples_size),
     };
 }
@@ -1261,7 +1261,7 @@ fn nif_load_wave_samples_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
         return switch (wave.sampleSize) {
             8 => core.Array.make_c(core.UInt, u8, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
             16 => core.Array.make_c(core.Int, c_short, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
-            32 => core.Array.make_c(core.Double, f32, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
+            32 => core.Array.make_c(core.Float, f32, env, @ptrCast(@alignCast(wave.data)), &samples_lengths),
             else => core.Binary.make_c(env, @ptrCast(@alignCast(wave.data)), samples_size),
         };
     } else {
@@ -1349,7 +1349,7 @@ fn nif_load_wave_samples_ex(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
                 wave_data_i = @mod(wave_data_i + data_length, wave_data.len);
                 var data_i: usize = 0;
                 while (data_i < data_length) {
-                    term_data = e.enif_make_list_cell(env, core.Double.make(env, @floatCast(wave_data[wave_data_i])), term_data);
+                    term_data = e.enif_make_list_cell(env, core.Float.make(env, wave_data[wave_data_i]), term_data);
                     data_i += 1;
                     if (wave_data_i == 0) {
                         wave_data_i = wave_data.len - 1;
@@ -1734,7 +1734,7 @@ fn nif_update_sound_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
 
                     rl.UpdateSoundStream(sound_stream.*, @ptrCast(data), @intCast(@divTrunc(data.len, sound_stream.stream.channels)));
                 } else {
-                    var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[1]) catch {
+                    var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[1]) catch {
                         return error.invalid_argument_data;
                     };
                     defer arg_data.free();
@@ -1936,7 +1936,7 @@ fn nif_load_sound_stream_next_samples(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
             sound_stream_data_i = @mod(sound_stream_data_i + copy_length, sound_stream_data.len);
             var data_i: usize = 0;
             while (data_i < copy_length) {
-                term_data = e.enif_make_list_cell(env, core.Double.make(env, @floatCast(sound_stream_data[sound_stream_data_i])), term_data);
+                term_data = e.enif_make_list_cell(env, core.Float.make(env, sound_stream_data[sound_stream_data_i]), term_data);
                 data_i += 1;
                 if (sound_stream_data_i == 0) {
                     sound_stream_data_i = sound_stream_data.len - 1;
@@ -1947,7 +1947,7 @@ fn nif_load_sound_stream_next_samples(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c
 
             if (data_i < data_length) {
                 while (data_i < data_length) {
-                    term_data = e.enif_make_list_cell(env, core.Double.make(env, 0), term_data);
+                    term_data = e.enif_make_list_cell(env, core.Float.make(env, 0), term_data);
                     data_i += 1;
                 }
             }
@@ -2184,13 +2184,13 @@ fn nif_set_sound_stream_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer if (return_resource) arg_sound_stream.free();
     const sound_stream = &arg_sound_stream.data;
 
-    const volume = core.Double.get(env, argv[1]) catch {
+    const volume = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_volume;
     };
 
     // Function
 
-    rl.SetSoundStreamVolume(sound_stream.*, @floatCast(volume));
+    rl.SetSoundStreamVolume(sound_stream.*, volume);
 
     // Return
 
@@ -2219,13 +2219,13 @@ fn nif_set_sound_stream_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     errdefer if (return_resource) arg_sound_stream.free();
     const sound_stream = &arg_sound_stream.data;
 
-    const pitch = core.Double.get(env, argv[1]) catch {
+    const pitch = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pitch;
     };
 
     // Function
 
-    rl.SetSoundStreamPitch(sound_stream.*, @floatCast(pitch));
+    rl.SetSoundStreamPitch(sound_stream.*, pitch);
 
     // Return
 
@@ -2254,13 +2254,13 @@ fn nif_set_sound_stream_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer if (return_resource) arg_sound_stream.free();
     const sound_stream = &arg_sound_stream.data;
 
-    const pan = core.Double.get(env, argv[1]) catch {
+    const pan = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pan;
     };
 
     // Function
 
-    rl.SetSoundStreamPan(sound_stream.*, @floatCast(pan));
+    rl.SetSoundStreamPan(sound_stream.*, pan);
 
     // Return
 
@@ -2361,7 +2361,7 @@ fn nif_get_sound_stream_time_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return
 
-    return core.Double.make(env, @floatCast(sound_stream_time_length));
+    return core.Float.make(env, sound_stream_time_length);
 }
 
 /// Get current sound stream time played (in seconds)
@@ -2385,7 +2385,7 @@ fn nif_get_sound_stream_time_played(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return
 
-    return core.Double.make(env, @floatCast(sound_stream_time_played));
+    return core.Float.make(env, sound_stream_time_played);
 }
 
 /// Get sound stream info
@@ -2739,13 +2739,13 @@ fn nif_seek_music_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlN
     errdefer if (return_resource) arg_music.free();
     const music = &arg_music.data;
 
-    const position = core.Double.get(env, argv[1]) catch {
+    const position = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_position;
     };
 
     // Function
 
-    rl.SeekMusicStream(music.*, @floatCast(position));
+    rl.SeekMusicStream(music.*, position);
 
     // Return
 
@@ -2774,13 +2774,13 @@ fn nif_set_music_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNi
     errdefer if (return_resource) arg_music.free();
     const music = &arg_music.data;
 
-    const volume = core.Double.get(env, argv[1]) catch {
+    const volume = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_volume;
     };
 
     // Function
 
-    rl.SetMusicVolume(music.*, @floatCast(volume));
+    rl.SetMusicVolume(music.*, volume);
 
     // Return
 
@@ -2809,13 +2809,13 @@ fn nif_set_music_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNif
     errdefer if (return_resource) arg_music.free();
     const music = &arg_music.data;
 
-    const pitch = core.Double.get(env, argv[1]) catch {
+    const pitch = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pitch;
     };
 
     // Function
 
-    rl.SetMusicPitch(music.*, @floatCast(pitch));
+    rl.SetMusicPitch(music.*, pitch);
 
     // Return
 
@@ -2844,13 +2844,13 @@ fn nif_set_music_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTe
     errdefer if (return_resource) arg_music.free();
     const music = &arg_music.data;
 
-    const pan = core.Double.get(env, argv[1]) catch {
+    const pan = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pan;
     };
 
     // Function
 
-    rl.SetMusicPan(music.*, @floatCast(pan));
+    rl.SetMusicPan(music.*, pan);
 
     // Return
 
@@ -2951,7 +2951,7 @@ fn nif_get_music_time_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
-    return core.Double.make(env, @floatCast(music_time_length));
+    return core.Float.make(env, music_time_length);
 }
 
 /// Get current music time played (in seconds)
@@ -2975,7 +2975,7 @@ fn nif_get_music_time_played(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
 
     // Return
 
-    return core.Double.make(env, @floatCast(music_time_played));
+    return core.Float.make(env, music_time_played);
 }
 
 /// Get music info
@@ -3150,7 +3150,7 @@ fn nif_update_audio_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Er
                 rl.UpdateAudioStream(stream.*, @ptrCast(data), @intCast(@divTrunc(data_size, stream.channels)));
             },
             32 => {
-                var arg_data = core.ArgumentArray(core.Double, f32, rl.allocator).get(env, argv[1]) catch {
+                var arg_data = core.ArgumentArray(core.Float, f32, rl.allocator).get(env, argv[1]) catch {
                     return error.invalid_argument_data;
                 };
                 defer arg_data.free();
@@ -3371,13 +3371,13 @@ fn nif_set_audio_stream_volume(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const 
     errdefer if (return_resource) arg_stream.free();
     const stream = &arg_stream.data;
 
-    const volume = core.Double.get(env, argv[1]) catch {
+    const volume = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_volume;
     };
 
     // Function
 
-    rl.SetAudioStreamVolume(stream.*, @floatCast(volume));
+    rl.SetAudioStreamVolume(stream.*, volume);
 
     // Return
 
@@ -3406,13 +3406,13 @@ fn nif_set_audio_stream_pitch(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e
     errdefer if (return_resource) arg_stream.free();
     const stream = &arg_stream.data;
 
-    const pitch = core.Double.get(env, argv[1]) catch {
+    const pitch = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pitch;
     };
 
     // Function
 
-    rl.SetAudioStreamPitch(stream.*, @floatCast(pitch));
+    rl.SetAudioStreamPitch(stream.*, pitch);
 
     // Return
 
@@ -3441,13 +3441,13 @@ fn nif_set_audio_stream_pan(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.E
     errdefer if (return_resource) arg_stream.free();
     const stream = &arg_stream.data;
 
-    const pan = core.Double.get(env, argv[1]) catch {
+    const pan = core.Float.get(env, argv[1]) catch {
         return error.invalid_argument_pan;
     };
 
     // Function
 
-    rl.SetAudioStreamPan(stream.*, @floatCast(pan));
+    rl.SetAudioStreamPan(stream.*, pan);
 
     // Return
 
@@ -3542,7 +3542,7 @@ fn nif_get_audio_stream_time_length(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return
 
-    return core.Double.make(env, @floatCast(stream_time_length));
+    return core.Float.make(env, stream_time_length);
 }
 
 /// Get current audio stream time played (in seconds)
@@ -3570,7 +3570,7 @@ fn nif_get_audio_stream_time_played(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]c
 
     // Return
 
-    return core.Double.make(env, @floatCast(stream_time_played));
+    return core.Float.make(env, stream_time_played);
 }
 
 /// Get audio stream info

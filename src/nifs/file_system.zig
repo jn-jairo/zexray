@@ -47,6 +47,6 @@ fn nif_load_dropped_files(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Return
 
-    const paths_lengths = [_]usize{ @intCast(dropped_files.count), @intCast(rl.MAX_FILEPATH_LENGTH) };
+    const paths_lengths = [_]usize{ @intCast(dropped_files.count), core.FilePathList.MAX_FILEPATH_LENGTH };
     return core.Array.make_c(core.CString, [*c]u8, env, dropped_files.paths, &paths_lengths);
 }

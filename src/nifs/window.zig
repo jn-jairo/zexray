@@ -602,13 +602,13 @@ fn nif_set_window_opacity(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
 
     // Arguments
 
-    const opacity = core.Double.get(env, argv[0]) catch {
+    const opacity = core.Float.get(env, argv[0]) catch {
         return error.invalid_argument_opacity;
     };
 
     // Function
 
-    rl.SetWindowOpacity(@floatCast(opacity));
+    rl.SetWindowOpacity(opacity);
 
     // Return
 
