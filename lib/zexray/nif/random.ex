@@ -36,8 +36,8 @@ defmodule Zexray.NIF.Random do
       """
       @doc group: :random
       @spec get_random_value(
-              min :: integer,
-              max :: integer
+              min :: number,
+              max :: number
             ) :: integer
       def get_random_value(
             _min,
@@ -56,8 +56,8 @@ defmodule Zexray.NIF.Random do
       @doc group: :random
       @spec load_random_sequence(
               count :: non_neg_integer,
-              min :: integer,
-              max :: integer
+              min :: number,
+              max :: number
             ) :: [integer]
       def load_random_sequence(
             _count,

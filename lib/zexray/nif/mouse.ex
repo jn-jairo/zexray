@@ -134,8 +134,8 @@ defmodule Zexray.NIF.Mouse do
       """
       @doc group: :input_mouse
       @spec set_mouse_position(
-              x :: integer,
-              y :: integer
+              x :: number,
+              y :: number
             ) :: :ok
       def set_mouse_position(
             _x,
@@ -153,8 +153,8 @@ defmodule Zexray.NIF.Mouse do
       """
       @doc group: :input_mouse
       @spec set_mouse_offset(
-              offset_x :: integer,
-              offset_y :: integer
+              offset_x :: number,
+              offset_y :: number
             ) :: :ok
       def set_mouse_offset(
             _offset_x,

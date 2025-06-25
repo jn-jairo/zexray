@@ -404,7 +404,7 @@ defmodule Zexray.NIF.Gui do
       ```
       """
       @doc group: :gui_icons
-      @spec gui_set_icon_scale(scale :: integer) :: :ok
+      @spec gui_set_icon_scale(scale :: number) :: :ok
       def gui_set_icon_scale(_scale), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -442,9 +442,9 @@ defmodule Zexray.NIF.Gui do
       @doc group: :gui_icons
       @spec gui_draw_icon(
               icon_id :: integer,
-              pox_x :: integer,
-              pox_y :: integer,
-              pixel_size :: integer,
+              pox_x :: number,
+              pox_y :: number,
+              pixel_size :: number,
               color :: tuple
             ) :: :ok
       def gui_draw_icon(
@@ -785,9 +785,9 @@ defmodule Zexray.NIF.Gui do
       @spec gui_spinner(
               bounds :: tuple,
               text :: binary,
-              value :: integer,
-              min_value :: integer,
-              max_value :: integer,
+              value :: number,
+              min_value :: number,
+              max_value :: number,
               edit_mode :: boolean
             ) :: {changed :: boolean, value :: integer}
       def gui_spinner(
@@ -812,9 +812,9 @@ defmodule Zexray.NIF.Gui do
       @spec gui_value_box(
               bounds :: tuple,
               text :: binary,
-              value :: integer,
-              min_value :: integer,
-              max_value :: integer,
+              value :: number,
+              min_value :: number,
+              max_value :: number,
               edit_mode :: boolean
             ) :: {changed :: boolean, value :: integer}
       def gui_value_box(
@@ -864,7 +864,7 @@ defmodule Zexray.NIF.Gui do
       @spec gui_text_box(
               bounds :: tuple,
               text :: binary,
-              text_max_size :: integer,
+              text_max_size :: number,
               edit_mode :: boolean
             ) :: {changed :: boolean, text :: binary}
       def gui_text_box(
@@ -1007,7 +1007,7 @@ defmodule Zexray.NIF.Gui do
               bounds :: tuple,
               text :: binary,
               spacing :: number,
-              subdivs :: integer,
+              subdivs :: number,
               mouse_cell :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1111,7 +1111,7 @@ defmodule Zexray.NIF.Gui do
               message :: binary,
               buttons :: binary,
               text :: binary,
-              text_max_size :: integer,
+              text_max_size :: number,
               secret_view_active :: nil | boolean
             ) ::
               {should_close :: boolean, button_pressed :: false | integer, text :: binary,

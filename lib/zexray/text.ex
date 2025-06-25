@@ -14,8 +14,8 @@ defmodule Zexray.Text do
   """
   @doc group: :drawing
   @spec draw_fps(
-          pos_x :: integer,
-          pos_y :: integer
+          pos_x :: number,
+          pos_y :: number
         ) :: :ok
   defdelegate draw_fps(
                 pos_x,
@@ -30,9 +30,9 @@ defmodule Zexray.Text do
   @doc group: :drawing
   @spec draw(
           text :: binary,
-          pos_x :: integer,
-          pos_y :: integer,
-          font_size :: integer,
+          pos_x :: number,
+          pos_y :: number,
+          font_size :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw(
@@ -147,7 +147,7 @@ defmodule Zexray.Text do
   Set vertical line spacing when drawing with line-breaks
   """
   @doc group: :font_info
-  @spec set_line_spacing(spacing :: integer) :: :ok
+  @spec set_line_spacing(spacing :: number) :: :ok
   defdelegate set_line_spacing(spacing), to: NIF, as: :set_text_line_spacing
 
   @doc """
@@ -156,7 +156,7 @@ defmodule Zexray.Text do
   @doc group: :font_info
   @spec measure(
           text :: binary,
-          font_size :: integer
+          font_size :: number
         ) :: integer
   defdelegate measure(
                 text,

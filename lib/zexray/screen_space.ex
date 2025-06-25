@@ -31,8 +31,8 @@ defmodule Zexray.ScreenSpace do
   @spec get_screen_to_world_ray_ex(
           position :: Zexray.Type.Vector2.t_all(),
           camera :: Zexray.Type.Camera.t_all(),
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Ray.t_nif()
   defdelegate get_screen_to_world_ray_ex(
@@ -67,8 +67,8 @@ defmodule Zexray.ScreenSpace do
   @spec get_world_to_screen_ex(
           position :: Zexray.Type.Vector3.t_all(),
           camera :: Zexray.Type.Camera.t_all(),
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
   defdelegate get_world_to_screen_ex(

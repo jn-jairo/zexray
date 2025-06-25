@@ -350,7 +350,7 @@ defmodule Zexray.Gui do
   Set default icon drawing size
   """
   @doc group: :icons
-  @spec set_icon_scale(scale :: integer) :: :ok
+  @spec set_icon_scale(scale :: number) :: :ok
   defdelegate set_icon_scale(scale), to: NIF, as: :gui_set_icon_scale
 
   @doc """
@@ -373,9 +373,9 @@ defmodule Zexray.Gui do
   @doc group: :icons
   @spec draw_icon(
           icon_id :: Zexray.Enum.GuiIcon.t(),
-          pox_x :: integer,
-          pox_y :: integer,
-          pixel_size :: integer,
+          pox_x :: number,
+          pox_y :: number,
+          pixel_size :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_icon(
@@ -652,9 +652,9 @@ defmodule Zexray.Gui do
   @spec spinner(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          value :: integer,
-          min_value :: integer,
-          max_value :: integer,
+          value :: number,
+          min_value :: number,
+          max_value :: number,
           edit_mode :: boolean
         ) :: {changed :: boolean, value :: integer}
   defdelegate spinner(
@@ -675,9 +675,9 @@ defmodule Zexray.Gui do
   @spec value_box(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          value :: integer,
-          min_value :: integer,
-          max_value :: integer,
+          value :: number,
+          min_value :: number,
+          max_value :: number,
           edit_mode :: boolean
         ) :: {changed :: boolean, value :: integer}
   defdelegate value_box(
@@ -719,7 +719,7 @@ defmodule Zexray.Gui do
   @spec text_box(
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
-          text_max_size :: integer,
+          text_max_size :: number,
           edit_mode :: boolean
         ) :: {changed :: boolean, text :: binary}
   defdelegate text_box(
@@ -838,7 +838,7 @@ defmodule Zexray.Gui do
           bounds :: Zexray.Type.Rectangle.t_all(),
           text :: binary,
           spacing :: number,
-          subdivs :: integer,
+          subdivs :: number,
           mouse_cell :: Zexray.Type.Vector2.t_all(),
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Vector2.t_nif()
@@ -926,7 +926,7 @@ defmodule Zexray.Gui do
           message :: binary,
           buttons :: binary,
           text :: binary,
-          text_max_size :: integer,
+          text_max_size :: number,
           secret_view_active :: nil | boolean
         ) ::
           {should_close :: boolean, button_pressed :: false | integer, text :: binary,

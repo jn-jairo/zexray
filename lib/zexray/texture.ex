@@ -61,8 +61,8 @@ defmodule Zexray.Texture do
   """
   @doc group: :loading
   @spec load_render_texture(
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.RenderTexture2D.t_nif()
   defdelegate load_render_texture(
@@ -178,8 +178,8 @@ defmodule Zexray.Texture do
   @doc group: :drawing
   @spec draw(
           texture :: Zexray.Type.Texture2D.t_all(),
-          pos_x :: integer,
-          pos_y :: integer,
+          pos_x :: number,
+          pos_y :: number,
           tint :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw(

@@ -50,8 +50,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_pixel(
-          pos_x :: integer,
-          pos_y :: integer,
+          pos_x :: number,
+          pos_y :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_pixel(
@@ -82,10 +82,10 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_line(
-          start_pos_x :: integer,
-          start_pos_y :: integer,
-          end_pos_x :: integer,
-          end_pos_y :: integer,
+          start_pos_x :: number,
+          start_pos_y :: number,
+          end_pos_x :: number,
+          end_pos_y :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_line(
@@ -173,8 +173,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_circle(
-          center_x :: integer,
-          center_y :: integer,
+          center_x :: number,
+          center_y :: number,
           radius :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
@@ -196,7 +196,7 @@ defmodule Zexray.Shape do
           radius :: number,
           start_angle :: number,
           end_angle :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_circle_sector(
@@ -219,7 +219,7 @@ defmodule Zexray.Shape do
           radius :: number,
           start_angle :: number,
           end_angle :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_circle_sector_lines(
@@ -238,8 +238,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_circle_gradient(
-          center_x :: integer,
-          center_y :: integer,
+          center_x :: number,
+          center_y :: number,
           radius :: number,
           inner :: Zexray.Type.Color.t_all(),
           outer :: Zexray.Type.Color.t_all()
@@ -276,8 +276,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_circle_lines(
-          center_x :: integer,
-          center_y :: integer,
+          center_x :: number,
+          center_y :: number,
           radius :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
@@ -312,8 +312,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_ellipse(
-          center_x :: integer,
-          center_y :: integer,
+          center_x :: number,
+          center_y :: number,
           radius_h :: number,
           radius_v :: number,
           color :: Zexray.Type.Color.t_all()
@@ -352,8 +352,8 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_ellipse_lines(
-          center_x :: integer,
-          center_y :: integer,
+          center_x :: number,
+          center_y :: number,
           radius_h :: number,
           radius_v :: number,
           color :: Zexray.Type.Color.t_all()
@@ -397,7 +397,7 @@ defmodule Zexray.Shape do
           outer_radius :: number,
           start_angle :: number,
           end_angle :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_ring(
@@ -422,7 +422,7 @@ defmodule Zexray.Shape do
           outer_radius :: number,
           start_angle :: number,
           end_angle :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_ring_lines(
@@ -442,10 +442,10 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_rectangle(
-          pos_x :: integer,
-          pos_y :: integer,
-          width :: integer,
-          height :: integer,
+          pos_x :: number,
+          pos_y :: number,
+          width :: number,
+          height :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_rectangle(
@@ -514,10 +514,10 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_rectangle_gradient_v(
-          pos_x :: integer,
-          pos_y :: integer,
-          width :: integer,
-          height :: integer,
+          pos_x :: number,
+          pos_y :: number,
+          width :: number,
+          height :: number,
           top :: Zexray.Type.Color.t_all(),
           bottom :: Zexray.Type.Color.t_all()
         ) :: :ok
@@ -537,10 +537,10 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_rectangle_gradient_h(
-          pos_x :: integer,
-          pos_y :: integer,
-          width :: integer,
-          height :: integer,
+          pos_x :: number,
+          pos_y :: number,
+          width :: number,
+          height :: number,
           left :: Zexray.Type.Color.t_all(),
           right :: Zexray.Type.Color.t_all()
         ) :: :ok
@@ -581,10 +581,10 @@ defmodule Zexray.Shape do
   """
   @doc group: :basic_drawing
   @spec draw_rectangle_lines(
-          pos_x :: integer,
-          pos_y :: integer,
-          width :: integer,
-          height :: integer,
+          pos_x :: number,
+          pos_y :: number,
+          width :: number,
+          height :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_rectangle_lines(
@@ -621,7 +621,7 @@ defmodule Zexray.Shape do
   @spec draw_rectangle_rounded(
           rec :: Zexray.Type.Rectangle.t_all(),
           roundness :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_rectangle_rounded(
@@ -640,7 +640,7 @@ defmodule Zexray.Shape do
   @spec draw_rectangle_rounded_lines(
           rec :: Zexray.Type.Rectangle.t_all(),
           roundness :: number,
-          segments :: integer,
+          segments :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_rectangle_rounded_lines(
@@ -659,7 +659,7 @@ defmodule Zexray.Shape do
   @spec draw_rectangle_rounded_lines_ex(
           rec :: Zexray.Type.Rectangle.t_all(),
           roundness :: number,
-          segments :: integer,
+          segments :: number,
           line_thick :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
@@ -747,7 +747,7 @@ defmodule Zexray.Shape do
   @doc group: :basic_drawing
   @spec draw_poly(
           center :: Zexray.Type.Vector2.t_all(),
-          sides :: integer,
+          sides :: number,
           radius :: number,
           rotation :: number,
           color :: Zexray.Type.Color.t_all()
@@ -768,7 +768,7 @@ defmodule Zexray.Shape do
   @doc group: :basic_drawing
   @spec draw_poly_lines(
           center :: Zexray.Type.Vector2.t_all(),
-          sides :: integer,
+          sides :: number,
           radius :: number,
           rotation :: number,
           color :: Zexray.Type.Color.t_all()
@@ -789,7 +789,7 @@ defmodule Zexray.Shape do
   @doc group: :basic_drawing
   @spec draw_poly_lines_ex(
           center :: Zexray.Type.Vector2.t_all(),
-          sides :: integer,
+          sides :: number,
           radius :: number,
           rotation :: number,
           line_thick :: number,
@@ -1250,7 +1250,7 @@ defmodule Zexray.Shape do
           point :: Zexray.Type.Vector2.t_all(),
           p1 :: Zexray.Type.Vector2.t_all(),
           p2 :: Zexray.Type.Vector2.t_all(),
-          threshold :: integer
+          threshold :: number
         ) :: boolean
   defdelegate collision_point_line?(
                 point,

@@ -372,8 +372,8 @@ defmodule Zexray.NIF.Color do
       """
       @doc group: :color
       @spec get_pixel_data_size(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               format :: integer
             ) :: non_neg_integer
       def get_pixel_data_size(

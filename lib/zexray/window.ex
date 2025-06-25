@@ -14,8 +14,8 @@ defmodule Zexray.Window do
   """
   @doc group: :initialization
   @spec with_window(
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           title :: binary,
           func :: (-> any)
         ) :: any
@@ -33,8 +33,8 @@ defmodule Zexray.Window do
   """
   @doc group: :initialization
   @spec init(
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           title :: binary
         ) :: :ok
   def init(
@@ -253,8 +253,8 @@ defmodule Zexray.Window do
   """
   @doc group: :property
   @spec set_position(
-          x :: integer,
-          y :: integer
+          x :: number,
+          y :: number
         ) :: :ok
   defdelegate set_position(
                 x,
@@ -268,8 +268,8 @@ defmodule Zexray.Window do
   """
   @doc group: :property
   @spec set_min_size(
-          width :: integer,
-          height :: integer
+          width :: number,
+          height :: number
         ) :: :ok
   defdelegate set_min_size(
                 width,
@@ -283,8 +283,8 @@ defmodule Zexray.Window do
   """
   @doc group: :property
   @spec set_max_size(
-          width :: integer,
-          height :: integer
+          width :: number,
+          height :: number
         ) :: :ok
   defdelegate set_max_size(
                 width,
@@ -298,8 +298,8 @@ defmodule Zexray.Window do
   """
   @doc group: :property
   @spec set_size(
-          width :: integer,
-          height :: integer
+          width :: number,
+          height :: number
         ) :: :ok
   defdelegate set_size(
                 width,

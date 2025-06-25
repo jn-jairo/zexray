@@ -66,8 +66,8 @@ defmodule Zexray.NIF.Window do
       """
       @doc group: :window
       @spec init_window(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               title :: binary
             ) :: :ok
       def init_window(
@@ -339,8 +339,8 @@ defmodule Zexray.NIF.Window do
       """
       @doc group: :window
       @spec set_window_position(
-              x :: integer,
-              y :: integer
+              x :: number,
+              y :: number
             ) :: :ok
       def set_window_position(
             _x,
@@ -358,8 +358,8 @@ defmodule Zexray.NIF.Window do
       """
       @doc group: :window
       @spec set_window_min_size(
-              width :: integer,
-              height :: integer
+              width :: number,
+              height :: number
             ) :: :ok
       def set_window_min_size(
             _width,
@@ -377,8 +377,8 @@ defmodule Zexray.NIF.Window do
       """
       @doc group: :window
       @spec set_window_max_size(
-              width :: integer,
-              height :: integer
+              width :: number,
+              height :: number
             ) :: :ok
       def set_window_max_size(
             _width,
@@ -396,8 +396,8 @@ defmodule Zexray.NIF.Window do
       """
       @doc group: :window
       @spec set_window_size(
-              width :: integer,
-              height :: integer
+              width :: number,
+              height :: number
             ) :: :ok
       def set_window_size(
             _width,

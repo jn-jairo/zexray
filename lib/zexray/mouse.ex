@@ -61,8 +61,8 @@ defmodule Zexray.Mouse do
   Set mouse position XY
   """
   @spec set_position(
-          x :: integer,
-          y :: integer
+          x :: number,
+          y :: number
         ) :: :ok
   defdelegate set_position(
                 x,
@@ -75,8 +75,8 @@ defmodule Zexray.Mouse do
   Set mouse offset
   """
   @spec set_offset(
-          offset_x :: integer,
-          offset_y :: integer
+          offset_x :: number,
+          offset_y :: number
         ) :: :ok
   defdelegate set_offset(
                 offset_x,

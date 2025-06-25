@@ -24,7 +24,7 @@ defmodule Zexray.NIF.Timing do
       ```
       """
       @doc group: :timing
-      @spec set_target_fps(fps :: integer) :: :ok
+      @spec set_target_fps(fps :: number) :: :ok
       def set_target_fps(_fps), do: :erlang.nif_error(:undef)
 
       @doc """

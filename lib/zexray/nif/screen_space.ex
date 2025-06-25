@@ -60,8 +60,8 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_screen_to_world_ray_ex(
               position :: tuple,
               camera :: tuple,
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_screen_to_world_ray_ex(
@@ -106,8 +106,8 @@ defmodule Zexray.NIF.ScreenSpace do
       @spec get_world_to_screen_ex(
               position :: tuple,
               camera :: tuple,
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_world_to_screen_ex(

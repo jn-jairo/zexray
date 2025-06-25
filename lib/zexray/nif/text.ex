@@ -38,8 +38,8 @@ defmodule Zexray.NIF.Text do
       """
       @doc group: :text_drawing
       @spec draw_fps(
-              pos_x :: integer,
-              pos_y :: integer
+              pos_x :: number,
+              pos_y :: number
             ) :: :ok
       def draw_fps(
             _pos_x,
@@ -58,9 +58,9 @@ defmodule Zexray.NIF.Text do
       @doc group: :text_drawing
       @spec draw_text(
               text :: binary,
-              pos_x :: integer,
-              pos_y :: integer,
-              font_size :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              font_size :: number,
               color :: tuple
             ) :: :ok
       def draw_text(
@@ -195,7 +195,7 @@ defmodule Zexray.NIF.Text do
       ```
       """
       @doc group: :text_font_info
-      @spec set_text_line_spacing(spacing :: integer) :: :ok
+      @spec set_text_line_spacing(spacing :: number) :: :ok
       def set_text_line_spacing(_spacing), do: :erlang.nif_error(:undef)
 
       @doc """
@@ -209,7 +209,7 @@ defmodule Zexray.NIF.Text do
       @doc group: :text_font_info
       @spec measure_text(
               text :: binary,
-              font_size :: integer
+              font_size :: number
             ) :: integer
       def measure_text(
             _text,

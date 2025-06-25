@@ -176,8 +176,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image
       @spec image_get_data_size(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               format :: integer,
               mipmaps :: integer
             ) :: non_neg_integer
@@ -223,8 +223,8 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_loading
       @spec load_image_raw(
               file_name :: binary,
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               format :: integer,
               header_size :: integer,
               return :: :auto | :value | :resource
@@ -395,8 +395,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_color(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -418,9 +418,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_gradient_linear(
-              width :: integer,
-              height :: integer,
-              direction :: integer,
+              width :: number,
+              height :: number,
+              direction :: number,
               color_start :: tuple,
               color_end :: tuple,
               return :: :auto | :value | :resource
@@ -445,8 +445,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_gradient_radial(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               density :: number,
               color_inner :: tuple,
               color_outer :: tuple,
@@ -472,8 +472,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_gradient_square(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               density :: number,
               color_inner :: tuple,
               color_outer :: tuple,
@@ -499,10 +499,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_checked(
-              width :: integer,
-              height :: integer,
-              checks_x :: integer,
-              checks_y :: integer,
+              width :: number,
+              height :: number,
+              checks_x :: number,
+              checks_y :: number,
               color_1 :: tuple,
               color_2 :: tuple,
               return :: :auto | :value | :resource
@@ -528,8 +528,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_white_noise(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               factor :: number,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -551,10 +551,10 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_perlin_noise(
-              width :: integer,
-              height :: integer,
-              offset_x :: integer,
-              offset_y :: integer,
+              width :: number,
+              height :: number,
+              offset_x :: number,
+              offset_y :: number,
               scale :: number,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -578,9 +578,9 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_cellular(
-              width :: integer,
-              height :: integer,
-              tile_size :: integer,
+              width :: number,
+              height :: number,
+              tile_size :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def gen_image_cellular(
@@ -601,8 +601,8 @@ defmodule Zexray.NIF.Image do
       """
       @doc group: :image_generation
       @spec gen_image_text(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               text :: binary,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -690,7 +690,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_text(
               text :: binary,
-              font_size :: integer,
+              font_size :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -887,7 +887,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_blur_gaussian(
               image :: tuple,
-              blur_size :: integer,
+              blur_size :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_blur_gaussian(
@@ -929,8 +929,8 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_resize(
               image :: tuple,
-              new_width :: integer,
-              new_height :: integer,
+              new_width :: number,
+              new_height :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_resize(
@@ -952,8 +952,8 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_resize_nn(
               image :: tuple,
-              new_width :: integer,
-              new_height :: integer,
+              new_width :: number,
+              new_height :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_resize_nn(
@@ -975,10 +975,10 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_resize_canvas(
               image :: tuple,
-              new_width :: integer,
-              new_height :: integer,
-              offset_x :: integer,
-              offset_y :: integer,
+              new_width :: number,
+              new_height :: number,
+              offset_x :: number,
+              offset_y :: number,
               fill :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1023,10 +1023,10 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_dither(
               image :: tuple,
-              r_bpp :: integer,
-              g_bpp :: integer,
-              b_bpp :: integer,
-              a_bpp :: integer,
+              r_bpp :: number,
+              g_bpp :: number,
+              b_bpp :: number,
+              a_bpp :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_dither(
@@ -1088,7 +1088,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_rotate(
               image :: tuple,
-              degrees :: integer,
+              degrees :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_rotate(
@@ -1227,7 +1227,7 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec image_color_brightness(
               image :: tuple,
-              brightness :: integer,
+              brightness :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def image_color_brightness(
@@ -1332,8 +1332,8 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_manipulation
       @spec get_image_color(
               image :: tuple,
-              x :: integer,
-              y :: integer,
+              x :: number,
+              y :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def get_image_color(
@@ -1380,8 +1380,8 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_pixel(
               dst :: tuple,
-              pos_x :: integer,
-              pos_y :: integer,
+              pos_x :: number,
+              pos_y :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1428,10 +1428,10 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_line(
               dst :: tuple,
-              start_pos_x :: integer,
-              start_pos_y :: integer,
-              end_pos_x :: integer,
-              end_pos_y :: integer,
+              start_pos_x :: number,
+              start_pos_y :: number,
+              end_pos_x :: number,
+              end_pos_y :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1484,7 +1484,7 @@ defmodule Zexray.NIF.Image do
               dst :: tuple,
               start_pos :: tuple,
               end_pos :: tuple,
-              thick :: integer,
+              thick :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1509,9 +1509,9 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_circle(
               dst :: tuple,
-              center_x :: integer,
-              center_y :: integer,
-              radius :: integer,
+              center_x :: number,
+              center_y :: number,
+              radius :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1537,7 +1537,7 @@ defmodule Zexray.NIF.Image do
       @spec image_draw_circle_v(
               dst :: tuple,
               center :: tuple,
-              radius :: integer,
+              radius :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1561,9 +1561,9 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_circle_lines(
               dst :: tuple,
-              center_x :: integer,
-              center_y :: integer,
-              radius :: integer,
+              center_x :: number,
+              center_y :: number,
+              radius :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1589,7 +1589,7 @@ defmodule Zexray.NIF.Image do
       @spec image_draw_circle_lines_v(
               dst :: tuple,
               center :: tuple,
-              radius :: integer,
+              radius :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1613,10 +1613,10 @@ defmodule Zexray.NIF.Image do
       @doc group: :image_drawing
       @spec image_draw_rectangle(
               dst :: tuple,
-              pos_x :: integer,
-              pos_y :: integer,
-              width :: integer,
-              height :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              width :: number,
+              height :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1691,7 +1691,7 @@ defmodule Zexray.NIF.Image do
       @spec image_draw_rectangle_lines(
               dst :: tuple,
               rec :: tuple,
-              thick :: integer,
+              thick :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple
@@ -1874,9 +1874,9 @@ defmodule Zexray.NIF.Image do
       @spec image_draw_text(
               dst :: tuple,
               text :: binary,
-              pos_x :: integer,
-              pos_y :: integer,
-              font_size :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              font_size :: number,
               color :: tuple,
               return :: :auto | :value | :resource
             ) :: tuple

@@ -207,10 +207,10 @@ defmodule Zexray.NIF.Drawing do
       """
       @doc group: :drawing
       @spec begin_scissor_mode(
-              x :: integer,
-              y :: integer,
-              width :: integer,
-              height :: integer
+              x :: number,
+              y :: number,
+              width :: number,
+              height :: number
             ) :: :ok
       def begin_scissor_mode(
             _x,

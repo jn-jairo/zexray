@@ -201,10 +201,10 @@ defmodule Zexray.Drawing do
   Run function with scissor mode (define screen area for following drawing)
   """
   @spec with_scissor_mode(
-          x :: integer,
-          y :: integer,
-          width :: integer,
-          height :: integer,
+          x :: number,
+          y :: number,
+          width :: number,
+          height :: number,
           func :: (-> any)
         ) :: any
   def with_scissor_mode(x, y, width, height, func) when is_function(func) do
@@ -226,10 +226,10 @@ defmodule Zexray.Drawing do
   Begin scissor mode (define screen area for following drawing)
   """
   @spec begin_scissor_mode(
-          x :: integer,
-          y :: integer,
-          width :: integer,
-          height :: integer
+          x :: number,
+          y :: number,
+          width :: number,
+          height :: number
         ) :: :ok
   defdelegate begin_scissor_mode(
                 x,

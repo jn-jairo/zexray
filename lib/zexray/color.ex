@@ -253,8 +253,8 @@ defmodule Zexray.Color do
   Get pixel data size in bytes for certain format
   """
   @spec get_pixel_data_size(
-          width :: integer,
-          height :: integer,
+          width :: number,
+          height :: number,
           format :: Zexray.Enum.PixelFormat.t()
         ) :: non_neg_integer
   defdelegate get_pixel_data_size(

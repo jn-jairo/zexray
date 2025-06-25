@@ -64,7 +64,7 @@ defmodule Zexray.NIF.Font do
       @doc group: :font_loading
       @spec load_font_ex(
               file_name :: binary,
-              font_size :: integer,
+              font_size :: number,
               codepoints :: [integer],
               font_type :: integer,
               return :: :auto | :value | :resource
@@ -113,7 +113,7 @@ defmodule Zexray.NIF.Font do
       @spec load_font_from_memory(
               file_type :: binary,
               file_data :: binary,
-              font_size :: integer,
+              font_size :: number,
               codepoints :: [integer],
               font_type :: integer,
               return :: :auto | :value | :resource

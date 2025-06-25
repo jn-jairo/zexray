@@ -153,8 +153,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_pixel(
-              pos_x :: integer,
-              pos_y :: integer,
+              pos_x :: number,
+              pos_y :: number,
               color :: tuple
             ) :: :ok
       def draw_pixel(
@@ -193,10 +193,10 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_line(
-              start_pos_x :: integer,
-              start_pos_y :: integer,
-              end_pos_x :: integer,
-              end_pos_y :: integer,
+              start_pos_x :: number,
+              start_pos_y :: number,
+              end_pos_x :: number,
+              end_pos_y :: number,
               color :: tuple
             ) :: :ok
       def draw_line(
@@ -304,8 +304,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_circle(
-              center_x :: integer,
-              center_y :: integer,
+              center_x :: number,
+              center_y :: number,
               radius :: number,
               color :: tuple
             ) :: :ok
@@ -331,7 +331,7 @@ defmodule Zexray.NIF.Shape do
               radius :: number,
               start_angle :: number,
               end_angle :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_sector(
@@ -358,7 +358,7 @@ defmodule Zexray.NIF.Shape do
               radius :: number,
               start_angle :: number,
               end_angle :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_circle_sector_lines(
@@ -381,8 +381,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_circle_gradient(
-              center_x :: integer,
-              center_y :: integer,
+              center_x :: number,
+              center_y :: number,
               radius :: number,
               inner :: tuple,
               outer :: tuple
@@ -427,8 +427,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_circle_lines(
-              center_x :: integer,
-              center_y :: integer,
+              center_x :: number,
+              center_y :: number,
               radius :: number,
               color :: tuple
             ) :: :ok
@@ -471,8 +471,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_ellipse(
-              center_x :: integer,
-              center_y :: integer,
+              center_x :: number,
+              center_y :: number,
               radius_h :: number,
               radius_v :: number,
               color :: tuple
@@ -519,8 +519,8 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_ellipse_lines(
-              center_x :: integer,
-              center_y :: integer,
+              center_x :: number,
+              center_y :: number,
               radius_h :: number,
               radius_v :: number,
               color :: tuple
@@ -572,7 +572,7 @@ defmodule Zexray.NIF.Shape do
               outer_radius :: number,
               start_angle :: number,
               end_angle :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_ring(
@@ -601,7 +601,7 @@ defmodule Zexray.NIF.Shape do
               outer_radius :: number,
               start_angle :: number,
               end_angle :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_ring_lines(
@@ -625,10 +625,10 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle(
-              pos_x :: integer,
-              pos_y :: integer,
-              width :: integer,
-              height :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              width :: number,
+              height :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle(
@@ -713,10 +713,10 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_gradient_v(
-              pos_x :: integer,
-              pos_y :: integer,
-              width :: integer,
-              height :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              width :: number,
+              height :: number,
               top :: tuple,
               bottom :: tuple
             ) :: :ok
@@ -740,10 +740,10 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_gradient_h(
-              pos_x :: integer,
-              pos_y :: integer,
-              width :: integer,
-              height :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              width :: number,
+              height :: number,
               left :: tuple,
               right :: tuple
             ) :: :ok
@@ -792,10 +792,10 @@ defmodule Zexray.NIF.Shape do
       """
       @doc group: :basic_shapes_drawing
       @spec draw_rectangle_lines(
-              pos_x :: integer,
-              pos_y :: integer,
-              width :: integer,
-              height :: integer,
+              pos_x :: number,
+              pos_y :: number,
+              width :: number,
+              height :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_lines(
@@ -840,7 +840,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_rectangle_rounded(
               rec :: tuple,
               roundness :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_rounded(
@@ -863,7 +863,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_rectangle_rounded_lines(
               rec :: tuple,
               roundness :: number,
-              segments :: integer,
+              segments :: number,
               color :: tuple
             ) :: :ok
       def draw_rectangle_rounded_lines(
@@ -886,7 +886,7 @@ defmodule Zexray.NIF.Shape do
       @spec draw_rectangle_rounded_lines_ex(
               rec :: tuple,
               roundness :: number,
-              segments :: integer,
+              segments :: number,
               line_thick :: number,
               color :: tuple
             ) :: :ok
@@ -994,7 +994,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_poly(
               center :: tuple,
-              sides :: integer,
+              sides :: number,
               radius :: number,
               rotation :: number,
               color :: tuple
@@ -1019,7 +1019,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_poly_lines(
               center :: tuple,
-              sides :: integer,
+              sides :: number,
               radius :: number,
               rotation :: number,
               color :: tuple
@@ -1044,7 +1044,7 @@ defmodule Zexray.NIF.Shape do
       @doc group: :basic_shapes_drawing
       @spec draw_poly_lines_ex(
               center :: tuple,
-              sides :: integer,
+              sides :: number,
               radius :: number,
               rotation :: number,
               line_thick :: number,
@@ -1597,7 +1597,7 @@ defmodule Zexray.NIF.Shape do
               point :: tuple,
               p1 :: tuple,
               p2 :: tuple,
-              threshold :: integer
+              threshold :: number
             ) :: boolean
       def check_collision_point_line(
             _point,

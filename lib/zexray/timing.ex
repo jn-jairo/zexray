@@ -12,7 +12,7 @@ defmodule Zexray.Timing do
   @doc """
   Set target FPS (maximum)
   """
-  @spec set_target_fps(fps :: integer) :: :ok
+  @spec set_target_fps(fps :: number) :: :ok
   defdelegate set_target_fps(fps), to: NIF, as: :set_target_fps
 
   @doc """

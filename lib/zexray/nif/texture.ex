@@ -106,8 +106,8 @@ defmodule Zexray.NIF.Texture do
       """
       @doc group: :texture_loading
       @spec load_render_texture(
-              width :: integer,
-              height :: integer,
+              width :: number,
+              height :: number,
               return :: :auto | :value | :resource
             ) :: tuple
       def load_render_texture(
@@ -257,8 +257,8 @@ defmodule Zexray.NIF.Texture do
       @doc group: :texture_drawing
       @spec draw_texture(
               texture :: tuple,
-              pos_x :: integer,
-              pos_y :: integer,
+              pos_x :: number,
+              pos_y :: number,
               tint :: tuple
             ) :: :ok
       def draw_texture(

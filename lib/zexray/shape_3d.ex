@@ -196,8 +196,8 @@ defmodule Zexray.Shape3D do
   @spec draw_sphere_ex(
           center_pos :: Zexray.Type.Vector3.t_all(),
           radius :: number,
-          rings :: integer,
-          slices :: integer,
+          rings :: number,
+          slices :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_sphere_ex(
@@ -217,8 +217,8 @@ defmodule Zexray.Shape3D do
   @spec draw_sphere_wires(
           center_pos :: Zexray.Type.Vector3.t_all(),
           radius :: number,
-          rings :: integer,
-          slices :: integer,
+          rings :: number,
+          slices :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_sphere_wires(
@@ -240,7 +240,7 @@ defmodule Zexray.Shape3D do
           radius_top :: number,
           radius_bottom :: number,
           height :: number,
-          slices :: integer,
+          slices :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_cylinder(
@@ -263,7 +263,7 @@ defmodule Zexray.Shape3D do
           end_pos :: Zexray.Type.Vector3.t_all(),
           start_radius :: number,
           end_radius :: number,
-          sides :: integer,
+          sides :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_cylinder_ex(
@@ -286,7 +286,7 @@ defmodule Zexray.Shape3D do
           radius_top :: number,
           radius_bottom :: number,
           height :: number,
-          slices :: integer,
+          slices :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_cylinder_wires(
@@ -309,7 +309,7 @@ defmodule Zexray.Shape3D do
           end_pos :: Zexray.Type.Vector3.t_all(),
           start_radius :: number,
           end_radius :: number,
-          sides :: integer,
+          sides :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_cylinder_wires_ex(
@@ -331,8 +331,8 @@ defmodule Zexray.Shape3D do
           start_pos :: Zexray.Type.Vector3.t_all(),
           end_pos :: Zexray.Type.Vector3.t_all(),
           radius :: number,
-          slices :: integer,
-          rings :: integer,
+          slices :: number,
+          rings :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_capsule(
@@ -354,8 +354,8 @@ defmodule Zexray.Shape3D do
           start_pos :: Zexray.Type.Vector3.t_all(),
           end_pos :: Zexray.Type.Vector3.t_all(),
           radius :: number,
-          slices :: integer,
-          rings :: integer,
+          slices :: number,
+          rings :: number,
           color :: Zexray.Type.Color.t_all()
         ) :: :ok
   defdelegate draw_capsule_wires(
@@ -406,7 +406,7 @@ defmodule Zexray.Shape3D do
   """
   @doc group: :basic_drawing
   @spec draw_grid(
-          slices :: integer,
+          slices :: number,
           spacing :: number
         ) :: :ok
   defdelegate draw_grid(
@@ -823,7 +823,7 @@ defmodule Zexray.Shape3D do
   """
   @doc group: :mesh_generation
   @spec gen_mesh_poly(
-          sides :: integer,
+          sides :: number,
           radius :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
@@ -842,8 +842,8 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_plane(
           width :: number,
           length :: number,
-          res_x :: integer,
-          res_z :: integer,
+          res_x :: number,
+          res_z :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_plane(
@@ -881,8 +881,8 @@ defmodule Zexray.Shape3D do
   @doc group: :mesh_generation
   @spec gen_mesh_sphere(
           radius :: number,
-          rings :: integer,
-          slices :: integer,
+          rings :: number,
+          slices :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_sphere(
@@ -900,8 +900,8 @@ defmodule Zexray.Shape3D do
   @doc group: :mesh_generation
   @spec gen_mesh_hemi_sphere(
           radius :: number,
-          rings :: integer,
-          slices :: integer,
+          rings :: number,
+          slices :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_hemi_sphere(
@@ -920,7 +920,7 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_cylinder(
           radius :: number,
           height :: number,
-          slices :: integer,
+          slices :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cylinder(
@@ -939,7 +939,7 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_cone(
           radius :: number,
           height :: number,
-          slices :: integer,
+          slices :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_cone(
@@ -958,8 +958,8 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_torus(
           radius :: number,
           size :: number,
-          rad_seg :: integer,
-          sides :: integer,
+          rad_seg :: number,
+          sides :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_torus(
@@ -979,8 +979,8 @@ defmodule Zexray.Shape3D do
   @spec gen_mesh_knot(
           radius :: number,
           size :: number,
-          rad_seg :: integer,
-          sides :: integer,
+          rad_seg :: number,
+          sides :: number,
           return :: :auto | :value | :resource
         ) :: Zexray.Type.Mesh.t_nif()
   defdelegate gen_mesh_knot(

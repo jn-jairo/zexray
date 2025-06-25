@@ -39,7 +39,7 @@ defmodule Zexray.Font do
   @doc group: :loading
   @spec load_ex(
           file_name :: binary,
-          font_size :: integer,
+          font_size :: number,
           codepoints :: [integer],
           font_type :: Zexray.Enum.FontType.t(),
           return :: :auto | :value | :resource
@@ -80,7 +80,7 @@ defmodule Zexray.Font do
   @spec load_from_memory(
           file_type :: binary,
           file_data :: binary,
-          font_size :: integer,
+          font_size :: number,
           codepoints :: [integer],
           font_type :: Zexray.Enum.FontType.t(),
           return :: :auto | :value | :resource

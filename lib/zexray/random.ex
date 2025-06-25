@@ -19,8 +19,8 @@ defmodule Zexray.Random do
   Get a random value between min and max (both included)
   """
   @spec get_value(
-          min :: integer,
-          max :: integer
+          min :: number,
+          max :: number
         ) :: integer
   defdelegate get_value(
                 min,
@@ -34,8 +34,8 @@ defmodule Zexray.Random do
   """
   @spec get_sequence(
           count :: non_neg_integer,
-          min :: integer,
-          max :: integer
+          min :: number,
+          max :: number
         ) :: [integer]
   defdelegate get_sequence(
                 count,
