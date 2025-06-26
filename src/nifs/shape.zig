@@ -142,8 +142,7 @@ fn nif_get_shapes_texture(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.Erl
     // Function
 
     const texture = rl.GetShapesTexture();
-    defer if (!return_resource) core.Texture2D.unload(texture);
-    errdefer if (return_resource) core.Texture2D.unload(texture);
+    // Do NOT free texture
 
     // Return
 
