@@ -1028,8 +1028,3 @@ defmodule Zexray.Math.Matrix do
     end
   end
 end
-
-# recompile
-# import Zexray.Math
-# mat = Zexray.TypeFixture.matrix_fixture()
-# 

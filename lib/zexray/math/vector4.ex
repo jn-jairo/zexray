@@ -421,10 +421,3 @@ defmodule Zexray.Math.Vector4 do
     end
   end
 end
-
-# recompile
-# import Zexray.Math
-# v1 = {:vector4, 1.0, 2.0, 3.0, 4.0}
-# v2 = {:vector4, 3.0, 8.0, 5.0, 6.0}
-# mat = Zexray.TypeFixture.matrix_fixture()
-# 

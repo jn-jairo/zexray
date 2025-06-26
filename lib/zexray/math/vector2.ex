@@ -597,10 +597,3 @@ defmodule Zexray.Math.Vector2 do
     end
   end
 end
-
-# recompile
-# import Zexray.Math
-# v1 = {:vector2, 1.0, 2.0}
-# v2 = {:vector2, 3.0, 8.0}
-# mat = Zexray.TypeFixture.matrix_fixture()
-# 
