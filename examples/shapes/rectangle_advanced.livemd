@@ -1,0 +1,487 @@
+# Rectangle advanced
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★★★] 4/4
+
+```elixir
+defmodule Example do
+  use Zexray.Enum
+  use Zexray.Type
+
+  import Zexray.Math, only: [deg2rad: 1]
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [shapes] example - rectangle advanced"
+
+  # Fewer segments are more efficient
+  @segments 4
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Set our game to run at 60 frames-per-second
+      Zexray.Timing.set_target_fps(60)
+
+      loop()
+    end)
+  end
+
+  defp loop() do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+      width = @screen_width / 2
+      height = @screen_height / 6
+      x = @screen_width / 2 - width / 2
+      y = @screen_height / 2 - width / 2
+
+      rec =
+        type_rectangle(
+          x: x,
+          y: y,
+          width: width,
+          height: height
+        )
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        # Draw All Rectangles with different roundess for each side and different gradients
+
+        draw_rectangle_rounded_gradient_h(
+          rec,
+          0.8,
+          0.8,
+          @segments,
+          enum_color(:blue),
+          enum_color(:red)
+        )
+
+        y = y + height + 1
+        rec = type_rectangle(rec, y: y)
+
+        draw_rectangle_rounded_gradient_h(
+          rec,
+          0.5,
+          1,
+          @segments,
+          enum_color(:red),
+          enum_color(:pink)
+        )
+
+        y = y + height + 1
+        rec = type_rectangle(rec, y: y)
+
+        draw_rectangle_rounded_gradient_h(
+          rec,
+          1,
+          0.5,
+          @segments,
+          enum_color(:red),
+          enum_color(:blue)
+        )
+
+        y = y + height + 1
+        rec = type_rectangle(rec, y: y)
+
+        draw_rectangle_rounded_gradient_h(
+          rec,
+          0,
+          1,
+          @segments,
+          enum_color(:blue),
+          enum_color(:black)
+        )
+
+        y = y + height + 1
+        rec = type_rectangle(rec, y: y)
+
+        draw_rectangle_rounded_gradient_h(
+          rec,
+          1,
+          0,
+          @segments,
+          enum_color(:blue),
+          enum_color(:pink)
+        )
+      end)
+
+      loop()
+    end
+  end
+
+  # Draw rectangle with rounded edges and horizontal gradient,
+  # with options to choose side of roundness
+  #
+  # NOTE: Adapted from both 'DrawRectangleRounded()'
+  # and 'DrawRectangleGradientH()' raylib [rshapes] implementations
+  defp draw_rectangle_rounded_gradient_h(
+         rec,
+         roundness_left,
+         roundness_right,
+         segments,
+         left,
+         right
+       ) do
+    type_rectangle(x: rec_x, y: rec_y, width: rec_width, height: rec_height) = rec
+    # Neither side is rounded
+    if (roundness_left <= 0 and roundness_right <= 0) or rec_width < 1 or rec_height < 1 do
+      Zexray.Shape.draw_rectangle_gradient_ex(rec, left, left, right, right)
+    else
+      type_color(r: left_r, g: left_g, b: left_b, a: left_a) = left
+      type_color(r: right_r, g: right_g, b: right_b, a: right_a) = right
+
+      roundness_left = min(1, roundness_left)
+      roundness_right = min(1, roundness_right)
+
+      # Calculate corner radius both from right and left
+      rec_size = if rec_width > rec_height, do: rec_height, else: rec_width
+      radius_left = rec_size * roundness_left / 2
+      radius_right = rec_size * roundness_right / 2
+
+      radius_left = max(0, radius_left)
+      radius_right = max(0, radius_right)
+
+      if radius_right <= 0 and radius_left <= 0 do
+        Zexray.Shape.draw_rectangle_gradient_ex(rec, left, left, right, right)
+      else
+        step_length = 90 / segments
+
+        # Diagram Copied here for reference, original at 'DrawRectangleRounded()' source code
+
+        #       P0____________________P1
+        #       /|                    |\
+        #      /1|          2         |3\
+        #  P7 /__|____________________|__\ P2
+        #    |   |P8                P9|   |
+        #    | 8 |          9         | 4 |
+        #    | __|____________________|__ |
+        #  P6 \  |P11              P10|  / P3
+        #      \7|          6         |5/
+        #       \|____________________|/
+        #       P5                    P4
+
+        # Coordinates of the 12 points also adapted from `DrawRectangleRounded`
+
+        point_0 = type_vector2(x: rec_x + radius_left, y: rec_y)
+        point_1 = type_vector2(x: rec_x + rec_width - radius_right, y: rec_y)
+        point_2 = type_vector2(x: rec_x + rec_width, y: rec_y + radius_right)
+
+        point_3 = type_vector2(x: rec_x + rec_width, y: rec_y + rec_height - radius_right)
+        point_4 = type_vector2(x: rec_x + rec_width - radius_right, y: rec_y + rec_height)
+
+        point_5 = type_vector2(x: rec_x + radius_left, y: rec_y + rec_height)
+        point_6 = type_vector2(x: rec_x, y: rec_y + rec_height - radius_left)
+        point_7 = type_vector2(x: rec_x, y: rec_y + radius_left)
+
+        point_8 = type_vector2(x: rec_x + radius_left, y: rec_y + radius_left)
+        point_9 = type_vector2(x: rec_x + rec_width - radius_right, y: rec_y + radius_right)
+
+        point_10 =
+          type_vector2(x: rec_x + rec_width - radius_right, y: rec_y + rec_height - radius_right)
+
+        point_11 = type_vector2(x: rec_x + radius_left, y: rec_y + rec_height - radius_left)
+
+        corners = [
+          {180, point_8, left, radius_left},
+          {270, point_9, right, radius_right},
+          {0, point_10, right, radius_right},
+          {90, point_11, left, radius_left}
+        ]
+
+        tex_shapes = Zexray.Shape.get_texture()
+        type_texture_2d(width: tex_shapes_width, height: tex_shapes_height) = tex_shapes
+
+        Zexray.Gl.with_texture(tex_shapes, fn ->
+          shape_rect = Zexray.Shape.get_texture_rectangle()
+
+          type_rectangle(
+            x: shape_rect_x,
+            y: shape_rect_y,
+            width: shape_rect_width,
+            height: shape_rect_height
+          ) = shape_rect
+
+          Zexray.Gl.with_drawing(enum_draw_mode(:quads), fn ->
+            # Draw all the 4 corners:
+            # [1] Upper Left Corner
+            # [3] Upper Right Corner
+            # [5] Lower Right Corner
+            # [7] Lower Left Corner
+
+            corners
+            |> Enum.each(fn {angle, center, color, radius} ->
+              type_color(r: color_r, g: color_g, b: color_b, a: color_a) = color
+              type_vector2(x: center_x, y: center_y) = center
+
+              angle =
+                0..trunc(segments / 2 - 1)
+                |> Enum.reduce(angle, fn _, angle ->
+                  Zexray.Gl.color4_byte(color_r, color_g, color_b, color_a)
+
+                  Zexray.Gl.tex_coord2(
+                    shape_rect_x / tex_shapes_width,
+                    shape_rect_y / tex_shapes_height
+                  )
+
+                  Zexray.Gl.vertex2(center_x, center_y)
+
+                  Zexray.Gl.tex_coord2(
+                    (shape_rect_x + shape_rect_width) / tex_shapes_width,
+                    shape_rect_y / tex_shapes_height
+                  )
+
+                  Zexray.Gl.vertex2(
+                    center_x + :math.cos(deg2rad(angle + step_length * 2)) * radius,
+                    center_y + :math.sin(deg2rad(angle + step_length * 2)) * radius
+                  )
+
+                  Zexray.Gl.tex_coord2(
+                    (shape_rect_x + shape_rect_width) / tex_shapes_width,
+                    (shape_rect_y + shape_rect_height) / tex_shapes_height
+                  )
+
+                  Zexray.Gl.vertex2(
+                    center_x + :math.cos(deg2rad(angle + step_length)) * radius,
+                    center_y + :math.sin(deg2rad(angle + step_length)) * radius
+                  )
+
+                  Zexray.Gl.tex_coord2(
+                    shape_rect_x / tex_shapes_width,
+                    (shape_rect_y + shape_rect_height) / tex_shapes_height
+                  )
+
+                  Zexray.Gl.vertex2(
+                    center_x + :math.cos(deg2rad(angle)) * radius,
+                    center_y + :math.sin(deg2rad(angle)) * radius
+                  )
+
+                  angle + step_length * 2
+                end)
+
+              if rem(segments, 2) != 0 do
+                Zexray.Gl.tex_coord2(
+                  shape_rect_x / tex_shapes_width,
+                  shape_rect_y / tex_shapes_height
+                )
+
+                Zexray.Gl.vertex2(center_x, center_y)
+
+                Zexray.Gl.tex_coord2(
+                  (shape_rect_x + shape_rect_width) / tex_shapes_width,
+                  (shape_rect_y + shape_rect_height) / tex_shapes_height
+                )
+
+                Zexray.Gl.vertex2(
+                  center_x + :math.cos(deg2rad(angle + step_length)) * radius,
+                  center_y + :math.sin(deg2rad(angle + step_length)) * radius
+                )
+
+                Zexray.Gl.tex_coord2(
+                  shape_rect_x / tex_shapes_width,
+                  (shape_rect_y + shape_rect_height) / tex_shapes_height
+                )
+
+                Zexray.Gl.vertex2(
+                  center_x + :math.cos(deg2rad(angle)) * radius,
+                  center_y + :math.sin(deg2rad(angle)) * radius
+                )
+
+                Zexray.Gl.tex_coord2(
+                  (shape_rect_x + shape_rect_width) / tex_shapes_width,
+                  shape_rect_y / tex_shapes_height
+                )
+
+                Zexray.Gl.vertex2(center_x, center_y)
+              end
+            end)
+
+            # Here we use the 'Diagram' to guide ourselves to which point receives what color
+            # By choosing the color correctly associated with a pointe the gradient effect
+            # will naturally come from OpenGL interpolation
+
+            # [2] Upper Rectangle
+            Zexray.Gl.color4_byte(left_r, left_g, left_b, left_a)
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_0, :x), type_vector2(point_0, :y))
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_8, :x), type_vector2(point_8, :y))
+
+            Zexray.Gl.color4_byte(right_r, right_g, right_b, right_a)
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_9, :x), type_vector2(point_9, :y))
+
+            Zexray.Gl.color4_byte(right_r, right_g, right_b, right_a)
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_1, :x), type_vector2(point_1, :y))
+
+            # [4] Left Rectangle
+            Zexray.Gl.color4_byte(right_r, right_g, right_b, right_a)
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_2, :x), type_vector2(point_2, :y))
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_9, :x), type_vector2(point_9, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_10, :x), type_vector2(point_10, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_3, :x), type_vector2(point_3, :y))
+
+            # [6] Bottom Rectangle
+            Zexray.Gl.color4_byte(left_r, left_g, left_b, left_a)
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_11, :x), type_vector2(point_11, :y))
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_5, :x), type_vector2(point_5, :y))
+
+            Zexray.Gl.color4_byte(right_r, right_g, right_b, right_a)
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_4, :x), type_vector2(point_4, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_10, :x), type_vector2(point_10, :y))
+
+            # [8] left_Rectangle
+            Zexray.Gl.color4_byte(left_r, left_g, left_b, left_a)
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_7, :x), type_vector2(point_7, :y))
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_6, :x), type_vector2(point_6, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_11, :x), type_vector2(point_11, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_8, :x), type_vector2(point_8, :y))
+
+            # [9] Middle Rectangle
+            Zexray.Gl.color4_byte(left_r, left_g, left_b, left_a)
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_8, :x), type_vector2(point_8, :y))
+
+            Zexray.Gl.tex_coord2(
+              shape_rect_x / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_11, :x), type_vector2(point_11, :y))
+
+            Zexray.Gl.color4_byte(right_r, right_g, right_b, right_a)
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              (shape_rect_y + shape_rect_height) / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_10, :x), type_vector2(point_10, :y))
+
+            Zexray.Gl.tex_coord2(
+              (shape_rect_x + shape_rect_width) / tex_shapes_width,
+              shape_rect_y / tex_shapes_height
+            )
+
+            Zexray.Gl.vertex2(type_vector2(point_9, :x), type_vector2(point_9, :y))
+          end)
+        end)
+      end
+    end
+  end
+end
+```
+
+```elixir
+Example.init()
+```

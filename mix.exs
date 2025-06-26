@@ -152,7 +152,11 @@ defmodule Zexray.MixProject do
         "examples/audio/raw_stream.livemd": [filename: "example_audio_raw_stream"],
         "examples/audio/stream_effects.livemd": [filename: "example_audio_stream_effects"],
         # Examples Gui
-        "examples/gui/controls_test_suite.livemd": [filename: "example_gui_controls_test_suite"]
+        "examples/gui/controls_test_suite.livemd": [filename: "example_gui_controls_test_suite"],
+        # Examples Shapes
+        "examples/shapes/rectangle_advanced.livemd": [
+          filename: "example_shapes_rectangle_advanced"
+        ]
       ],
       source_ref: "v#{@version}",
       source_url: @source_url,
@@ -180,7 +184,8 @@ defmodule Zexray.MixProject do
       groups_for_extras: [
         "Examples: Core": ~r"examples/core",
         "Examples: Audio": ~r"examples/audio",
-        "Examples: Gui": ~r"examples/gui"
+        "Examples: Gui": ~r"examples/gui",
+        "Examples: Shapes": ~r"examples/shapes"
       ],
       groups_for_modules: [
         Bindings: [
