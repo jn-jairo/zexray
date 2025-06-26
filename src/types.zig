@@ -2713,6 +2713,7 @@ pub const Texture = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.Texture;
     pub const resource_name = "texture";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{ resources.ResourceTypeKey.texture_2d, resources.ResourceTypeKey.texture_cubemap };
 
     pub const Resource = ResourceBase(Self);
 
@@ -2808,6 +2809,7 @@ pub const Texture2D = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.Texture2D;
     pub const resource_name = "texture_2d";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{ resources.ResourceTypeKey.texture, resources.ResourceTypeKey.texture_cubemap };
 
     pub const Resource = ResourceBase(Self);
 
@@ -2903,6 +2905,7 @@ pub const TextureCubemap = struct {
     pub const allocator = rl.allocator;
     pub const data_type = rl.TextureCubemap;
     pub const resource_name = "texture_cubemap";
+    pub const resource_type_aliases = [_]resources.ResourceTypeKey{ resources.ResourceTypeKey.texture, resources.ResourceTypeKey.texture_2d };
 
     pub const Resource = ResourceBase(Self);
 
