@@ -1,0 +1,232 @@
+# 2D Camera mouse zoom
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★☆☆] 2/4
+
+```elixir
+defmodule Example do
+  use Zexray.Enum
+  use Zexray.Type
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [core] example - 2d camera mouse zoom"
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Set our game to run at 60 frames-per-second
+      Zexray.Timing.set_target_fps(60)
+
+      # Manage resources loading/unloading
+      Zexray.Resource.with_resource(
+        fn ->
+          camera = type_camera_2d()
+
+          # :mouse_wheel | :mouse_move
+          zoom_mode = :mouse_wheel
+
+          font = Zexray.Font.get_default(:resource)
+
+          {camera, zoom_mode, font}
+        end,
+        &loop/1
+      )
+    end)
+  end
+
+  defp loop({camera, zoom_mode, font}) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      type_camera_2d(
+        offset: camera_offset,
+        target: camera_target,
+        zoom: camera_zoom
+      ) = camera
+
+      mouse_position = Zexray.Mouse.get_position()
+      type_vector2(x: mouse_position_x, y: mouse_position_y) = mouse_position
+
+      zoom_mode =
+        cond do
+          Zexray.Keyboard.pressed?(enum_keyboard_key(:one)) -> :mouse_wheel
+          Zexray.Keyboard.pressed?(enum_keyboard_key(:two)) -> :mouse_move
+          true -> zoom_mode
+        end
+
+      # Translate based on mouse right click
+      camera_target =
+        if Zexray.Mouse.down?(enum_mouse_button(:left)) do
+          delta =
+            Zexray.Mouse.get_delta()
+            |> Zexray.Math.vector2_scale(-1 / camera_zoom)
+
+          Zexray.Math.vector2_add(camera_target, delta)
+        else
+          camera_target
+        end
+
+      camera = type_camera_2d(camera, target: camera_target)
+
+      {camera_offset, camera_target, camera_zoom} =
+        case zoom_mode do
+          :mouse_wheel ->
+            # Zoom based on mouse wheel
+            wheel = Zexray.Mouse.get_wheel_move()
+
+            if wheel != 0 do
+              # Get the world point that is under the mouse
+              mouse_world_pos =
+                Zexray.ScreenSpace.get_screen_to_world_2d(
+                  mouse_position,
+                  camera
+                )
+
+              # Set the offset to where the mouse is
+              camera_offset = mouse_position
+
+              # Set the target to match, so that the camera maps the world space point 
+              # under the cursor to the screen space point under the cursor at any zoom
+              camera_target = mouse_world_pos
+
+              # Zoom increment
+              # Uses log scaling to provide consistent zoom speed
+              scale = 0.2 * wheel
+
+              camera_zoom =
+                Zexray.Math.clamp(:math.exp(:math.log(camera_zoom) + scale), 0.125, 64)
+
+              {camera_offset, camera_target, camera_zoom}
+            else
+              {camera_offset, camera_target, camera_zoom}
+            end
+
+          :mouse_move ->
+            # Zoom based on mouse right click
+            {camera_offset, camera_target} =
+              if Zexray.Mouse.pressed?(enum_mouse_button(:right)) do
+                # Get the world point that is under the mouse
+                mouse_world_pos =
+                  Zexray.ScreenSpace.get_screen_to_world_2d(
+                    mouse_position,
+                    camera
+                  )
+
+                # Set the offset to where the mouse is
+                camera_offset = mouse_position
+
+                # Set the target to match, so that the camera maps the world space point 
+                # under the cursor to the screen space point under the cursor at any zoom
+                camera_target = mouse_world_pos
+
+                {camera_offset, camera_target}
+              else
+                {camera_offset, camera_target}
+              end
+
+            camera_zoom =
+              if Zexray.Mouse.down?(enum_mouse_button(:right)) do
+                # Zoom increment
+                # Uses log scaling to provide consistent zoom speed
+                type_vector2(x: delta_x) = Zexray.Mouse.get_delta()
+                scale = 0.005 * delta_x
+                Zexray.Math.clamp(:math.exp(:math.log(camera_zoom) + scale), 0.125, 64)
+              else
+                camera_zoom
+              end
+
+            {camera_offset, camera_target, camera_zoom}
+        end
+
+      camera =
+        type_camera_2d(camera,
+          offset: camera_offset,
+          target: camera_target,
+          zoom: camera_zoom
+        )
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Zexray.Drawing.with_mode_2d(camera, fn ->
+          # Draw the 3d grid, rotated 90 degrees and centered around 0,0
+          # just so we have something in the XY plane
+          Zexray.Gl.with_matrix(fn ->
+            Zexray.Gl.translate(0, 25 * 50, 0)
+            Zexray.Gl.rotate(90, 1, 0, 0)
+            Zexray.Shape3D.draw_grid(100, 50)
+          end)
+
+          # Draw a reference circle
+          Zexray.Shape.draw_circle(
+            trunc(@screen_width / 2),
+            trunc(@screen_height / 2),
+            50,
+            enum_color(:maroon)
+          )
+        end)
+
+        # Draw mouse reference
+        Zexray.Shape.draw_circle_v(mouse_position, 4, enum_color(:darkgray))
+
+        Zexray.Text.draw_ex(
+          font,
+          "[#{mouse_position_x}, #{mouse_position_y}]",
+          Zexray.Math.vector2_add(mouse_position, type_vector2(x: -44, y: -24)),
+          20,
+          2,
+          enum_color(:black)
+        )
+
+        Zexray.Text.draw(
+          "[1][2] Select mouse zoom mode (Wheel or Move)",
+          20,
+          20,
+          20,
+          enum_color(:darkgray)
+        )
+
+        case zoom_mode do
+          :mouse_wheel ->
+            Zexray.Text.draw(
+              "Mouse left button drag to move, mouse wheel to zoom",
+              20,
+              50,
+              20,
+              enum_color(:darkgray)
+            )
+
+          :mouse_move ->
+            Zexray.Text.draw(
+              "Mouse left button drag to move, mouse right press and move to zoom",
+              20,
+              50,
+              20,
+              enum_color(:darkgray)
+            )
+        end
+      end)
+
+      {camera, zoom_mode, font}
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.init()
+```

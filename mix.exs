@@ -140,6 +140,9 @@ defmodule Zexray.MixProject do
         "README.md",
         # Examples Core
         "examples/core/2d_camera.livemd": [filename: "example_core_2d_camera"],
+        "examples/core/2d_camera_mouse_zoom.livemd": [
+          filename: "example_core_2d_camera_mouse_zoom"
+        ],
         # Examples Audio
         "examples/audio/sound_loading.livemd": [filename: "example_audio_sound_loading"],
         "examples/audio/music_stream.livemd": [filename: "example_audio_music_stream"],
