@@ -31,10 +31,15 @@ defmodule Zexray.Enum do
           Color,
           ConfigFlag,
           CubemapLayout,
+          CullMode,
+          DrawMode,
           FontType,
+          FramebufferAttachTextureType,
+          FramebufferAttachType,
           GamepadAxis,
           GamepadButton,
           Gesture,
+          GlVersion,
           GuiControl,
           GuiIcon,
           GuiPropertyCheckBox,
@@ -57,6 +62,7 @@ defmodule Zexray.Enum do
           GuiTextWrapMode,
           KeyboardKey,
           MaterialMapIndex,
+          MatrixMode,
           MouseButton,
           MouseCursor,
           NPatchLayout,
@@ -125,9 +131,33 @@ defmodule Zexray.Enum do
     end
   end
 
+  defmacro enum_cull_mode(value) do
+    quote do
+      Zexray.Enum.CullMode.enum(unquote(value))
+    end
+  end
+
+  defmacro enum_draw_mode(value) do
+    quote do
+      Zexray.Enum.DrawMode.enum(unquote(value))
+    end
+  end
+
   defmacro enum_font_type(value) do
     quote do
       Zexray.Enum.FontType.enum(unquote(value))
+    end
+  end
+
+  defmacro enum_framebuffer_attach_texture_type(value) do
+    quote do
+      Zexray.Enum.FramebufferAttachTextureType.enum(unquote(value))
+    end
+  end
+
+  defmacro enum_framebuffer_attach_type(value) do
+    quote do
+      Zexray.Enum.FramebufferAttachType.enum(unquote(value))
     end
   end
 
@@ -146,6 +176,12 @@ defmodule Zexray.Enum do
   defmacro enum_gesture(value) do
     quote do
       Zexray.Enum.Gesture.enum(unquote(value))
+    end
+  end
+
+  defmacro enum_gl_version(value) do
+    quote do
+      Zexray.Enum.GlVersion.enum(unquote(value))
     end
   end
 
@@ -278,6 +314,12 @@ defmodule Zexray.Enum do
   defmacro enum_material_map_index(value) do
     quote do
       Zexray.Enum.MaterialMapIndex.enum(unquote(value))
+    end
+  end
+
+  defmacro enum_matrix_mode(value) do
+    quote do
+      Zexray.Enum.MatrixMode.enum(unquote(value))
     end
   end
 

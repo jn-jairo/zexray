@@ -63,6 +63,7 @@ defmodule Zexray.NIF do
   use Zexray.NIF.FrameControl
   use Zexray.NIF.Gamepad
   use Zexray.NIF.Gesture
+  use Zexray.NIF.Gl
   use Zexray.NIF.Gui
   use Zexray.NIF.Image
   use Zexray.NIF.Keyboard
@@ -94,6 +95,7 @@ defmodule Zexray.NIF do
           @nifs_frame_control ++
           @nifs_gamepad ++
           @nifs_gesture ++
+          @nifs_gl ++
           @nifs_gui ++
           @nifs_image ++
           @nifs_keyboard ++
