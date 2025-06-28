@@ -158,6 +158,7 @@ defmodule Zexray.MixProject do
           filename: "example_shapes_rectangle_advanced"
         ],
         # Examples Textures
+        "examples/textures/sprite_anim.livemd": [filename: "example_textures_sprite_anim"],
         "examples/textures/bunnymark.livemd": [filename: "example_textures_bunnymark"]
       ],
       source_ref: "v#{@version}",

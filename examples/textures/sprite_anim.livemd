@@ -1,0 +1,185 @@
+# Sprite animation
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★☆☆] 2/4
+
+```elixir
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/scarfy.png" => "#{@resources_url}/examples/textures/resources/scarfy.png"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [textures] example - sprite anim"
+
+  @max_frame_speed 15
+  @min_frame_speed 1
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Set our game to run at 60 frames-per-second
+      Zexray.Timing.set_target_fps(60)
+
+      # Manage resources loading/unloading
+      Zexray.Resource.with_resource(
+        fn ->
+          # Load bunny texture
+          scarfy = Zexray.Texture.load("#{@resources_dir}/scarfy.png", :resource)
+          scarfy_content = Zexray.Resource.content!(scarfy)
+          type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_content
+
+          position = type_vector2(x: 350, y: 280)
+          frame_rec = type_rectangle(x: 0, y: 0, width: scarfy_width / 6, height: scarfy_height)
+
+          current_frame = 0
+
+          frames_counter = 0
+
+          # Number of spritesheet frames shown by second
+          frames_speed = 8
+
+          {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter,
+           frames_speed}
+        end,
+        &loop/1
+      )
+    end)
+  end
+
+  defp loop(
+         {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter,
+          frames_speed}
+       ) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_content
+
+      frames_counter = frames_counter + 1
+
+      {frames_counter, current_frame, frame_rec} =
+        if frames_counter >= 60 / frames_speed do
+          frames_counter = 0
+          current_frame = current_frame + 1
+
+          current_frame = if current_frame > 5, do: 0, else: current_frame
+
+          frame_rec = type_rectangle(frame_rec, x: current_frame * scarfy_width / 6)
+
+          {frames_counter, current_frame, frame_rec}
+        else
+          {frames_counter, current_frame, frame_rec}
+        end
+
+      # Control frames speed
+
+      frames_speed =
+        cond do
+          Zexray.Keyboard.pressed?(enum_keyboard_key(:right)) -> frames_speed + 1
+          Zexray.Keyboard.pressed?(enum_keyboard_key(:left)) -> frames_speed - 1
+          true -> frames_speed
+        end
+
+      frames_speed = min(@max_frame_speed, max(@min_frame_speed, frames_speed))
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        type_rectangle(
+          x: frame_rec_x,
+          y: frame_rec_y,
+          width: frame_rec_width,
+          height: frame_rec_height
+        ) = frame_rec
+
+        Zexray.Texture.draw(scarfy, 15, 40, enum_color(:white))
+        Zexray.Shape.draw_rectangle_lines(15, 40, scarfy_width, scarfy_height, enum_color(:lime))
+
+        Zexray.Shape.draw_rectangle_lines(
+          15 + frame_rec_x,
+          40 + frame_rec_y,
+          frame_rec_width,
+          frame_rec_height,
+          enum_color(:red)
+        )
+
+        Zexray.Text.draw("FRAME SPEED:", 165, 210, 10, enum_color(:darkgray))
+        Zexray.Text.draw("#{frames_speed} FPS", 575, 210, 10, enum_color(:darkgray))
+
+        Zexray.Text.draw(
+          "PRESS RIGHT/LEFT KEYS to CHANGE SPEED!",
+          290,
+          240,
+          10,
+          enum_color(:darkgray)
+        )
+
+        0..(@max_frame_speed - 1)
+        |> Enum.each(fn i ->
+          if i < frames_speed do
+            Zexray.Shape.draw_rectangle(250 + 21 * i, 205, 20, 20, enum_color(:red))
+          else
+            Zexray.Shape.draw_rectangle_lines(250 + 21 * i, 205, 20, 20, enum_color(:maroon))
+          end
+        end)
+
+        # Draw part of the texture
+        Zexray.Texture.draw_rec(scarfy, frame_rec, position, enum_color(:white))
+
+        Zexray.Text.draw(
+          "(c) Scarfy sprite by Eiden Marsal",
+          @screen_width - 200,
+          @screen_height - 20,
+          10,
+          enum_color(:gray)
+        )
+      end)
+
+      {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter, frames_speed}
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```
