@@ -156,7 +156,9 @@ defmodule Zexray.MixProject do
         # Examples Shapes
         "examples/shapes/rectangle_advanced.livemd": [
           filename: "example_shapes_rectangle_advanced"
-        ]
+        ],
+        # Examples Textures
+        "examples/textures/bunnymark.livemd": [filename: "example_textures_bunnymark"]
       ],
       source_ref: "v#{@version}",
       source_url: @source_url,
@@ -185,7 +187,8 @@ defmodule Zexray.MixProject do
         "Examples: Core": ~r"examples/core",
         "Examples: Audio": ~r"examples/audio",
         "Examples: Gui": ~r"examples/gui",
-        "Examples: Shapes": ~r"examples/shapes"
+        "Examples: Shapes": ~r"examples/shapes",
+        "Examples: Textures": ~r"examples/textures"
       ],
       groups_for_modules: [
         Bindings: [

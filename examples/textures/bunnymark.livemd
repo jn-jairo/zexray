@@ -1,0 +1,203 @@
+# Bunnymark
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★★☆] 3/4
+
+```elixir
+defmodule Bunny do
+  require Record
+  require Zexray.Enum.Color
+  require Zexray.Type.Vector2
+
+  Record.defrecord(:bunny,
+    position: Zexray.Type.Vector2.t(x: 0, y: 0),
+    speed: Zexray.Type.Vector2.t(x: 0, y: 0),
+    color: Zexray.Enum.Color.enum(:black)
+  )
+
+  @type bunny ::
+          record(:bunny,
+            position: Zexray.Type.Vector2.t(),
+            speed: Zexray.Type.Vector2.t(),
+            color: Zexray.Type.Color.t()
+          )
+end
+
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  import Bunny
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/wabbit_alpha.png" =>
+        "#{@resources_url}/examples/textures/resources/wabbit_alpha.png"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [textures] example - bunnymark"
+
+  # bunnies limit
+  @max_bunnies 500
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Set our game to run at 60 frames-per-second
+      Zexray.Timing.set_target_fps(60)
+
+      # Manage resources loading/unloading
+      Zexray.Resource.with_resource(
+        fn ->
+          # Load bunny texture
+          tex_bunny = Zexray.Texture.load("#{@resources_dir}/wabbit_alpha.png", :resource)
+          tex_bunny_content = Zexray.Resource.content!(tex_bunny)
+
+          bunnies_count = 0
+
+          bunnies = []
+
+          {tex_bunny, tex_bunny_content, bunnies_count, bunnies}
+        end,
+        &loop/1
+      )
+    end)
+  end
+
+  defp get_random_value(min, max) do
+    :rand.uniform() * (max - min) + min
+  end
+
+  defp loop({tex_bunny, tex_bunny_content, bunnies_count, bunnies}) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      type_texture_2d(width: tex_bunny_width, height: tex_bunny_height) = tex_bunny_content
+
+      {bunnies_count, bunnies} =
+        if Zexray.Mouse.down?(enum_mouse_button(:left)) do
+          position = Zexray.Mouse.get_position()
+
+          # Create more bunnies
+          1..10
+          |> Enum.reduce({bunnies_count, bunnies}, fn _, {bunnies_count, bunnies} ->
+            if bunnies_count < @max_bunnies do
+              bunny =
+                bunny(
+                  position: position,
+                  speed:
+                    type_vector2(
+                      x: get_random_value(-250, 250) / 60,
+                      y: get_random_value(-250, 250) / 60
+                    ),
+                  color:
+                    type_color(
+                      r: get_random_value(50, 240),
+                      g: get_random_value(80, 240),
+                      b: get_random_value(100, 240),
+                      a: 255
+                    )
+                )
+
+              {bunnies_count + 1, [bunny | bunnies]}
+            else
+              {bunnies_count, bunnies}
+            end
+          end)
+        else
+          {bunnies_count, bunnies}
+        end
+
+      # Update bunnies
+      bunnies =
+        bunnies
+        |> Enum.map(fn bunny ->
+          bunny(position: position, speed: speed) = bunny
+          type_vector2(x: position_x, y: position_y) = position
+          type_vector2(x: speed_x, y: speed_y) = speed
+
+          position_x = position_x + speed_x
+          position_y = position_y + speed_y
+
+          speed_x =
+            if position_x + tex_bunny_width / 2 > @screen_width or
+                 position_x + tex_bunny_width / 2 < 0 do
+              speed_x * -1
+            else
+              speed_x
+            end
+
+          speed_y =
+            if position_y + tex_bunny_height / 2 > @screen_height or
+                 position_y + tex_bunny_height / 2 - 40 < 0 do
+              speed_y * -1
+            else
+              speed_y
+            end
+
+          bunny(
+            bunny,
+            position: type_vector2(x: position_x, y: position_y),
+            speed: type_vector2(x: speed_x, y: speed_y)
+          )
+        end)
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        Enum.each(bunnies, fn bunny ->
+          bunny(position: position, color: color) = bunny
+          type_vector2(x: position_x, y: position_y) = position
+          Zexray.Texture.draw(tex_bunny, position_x, position_y, color)
+        end)
+
+        Zexray.Shape.draw_rectangle(0, 0, @screen_width, 40, enum_color(:black))
+        Zexray.Text.draw("bunnies: #{bunnies_count}", 120, 10, 20, enum_color(:green))
+
+        Zexray.Text.draw_fps(10, 10)
+      end)
+
+      {tex_bunny, tex_bunny_content, bunnies_count, bunnies}
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```
