@@ -48,7 +48,7 @@ defmodule ExampleState do
           record(:example_state,
             colors: [Zexray.Type.Color.t()],
             circles: [CircleWave.circle_wave()],
-            music: Zexray.Type.Music.Resource.t(),
+            music: Zexray.Type.Music.t_resource(),
             pitch: number
           )
 end

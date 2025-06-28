@@ -11,12 +11,40 @@ Mix.install([
 Example complexity rating: [★★☆☆] 2/4
 
 ```elixir
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    scarfy: nil,
+    scarfy_info: nil,
+    position: nil,
+    frame_rec: nil,
+    current_frame: 0,
+    frames_counter: 0,
+    # Number of spritesheet frames shown by second
+    frames_speed: 8
+  )
+
+  @type example_state ::
+          record(:example_state,
+            scarfy: Zexray.Type.Texture2D.t_resource(),
+            scarfy_info: Zexray.Type.Texture2D.t(),
+            position: Zexray.Type.Vector2.t(),
+            frame_rec: Zexray.Type.Rectangle.t(),
+            current_frame: non_neg_integer,
+            frames_counter: non_neg_integer,
+            frames_speed: non_neg_integer
+          )
+end
+
 defmodule Example do
   @resources_dir System.tmp_dir!() <> "/zexray/resources"
   @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
 
   use Zexray.Enum
   use Zexray.Type
+
+  import ExampleState
 
   def download_resources do
     File.mkdir_p!(@resources_dir)
@@ -54,38 +82,42 @@ defmodule Example do
         fn ->
           # Load bunny texture
           scarfy = Zexray.Texture.load("#{@resources_dir}/scarfy.png", :resource)
-          scarfy_content = Zexray.Resource.content!(scarfy)
-          type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_content
+          scarfy_info = Zexray.Resource.content!(scarfy)
+          type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_info
 
           position = type_vector2(x: 350, y: 280)
           frame_rec = type_rectangle(x: 0, y: 0, width: scarfy_width / 6, height: scarfy_height)
 
-          current_frame = 0
-
-          frames_counter = 0
-
-          # Number of spritesheet frames shown by second
-          frames_speed = 8
-
-          {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter,
-           frames_speed}
+          example_state(
+            scarfy: scarfy,
+            scarfy_info: scarfy_info,
+            position: position,
+            frame_rec: frame_rec
+          )
         end,
         &loop/1
       )
     end)
   end
 
-  defp loop(
-         {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter,
-          frames_speed}
-       ) do
+  defp loop(state) do
     # Detect window close button or ESC key
     if Zexray.Window.should_close?() do
       :ok
     else
       # Update
 
-      type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_content
+      example_state(
+        scarfy: scarfy,
+        scarfy_info: scarfy_info,
+        position: position,
+        frame_rec: frame_rec,
+        current_frame: current_frame,
+        frames_counter: frames_counter,
+        frames_speed: frames_speed
+      ) = state
+
+      type_texture_2d(width: scarfy_width, height: scarfy_height) = scarfy_info
 
       frames_counter = frames_counter + 1
 
@@ -169,7 +201,13 @@ defmodule Example do
         )
       end)
 
-      {scarfy, scarfy_content, position, frame_rec, current_frame, frames_counter, frames_speed}
+      state
+      |> example_state(
+        frame_rec: frame_rec,
+        current_frame: current_frame,
+        frames_counter: frames_counter,
+        frames_speed: frames_speed
+      )
       |> loop()
     end
   end

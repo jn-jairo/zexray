@@ -24,7 +24,7 @@ defmodule ExampleState do
 
   @type example_state ::
           record(:example_state,
-            music: Zexray.Type.SoundStream.Resource.t(),
+            music: Zexray.Type.SoundStream.t_resource(),
             effect_lpf_enabled: boolean,
             effect_lpf_state: {number, number},
             effect_delay_enabled: boolean,

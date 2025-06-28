@@ -30,6 +30,25 @@ defmodule Bunny do
           )
 end
 
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    tex_bunny: nil,
+    tex_bunny_info: nil,
+    bunnies_count: 0,
+    bunnies: []
+  )
+
+  @type example_state ::
+          record(:example_state,
+            tex_bunny: Zexray.Type.Texture2D.t_resource(),
+            tex_bunny_info: Zexray.Type.Texture2D.t(),
+            bunnies_count: non_neg_integer,
+            bunnies: [Bunny.bunny()]
+          )
+end
+
 defmodule Example do
   @resources_dir System.tmp_dir!() <> "/zexray/resources"
   @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
@@ -38,6 +57,7 @@ defmodule Example do
   use Zexray.Type
 
   import Bunny
+  import ExampleState
 
   def download_resources do
     File.mkdir_p!(@resources_dir)
@@ -76,13 +96,12 @@ defmodule Example do
         fn ->
           # Load bunny texture
           tex_bunny = Zexray.Texture.load("#{@resources_dir}/wabbit_alpha.png", :resource)
-          tex_bunny_content = Zexray.Resource.content!(tex_bunny)
+          tex_bunny_info = Zexray.Resource.content!(tex_bunny)
 
-          bunnies_count = 0
-
-          bunnies = []
-
-          {tex_bunny, tex_bunny_content, bunnies_count, bunnies}
+          example_state(
+            tex_bunny: tex_bunny,
+            tex_bunny_info: tex_bunny_info
+          )
         end,
         &loop/1
       )
@@ -93,14 +112,21 @@ defmodule Example do
     :rand.uniform() * (max - min) + min
   end
 
-  defp loop({tex_bunny, tex_bunny_content, bunnies_count, bunnies}) do
+  defp loop(state) do
     # Detect window close button or ESC key
     if Zexray.Window.should_close?() do
       :ok
     else
       # Update
 
-      type_texture_2d(width: tex_bunny_width, height: tex_bunny_height) = tex_bunny_content
+      example_state(
+        tex_bunny: tex_bunny,
+        tex_bunny_info: tex_bunny_info,
+        bunnies_count: bunnies_count,
+        bunnies: bunnies
+      ) = state
+
+      type_texture_2d(width: tex_bunny_width, height: tex_bunny_height) = tex_bunny_info
 
       {bunnies_count, bunnies} =
         if Zexray.Mouse.down?(enum_mouse_button(:left)) do
@@ -187,7 +213,11 @@ defmodule Example do
         Zexray.Text.draw_fps(10, 10)
       end)
 
-      {tex_bunny, tex_bunny_content, bunnies_count, bunnies}
+      state
+      |> example_state(
+        bunnies_count: bunnies_count,
+        bunnies: bunnies
+      )
       |> loop()
     end
   end
