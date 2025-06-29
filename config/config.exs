@@ -1,5 +1,11 @@
 import Config
 
+config :zexray, :internal_docs, System.get_env("ZEXRAY_INTERNAL_DOCS") == "true"
+
+#########
+#  Zig  #
+#########
+
 if config_env() == :prod do
   config :zexray, :optimize, "ReleaseSafe"
 else
@@ -8,7 +14,9 @@ end
 
 config :zexray, :target, "native"
 
-config :zexray, :internal_docs, System.get_env("ZEXRAY_INTERNAL_DOCS") == "true"
+############
+#  Raylib  #
+############
 
 case config_env() do
   :test ->
@@ -37,4 +45,14 @@ case config_env() do
     config :zexray, :trace_log_level, :info
     config :zexray, :trace_log, true
     config :zexray, :trace_log_debug, false
+end
+
+case config_env() do
+  :dev ->
+    config :zexray, :screen_capture, true
+    config :zexray, :gif_recording, true
+
+  _ ->
+    config :zexray, :screen_capture, false
+    config :zexray, :gif_recording, false
 end

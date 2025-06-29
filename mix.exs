@@ -83,6 +83,12 @@ defmodule Zexray.MixProject do
     raylib_trace_log_debug =
       Application.get_env(:zexray, :trace_log_debug, false) |> Atom.to_string()
 
+    raylib_screen_capture =
+      Application.get_env(:zexray, :screen_capture, false) |> Atom.to_string()
+
+    raylib_gif_recording =
+      Application.get_env(:zexray, :gif_recording, false) |> Atom.to_string()
+
     args = [
       "build",
       "-Doptimize=#{optimize}",
@@ -93,6 +99,8 @@ defmodule Zexray.MixProject do
       "-Derts_include_path=#{erts_include_path}",
       "-Draylib_trace_log=#{raylib_trace_log}",
       "-Draylib_trace_log_debug=#{raylib_trace_log_debug}",
+      "-Draylib_screen_capture=#{raylib_screen_capture}",
+      "-Draylib_gif_recording=#{raylib_gif_recording}",
       "--prefix",
       "#{prefix}"
     ]
