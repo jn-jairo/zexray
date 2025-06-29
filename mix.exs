@@ -168,6 +168,7 @@ defmodule Zexray.MixProject do
         # Examples Textures
         "examples/textures/sprite_anim.livemd": [filename: "example_textures_sprite_anim"],
         "examples/textures/sprite_button.livemd": [filename: "example_textures_sprite_button"],
+        "examples/textures/sprite_explosion.livemd": [filename: "example_textures_sprite_explosion"],
         "examples/textures/bunnymark.livemd": [filename: "example_textures_bunnymark"]
       ],
       source_ref: "v#{@version}",

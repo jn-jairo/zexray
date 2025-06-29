@@ -1,0 +1,243 @@
+# Sprite explosion
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★☆☆] 2/4
+
+```elixir
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    # Explosion sound
+    fx_boom: nil,
+    # Explosion texture
+    explosion: nil,
+    # Sprite one frame rectangle width
+    frame_width: 0,
+    # Sprite one frame rectangle height
+    frame_height: 0,
+    current_frame: 0,
+    current_line: 0,
+    frame_rec: nil,
+    position: nil,
+    frames_counter: 0,
+    active: false
+  )
+
+  @type example_state ::
+          record(:example_state,
+            fx_boom: Zexray.Type.Sound.t_resource(),
+            explosion: Zexray.Type.Texture2D.t_resource(),
+            frame_width: non_neg_integer,
+            frame_height: non_neg_integer,
+            current_frame: non_neg_integer,
+            current_line: non_neg_integer,
+            frame_rec: Zexray.Type.Rectangle.t(),
+            position: Zexray.Type.Vector2.t(),
+            frames_counter: non_neg_integer,
+            active: boolean
+          )
+end
+
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  import ExampleState
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/boom.wav" => "#{@resources_url}/examples/textures/resources/boom.wav",
+      "#{@resources_dir}/explosion.png" =>
+        "#{@resources_url}/examples/textures/resources/explosion.png"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [textures] example - sprite explosion"
+
+  @num_frames_per_line 5
+  @num_lines 5
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 60 frames-per-second
+        Zexray.Timing.set_target_fps(60)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            # Load explosion sound
+            fx_boom = Zexray.Audio.load_sound("#{@resources_dir}/boom.wav", :resource)
+
+            # Load explosion texture
+            explosion = Zexray.Texture.load("#{@resources_dir}/explosion.png", :resource)
+
+            type_texture_2d(width: explosion_width, height: explosion_height) =
+              Zexray.Resource.content!(explosion)
+
+            # Sprite one frame rectangle width
+            frame_width = div(explosion_width, @num_frames_per_line)
+
+            # Sprite one frame rectangle height
+            frame_height = div(explosion_height, @num_lines)
+
+            frame_rec = type_rectangle(x: 0, y: 0, width: frame_width, height: frame_height)
+            position = type_vector2(x: 0, y: 0)
+
+            example_state(
+              fx_boom: fx_boom,
+              explosion: explosion,
+              frame_width: frame_width,
+              frame_height: frame_height,
+              frame_rec: frame_rec,
+              position: position
+            )
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop(state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      example_state(
+        fx_boom: fx_boom,
+        explosion: explosion,
+        frame_width: frame_width,
+        frame_height: frame_height,
+        frame_rec: frame_rec,
+        position: position,
+        current_frame: current_frame,
+        current_line: current_line,
+        frames_counter: frames_counter,
+        active: active
+      ) = state
+
+      # Check for mouse button pressed and activate explosion (if not active)
+      {position, active} =
+        if not active and Zexray.Mouse.pressed?(enum_mouse_button(:left)) do
+          type_vector2(x: position_x, y: position_y) = Zexray.Mouse.get_position()
+
+          position =
+            type_vector2(
+              x: position_x - frame_width / 2,
+              y: position_y - frame_height / 2
+            )
+
+          Zexray.Audio.play(fx_boom)
+
+          {position, true}
+        else
+          {position, active}
+        end
+
+      # Compute explosion animation frames
+      {frames_counter, current_frame, current_line, active} =
+        if active do
+          frames_counter = frames_counter + 1
+
+          {frames_counter, current_frame, current_line, active} =
+            if frames_counter > 2 do
+              current_frame = current_frame + 1
+
+              {current_frame, current_line, active} =
+                if current_frame >= @num_frames_per_line do
+                  current_frame = 0
+                  current_line = current_line + 1
+
+                  {current_line, active} =
+                    if current_line >= @num_lines do
+                      {0, false}
+                    else
+                      {current_line, active}
+                    end
+
+                  {current_frame, current_line, active}
+                else
+                  {current_frame, current_line, active}
+                end
+
+              frames_counter = 0
+
+              {frames_counter, current_frame, current_line, active}
+            else
+              {frames_counter, current_frame, current_line, active}
+            end
+
+          {frames_counter, current_frame, current_line, active}
+        else
+          {frames_counter, current_frame, current_line, active}
+        end
+
+      frame_rec =
+        type_rectangle(frame_rec,
+          x: frame_width * current_frame,
+          y: frame_height * current_line
+        )
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        # Draw explosion required frame rectangle
+        if active do
+          Zexray.Texture.draw_rec(explosion, frame_rec, position, enum_color(:white))
+        end
+      end)
+
+      state
+      |> example_state(
+        frame_rec: frame_rec,
+        position: position,
+        current_frame: current_frame,
+        current_line: current_line,
+        frames_counter: frames_counter,
+        active: active
+      )
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```
