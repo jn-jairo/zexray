@@ -1,0 +1,199 @@
+# Sprite button
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★★☆☆] 2/4
+
+```elixir
+defmodule ExampleState do
+  require Record
+
+  Record.defrecord(:example_state,
+    # Button sound
+    fx_button: nil,
+    # Button texture
+    button: nil,
+    # Frame rectangle for drawing
+    frame_height: 0,
+    source_rec: nil,
+    # Button bounds on screen
+    btn_bounds: nil
+  )
+
+  @type example_state ::
+          record(:example_state,
+            fx_button: Zexray.Type.Sound.t_resource(),
+            button: Zexray.Type.Texture2D.t_resource(),
+            frame_height: non_neg_integer,
+            source_rec: Zexray.Type.Rectangle.t(),
+            btn_bounds: Zexray.Type.Rectangle.t()
+          )
+end
+
+defmodule Example do
+  @resources_dir System.tmp_dir!() <> "/zexray/resources"
+  @resources_url "https://github.com/raysan5/raylib/raw/3e336e4470f7975af67f716d4d809441883d7eef"
+
+  use Zexray.Enum
+  use Zexray.Type
+
+  import ExampleState
+
+  def download_resources do
+    File.mkdir_p!(@resources_dir)
+
+    resources = %{
+      "#{@resources_dir}/buttonfx.wav" =>
+        "#{@resources_url}/examples/textures/resources/buttonfx.wav",
+      "#{@resources_dir}/button.png" => "#{@resources_url}/examples/textures/resources/button.png"
+    }
+
+    :inets.start()
+    :ssl.start()
+
+    Enum.each(resources, fn {file, url} ->
+      if not File.exists?(file) do
+        {:ok, :saved_to_file} =
+          :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
+      end
+    end)
+  end
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [textures] example - sprite button"
+
+  # Number of frames (rectangles) for the button sprite texture
+  @num_frames 3
+
+  @btn_states [:normal, :mouse_hover, :pressed]
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        # Set our game to run at 60 frames-per-second
+        Zexray.Timing.set_target_fps(60)
+
+        # Manage resources loading/unloading
+        Zexray.Resource.with_resource(
+          fn ->
+            # Load button sound
+            fx_button = Zexray.Audio.load_sound("#{@resources_dir}/buttonfx.wav", :resource)
+
+            # Load button texture
+            button = Zexray.Texture.load("#{@resources_dir}/button.png", :resource)
+
+            type_texture_2d(width: button_width, height: button_height) =
+              Zexray.Resource.content!(button)
+
+            # Define frame rectangle for drawing
+            frame_height = button_height / @num_frames
+            source_rec = type_rectangle(x: 0, y: 0, width: button_width, height: frame_height)
+
+            # Define button bounds on screen
+            btn_bounds =
+              type_rectangle(
+                x: @screen_width / 2 - button_width / 2,
+                y: @screen_height / 2 - button_height / @num_frames / 2,
+                width: button_width,
+                height: frame_height
+              )
+
+            example_state(
+              fx_button: fx_button,
+              button: button,
+              frame_height: frame_height,
+              source_rec: source_rec,
+              btn_bounds: btn_bounds
+            )
+          end,
+          &loop/1
+        )
+      end)
+    end)
+  end
+
+  defp loop(state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      :ok
+    else
+      # Update
+
+      example_state(
+        fx_button: fx_button,
+        button: button,
+        frame_height: frame_height,
+        source_rec: source_rec,
+        btn_bounds: btn_bounds
+      ) = state
+
+      type_rectangle(x: btn_bounds_x, y: btn_bounds_y) = btn_bounds
+
+      mouse_point = Zexray.Mouse.get_position()
+
+      # Button state: :normal, :mouse_hover, :pressed
+      # Button action should be activated
+
+      # Check button state
+      {btn_state, btn_action} =
+        if Zexray.Shape.collision_point_rec?(mouse_point, btn_bounds) do
+          btn_state =
+            if Zexray.Mouse.down?(enum_mouse_button(:left)), do: :pressed, else: :mouse_hover
+
+          btn_action = if Zexray.Mouse.released?(enum_mouse_button(:left)), do: true, else: false
+
+          {btn_state, btn_action}
+        else
+          {:normal, false}
+        end
+
+      if btn_action do
+        Zexray.Audio.play(fx_button)
+
+        # TODO: Any desired action
+      end
+
+      # Calculate button frame rectangle to draw depending on button state
+      source_rec =
+        type_rectangle(source_rec,
+          y: frame_height * Enum.find_index(@btn_states, &(&1 == btn_state))
+        )
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        # Draw button frame
+        Zexray.Texture.draw_rec(
+          button,
+          source_rec,
+          type_vector2(x: btn_bounds_x, y: btn_bounds_y),
+          enum_color(:white)
+        )
+      end)
+
+      state
+      |> example_state(source_rec: source_rec)
+      |> loop()
+    end
+  end
+end
+```
+
+```elixir
+Example.download_resources()
+```
+
+```elixir
+Example.init()
+```
