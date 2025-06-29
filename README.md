@@ -62,10 +62,10 @@ config :zexray, :linux_display_backend, "Both"
 config :zexray, :opengl_version, "auto"
 
 # Allow automatic screen capture of current screen pressing F12 (default: false)
-config :zexray, :screen_capture, true
+config :zexray, :screen_capture, false
 
 # Allow automatic gif recording of current screen pressing CTRL+F12 (default: false)
-config :zexray, :gif_recording, true
+config :zexray, :gif_recording, false
 
 # Trace log level
 # :all | :trace | :debug | :info | :warning | :error | :fatal | :none
