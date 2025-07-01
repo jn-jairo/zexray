@@ -21,15 +21,15 @@ defmodule Zexray.Type.VrDeviceInfo do
 
   @type t ::
           record(:t,
-            h_resolution: integer,
-            v_resolution: integer,
-            h_screen_size: float,
-            v_screen_size: float,
-            eye_to_screen_distance: float,
-            lens_separation_distance: float,
-            interpupillary_distance: float,
-            lens_distortion_values: [float],
-            chroma_ab_correction: [float]
+            h_resolution: number,
+            v_resolution: number,
+            h_screen_size: number,
+            v_screen_size: number,
+            eye_to_screen_distance: number,
+            lens_separation_distance: number,
+            interpupillary_distance: number,
+            lens_distortion_values: [number],
+            chroma_ab_correction: [number]
           )
 
   Record.defrecord(:t, :vr_device_info,

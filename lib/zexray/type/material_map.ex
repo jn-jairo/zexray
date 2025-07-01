@@ -20,7 +20,7 @@ defmodule Zexray.Type.MaterialMap do
           record(:t,
             texture: Zexray.Type.Texture2D.t_nif(),
             color: Zexray.Type.Color.t_nif(),
-            value: float
+            value: number
           )
 
   Record.defrecord(:t, :material_map,

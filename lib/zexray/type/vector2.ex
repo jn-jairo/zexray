@@ -14,8 +14,8 @@ defmodule Zexray.Type.Vector2 do
 
   @type t ::
           record(:t,
-            x: float,
-            y: float
+            x: number,
+            y: number
           )
 
   Record.defrecord(:t, :vector2,

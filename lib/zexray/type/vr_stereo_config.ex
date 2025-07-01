@@ -22,12 +22,12 @@ defmodule Zexray.Type.VrStereoConfig do
           record(:t,
             projection: [Zexray.Type.Matrix.t_nif()],
             view_offset: [Zexray.Type.Matrix.t_nif()],
-            left_lens_center: [float],
-            right_lens_center: [float],
-            left_screen_center: [float],
-            right_screen_center: [float],
-            scale: [float],
-            scale_in: [float]
+            left_lens_center: [number],
+            right_lens_center: [number],
+            left_screen_center: [number],
+            right_screen_center: [number],
+            scale: [number],
+            scale_in: [number]
           )
 
   Record.defrecord(:t, :vr_stereo_config,

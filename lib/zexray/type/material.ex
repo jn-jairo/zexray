@@ -19,7 +19,7 @@ defmodule Zexray.Type.Material do
           record(:t,
             shader: Zexray.Type.Shader.t_nif(),
             maps: [Zexray.Type.MaterialMap.t_nif()],
-            params: [float]
+            params: [number]
           )
 
   Record.defrecord(:t, :material,

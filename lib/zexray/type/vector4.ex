@@ -23,10 +23,10 @@ defmodule Zexray.Type.Vector4Base do
 
       @type t ::
               record(:t,
-                x: float,
-                y: float,
-                z: float,
-                w: float
+                x: number,
+                y: number,
+                z: number,
+                w: number
               )
 
       Record.defrecord(:t, unquote(prefix_atom),

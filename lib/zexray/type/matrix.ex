@@ -16,22 +16,22 @@ defmodule Zexray.Type.Matrix do
 
   @type t ::
           record(:t,
-            m0: float,
-            m1: float,
-            m2: float,
-            m3: float,
-            m4: float,
-            m5: float,
-            m6: float,
-            m7: float,
-            m8: float,
-            m9: float,
-            m10: float,
-            m11: float,
-            m12: float,
-            m13: float,
-            m14: float,
-            m15: float
+            m0: number,
+            m1: number,
+            m2: number,
+            m3: number,
+            m4: number,
+            m5: number,
+            m6: number,
+            m7: number,
+            m8: number,
+            m9: number,
+            m10: number,
+            m11: number,
+            m12: number,
+            m13: number,
+            m14: number,
+            m15: number
           )
 
   Record.defrecord(:t, :matrix,

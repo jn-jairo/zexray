@@ -22,10 +22,10 @@ defmodule Zexray.Type.NPatchInfo do
   @type t ::
           record(:t,
             source: Zexray.Type.Rectangle.t_nif(),
-            left: integer,
-            top: integer,
-            right: integer,
-            bottom: integer,
+            left: number,
+            top: number,
+            right: number,
+            bottom: number,
             layout: Zexray.Enum.NPatchLayout.t()
           )
 

@@ -20,8 +20,8 @@ defmodule Zexray.Type.Camera2D do
           record(:t,
             offset: Zexray.Type.Vector2.t_nif(),
             target: Zexray.Type.Vector2.t_nif(),
-            rotation: float,
-            zoom: float
+            rotation: number,
+            zoom: number
           )
 
   Record.defrecord(:t, :camera_2d,

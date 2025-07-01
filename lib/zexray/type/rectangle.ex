@@ -16,10 +16,10 @@ defmodule Zexray.Type.Rectangle do
 
   @type t ::
           record(:t,
-            x: float,
-            y: float,
-            width: float,
-            height: float
+            x: number,
+            y: number,
+            width: number,
+            height: number
           )
 
   Record.defrecord(:t, :rectangle,

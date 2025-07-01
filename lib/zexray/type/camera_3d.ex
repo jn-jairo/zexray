@@ -30,7 +30,7 @@ defmodule Zexray.Type.Camera3DBase do
                 position: Zexray.Type.Vector3.t_nif(),
                 target: Zexray.Type.Vector3.t_nif(),
                 up: Zexray.Type.Vector3.t_nif(),
-                fovy: float,
+                fovy: number,
                 projection: Zexray.Enum.CameraProjection.t()
               )
 

@@ -81,7 +81,7 @@ defmodule Zexray.Resource do
   end
 
   @spec new!(value :: map) :: map
-  @spec new!(value :: any) :: struct
+  @spec new!(value :: tuple) :: tuple
   def new!(value) do
     cond do
       resourceable?(value) ->
@@ -123,7 +123,8 @@ defmodule Zexray.Resource do
   end
 
   @spec new(value :: map) :: map
-  @spec new(value :: any) :: struct
+  @spec new(value :: tuple) :: tuple
+  @spec new(value :: any) :: any
   def new(value) do
     cond do
       resourceable?(value) ->
@@ -165,7 +166,7 @@ defmodule Zexray.Resource do
   end
 
   @spec content!(resource :: map) :: map
-  @spec content!(resource :: any) :: struct
+  @spec content!(resource :: tuple) :: tuple
   def content!(resource) do
     cond do
       resource?(resource) ->
@@ -207,7 +208,8 @@ defmodule Zexray.Resource do
   end
 
   @spec content(value :: map) :: map
-  @spec content(value :: any) :: struct
+  @spec content(value :: tuple) :: tuple
+  @spec content(value :: any) :: any
   def content(value) do
     cond do
       resource?(value) ->
@@ -249,7 +251,7 @@ defmodule Zexray.Resource do
   end
 
   @spec free!(resource :: map) :: map
-  @spec free!(resource :: any) :: :ok
+  @spec free!(resource :: tuple) :: tuple | :ok
   def free!(resource) do
     cond do
       resource?(resource) ->
@@ -291,7 +293,8 @@ defmodule Zexray.Resource do
   end
 
   @spec free(value :: map) :: map
-  @spec free(value :: any) :: :ok
+  @spec free(value :: tuple) :: tuple | :ok
+  @spec free(value :: any) :: any
   def free(value) do
     cond do
       resource?(value) ->
@@ -348,9 +351,9 @@ defmodule Zexray.Resource do
           seconds :: number
         ) :: map
   @spec free_async!(
-          resource :: any,
+          resource :: tuple,
           seconds :: number
-        ) :: :ok
+        ) :: tuple | :ok
   def free_async!(
         resource,
         seconds
@@ -416,9 +419,13 @@ defmodule Zexray.Resource do
           seconds :: number
         ) :: map
   @spec free_async(
+          value :: tuple,
+          seconds :: number
+        ) :: tuple | :ok
+  @spec free_async(
           value :: any,
           seconds :: number
-        ) :: :ok
+        ) :: any
   def free_async(
         value,
         seconds

@@ -31,7 +31,7 @@ defmodule Zexray.Type.SoundStreamBase do
                 frame_count: non_neg_integer,
                 looping: boolean,
                 position: nil | Zexray.Type.Vector3.t_nif(),
-                position_state: [float],
+                position_state: [number],
                 data: binary
               )
 

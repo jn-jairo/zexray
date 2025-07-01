@@ -19,7 +19,7 @@ defmodule Zexray.Type.RayCollision do
   @type t ::
           record(:t,
             hit: boolean,
-            distance: float,
+            distance: number,
             point: Zexray.Type.Vector3.t_nif(),
             normal: Zexray.Type.Vector3.t_nif()
           )
