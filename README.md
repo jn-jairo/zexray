@@ -67,6 +67,9 @@ config :zexray, :screen_capture, false
 # Allow automatic gif recording of current screen pressing CTRL+F12 (default: false)
 config :zexray, :gif_recording, false
 
+# Allows manual control of the frame processes, use at your own risk
+config :zexray, :custom_frame_control, false
+
 # Trace log level
 # :all | :trace | :debug | :info | :warning | :error | :fatal | :none
 # (default: :info)

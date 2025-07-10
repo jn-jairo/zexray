@@ -89,6 +89,9 @@ defmodule Zexray.MixProject do
     raylib_gif_recording =
       Application.get_env(:zexray, :gif_recording, false) |> Atom.to_string()
 
+    raylib_custom_frame_control =
+      Application.get_env(:zexray, :custom_frame_control, false) |> Atom.to_string()
+
     args = [
       "build",
       "-Doptimize=#{optimize}",
@@ -101,6 +104,7 @@ defmodule Zexray.MixProject do
       "-Draylib_trace_log_debug=#{raylib_trace_log_debug}",
       "-Draylib_screen_capture=#{raylib_screen_capture}",
       "-Draylib_gif_recording=#{raylib_gif_recording}",
+      "-Draylib_custom_frame_control=#{raylib_custom_frame_control}",
       "--prefix",
       "#{prefix}"
     ]

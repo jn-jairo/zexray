@@ -51,8 +51,10 @@ case config_env() do
   :dev ->
     config :zexray, :screen_capture, true
     config :zexray, :gif_recording, true
+    config :zexray, :custom_frame_control, false
 
   _ ->
     config :zexray, :screen_capture, false
     config :zexray, :gif_recording, false
+    config :zexray, :custom_frame_control, false
 end

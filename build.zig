@@ -23,6 +23,7 @@ pub fn build(b: *std.Build) !void {
     const raylib_trace_log_debug = b.option(bool, "raylib_trace_log_debug", "raylib: trace log debug") orelse false;
     const raylib_screen_capture = b.option(bool, "raylib_screen_capture", "raylib: allow automatic screen capture of current screen pressing F12") orelse false;
     const raylib_gif_recording = b.option(bool, "raylib_gif_recording", "raylib: allow automatic gif recording of current screen pressing CTRL+F12") orelse false;
+    const raylib_custom_frame_control = b.option(bool, "raylib_custom_frame_control", "raylib: allows manual control of the frame processes, use at your own risk") orelse false;
 
     const options = b.addOptions();
     options.addOption(bool, "trace_log", raylib_trace_log);
@@ -34,6 +35,7 @@ pub fn build(b: *std.Build) !void {
     const config_raylib_tracelog_debug = if (raylib_trace_log_debug) "-DSUPPORT_TRACELOG_DEBUG=1" else "-DSUPPORT_TRACELOG_DEBUG= -USUPPORT_TRACELOG_DEBUG";
     const config_raylib_screen_capture = if (raylib_screen_capture) "-DSUPPORT_SCREEN_CAPTURE=1" else "-DSUPPORT_SCREEN_CAPTURE= -USUPPORT_SCREEN_CAPTURE";
     const config_raylib_gif_recording = if (raylib_gif_recording) "-DSUPPORT_GIF_RECORDING=1" else "-DSUPPORT_GIF_RECORDING= -USUPPORT_GIF_RECORDING";
+    const config_raylib_custom_frame_control = if (raylib_custom_frame_control) "-DSUPPORT_CUSTOM_FRAME_CONTROL=1" else "-DSUPPORT_CUSTOM_FRAME_CONTROL= -USUPPORT_CUSTOM_FRAME_CONTROL";
 
     var config_buf = std.ArrayList(u8).init(b.allocator);
     defer config_buf.deinit();
@@ -46,6 +48,8 @@ pub fn build(b: *std.Build) !void {
     try writer.writeAll(config_raylib_screen_capture);
     try writer.writeAll(" ");
     try writer.writeAll(config_raylib_gif_recording);
+    try writer.writeAll(" ");
+    try writer.writeAll(config_raylib_custom_frame_control);
 
     if (erts_include_path) |path| {
         const erl_nif_path = try std.fs.path.join(b.allocator, &[_][]const u8{ path, "erl_nif.h" });
