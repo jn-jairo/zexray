@@ -185,4 +185,12 @@ defmodule Zexray.Util do
       :ok
     end
   end
+
+  @doc """
+  Get a random number between min and max (both included)
+  """
+  @spec random_number(min :: number, max :: number) :: float
+  def random_number(min, max) do
+    :rand.uniform() * (max - min) + min
+  end
 end

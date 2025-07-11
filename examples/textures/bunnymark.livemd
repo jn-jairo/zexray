@@ -56,6 +56,8 @@ defmodule Example do
   use Zexray.Enum
   use Zexray.Type
 
+  import Zexray.Util, only: [random_number: 2]
+
   import Bunny
   import ExampleState
 
@@ -108,10 +110,6 @@ defmodule Example do
     end)
   end
 
-  defp get_random_value(min, max) do
-    :rand.uniform() * (max - min) + min
-  end
-
   defp loop(state) do
     # Detect window close button or ESC key
     if Zexray.Window.should_close?() do
@@ -141,14 +139,14 @@ defmodule Example do
                   position: position,
                   speed:
                     type_vector2(
-                      x: get_random_value(-250, 250) / 60,
-                      y: get_random_value(-250, 250) / 60
+                      x: random_number(-250, 250) / 60,
+                      y: random_number(-250, 250) / 60
                     ),
                   color:
                     type_color(
-                      r: get_random_value(50, 240),
-                      g: get_random_value(80, 240),
-                      b: get_random_value(100, 240),
+                      r: random_number(50, 240),
+                      g: random_number(80, 240),
+                      b: random_number(100, 240),
                       a: 255
                     )
                 )

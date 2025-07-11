@@ -15,6 +15,8 @@ defmodule Example do
   use Zexray.Enum
   use Zexray.Type
 
+  import Zexray.Util, only: [random_number: 2]
+
   @screen_width 800
   @screen_height 450
   @title "zexray [core] example - 2d camera"
@@ -35,8 +37,8 @@ defmodule Example do
           {_spacing, buildings} =
             0..@max_buildings
             |> Enum.reduce({0, []}, fn _, {spacing, buildings} ->
-              width = get_random_value(50, 200)
-              height = get_random_value(100, 800)
+              width = random_number(50, 200)
+              height = random_number(100, 800)
 
               building =
                 type_rectangle(
@@ -48,9 +50,9 @@ defmodule Example do
 
               build_color =
                 type_color(
-                  r: trunc(get_random_value(200, 240)),
-                  g: trunc(get_random_value(200, 240)),
-                  b: trunc(get_random_value(200, 250)),
+                  r: trunc(random_number(200, 240)),
+                  g: trunc(random_number(200, 240)),
+                  b: trunc(random_number(200, 250)),
                   a: 255
                 )
 
@@ -78,10 +80,6 @@ defmodule Example do
         &loop/1
       )
     end)
-  end
-
-  defp get_random_value(min, max) do
-    :rand.uniform() * (max - min) + min
   end
 
   defp loop({player, camera, buildings}) do

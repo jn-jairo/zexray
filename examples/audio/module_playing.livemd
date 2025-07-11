@@ -60,6 +60,8 @@ defmodule Example do
   use Zexray.Enum
   use Zexray.Type
 
+  import Zexray.Util, only: [random_number: 2]
+
   import CircleWave
   import ExampleState
 
@@ -79,10 +81,6 @@ defmodule Example do
           :httpc.request(:get, {~c"#{url}", []}, [], stream: ~c"#{file}")
       end
     end)
-  end
-
-  defp get_random_value(min, max) do
-    :rand.uniform() * (max - min) + min
   end
 
   @screen_width 800
@@ -129,17 +127,17 @@ defmodule Example do
 
             circles =
               Enum.map(1..@max_circles, fn _ ->
-                radius = get_random_value(10, 40)
+                radius = random_number(10, 40)
 
                 circle_wave(
                   alpha: 0,
                   radius: radius,
                   position:
                     type_vector2(
-                      x: get_random_value(radius, @screen_width - radius),
-                      y: get_random_value(radius, @screen_height - radius)
+                      x: random_number(radius, @screen_width - radius),
+                      y: random_number(radius, @screen_height - radius)
                     ),
-                  speed: get_random_value(1, 100) / 2_000,
+                  speed: random_number(1, 100) / 2_000,
                   color: Enum.random(colors)
                 )
               end)
@@ -230,17 +228,17 @@ defmodule Example do
           speed = if alpha >= 1, do: speed * -1, else: speed
 
           if alpha <= 0 do
-            radius = get_random_value(10, 40)
+            radius = random_number(10, 40)
 
             circle_wave(
               alpha: 0,
               radius: radius,
               position:
                 type_vector2(
-                  x: get_random_value(radius, @screen_width - radius),
-                  y: get_random_value(radius, @screen_height - radius)
+                  x: random_number(radius, @screen_width - radius),
+                  y: random_number(radius, @screen_height - radius)
                 ),
-              speed: get_random_value(1, 100) / 2_000,
+              speed: random_number(1, 100) / 2_000,
               color: Enum.random(colors)
             )
           else
