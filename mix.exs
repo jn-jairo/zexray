@@ -113,6 +113,8 @@ defmodule Zexray.MixProject do
 
     cmd!(zig, args, env)
 
+    File.rm_rf!(Path.join([prefix, "include"]))
+
     {:ok, []}
   end
 
