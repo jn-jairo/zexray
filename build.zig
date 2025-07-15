@@ -87,6 +87,11 @@ pub fn build(b: *std.Build) !void {
     const raylib_lib = raylib_pkg.lib;
     const raylib_dep = raylib_pkg.dep;
 
+    raylib_lib.addIncludePath(b.path("src"));
+    raylib_lib.addCSourceFile(.{
+        .file = b.path("src/nif_allocator.c"),
+    });
+
     if (erts_include_path) |path| {
         raylib_lib.addSystemIncludePath(.{ .cwd_relative = path });
     } else {
