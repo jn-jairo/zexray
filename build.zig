@@ -88,17 +88,12 @@ pub fn build(b: *std.Build) !void {
     const raylib_dep = raylib_pkg.dep;
 
     raylib_lib.addIncludePath(b.path("src"));
-    raylib_lib.addCSourceFile(.{
-        .file = b.path("src/nif_allocator.c"),
-    });
 
     if (erts_include_path) |path| {
         raylib_lib.addSystemIncludePath(.{ .cwd_relative = path });
     } else {
         raylib_lib.step.dependOn(&b.addFail("Missing include path for nif headers").step);
     }
-
-    b.installArtifact(raylib_lib);
 
     // nif_lib
 
@@ -117,9 +112,6 @@ pub fn build(b: *std.Build) !void {
     nif_lib.root_module.addOptions("config", options);
 
     nif_lib.addIncludePath(b.path("src"));
-    nif_lib.addCSourceFile(.{
-        .file = b.path("src/nif_allocator.c"),
-    });
 
     nif_lib.addIncludePath(raylib_dep.path("src"));
     nif_lib.linkLibrary(raylib_lib);
@@ -139,7 +131,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
         .target = target,
         .optimize = optimize,
         .config = config,
-        .shared = true,
+        .shared = false,
         .platform = platform,
         .linux_display_backend = linux_display_backend,
         .opengl_version = opengl_version,

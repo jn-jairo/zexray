@@ -113,7 +113,38 @@ defmodule Zexray.MixProject do
 
     cmd!(zig, args, env)
 
-    File.rm_rf!(Path.join([prefix, "include"]))
+    bin_folder = Path.join([prefix, "bin"])
+    lib_folder = Path.join([prefix, "lib"])
+
+    if File.exists?(lib_folder) and File.exists?(bin_folder) do
+      File.ls!(bin_folder)
+      |> Enum.each(fn file ->
+        src = Path.join([bin_folder, file])
+        dst = Path.join([lib_folder, file])
+        File.rename!(src, dst)
+      end)
+    end
+
+    if File.exists?(lib_folder) do
+      File.ls!(lib_folder)
+      |> Enum.each(fn file ->
+        cond do
+          Path.extname(file) not in [".so", ".dll", ".pdb", ".dylib"] ->
+            Path.join([lib_folder, file])
+            |> File.rm_rf!()
+
+          not String.starts_with?(file, "lib") ->
+            src = Path.join([lib_folder, file])
+            dst = Path.join([lib_folder, "lib#{file}"])
+            File.rename!(src, dst)
+
+          true ->
+            :ok
+        end
+      end)
+    end
+
+    File.rm_rf!(bin_folder)
 
     {:ok, []}
   end

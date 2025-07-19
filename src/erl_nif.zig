@@ -1,9 +1,12 @@
 const std = @import("std");
+const builtin = @import("builtin");
 
-const e = @cImport(@cInclude("erl_nif.h"));
+const e = if (builtin.target.os.tag == .windows) @cImport(@cInclude("erl_nif_win.h")) else @cImport(@cInclude("erl_nif.h"));
 pub usingnamespace e;
 
-const nif_allocator = @cImport(@cInclude("nif_allocator.h"));
+pub const ETWinDynNifCallbacks = if (@hasDecl(e, "TWinDynNifCallbacks")) e.TWinDynNifCallbacks else struct {};
+
+const nif_allocator = @import("nif_allocator.zig");
 
 pub const ErlNifTerm = e.ERL_NIF_TERM;
 

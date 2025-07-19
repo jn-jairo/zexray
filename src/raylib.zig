@@ -1,3 +1,4 @@
+const std = @import("std");
 const assert = std.debug.assert;
 
 const raylib = @cImport({
@@ -16,7 +17,7 @@ const miniaudio = @cImport({
     @cInclude("miniaudio.h");
 });
 
-var audio_lock: miniaudio.ma_mutex = undefined;
+var audio_lock = std.Thread.Mutex{};
 
 pub var mode_3d_listener: ?raylib.Camera3D = null;
 pub var mode_3d_listener_max_distance: ?f32 = null;
@@ -24,7 +25,6 @@ pub var mode_3d_listener_max_distance: ?f32 = null;
 const config = @import("config.zig");
 pub usingnamespace config;
 
-const std = @import("std");
 const build_config = @import("config");
 const utils = @import("utils.zig");
 
@@ -259,7 +259,8 @@ pub fn GetSoundTimePlayed(sound: raylib.Sound) f32 {
     const stream_buffer: ?*AudioBuffer = @ptrCast(@alignCast(sound.stream.buffer));
 
     if (stream_buffer) |buffer| {
-        miniaudio.ma_mutex_lock(&audio_lock);
+        audio_lock.lock();
+        defer audio_lock.unlock();
         const framesProcessed: c_int = @intCast(buffer.framesProcessed);
         const subBufferSize: c_int = @intCast(buffer.sizeInFrames / 2);
         const framesInFirstBuffer: c_int = if (buffer.isSubBufferProcessed[0]) 0 else subBufferSize;
@@ -268,7 +269,6 @@ pub fn GetSoundTimePlayed(sound: raylib.Sound) f32 {
         var framesPlayed: c_int = @mod((framesProcessed - framesInFirstBuffer - framesInSecondBuffer + framesSentToMix), @as(c_int, @intCast(sound.frameCount)));
         if (framesPlayed < 0) framesPlayed += @as(c_int, @intCast(sound.frameCount));
         secondsPlayed = @as(f32, @floatFromInt(framesPlayed)) / @as(f32, @floatFromInt(sound.stream.sampleRate));
-        miniaudio.ma_mutex_unlock(&audio_lock);
     }
 
     return secondsPlayed;
@@ -286,7 +286,8 @@ pub fn GetAudioStreamTimePlayed(stream: raylib.AudioStream, frameCount: c_uint) 
     const stream_buffer: ?*AudioBuffer = @ptrCast(@alignCast(stream.buffer));
 
     if (stream_buffer) |buffer| {
-        miniaudio.ma_mutex_lock(&audio_lock);
+        audio_lock.lock();
+        defer audio_lock.unlock();
         const framesProcessed: c_int = @intCast(buffer.framesProcessed);
         const subBufferSize: c_int = @intCast(buffer.sizeInFrames / 2);
         const framesInFirstBuffer: c_int = if (buffer.isSubBufferProcessed[0]) 0 else subBufferSize;
@@ -295,7 +296,6 @@ pub fn GetAudioStreamTimePlayed(stream: raylib.AudioStream, frameCount: c_uint) 
         var framesPlayed: c_int = @mod((framesProcessed - framesInFirstBuffer - framesInSecondBuffer + framesSentToMix), @as(c_int, @intCast(frameCount)));
         if (framesPlayed < 0) framesPlayed += @as(c_int, @intCast(frameCount));
         secondsPlayed = @as(f32, @floatFromInt(framesPlayed)) / @as(f32, @floatFromInt(stream.sampleRate));
-        miniaudio.ma_mutex_unlock(&audio_lock);
     }
 
     return secondsPlayed;
@@ -479,7 +479,8 @@ pub fn GetSoundStreamTimePlayed(sound_stream: SoundStream) f32 {
     const stream_buffer: ?*AudioBuffer = @ptrCast(@alignCast(sound_stream.stream.buffer));
 
     if (stream_buffer) |buffer| {
-        miniaudio.ma_mutex_lock(&audio_lock);
+        audio_lock.lock();
+        defer audio_lock.unlock();
         const framesProcessed: c_int = @intCast(buffer.framesProcessed);
         const subBufferSize: c_int = @intCast(buffer.sizeInFrames / 2);
         const framesInFirstBuffer: c_int = if (buffer.isSubBufferProcessed[0]) 0 else subBufferSize;
@@ -488,7 +489,6 @@ pub fn GetSoundStreamTimePlayed(sound_stream: SoundStream) f32 {
         var framesPlayed: c_int = @mod((framesProcessed - framesInFirstBuffer - framesInSecondBuffer + framesSentToMix), @as(c_int, @intCast(sound_stream.frameCount)));
         if (framesPlayed < 0) framesPlayed += @as(c_int, @intCast(sound_stream.frameCount));
         secondsPlayed = @as(f32, @floatFromInt(framesPlayed)) / @as(f32, @floatFromInt(sound_stream.stream.sampleRate));
-        miniaudio.ma_mutex_unlock(&audio_lock);
     }
 
     return secondsPlayed;
@@ -500,9 +500,9 @@ pub fn GetSoundStreamFramesProcessed(sound_stream: SoundStream) c_uint {
 
     const stream_buffer: ?*AudioBuffer = @ptrCast(@alignCast(sound_stream.stream.buffer));
     if (stream_buffer) |buffer| {
-        miniaudio.ma_mutex_lock(&audio_lock);
+        audio_lock.lock();
+        defer audio_lock.unlock();
         framesProcessed = buffer.framesProcessed;
-        miniaudio.ma_mutex_unlock(&audio_lock);
     }
 
     return framesProcessed;
@@ -514,9 +514,9 @@ pub fn GetSoundStreamSubBufferSize(sound_stream: SoundStream) c_uint {
 
     const stream_buffer: ?*AudioBuffer = @ptrCast(@alignCast(sound_stream.stream.buffer));
     if (stream_buffer) |buffer| {
-        miniaudio.ma_mutex_lock(&audio_lock);
+        audio_lock.lock();
+        defer audio_lock.unlock();
         subBufferSize = buffer.sizeInFrames / 2;
-        miniaudio.ma_mutex_unlock(&audio_lock);
     }
 
     return subBufferSize;

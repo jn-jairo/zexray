@@ -49,11 +49,11 @@ pub fn trace_log(log_level: c_int, text: []const u8) void {
     }
 }
 
-pub fn traceLog(log_level: c_int, text: [*c]const u8, args: [*c]rl.struct___va_list_tag_1) callconv(.C) void {
+pub fn traceLog(log_level: c_int, text: [*c]const u8, args: *anyopaque) callconv(.C) void {
     const buf_len = rl.MAX_TRACELOG_MSG_LENGTH * 4;
     var buf: [buf_len]u8 = std.mem.zeroes([buf_len]u8);
 
-    const len: usize = @intCast(rl.vsnprintf(&buf, buf_len, text, args));
+    const len: usize = @intCast(rl.vsnprintf(&buf, buf_len, text, @ptrCast(@alignCast(args))));
 
     trace_log(log_level, buf[0..len]);
 }

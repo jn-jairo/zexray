@@ -15,15 +15,22 @@ defmodule Zexray.NIF do
     ld_library_path = System.get_env("LD_LIBRARY_PATH")
     System.put_env("LD_LIBRARY_PATH", "#{:code.priv_dir(:zexray)}/lib/:#{ld_library_path}")
 
-    lib = ~c"#{:code.priv_dir(:zexray)}/lib/libzexray"
+    lib = Path.join(["#{:code.priv_dir(:zexray)}", "lib", "libzexray"])
 
-    ret = :erlang.load_nif(lib, 0)
+    :erlang.load_nif(~c"#{lib}", 0)
+    |> case do
+      :ok ->
+        after_load()
+        :ok
 
-    if ret == :ok do
-      after_load()
+      {:error, {reason, text}} ->
+        raise """
+        Failed to load NIF library.
+
+        #{inspect(reason)}
+        #{text}
+        """
     end
-
-    ret
   end
 
   defp after_load do

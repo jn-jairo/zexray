@@ -1,3 +1,4 @@
+const builtin = @import("builtin");
 const e = @import("./erl_nif.zig");
 
 const resources = @import("./resources.zig");
@@ -106,6 +107,17 @@ const entry = e.ErlNifEntry{
     .min_erts = e.ERL_NIF_MIN_ERTS_VERSION,
 };
 
-export fn nif_init() *const e.ErlNifEntry {
+export var WinDynNifCallbacks: e.ETWinDynNifCallbacks = undefined;
+
+fn nif_init_nix() callconv(.C) [*c]const e.ErlNifEntry {
     return &entry;
+}
+
+fn nif_init_win(callbacks: [*c]e.ETWinDynNifCallbacks) callconv(.C) [*c]const e.ErlNifEntry {
+    WinDynNifCallbacks = callbacks.*;
+    return &entry;
+}
+
+comptime {
+    @export(if (builtin.target.os.tag == .windows) &nif_init_win else &nif_init_nix, .{ .name = "nif_init", .linkage = .strong });
 }
