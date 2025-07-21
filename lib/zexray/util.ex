@@ -163,26 +163,47 @@ defmodule Zexray.Util do
 
   @doc """
   Wait for the function to return `true`
+
+  Options:
+
+  - `seconds` seconds to wait between checks (default: `0.001`)
+  - `max_seconds` max seconds to wait or `:infinity` (default: `1.0`)
+  - `on_timeout` function to run on timeout
   """
-  @spec wait_fn(function :: (-> boolean), seconds :: number, max_seconds :: number) :: :ok
+  @spec wait_fn(function :: (-> boolean),
+          seconds: number,
+          max_seconds: number | :infinity,
+          on_timeout: (-> any)
+        ) :: :ok | :timeout
+  def wait_fn(function, opts \\ []) when is_function(function) do
+    seconds = Keyword.get(opts, :seconds, 0.001)
+    max_seconds = Keyword.get(opts, :max_seconds, 1.0)
+    on_timeout = Keyword.get(opts, :on_timeout, nil)
 
-  def wait_fn(function, seconds \\ 0.001, max_seconds \\ 1.0)
+    if max_seconds != :infinity and seconds >= max_seconds do
+      if not is_nil(on_timeout) do
+        apply(on_timeout, [])
+      end
 
-  def wait_fn(_function, seconds, max_seconds)
-      when is_number(seconds) and
-             is_number(max_seconds) and
-             seconds >= max_seconds,
-      do: :ok
-
-  def wait_fn(function, seconds, max_seconds)
-      when is_function(function) and
-             is_number(seconds) and
-             is_number(max_seconds) do
-    if not function.() do
-      wait_time(seconds)
-      wait_fn(function, seconds, max_seconds - seconds)
+      :timeout
     else
-      :ok
+      if not apply(function, []) do
+        wait_time(seconds)
+
+        max_seconds =
+          if max_seconds != :infinity do
+            max_seconds - seconds
+          else
+            max_seconds
+          end
+
+        wait_fn(
+          function,
+          Keyword.merge(opts, max_seconds: max_seconds)
+        )
+      else
+        :ok
+      end
     end
   end
 
