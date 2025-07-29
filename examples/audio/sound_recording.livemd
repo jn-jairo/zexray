@@ -1,0 +1,120 @@
+# Sound recording
+
+```elixir
+Mix.install([
+  {:zexray, github: "jn-jairo/zexray", depth: 1}
+])
+```
+
+## Code example
+
+Example complexity rating: [★☆☆☆] 1/4
+
+```elixir
+defmodule Example do
+  use Zexray.Enum
+  use Zexray.Type
+
+  @screen_width 800
+  @screen_height 450
+  @title "zexray [audio] example - sound recording"
+
+  @sample_rate 44_100
+  @sample_size 32
+  @channels 1
+
+  # 5 seconds
+  # @max_frame_count 5 * @sample_rate
+
+  # no time limit
+  @max_frame_count 0
+
+  def init do
+    # Initialize window
+    Zexray.Window.with_window(@screen_width, @screen_height, @title, fn ->
+      # Initialize audio device
+      Zexray.Audio.with_audio(fn ->
+        Zexray.Audio.with_audio_record_wave(
+          @max_frame_count,
+          @sample_rate,
+          @sample_size,
+          @channels,
+          fn ->
+            # Set our game to run at 60 frames-per-second
+            Zexray.Timing.set_target_fps(60)
+
+            loop({nil, nil})
+          end
+        )
+      end)
+    end)
+  end
+
+  defp loop({wave, sound} = state) do
+    # Detect window close button or ESC key
+    if Zexray.Window.should_close?() do
+      if not is_nil(sound) do
+        sound
+        |> Zexray.Audio.stop()
+      end
+
+      Zexray.Resource.free(state)
+
+      :ok
+    else
+      # Update
+
+      {wave, sound} =
+        if Zexray.Keyboard.pressed?(enum_keyboard_key(:space)) do
+          if Zexray.Audio.recording?() do
+            Zexray.Audio.stop_record()
+
+            if not is_nil(sound) do
+              sound
+              |> Zexray.Audio.stop()
+            end
+
+            Zexray.Resource.free(state)
+
+            wave = Zexray.Audio.get_record_wave(:resource)
+
+            sound =
+              wave
+              |> Zexray.Audio.load_sound_from_wave(:resource)
+              |> Zexray.Audio.play()
+
+            {wave, sound}
+          else
+            Zexray.Audio.start_record()
+
+            {wave, sound}
+          end
+        else
+          {wave, sound}
+        end
+
+      # Draw
+
+      Zexray.Drawing.with_drawing(fn ->
+        Zexray.Drawing.clear_background(enum_color(:raywhite))
+
+        text = if Zexray.Audio.recording?(), do: "STOP", else: "START"
+
+        Zexray.Text.draw(
+          "Press SPACE to #{text} recording the WAV sound!",
+          150,
+          180,
+          20,
+          enum_color(:lightgray)
+        )
+      end)
+
+      loop({wave, sound})
+    end
+  end
+end
+```
+
+```elixir
+Example.init()
+```

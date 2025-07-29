@@ -169,7 +169,22 @@ defmodule Zexray.NIF.Audio do
         get_audio_stream_time_length: 2,
         get_audio_stream_time_played: 2,
         get_audio_stream_info: 1,
-        get_audio_stream_info: 2
+        get_audio_stream_info: 2,
+
+        # Audio record
+        init_audio_device_record_stream: 4,
+        close_audio_device_record_stream: 0,
+        init_audio_device_record_wave: 4,
+        close_audio_device_record_wave: 0,
+        reset_audio_device_record_wave: 0,
+        get_audio_device_record_wave: 1,
+        get_audio_device_record_wave: 2,
+        is_audio_device_record_ready: 0,
+        is_audio_device_record_recording: 0,
+        get_audio_device_record_info: 0,
+        get_audio_device_record_info: 1,
+        start_audio_device_record: 0,
+        stop_audio_device_record: 0
       ]
 
       ##########
@@ -1771,6 +1786,116 @@ defmodule Zexray.NIF.Audio do
             _return \\ :auto
           ),
           do: :erlang.nif_error(:undef)
+
+      ##################
+      #  Audio record  #
+      ##################
+
+      @doc """
+      Initialize audio stream device and context
+      """
+      @doc group: :audio_record
+      @spec init_audio_device_record_stream(
+              sample_rate :: non_neg_integer,
+              sample_size :: non_neg_integer,
+              channels :: non_neg_integer,
+              pid :: pid
+            ) :: :ok
+      def init_audio_device_record_stream(
+            _sample_rate,
+            _sample_size,
+            _channels,
+            _pid
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Close the audio stream device and context
+      """
+      @doc group: :audio_record
+      @spec close_audio_device_record_stream() :: :ok
+      def close_audio_device_record_stream(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Initialize audio wave device and context
+      """
+      @doc group: :audio_record
+      @spec init_audio_device_record_wave(
+              max_frame_count :: non_neg_integer,
+              sample_rate :: non_neg_integer,
+              sample_size :: non_neg_integer,
+              channels :: non_neg_integer
+            ) :: :ok
+      def init_audio_device_record_wave(
+            _max_frame_count,
+            _sample_rate,
+            _sample_size,
+            _channels
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Close the audio wave device and context
+      """
+      @doc group: :audio_record
+      @spec close_audio_device_record_wave() :: :ok
+      def close_audio_device_record_wave(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Reset the recorded wave
+      """
+      @doc group: :audio_record
+      @spec reset_audio_device_record_wave() :: :ok
+      def reset_audio_device_record_wave(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get recorded wave
+      """
+      @doc group: :audio_record
+      @spec get_audio_device_record_wave(
+              reset_after :: boolean,
+              return :: :auto | :value | :resource
+            ) :: tuple
+      def get_audio_device_record_wave(
+            _reset_after,
+            _return \\ :auto
+          ),
+          do: :erlang.nif_error(:undef)
+
+      @doc """
+      Check if audio device has been initialized successfully
+      """
+      @doc group: :audio_record
+      @spec is_audio_device_record_ready() :: boolean
+      def is_audio_device_record_ready(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Check if audio device is recording
+      """
+      @doc group: :audio_record
+      @spec is_audio_device_record_recording() :: boolean
+      def is_audio_device_record_recording(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Get audio device record info
+      """
+      @doc group: :audio_record
+      @spec get_audio_device_record_info(return :: :auto | :value | :resource) :: tuple
+      def get_audio_device_record_info(_return \\ :auto), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Start audio record
+      """
+      @doc group: :audio_record
+      @spec start_audio_device_record() :: :ok
+      def start_audio_device_record(), do: :erlang.nif_error(:undef)
+
+      @doc """
+      Stop audio record
+      """
+      @doc group: :audio_record
+      @spec stop_audio_device_record() :: :ok
+      def stop_audio_device_record(), do: :erlang.nif_error(:undef)
     end
   end
 end

@@ -21,7 +21,7 @@ defmodule Zexray.Type.Wave do
             sample_rate: non_neg_integer,
             sample_size: non_neg_integer,
             channels: non_neg_integer,
-            data: binary
+            data: binary | [byte] | [integer] | [float]
           )
 
   Record.defrecord(:t, :wave,

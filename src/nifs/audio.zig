@@ -2,6 +2,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const e = @import("../erl_nif.zig");
 const rl = @import("../raylib.zig");
+const miniaudio = rl.miniaudio;
+const utils = @import("../utils.zig");
 
 const core = @import("../core.zig");
 
@@ -172,6 +174,21 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "get_audio_stream_time_played", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_stream_time_played), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_audio_stream_info", .arity = 1, .fptr = core.nif_wrapper(nif_get_audio_stream_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_audio_stream_info", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_stream_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+
+    // Audio record
+    .{ .name = "init_audio_device_record_stream", .arity = 4, .fptr = core.nif_wrapper(nif_init_audio_device_record_stream), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "close_audio_device_record_stream", .arity = 0, .fptr = core.nif_wrapper(nif_close_audio_device_record_stream), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "init_audio_device_record_wave", .arity = 4, .fptr = core.nif_wrapper(nif_init_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "close_audio_device_record_wave", .arity = 0, .fptr = core.nif_wrapper(nif_close_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "reset_audio_device_record_wave", .arity = 0, .fptr = core.nif_wrapper(nif_reset_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_audio_device_record_wave", .arity = 1, .fptr = core.nif_wrapper(nif_get_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_audio_device_record_wave", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_audio_device_record_ready", .arity = 0, .fptr = core.nif_wrapper(nif_is_audio_device_record_ready), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "is_audio_device_record_recording", .arity = 0, .fptr = core.nif_wrapper(nif_is_audio_device_record_recording), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_audio_device_record_info", .arity = 0, .fptr = core.nif_wrapper(nif_get_audio_device_record_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "get_audio_device_record_info", .arity = 1, .fptr = core.nif_wrapper(nif_get_audio_device_record_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "start_audio_device_record", .arity = 0, .fptr = core.nif_wrapper(nif_start_audio_device_record), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "stop_audio_device_record", .arity = 0, .fptr = core.nif_wrapper(nif_stop_audio_device_record), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 
 ////////////
@@ -3600,4 +3617,499 @@ fn nif_get_audio_stream_info(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.
     return core.maybe_make_struct_as_resource(core.AudioInfo, env, info, return_resource) catch {
         return error.invalid_return;
     };
+}
+
+/// Receiving audio data from device callback function and send to pid from device.pUserData
+fn SendAudioDataStream(pDevice: [*c]miniaudio.ma_device, pFramesOut: ?*anyopaque, pFramesInput: ?*const anyopaque, frameCount: miniaudio.ma_uint32) callconv(.C) void {
+    _ = pFramesOut;
+
+    if (pDevice) |device| {
+        const frame_count: c_uint = @intCast(frameCount);
+
+        if (frame_count > 0) {
+            const sample_rate: c_uint = @intCast(device.*.sampleRate);
+            const sample_size: c_uint = @intCast(8 * miniaudio.ma_get_bytes_per_sample(device.*.capture.format));
+            const channels: c_uint = @intCast(device.*.capture.channels);
+
+            const env: ?*e.ErlNifEnv = e.enif_alloc_env();
+            defer e.enif_free_env(env);
+
+            const to_pid: *e.ErlNifPid = @ptrCast(@alignCast(device.*.pUserData));
+
+            const wave = rl.Wave{
+                .frameCount = frame_count,
+                .sampleRate = sample_rate,
+                .sampleSize = sample_size,
+                .channels = channels,
+                .data = @ptrCast(@alignCast(@constCast(pFramesInput)))
+            };
+
+            const msg = core.Tuple.make(env, &[_]e.ErlNifTerm{
+                core.Atom.make(env, "audio_record_stream"),
+                core.Wave.make(env, wave),
+            });
+
+            if (e.enif_send(null, to_pid, env, msg) == 0) {
+                utils.TRACELOG(rl.LOG_WARNING, "AUDIO: Failed to send recorded data", .{});
+            }
+        }
+    }
+}
+
+/// Initialize audio stream device and context
+fn nif_init_audio_device_record_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4);
+
+    // Arguments
+
+    const sample_rate = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_sample_rate;
+    };
+
+    const sample_size = core.UInt.get(env, argv[1]) catch {
+        return error.invalid_argument_sample_size;
+    };
+
+    const channels = core.UInt.get(env, argv[2]) catch {
+        return error.invalid_argument_channels;
+    };
+
+    const pid = core.Pid.get(env, argv[3]) catch {
+        return error.invalid_argument_pid;
+    };
+
+    const pid_ptr = try rl.allocator.create(e.ErlNifPid);
+    errdefer rl.allocator.destroy(pid_ptr);
+    pid_ptr.* = pid;
+
+    // Function
+
+    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, SendAudioDataStream, @ptrCast(pid_ptr));
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Close the audio stream device and context
+fn nif_close_audio_device_record_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    if (!rl.IsAudioDeviceRecordDataCallback(SendAudioDataStream)) return error.runtime_audio_record_type_mismatch;
+
+    // Function
+
+    const pid_ptr: *e.ErlNifPid = @ptrCast(@alignCast(try rl.CloseAudioDeviceRecord()));
+    rl.allocator.destroy(pid_ptr);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+const RecordWaveBuffer = struct {
+    frameCount: c_uint = @import("std").mem.zeroes(c_uint),
+    data: ?*anyopaque = @import("std").mem.zeroes(?*anyopaque),
+    next: ?*RecordWaveBuffer = std.mem.zeroes(?*RecordWaveBuffer), // Next wave data on the list
+    prev: ?*RecordWaveBuffer = std.mem.zeroes(?*RecordWaveBuffer), // Previous wave data on the list
+};
+
+const RecordWave = struct {
+    lock: std.Thread.Mutex = @import("std").mem.zeroes(std.Thread.Mutex),
+    maxFrameCount: c_uint = @import("std").mem.zeroes(c_uint),
+    frameCount: c_uint = @import("std").mem.zeroes(c_uint),
+    sampleRate: c_uint = @import("std").mem.zeroes(c_uint),
+    sampleSize: c_uint = @import("std").mem.zeroes(c_uint),
+    channels: c_uint = @import("std").mem.zeroes(c_uint),
+    buffer: ?*RecordWaveBuffer = std.mem.zeroes(?*RecordWaveBuffer),
+};
+
+fn CreateRecordWave(max_frame_count: c_uint, sample_rate: c_uint, sample_size: c_uint, channels: c_uint) !*RecordWave {
+    const record_wave = try rl.allocator.create(RecordWave);
+
+    record_wave.* = RecordWave{
+        .maxFrameCount = max_frame_count,
+        .frameCount = 0,
+        .sampleRate = sample_rate,
+        .sampleSize = sample_size,
+        .channels = channels,
+        .buffer = null,
+    };
+
+    return record_wave;
+}
+
+fn DestroyRecordWave(record_wave: *RecordWave) void {
+    var buffer = record_wave.buffer;
+
+    while (buffer) |buf| {
+        const next = buf.next;
+
+        DestroyRecordWaveBuffer(record_wave, buf);
+
+        buffer = next;
+    }
+
+    rl.allocator.destroy(record_wave);
+}
+
+fn ResetRecordWave(record_wave: *RecordWave) void {
+    var buffer = record_wave.buffer;
+
+    while (buffer) |buf| {
+        const next = buf.next;
+
+        DestroyRecordWaveBuffer(record_wave, buf);
+
+        buffer = next;
+    }
+
+    record_wave.buffer = null;
+    record_wave.frameCount = 0;
+}
+
+fn CreateRecordWaveBuffer(record_wave: *RecordWave, frame_count: c_uint, data: ?*const anyopaque) !*RecordWaveBuffer {
+    if (data == null) return error.runtime_empty_buffer;
+
+    const wave = rl.Wave{
+        .frameCount = frame_count,
+        .sampleRate = record_wave.sampleRate,
+        .sampleSize = record_wave.sampleSize,
+        .channels = record_wave.channels,
+        .data = @constCast(data),
+    };
+
+    const new_wave = rl.WaveCopy(wave);
+    if (new_wave.data == null) return error.runtime_empty_copy_buffer;
+
+    const buffer = try rl.allocator.create(RecordWaveBuffer);
+
+    buffer.* = RecordWaveBuffer{
+        .frameCount = frame_count,
+        .data = new_wave.data,
+        .next = null,
+        .prev = null,
+    };
+
+    return buffer;
+}
+
+/// Destroys the buffer. Does NOT unlink from list.
+fn DestroyRecordWaveBuffer(record_wave: *RecordWave, buffer: *RecordWaveBuffer) void {
+    const wave = rl.Wave{
+        .frameCount = buffer.frameCount,
+        .sampleRate = record_wave.sampleRate,
+        .sampleSize = record_wave.sampleSize,
+        .channels = record_wave.channels,
+        .data = buffer.data,
+    };
+
+    rl.UnloadWave(wave);
+
+    rl.allocator.destroy(buffer);
+}
+
+fn ShiftRecordWaveBuffer(record_wave: *RecordWave) void {
+    if (record_wave.buffer) |buf| {
+        var next = buf.next;
+        record_wave.frameCount -= buf.frameCount;
+        DestroyRecordWaveBuffer(record_wave, buf);
+        if (next != null) next.?.prev = null;
+        record_wave.buffer = next;
+    }
+}
+
+fn AppendRecordWaveBuffer(record_wave: *RecordWave, new_buffer: *RecordWaveBuffer) void {
+    assert(new_buffer.next == null and new_buffer.prev == null);
+
+    if (record_wave.maxFrameCount > 0) {
+        var empty_frame_count: c_int = @as(c_int, @intCast(record_wave.maxFrameCount)) - @as(c_int, @intCast(record_wave.frameCount));
+        var first_buffer_frame_count: c_int = @intCast(if (record_wave.buffer) |buffer| buffer.frameCount else 0);
+        const new_buffer_frame_count: c_int = @intCast(new_buffer.frameCount);
+
+        while (empty_frame_count <= 0 and empty_frame_count + first_buffer_frame_count - new_buffer_frame_count <= 0) {
+            ShiftRecordWaveBuffer(record_wave);
+            empty_frame_count = @as(c_int, @intCast(record_wave.maxFrameCount)) - @as(c_int, @intCast(record_wave.frameCount));
+            first_buffer_frame_count = @intCast(if (record_wave.buffer) |buffer| buffer.frameCount else 0);
+        }
+    }
+
+    if (record_wave.buffer == null) {
+        record_wave.buffer = new_buffer;
+    } else {
+        var buffer = record_wave.buffer;
+        while (buffer.?.next != null) {
+            buffer = buffer.?.next;
+        }
+        new_buffer.prev = buffer;
+        buffer.?.next = new_buffer;
+    }
+
+    record_wave.frameCount += new_buffer.frameCount;
+}
+
+fn LoadWaveFromRecordWave(record_wave: *RecordWave) !rl.Wave {
+    var wave = rl.Wave{
+        .frameCount = if (record_wave.maxFrameCount > 0) @min(record_wave.frameCount, record_wave.maxFrameCount) else record_wave.frameCount,
+        .sampleRate = record_wave.sampleRate,
+        .sampleSize = record_wave.sampleSize,
+        .channels = record_wave.channels,
+        .data = null,
+    };
+
+    if (record_wave.buffer == null) {
+        wave.frameCount = 0;
+    } else {
+        const data_size: usize = @intCast(wave.frameCount * wave.channels * @divTrunc(wave.sampleSize, 8));
+        var data = try rl.allocator.alloc(u8, data_size);
+        errdefer rl.allocator.free(data);
+
+        var wave_data_index: usize = 0;
+
+        const skip_frames: usize = @intCast(if (record_wave.frameCount > wave.frameCount) record_wave.frameCount - wave.frameCount else 0);
+        var skip_data: usize = @intCast(skip_frames * wave.channels * @divTrunc(wave.sampleSize, 8));
+
+        var buffer = record_wave.buffer;
+        while (buffer) |buf| {
+            if (buf.data == null) {
+                buffer = buffer.?.next;
+                continue;
+            }
+
+            const buffer_data_size: usize = @intCast(buf.frameCount * wave.channels * @divTrunc(wave.sampleSize, 8));
+            const buffer_data = @as([*]u8, @ptrCast(buf.data))[0..buffer_data_size];
+
+            const buffer_data_index: usize = @min(skip_data, buffer_data_size);
+            const buffer_data_size_copy: usize = buffer_data_size - buffer_data_index;
+
+            const data_size_copy: usize = @min(data_size - wave_data_index, buffer_data_size_copy);
+
+            if (data_size_copy > 0) {
+                @memcpy(data[wave_data_index..(wave_data_index + data_size_copy)], buffer_data[buffer_data_index..(buffer_data_index + data_size_copy)]);
+            }
+
+            skip_data -= buffer_data_index;
+            wave_data_index += data_size_copy;
+            buffer = buffer.?.next;
+
+            if (wave_data_index >= data_size) break;
+        }
+
+        if (wave_data_index < data_size) {
+            @memset(data[wave_data_index..data_size], 0);
+        }
+
+        wave.data = @ptrCast(data);
+    }
+
+    return wave;
+}
+
+/// Receiving audio data from device callback function and add to RecordWave from device.pUserData
+fn SaveAudioDataToWave(pDevice: [*c]miniaudio.ma_device, pFramesOut: ?*anyopaque, pFramesInput: ?*const anyopaque, frameCount: miniaudio.ma_uint32) callconv(.C) void {
+    _ = pFramesOut;
+
+    if (pDevice) |device| {
+        const frame_count: c_uint = @intCast(frameCount);
+
+        if (frame_count > 0) {
+            const record_wave: *RecordWave = @ptrCast(@alignCast(device.*.pUserData));
+
+            record_wave.lock.lock();
+            defer record_wave.lock.unlock();
+
+            const new_buffer = CreateRecordWaveBuffer(record_wave, frame_count, pFramesInput) catch {
+                utils.TRACELOG(rl.LOG_WARNING, "AUDIO: Failed to create wave buffer", .{});
+                return;
+            };
+            errdefer DestroyRecordWaveBuffer(record_wave, new_buffer);
+
+            AppendRecordWaveBuffer(record_wave, new_buffer);
+        }
+    }
+}
+
+/// Initialize audio wave device and context
+fn nif_init_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 4);
+
+    // Arguments
+
+    const max_frame_count = core.UInt.get(env, argv[0]) catch {
+        return error.invalid_argument_max_frame_count;
+    };
+
+    const sample_rate = core.UInt.get(env, argv[1]) catch {
+        return error.invalid_argument_sample_rate;
+    };
+
+    const sample_size = core.UInt.get(env, argv[2]) catch {
+        return error.invalid_argument_sample_size;
+    };
+
+    const channels = core.UInt.get(env, argv[3]) catch {
+        return error.invalid_argument_channels;
+    };
+
+    const record_wave = try CreateRecordWave(max_frame_count, sample_rate, sample_size, channels);
+    errdefer DestroyRecordWave(record_wave);
+
+    // Function
+
+    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, SaveAudioDataToWave, @ptrCast(record_wave));
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Close the audio wave device and context
+fn nif_close_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    if (!rl.IsAudioDeviceRecordDataCallback(SaveAudioDataToWave)) return error.runtime_audio_record_type_mismatch;
+
+    // Function
+
+    const record_wave: *RecordWave = @ptrCast(@alignCast(try rl.CloseAudioDeviceRecord()));
+    DestroyRecordWave(record_wave);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Reset the recorded wave
+fn nif_reset_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    if (!rl.IsAudioDeviceRecordDataCallback(SaveAudioDataToWave)) return error.runtime_audio_record_type_mismatch;
+
+    // Function
+
+    const record_wave: *RecordWave = @ptrCast(@alignCast(rl.GetAudioDeviceUserData()));
+
+    record_wave.lock.lock();
+    defer record_wave.lock.unlock();
+
+    ResetRecordWave(record_wave);
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Get recorded wave
+fn nif_get_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 1 or argc == 2);
+
+    if (!rl.IsAudioDeviceRecordDataCallback(SaveAudioDataToWave)) return error.runtime_audio_record_type_mismatch;
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 1);
+
+    // Arguments
+
+    const reset_after = core.Boolean.get(env, argv[0]) catch {
+        return error.invalid_argument_reset_after;
+    };
+
+    // Function
+
+    const record_wave: *RecordWave = @ptrCast(@alignCast(rl.GetAudioDeviceUserData()));
+
+    record_wave.lock.lock();
+    defer record_wave.lock.unlock();
+
+    const wave = try LoadWaveFromRecordWave(record_wave);
+    if (reset_after) ResetRecordWave(record_wave);
+    defer if (!return_resource) core.Wave.unload(wave);
+    errdefer if (return_resource) core.Wave.unload(wave);
+
+    // Return
+
+    return core.maybe_make_struct_as_resource(core.Wave, env, wave, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Check if audio device has been initialized successfully
+fn nif_is_audio_device_record_ready(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Function
+
+    const is_audio_device_record_ready = rl.IsAudioDeviceRecordReady();
+
+    // Return
+
+    return core.Boolean.make(env, is_audio_device_record_ready);
+}
+
+/// Check if audio device is recording
+fn nif_is_audio_device_record_recording(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Function
+
+    const is_audio_device_record_recording = rl.IsAudioDeviceRecordRecording();
+
+    // Return
+
+    return core.Boolean.make(env, is_audio_device_record_recording);
+}
+
+/// Get audio device record info
+fn nif_get_audio_device_record_info(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0 or argc == 1);
+
+    // Return type
+
+    const return_resource = core.must_return_resource(env, argc, argv, 0);
+
+    // Function
+
+    const info = rl.GetAudioDeviceRecordInfo();
+    defer if (!return_resource) core.AudioInfo.unload(info);
+    errdefer if (return_resource) core.AudioInfo.unload(info);
+
+    // Return
+
+    return core.maybe_make_struct_as_resource(core.AudioInfo, env, info, return_resource) catch {
+        return error.invalid_return;
+    };
+}
+
+/// Start audio record
+fn nif_start_audio_device_record(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Function
+
+    try rl.StartAudioDeviceRecord();
+
+    // Return
+
+    return core.Atom.make(env, "ok");
+}
+
+/// Stop audio record
+fn nif_stop_audio_device_record(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
+    assert(argc == 0);
+    _ = argv;
+
+    // Function
+
+    try rl.StopAudioDeviceRecord();
+
+    // Return
+
+    return core.Atom.make(env, "ok");
 }

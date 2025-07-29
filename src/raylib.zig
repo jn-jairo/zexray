@@ -13,11 +13,26 @@ const raylib = @cImport({
 });
 pub usingnamespace raylib;
 
-const miniaudio = @cImport({
+pub const miniaudio = @cImport({
     @cInclude("miniaudio.h");
 });
 
 var audio_lock = std.Thread.Mutex{};
+
+pub const AudioDataCallback = fn (pDevice: [*c]miniaudio.ma_device, pFramesOut: ?*anyopaque, pFramesInput: ?*const anyopaque, frameCount: miniaudio.ma_uint32) callconv(.C) void;
+
+const AudioDataRecord = struct {
+    context: miniaudio.ma_context = @import("std").mem.zeroes(miniaudio.ma_context),
+    device: miniaudio.ma_device = @import("std").mem.zeroes(miniaudio.ma_device),
+    lock: std.Thread.Mutex = @import("std").mem.zeroes(std.Thread.Mutex),
+    is_ready: bool = @import("std").mem.zeroes(bool),
+    is_recording: bool = @import("std").mem.zeroes(bool),
+    data_callback: ?*const AudioDataCallback = @import("std").mem.zeroes(?*AudioDataCallback),
+};
+
+var audio_data_record = AudioDataRecord{
+    .lock = std.Thread.Mutex{},
+};
 
 pub var mode_3d_listener: ?raylib.Camera3D = null;
 pub var mode_3d_listener_max_distance: ?f32 = null;
@@ -769,4 +784,194 @@ pub fn ApplyFilterFront(sample_rate: c_uint, channels: c_uint, samples: []f32, g
     ApplyBiquadFilter(channels, samples, ba_1.b, ba_1.a, hist[0 .. 4 * channels]);
     ApplyBiquadFilter(channels, samples, ba_2.b, ba_2.a, hist[4 * channels .. 2 * 4 * channels]);
     ApplyBiquadFilter(channels, samples, ba_3.b, ba_3.a, hist[2 * 4 * channels .. 3 * 4 * channels]);
+}
+
+pub fn InitAudioDeviceRecord(sample_rate: c_uint, sample_size: c_uint, channels: c_uint, data_callback: ?*const AudioDataCallback, user_data: ?*anyopaque) !void {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    if (audio_data_record.is_ready) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be initialized, already initialized", .{});
+        return error.runtime_audio_device_already_initialized;
+    }
+
+    // Init audio context
+    var ctx_config: miniaudio.ma_context_config = miniaudio.ma_context_config_init();
+    var result: miniaudio.ma_result = miniaudio.ma_context_init(null, 0, &ctx_config, &audio_data_record.context);
+    if (result != miniaudio.MA_SUCCESS) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Failed to initialize record context", .{});
+        return error.runtime_audio_initialize_context;
+    }
+    errdefer _ = miniaudio.ma_context_uninit(&audio_data_record.context);
+
+    // Init audio device
+    // NOTE: Using the default device
+
+    const format: c_uint = switch (sample_size) {
+        8 => miniaudio.ma_format_u8,
+        16 => miniaudio.ma_format_s16,
+        32 => miniaudio.ma_format_f32,
+        else => return error.invalid_argument_sample_size,
+    };
+
+    var device_config: miniaudio.ma_device_config = miniaudio.ma_device_config_init(miniaudio.ma_device_type_capture);
+    device_config.capture.pDeviceID = null; // default capture device
+    device_config.capture.format = format;
+    device_config.capture.channels = channels;
+    device_config.sampleRate = sample_rate;
+    device_config.dataCallback = data_callback;
+    device_config.pUserData = user_data;
+
+    result = miniaudio.ma_device_init(&audio_data_record.context, &device_config, &audio_data_record.device);
+    if (result != miniaudio.MA_SUCCESS) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Failed to initialize record device", .{});
+        _ = miniaudio.ma_context_uninit(&audio_data_record.context);
+        return error.runtime_audio_initialize_device;
+    }
+    errdefer miniaudio.ma_device_uninit(&audio_data_record.device);
+
+    utils.TRACELOG(raylib.LOG_INFO, "AUDIO: Record device initialized successfully", .{});
+    utils.TRACELOG(raylib.LOG_INFO, "    > Backend:       miniaudio | %s", .{
+        miniaudio.ma_get_backend_name(audio_data_record.context.backend),
+    });
+    utils.TRACELOG(raylib.LOG_INFO, "    > Format:        %s -> %s", .{
+        miniaudio.ma_get_format_name(audio_data_record.device.capture.format),
+        miniaudio.ma_get_format_name(audio_data_record.device.capture.internalFormat),
+    });
+    utils.TRACELOG(raylib.LOG_INFO, "    > Channels:      %d -> %d", .{
+        audio_data_record.device.capture.channels,
+        audio_data_record.device.capture.internalChannels,
+    });
+    utils.TRACELOG(raylib.LOG_INFO, "    > Sample rate:   %d -> %d", .{
+        audio_data_record.device.sampleRate,
+        audio_data_record.device.capture.internalSampleRate,
+    });
+    utils.TRACELOG(raylib.LOG_INFO, "    > Periods size:  %d", .{
+        audio_data_record.device.capture.internalPeriodSizeInFrames * audio_data_record.device.capture.internalPeriods,
+    });
+
+    audio_data_record.data_callback = data_callback;
+    audio_data_record.is_ready = true;
+}
+
+pub fn CloseAudioDeviceRecord() !?*anyopaque {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    if (!audio_data_record.is_ready) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be closed, not currently initialized", .{});
+        return error.runtime_audio_close_device;
+    }
+
+    const user_data = audio_data_record.device.pUserData;
+
+    miniaudio.ma_device_uninit(&audio_data_record.device);
+    _ = miniaudio.ma_context_uninit(&audio_data_record.context);
+
+    audio_data_record.is_recording = false;
+    audio_data_record.is_ready = false;
+    audio_data_record.data_callback = null;
+
+    utils.TRACELOG(raylib.LOG_INFO, "AUDIO: Record device closed successfully", .{});
+
+    return user_data;
+}
+
+pub fn GetAudioDeviceUserData() ?*anyopaque {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    return audio_data_record.device.pUserData;
+}
+
+pub fn IsAudioDeviceRecordReady() bool {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    return audio_data_record.is_ready;
+}
+
+pub fn IsAudioDeviceRecordRecording() bool {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    return audio_data_record.is_recording;
+}
+
+pub fn IsAudioDeviceRecordDataCallback(data_callback: ?*const AudioDataCallback) bool {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    return data_callback == null and audio_data_record.data_callback == null or
+        data_callback.? == audio_data_record.data_callback.?;
+}
+
+pub fn GetAudioDeviceRecordInfo() AudioInfo {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    var info = AudioInfo{};
+
+    if (audio_data_record.is_ready) {
+        info.frameCount = 0;
+        info.sampleRate = @intCast(audio_data_record.device.sampleRate);
+        info.sampleSize = @intCast(8 * miniaudio.ma_get_bytes_per_sample(audio_data_record.device.capture.format));
+        info.channels = @intCast(audio_data_record.device.capture.channels);
+    }
+
+    return info;
+}
+
+pub fn LockAudioDeviceRecord() void {
+    audio_data_record.lock.lock();
+}
+
+pub fn UnlockAudioDeviceRecord() void {
+    audio_data_record.lock.unlock();
+}
+
+pub fn StartAudioDeviceRecord() !void {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    if (!audio_data_record.is_ready) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be started, not currently initialized", .{});
+        return error.runtime_audio_close_device;
+    }
+
+    if (audio_data_record.is_recording) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be started, already started", .{});
+        return error.runtime_audio_close_device;
+    }
+
+    const result: miniaudio.ma_result = miniaudio.ma_device_start(&audio_data_record.device);
+    if (result != miniaudio.MA_SUCCESS) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Failed to start record device", .{});
+        return error.runtime_audio_start_device;
+    }
+
+    audio_data_record.is_recording = true;
+}
+
+pub fn StopAudioDeviceRecord() !void {
+    LockAudioDeviceRecord();
+    defer UnlockAudioDeviceRecord();
+
+    if (!audio_data_record.is_ready) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be stoped, not currently initialized", .{});
+        return error.runtime_audio_close_device;
+    }
+
+    if (!audio_data_record.is_recording) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Record device could not be stoped, not currently started", .{});
+        return error.runtime_audio_close_device;
+    }
+
+    const result: miniaudio.ma_result = miniaudio.ma_device_stop(&audio_data_record.device);
+    if (result != miniaudio.MA_SUCCESS) {
+        utils.TRACELOG(raylib.LOG_WARNING, "AUDIO: Failed to stop record device", .{});
+        return error.runtime_audio_stop_device;
+    }
+
+    audio_data_record.is_recording = false;
 }

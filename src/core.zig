@@ -19,6 +19,7 @@ pub fn nif_wrapper(comptime func: ZigNifFuncType) NifFuncType {
 
                 const invalid_argument = "invalid_argument_";
                 const invalid_return = "invalid_return";
+                const runtime = "runtime_";
 
                 var new_err: anyerror = err;
 
@@ -28,6 +29,9 @@ pub fn nif_wrapper(comptime func: ZigNifFuncType) NifFuncType {
                 } else if (std.mem.startsWith(u8, error_name, invalid_return)) {
                     writer.writeAll("Failed to get return value.") catch unreachable;
                     new_err = error.ArgumentError;
+                } else if (std.mem.startsWith(u8, error_name, runtime)) {
+                    writer.print("Error: {s}.", .{error_name[(runtime.len)..(error_name.len)]}) catch unreachable;
+                    new_err = error.RuntimeError;
                 } else {
                     return raise_exception(e.allocator, env, new_err, @errorReturnTrace(), null);
                 }

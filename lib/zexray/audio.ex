@@ -1942,4 +1942,188 @@ defmodule Zexray.Audio do
               ),
               to: NIF,
               as: :get_audio_stream_info
+
+  ##################
+  #  Audio record  #
+  ##################
+
+  @doc """
+  Run function with audio stream device and close it after.
+  """
+  @doc group: :record
+  @spec with_audio_record_stream(
+          sample_rate :: non_neg_integer,
+          sample_size :: non_neg_integer,
+          channels :: non_neg_integer,
+          func :: (-> any)
+        ) :: any
+  def with_audio_record_stream(
+        sample_rate,
+        sample_size,
+        channels,
+        func
+      )
+      when is_function(func) do
+    try do
+      init_record_stream(
+        sample_rate,
+        sample_size,
+        channels
+      )
+
+      func.()
+    after
+      close_record_stream()
+    end
+  end
+
+  @doc """
+  Initialize audio stream device and context
+  """
+  @doc group: :record
+  @spec init_record_stream(
+          sample_rate :: non_neg_integer,
+          sample_size :: non_neg_integer,
+          channels :: non_neg_integer
+        ) :: :ok
+  def init_record_stream(
+        sample_rate,
+        sample_size,
+        channels
+      ) do
+    NIF.init_audio_device_record_stream(
+      sample_rate,
+      sample_size,
+      channels,
+      self()
+    )
+  end
+
+  @doc """
+  Close the audio stream device and context
+  """
+  @doc group: :record
+  @spec close_record_stream() :: :ok
+  defdelegate close_record_stream(), to: NIF, as: :close_audio_device_record_stream
+
+  @doc """
+  Run function with audio wave device and close it after.
+  """
+  @doc group: :record
+  @spec with_audio_record_wave(
+          max_frame_count :: non_neg_integer,
+          sample_rate :: non_neg_integer,
+          sample_size :: non_neg_integer,
+          channels :: non_neg_integer,
+          func :: (-> any)
+        ) :: any
+  def with_audio_record_wave(
+        max_frame_count,
+        sample_rate,
+        sample_size,
+        channels,
+        func
+      )
+      when is_function(func) do
+    try do
+      init_record_wave(
+        max_frame_count,
+        sample_rate,
+        sample_size,
+        channels
+      )
+
+      func.()
+    after
+      close_record_wave()
+    end
+  end
+
+  @doc """
+  Initialize audio wave device and context
+  """
+  @doc group: :record
+  @spec init_record_wave(
+          max_frame_count :: non_neg_integer,
+          sample_rate :: non_neg_integer,
+          sample_size :: non_neg_integer,
+          channels :: non_neg_integer
+        ) :: :ok
+  defdelegate init_record_wave(
+                max_frame_count,
+                sample_rate,
+                sample_size,
+                channels
+              ), to: NIF, as: :init_audio_device_record_wave
+
+  @doc """
+  Close the audio wave device and context
+  """
+  @doc group: :record
+  @spec close_record_wave() :: :ok
+  defdelegate close_record_wave(), to: NIF, as: :close_audio_device_record_wave
+
+  @doc """
+  Reset the recorded wave
+  """
+  @doc group: :record
+  @spec reset_record_wave() :: :ok
+  defdelegate reset_record_wave(), to: NIF, as: :reset_audio_device_record_wave
+
+  @doc """
+  Get recorded wave
+  """
+  @doc group: :record
+  @spec get_record_wave(
+          reset_after :: boolean,
+          return :: :auto | :value | :resource
+        ) :: Zexray.Type.Wave.t_nif()
+  def get_record_wave(
+        reset_after \\ true,
+        return \\ :auto
+      ) do
+    {reset_after, return} =
+      if is_nif_return(reset_after) do
+        {true, reset_after}
+      else
+        {reset_after, return}
+      end
+
+    NIF.get_audio_device_record_wave(reset_after, return)
+  end
+
+  @doc """
+  Check if audio device has been initialized successfully
+  """
+  @doc group: :record
+  @spec record_ready?() :: boolean
+  defdelegate record_ready?(), to: NIF, as: :is_audio_device_record_ready
+
+  @doc """
+  Check if audio device is recording
+  """
+  @doc group: :record
+  @spec recording?() :: boolean
+  defdelegate recording?(), to: NIF, as: :is_audio_device_record_recording
+
+  @doc """
+  Get audio device record info
+  """
+  @doc group: :record
+  @spec get_record_info(return :: :auto | :value | :resource) :: Zexray.Type.AudioInfo.t_nif()
+  defdelegate get_record_info(return \\ :auto), to: NIF, as: :get_audio_device_record_info
+
+  @doc """
+  Start audio record
+  """
+  @doc group: :record
+  @spec start_record() :: :ok
+  defdelegate start_record(), to: NIF, as: :start_audio_device_record
+
+  @doc """
+  Stop audio record
+  """
+  @doc group: :record
+  @spec stop_record() :: :ok
+  defdelegate stop_record(), to: NIF, as: :stop_audio_device_record
 end

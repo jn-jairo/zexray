@@ -104,6 +104,22 @@ pub const Tuple = struct {
     }
 };
 
+///////////
+//  Pid  //
+///////////
+
+pub const Pid = struct {
+    pub fn make(env: ?*e.ErlNifEnv, value: e.ErlNifPid) e.ErlNifTerm {
+        return e.enif_make_pid(env, &value);
+    }
+
+    pub fn get(env: ?*e.ErlNifEnv, term: e.ErlNifTerm) !e.ErlNifPid {
+        var pid: e.ErlNifPid = undefined;
+        if (e.enif_get_local_pid(env, term, &pid) == 0) return error.ArgumentError;
+        return pid;
+    }
+};
+
 //////////////
 //  Number  //
 //////////////
