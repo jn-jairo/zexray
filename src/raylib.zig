@@ -913,7 +913,7 @@ pub fn GetAudioDeviceRecordInfo() AudioInfo {
     var info = AudioInfo{};
 
     if (audio_data_record.is_ready) {
-        info.frameCount = 0;
+        info.frameCount = @intCast(audio_data_record.device.capture.internalPeriodSizeInFrames);
         info.sampleRate = @intCast(audio_data_record.device.sampleRate);
         info.sampleSize = @intCast(8 * miniaudio.ma_get_bytes_per_sample(audio_data_record.device.capture.format));
         info.channels = @intCast(audio_data_record.device.capture.channels);
