@@ -53,12 +53,18 @@ defmodule Example do
     # Set our game to run at 60 frames-per-second
     Zexray.Timing.set_target_fps(60)
 
+    type_audio_info(
+      sample_rate: sample_rate,
+      sample_size: sample_size,
+      channels: channels
+    ) = Zexray.Audio.get_record_info()
+    
     wave =
       type_wave(
         frame_count: 0,
-        sample_rate: @sample_rate,
-        sample_size: @sample_size,
-        channels: @channels,
+        sample_rate: sample_rate,
+        sample_size: sample_size,
+        channels: channels,
         data: []
       )
 
