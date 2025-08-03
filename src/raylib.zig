@@ -786,7 +786,7 @@ pub fn ApplyFilterFront(sample_rate: c_uint, channels: c_uint, samples: []f32, g
     ApplyBiquadFilter(channels, samples, ba_3.b, ba_3.a, hist[2 * 4 * channels .. 3 * 4 * channels]);
 }
 
-pub fn InitAudioDeviceRecord(sample_rate: c_uint, sample_size: c_uint, channels: c_uint, data_callback: ?*const AudioDataCallback, user_data: ?*anyopaque) !void {
+pub fn InitAudioDeviceRecord(sample_rate: c_uint, sample_size: c_uint, channels: c_uint, buffer_size: c_uint, data_callback: ?*const AudioDataCallback, user_data: ?*anyopaque) !void {
     LockAudioDeviceRecord();
     defer UnlockAudioDeviceRecord();
 
@@ -821,6 +821,7 @@ pub fn InitAudioDeviceRecord(sample_rate: c_uint, sample_size: c_uint, channels:
     device_config.sampleRate = sample_rate;
     device_config.dataCallback = data_callback;
     device_config.pUserData = user_data;
+    device_config.periodSizeInFrames = buffer_size;
 
     result = miniaudio.ma_device_init(&audio_data_record.context, &device_config, &audio_data_record.device);
     if (result != miniaudio.MA_SUCCESS) {

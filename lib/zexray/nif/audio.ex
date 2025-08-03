@@ -172,9 +172,9 @@ defmodule Zexray.NIF.Audio do
         get_audio_stream_info: 2,
 
         # Audio record
-        init_audio_device_record_stream: 4,
+        init_audio_device_record_stream: 5,
         close_audio_device_record_stream: 0,
-        init_audio_device_record_wave: 4,
+        init_audio_device_record_wave: 5,
         close_audio_device_record_wave: 0,
         reset_audio_device_record_wave: 0,
         get_audio_device_record_wave: 1,
@@ -1799,13 +1799,15 @@ defmodule Zexray.NIF.Audio do
               sample_rate :: non_neg_integer,
               sample_size :: non_neg_integer,
               channels :: non_neg_integer,
-              pid :: pid
+              pid :: pid,
+              buffer_size :: non_neg_integer
             ) :: :ok
       def init_audio_device_record_stream(
             _sample_rate,
             _sample_size,
             _channels,
-            _pid
+            _pid,
+            _buffer_size
           ),
           do: :erlang.nif_error(:undef)
 
@@ -1824,13 +1826,15 @@ defmodule Zexray.NIF.Audio do
               max_frame_count :: non_neg_integer,
               sample_rate :: non_neg_integer,
               sample_size :: non_neg_integer,
-              channels :: non_neg_integer
+              channels :: non_neg_integer,
+              buffer_size :: non_neg_integer
             ) :: :ok
       def init_audio_device_record_wave(
             _max_frame_count,
             _sample_rate,
             _sample_size,
-            _channels
+            _channels,
+            _buffer_size
           ),
           do: :erlang.nif_error(:undef)
 

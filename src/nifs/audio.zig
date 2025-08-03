@@ -176,9 +176,9 @@ pub const exported_nifs = [_]e.ErlNifFunc{
     .{ .name = "get_audio_stream_info", .arity = 2, .fptr = core.nif_wrapper(nif_get_audio_stream_info), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
 
     // Audio record
-    .{ .name = "init_audio_device_record_stream", .arity = 4, .fptr = core.nif_wrapper(nif_init_audio_device_record_stream), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "init_audio_device_record_stream", .arity = 5, .fptr = core.nif_wrapper(nif_init_audio_device_record_stream), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "close_audio_device_record_stream", .arity = 0, .fptr = core.nif_wrapper(nif_close_audio_device_record_stream), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    .{ .name = "init_audio_device_record_wave", .arity = 4, .fptr = core.nif_wrapper(nif_init_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    .{ .name = "init_audio_device_record_wave", .arity = 5, .fptr = core.nif_wrapper(nif_init_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "close_audio_device_record_wave", .arity = 0, .fptr = core.nif_wrapper(nif_close_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "reset_audio_device_record_wave", .arity = 0, .fptr = core.nif_wrapper(nif_reset_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
     .{ .name = "get_audio_device_record_wave", .arity = 1, .fptr = core.nif_wrapper(nif_get_audio_device_record_wave), .flags = e.ERL_NIF_DIRTY_JOB_CPU_BOUND },
@@ -3658,7 +3658,7 @@ fn SendAudioDataStream(pDevice: [*c]miniaudio.ma_device, pFramesOut: ?*anyopaque
 
 /// Initialize audio stream device and context
 fn nif_init_audio_device_record_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
-    assert(argc == 4);
+    assert(argc == 5);
 
     // Arguments
 
@@ -3682,9 +3682,13 @@ fn nif_init_audio_device_record_stream(env: ?*e.ErlNifEnv, argc: c_int, argv: [*
     errdefer rl.allocator.destroy(pid_ptr);
     pid_ptr.* = pid;
 
+    const buffer_size = core.UInt.get(env, argv[4]) catch {
+        return error.invalid_argument_buffer_size;
+    };
+
     // Function
 
-    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, SendAudioDataStream, @ptrCast(pid_ptr));
+    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, buffer_size, SendAudioDataStream, @ptrCast(pid_ptr));
 
     // Return
 
@@ -3932,7 +3936,7 @@ fn SaveAudioDataToWave(pDevice: [*c]miniaudio.ma_device, pFramesOut: ?*anyopaque
 
 /// Initialize audio wave device and context
 fn nif_init_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]const e.ErlNifTerm) !e.ErlNifTerm {
-    assert(argc == 4);
+    assert(argc == 5);
 
     // Arguments
 
@@ -3952,12 +3956,16 @@ fn nif_init_audio_device_record_wave(env: ?*e.ErlNifEnv, argc: c_int, argv: [*c]
         return error.invalid_argument_channels;
     };
 
+    const buffer_size = core.UInt.get(env, argv[4]) catch {
+        return error.invalid_argument_buffer_size;
+    };
+
     const record_wave = try CreateRecordWave(max_frame_count, sample_rate, sample_size, channels);
     errdefer DestroyRecordWave(record_wave);
 
     // Function
 
-    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, SaveAudioDataToWave, @ptrCast(record_wave));
+    try rl.InitAudioDeviceRecord(sample_rate, sample_size, channels, buffer_size, SaveAudioDataToWave, @ptrCast(record_wave));
 
     // Return
 

@@ -1955,12 +1955,14 @@ defmodule Zexray.Audio do
           sample_rate :: non_neg_integer,
           sample_size :: non_neg_integer,
           channels :: non_neg_integer,
+          buffer_size :: non_neg_integer,
           func :: (-> any)
         ) :: any
   def with_audio_record_stream(
         sample_rate,
         sample_size,
         channels,
+        buffer_size \\ 1_024,
         func
       )
       when is_function(func) do
@@ -1968,7 +1970,8 @@ defmodule Zexray.Audio do
       init_record_stream(
         sample_rate,
         sample_size,
-        channels
+        channels,
+        buffer_size
       )
 
       func.()
@@ -1984,18 +1987,21 @@ defmodule Zexray.Audio do
   @spec init_record_stream(
           sample_rate :: non_neg_integer,
           sample_size :: non_neg_integer,
-          channels :: non_neg_integer
+          channels :: non_neg_integer,
+          buffer_size :: non_neg_integer
         ) :: :ok
   def init_record_stream(
         sample_rate,
         sample_size,
-        channels
+        channels,
+        buffer_size \\ 1_024
       ) do
     NIF.init_audio_device_record_stream(
       sample_rate,
       sample_size,
       channels,
-      self()
+      self(),
+      buffer_size
     )
   end
 
@@ -2015,6 +2021,7 @@ defmodule Zexray.Audio do
           sample_rate :: non_neg_integer,
           sample_size :: non_neg_integer,
           channels :: non_neg_integer,
+          buffer_size :: non_neg_integer,
           func :: (-> any)
         ) :: any
   def with_audio_record_wave(
@@ -2022,6 +2029,7 @@ defmodule Zexray.Audio do
         sample_rate,
         sample_size,
         channels,
+        buffer_size \\ 1_024,
         func
       )
       when is_function(func) do
@@ -2030,7 +2038,8 @@ defmodule Zexray.Audio do
         max_frame_count,
         sample_rate,
         sample_size,
-        channels
+        channels,
+        buffer_size
       )
 
       func.()
@@ -2047,13 +2056,15 @@ defmodule Zexray.Audio do
           max_frame_count :: non_neg_integer,
           sample_rate :: non_neg_integer,
           sample_size :: non_neg_integer,
-          channels :: non_neg_integer
+          channels :: non_neg_integer,
+          buffer_size :: non_neg_integer
         ) :: :ok
   defdelegate init_record_wave(
                 max_frame_count,
                 sample_rate,
                 sample_size,
-                channels
+                channels,
+                buffer_size \\ 1_024
               ), to: NIF, as: :init_audio_device_record_wave
 
   @doc """
