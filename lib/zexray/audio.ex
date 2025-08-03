@@ -1962,7 +1962,7 @@ defmodule Zexray.Audio do
         sample_rate,
         sample_size,
         channels,
-        buffer_size \\ 1_024,
+        buffer_size \\ 0,
         func
       )
       when is_function(func) do
@@ -1994,7 +1994,7 @@ defmodule Zexray.Audio do
         sample_rate,
         sample_size,
         channels,
-        buffer_size \\ 1_024
+        buffer_size \\ 0
       ) do
     NIF.init_audio_device_record_stream(
       sample_rate,
@@ -2029,7 +2029,7 @@ defmodule Zexray.Audio do
         sample_rate,
         sample_size,
         channels,
-        buffer_size \\ 1_024,
+        buffer_size \\ 0,
         func
       )
       when is_function(func) do
@@ -2064,7 +2064,7 @@ defmodule Zexray.Audio do
                 sample_rate,
                 sample_size,
                 channels,
-                buffer_size \\ 1_024
+                buffer_size \\ 0
               ), to: NIF, as: :init_audio_device_record_wave
 
   @doc """
